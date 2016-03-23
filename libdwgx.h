@@ -3,9 +3,12 @@
 
 #define _LIBDWGX_DEBUG
 
-// #include "libdwgx_datatypes.h"
+#include "dwg_base.h"
 #include "libdwgx_versions.h"
-#include <stdio.h>
+
+#include <iostream>
+#include <string>
+#include <fstream>
 
 static const char * DWGVersions[] =
 {
@@ -23,24 +26,10 @@ struct SLRecord
     int dSize;
 };
 
-struct DWGInfo
+namespace libdwgx
 {
-    char DWGVersion[6];
-    char DWGRevision;
-
-    short dCodePage;
-    int dImageSeeker;
-
-    int dSLRecords;
-    SLRecord *paSLRecords;
-
-    FILE * fpDWG;
+    DWGFile * InitializeDWG( const char * filename );
 };
-
-typedef DWGInfo * DWGHandle;
-
-DWGHandle DWGOpen ( const char * filename );
-int DWGReadHeader ( DWGHandle hDWG );
 
 char extractBits ( size_t start, size_t count, char * data );
 

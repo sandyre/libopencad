@@ -3,6 +3,6 @@
 
 int main ( int argc, char* argv[] )
 {
-    DWGHandle handle = DWGOpen( "./test/ACAD_r2000_libereco.dwg" );
-    DWGReadHeader( handle );
+    DWGFile *dwgfile = libdwgx::InitializeDWG( "./test/ACAD_r2000_libereco.dwg" );
+    dwgfile->ReadHeader();
 }
