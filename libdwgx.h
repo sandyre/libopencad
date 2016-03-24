@@ -34,4 +34,10 @@ namespace libdwgx
 
 char extractBits ( size_t start, size_t count, char * data );
 
+void swapByteOrder(unsigned short& us);
+
+void swapByteOrder(unsigned int& ui);
+
+void swapByteOrder(unsigned long long& ull);
+
 #endif

@@ -28,6 +28,7 @@ public:
     ~DWGFileR2000() override {}
 
     int ReadHeader() override;
+    int ReadObjectMap() override;
 private:
     DWGR2000_FILE_HEADER fileHeader;
 };

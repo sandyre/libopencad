@@ -11,6 +11,7 @@ public:
     virtual ~DWGFile() {}
 
     virtual int ReadHeader() {};
+    virtual int ReadObjectMap() {};
     int ReadObject() { return 0; }
 
     std::ifstream fDWG;
