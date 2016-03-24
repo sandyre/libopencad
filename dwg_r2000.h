@@ -4,13 +4,21 @@
 #include "libdwgx.h"
 #include "dwg_base.h"
 
+#include <map>
+#include <string>
+#include <vector>
+
+using std::map;
+using std::string;
+using std::vector;
+
 struct DWGR2000_FILE_HEADER
 {
-    char pabyDWGVersion[6];
     int32_t dImageSeeker;
     int16_t dCodePage;
 
-    SLRecord * paSLRecords;
+    vector < SLRecord >  SLRecords;
+    map < string, char > header_variables;
 };
 
 class DWGFileR2000 : public DWGFile

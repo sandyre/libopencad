@@ -4,6 +4,7 @@
 #define _LIBDWGX_DEBUG
 
 #include "dwg_base.h"
+#include "dwg_format_sentinels.h"
 #include "libdwgx_versions.h"
 
 #include <iostream>
