@@ -12,6 +12,17 @@ using std::map;
 using std::string;
 using std::vector;
 
+static const map < string, string > DWG2000_CLASS_FIELDS
+{
+    std::make_pair ( "CLASSNUM", "BITSHORT"),
+    std::make_pair ( "VERSION", "BITSHORT"),
+    std::make_pair ( "APPNAME", "TV"),
+    std::make_pair ( "CPLUSPPLUSCLASSNAME", "TV"),
+    std::make_pair ( "CLASSDXFNAME", "TV"),
+    std::make_pair ( "WASAZOMBIE", "BIT" ),
+    std::make_pair ( "ITEMCLASSID", "BITSHORT" )
+};
+
 struct DWGR2000_FILE_HEADER
 {
     int32_t dImageSeeker;
@@ -28,7 +39,9 @@ public:
     ~DWGFileR2000() override {}
 
     int ReadHeader() override;
+    int ReadClassesSection() override;
     int ReadObjectMap() override;
+
 private:
     DWGR2000_FILE_HEADER fileHeader;
 };
