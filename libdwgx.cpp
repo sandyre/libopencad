@@ -1,11 +1,6 @@
 #include "libdwgx.h"
 
-#include "dwg_base.h"
 #include "dwg_r2000.h"
-
-#include <string>
-#include <iostream>
-#include <fstream>
 
 using std::ifstream;
 using std::string;
@@ -34,7 +29,7 @@ DWGFile * libdwgx::InitializeDWG( const char *filename )
 
     else
     {
-        std::cerr << "Unsupported DWG file version. Check documentation.";
+        std::cerr << "Unsupported DWG file version. Check documentation.\n";
         return nullptr;
     }
 }

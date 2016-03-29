@@ -10,9 +10,10 @@ public:
     DWGFile() {}
     virtual ~DWGFile() {}
 
-    virtual int ReadHeader() {};
-    virtual int ReadObjectMap() {};
-    int ReadObject() { return 0; }
+    virtual int ReadHeader() { return 0;};
+    virtual int ReadClassesSection() { return 0; };
+    virtual int ReadObjectMap() { return 0;};
+    virtual int ReadObject() { return 0; }
 
     std::ifstream fDWG;
 protected:

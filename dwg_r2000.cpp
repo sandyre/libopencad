@@ -1,7 +1,5 @@
 #include "dwg_r2000.h"
 
-#include "libdwgx_datatypes.h"
-
 int DWGFileR2000::ReadHeader()
 {
     char * pabyBuf = new char[100];
@@ -197,6 +195,12 @@ int DWGFileR2000::ReadObjectMap()
 
 int DWGFileR2000::ReadObject()
 {
+    char * pabySectionContent = new char[100];
+    size_t bitOffsetFromStart = 0;
     fDWG.seekg ( object_map[0].second );
+    fDWG.read ( pabySectionContent, 100 );
 
+    std::cout << "MODULAR SHORT (LENGTH): " << ReadMSHORT ( pabySectionContent, bitOffsetFromStart ) << std::endl;
+    std::cout << "BITSHORT (TYPE): " << ReadBITSHORT ( pabySectionContent, bitOffsetFromStart ) << std::endl;
+    std::cout << "OBJ SIZE (BITS): " << ReadRAWLONG ( pabySectionContent, bitOffsetFromStart ) << std::endl;
 }

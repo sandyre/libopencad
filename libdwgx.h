@@ -6,6 +6,7 @@
 #include "dwg_base.h"
 #include "dwg_format_sentinels.h"
 #include "libdwgx_versions.h"
+#include "libdwgx_io.h"
 
 #include <iostream>
 #include <string>
@@ -32,7 +33,6 @@ namespace libdwgx
     DWGFile * InitializeDWG( const char * filename );
 };
 
-char extractBits ( size_t start, size_t count, char * data );
 
 void swapByteOrder(unsigned short& us);
 

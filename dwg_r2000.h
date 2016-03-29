@@ -134,7 +134,7 @@ public:
     int ReadHeader() override;
     int ReadClassesSection() override;
     int ReadObjectMap() override;
-    int ReadObject();
+    int ReadObject() override;
 private:
     DWG2000_CLASS ReadClass( const char * input_array, size_t& bitOffset );
 
