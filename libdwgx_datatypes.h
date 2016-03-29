@@ -22,11 +22,11 @@
 #include <vector>
 #include <algorithm>
 
-bool ReadBIT ( const char * input_array, size_t& bitOffsetFromStart );
-short ReadSHORT ( const char * input_array, size_t& bitOffsetFromStart );
-char ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart );
-double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
-long long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
+bool        ReadBIT ( const char * input_array, size_t& bitOffsetFromStart );
+short       ReadSHORT ( const char * input_array, size_t& bitOffsetFromStart );
+char        ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart );
+double      ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
+long long   ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
 std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart );
 
 bool ReadBIT ( const char * input_array, size_t& bitOffsetFromStart )
@@ -49,13 +49,54 @@ short ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart )
     size_t bitOffsetInByte = bitOffsetFromStart % 8;
 
     const char * pShortFirstByte = input_array + byteOffset;
-    char aShortBytes[3]; // maximum bytes a single short can take.
-    memcpy ( aShortBytes, pShortFirstByte, 3 );
+    unsigned char aShortBytes[4]; // maximum bytes a single short can take.
+    memcpy ( aShortBytes, pShortFirstByte, 4 );
 
-    // std::cout << "CONTENT: " << std::bitset<8>(aShortBytes[0]) << " "
-    //                          << std::bitset<8>(aShortBytes[1]) << " "
-    //                          << std::bitset<8>(aShortBytes[2]) << " "
-    //                          << " BIT OFFSET: " << bitOffsetInByte << std::endl;
+    // Exclusive case.
+    if ( bitOffsetInByte == 7 )
+    {
+        char BITCODE = ( ( aShortBytes[0] & 0b00000001 ) << 1 ) | ( ( aShortBytes[1] >> 7 ) & 0b00000001 );
+
+        switch( BITCODE )
+        {
+            case BITSHORT_NORMAL:
+            {
+                aShortBytes[1]  = ( aShortBytes[1] << 1 );
+                aShortBytes[1] |= ( aShortBytes[2] >> 7 );
+                aShortBytes[2]  = ( aShortBytes[2] << 1 );
+                aShortBytes[2] |= ( aShortBytes[3] >> 7 );
+
+                bitOffsetFromStart += 18;
+
+                void * ptr = aShortBytes + 1;
+                short * result = static_cast< short *> ( ptr );
+
+                return * result;
+            }
+
+            case BITSHORT_UNSIGNED_CHAR:
+            {
+                aShortBytes[1]  = ( aShortBytes[1] << 1 );
+                aShortBytes[1] |= ( aShortBytes[2] >> 7 );
+
+                bitOffsetFromStart += 10;
+
+                return ( unsigned char ) aShortBytes[1];
+            }
+
+            case BITSHORT_ZERO_VALUE:
+            {
+                bitOffsetFromStart += 2;
+                return ( short ) 0;
+            }
+
+            case BITSHORT_256:
+            {
+                bitOffsetFromStart += 2;
+                return ( short ) 256;
+            }
+        }
+    }
 
     char BITCODE = ( ( aShortBytes[0] >> ( 6 - bitOffsetInByte ) ) & 0b00000011 );
 
@@ -63,7 +104,6 @@ short ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart )
     {
         case BITSHORT_NORMAL:
         {
-            // std::cout << "[ NORMAL CASE ]" << std::endl;
             aShortBytes[0]  = ( aShortBytes[0] << ( bitOffsetInByte + 2 ) );
             aShortBytes[0] |= ( aShortBytes[1] >> ( 6 - bitOffsetInByte ) );
             aShortBytes[1]  = ( aShortBytes[1] << ( bitOffsetInByte + 2 ) );
@@ -79,7 +119,6 @@ short ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart )
 
         case BITSHORT_UNSIGNED_CHAR:
         {
-            // std::cout << "[ UNSIGNED CASE ]" << std::endl;
             aShortBytes[0]  = ( aShortBytes[0] << ( bitOffsetInByte + 2 ) );
             aShortBytes[0] |= ( aShortBytes[1] >> ( 6 - bitOffsetInByte ) );
 
@@ -90,14 +129,12 @@ short ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart )
 
         case BITSHORT_ZERO_VALUE:
         {
-            // std::cout << "[ ZERO CASE ]" << std::endl;
             bitOffsetFromStart += 2;
             return ( short ) 0;
         }
 
         case BITSHORT_256:
         {
-            // std::cout << "[ 256 CASE ]" << std::endl;
             bitOffsetFromStart += 2;
             return ( short ) 256;
         }
@@ -127,7 +164,7 @@ char ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart )
 std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart )
 {
     short string_length = ReadBITSHORT ( input_array, bitOffsetFromStart );
-    // std::cout << "STRING LENGTH: "<< string_length << std::endl;
+
     std::string result;
 
     for ( size_t i = 0; i < string_length; ++i )
@@ -147,12 +184,6 @@ long long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
 
     const char * pMCharFirstByte = input_array + byteOffset;
 
-    std::cout << std::bitset<8>(pMCharFirstByte[0]) << " "
-              << std::bitset<8>(pMCharFirstByte[1]) << " "
-              << std::bitset<8>(pMCharFirstByte[2]) << " "
-              << std::bitset<8>(pMCharFirstByte[3]) << " "
-              << std::bitset<8>(pMCharFirstByte[4]) << std::endl;
-
     size_t MCharBytesCount = 1;
     for ( size_t i = 0; i < 8; ++i )
     {
@@ -161,16 +192,13 @@ long long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
         ++MCharBytesCount;
     }
 
-    std::cout << "BYTES COUNT: " << MCharBytesCount << std::endl;
-
-    char aMCharBytes[MCharBytesCount]; // 8 bytes is maximum.
+    unsigned char aMCharBytes[MCharBytesCount]; // 8 bytes is maximum.
     memcpy ( aMCharBytes, pMCharFirstByte, MCharBytesCount );
 
     std::reverse ( aMCharBytes, aMCharBytes + MCharBytesCount ); // LSB to MSB
 
-    if ( aMCharBytes[0] & 0b01000000 )
+    if ( ( aMCharBytes[0] & 0b01000000 ) == 0b01000000 )
     {
-        std::cout << "NEGATIVE MCHAR" << std::endl;
         aMCharBytes[0] &= 0b10111111;
         negative = true;
     }
@@ -180,10 +208,29 @@ long long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
         aMCharBytes[i] &= 0b01111111;
     }
 
-    for ( size_t i = 0; i < MCharBytesCount - 1; ++i )
+    // TODO: this code doesnt cover case when char.bytescount > 3, but its possible on large files.
+    // I just can write an algorithm that does this.
+    switch ( MCharBytesCount )
     {
-        aMCharBytes[i]    |= ( aMCharBytes[i + 1] & 0b00000001 );
-        aMCharBytes[i + 1] = ( aMCharBytes[i + 1] >> 1 );
+        case 1:
+            break;
+        case 2:
+        {
+            char tmp = aMCharBytes[0] & 0b00000001;
+            aMCharBytes[0] = aMCharBytes[0] >> 1;
+            aMCharBytes[1] |= (tmp << 7);
+            break;
+        }
+        case 3:
+        {
+            unsigned char tmp1 = aMCharBytes[0] & 0b00000011;
+            unsigned char tmp2 = aMCharBytes[1] & 0b00000001;
+            aMCharBytes[0] = aMCharBytes[0] >> 2;
+            aMCharBytes[1] = aMCharBytes[1] >> 1;
+            aMCharBytes[1] |= ( tmp1 << 6 );
+            aMCharBytes[2] |= ( tmp2 << 7 );
+            break;
+        }
     }
 
     std::reverse ( aMCharBytes, aMCharBytes + MCharBytesCount ); // MSB to LSB
