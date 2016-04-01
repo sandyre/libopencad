@@ -1,0 +1,28 @@
+language: cpp
+sudo: required
+dist: trusty
+compiler:
+- clang
+os:
+- linux
+ruby: 2.2.0
+before_install:
+- echo $LANG
+- echo $LC_ALL
+before_script:
+- travis_retry bundle
+script: ./cmake
+after_success:
+- if [ $TRAVIS_BRANCH == $TRAVIS_TAG ]; then ./scripts/deploy.sh release github website triggers; fi
+branches:
+  only:
+  - master
+  - "/^v\\d+\\./"
+notifications:
+  email: false
+  irc:
+    template:
+    - "%{repository}/%{branch} (%{commit} - %{author}): %{build_url}: %{message}"
+env:
+  global:
+  - LANG="en_US.UTF-8"
