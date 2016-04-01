@@ -11,11 +11,10 @@ before_install:
 script: cmake CMakeLists.txt
 after_success:
 - cd gtest/tests
-- run_libdwgx_tests
+- ./run_libdwgx_tests
 branches:
   only:
   - master
-  - "/^v\\d+\\./"
 notifications:
   email: false
   irc:
