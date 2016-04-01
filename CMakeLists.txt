@@ -11,4 +11,4 @@ include_directories(libdwgx)
 add_subdirectory(libdwgx)
 add_subdirectory(gtest)
 
-target_link_libraries(libdwgx_run libdwgx)
+target_link_libraries(libdwgx_run libdwgx_core)
