@@ -8,9 +8,10 @@ os:
 before_install:
 - echo $LANG
 - echo $LC_ALL
-script: ./cmake
+script: cmake CMakeLists.txt
 after_success:
-- if [ $TRAVIS_BRANCH == $TRAVIS_TAG ]; then ./scripts/deploy.sh release github website triggers; fi
+- cd gtest/tests
+- run_libdwgx_tests
 branches:
   only:
   - master
