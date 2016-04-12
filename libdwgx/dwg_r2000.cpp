@@ -1,4 +1,7 @@
 #include "dwg_r2000.h"
+#include "dwg_objecttypes.h"
+
+#include <algorithm>
 
 int DWGFileR2000::ReadHeader()
 {
@@ -114,13 +117,13 @@ int DWGFileR2000::ReadClassesSection()
     for ( int i = 0; i < custom_classes.size(); ++i )
     {
         std::cout << "/////// CLASS INFO ////////" << std::endl;
-        std::cout << "CLASSNUM: " << custom_classes[i].CLASSNUM << std::endl;
-        std::cout << "VERSION: " << custom_classes[i].VERSION << std::endl;
-        std::cout << "APPNAME: " << custom_classes[i].APPNAME << std::endl;
-        std::cout << "C++CLASSNAME: " << custom_classes[i].CPLUSPLUSCLASSNAME << std::endl;
-        std::cout << "CLASSDXFNAME: " << custom_classes[i].CLASSDXFNAME << std::endl;
-        std::cout << "WASAZOMBIE: " << custom_classes[i].WASAZOMBIE << std::endl;
-        std::cout << "ITEMCLASSID: " << std::hex << custom_classes[i].ITEMCLASSID << std::dec  << std::endl << std::endl;
+        std::cout << "dClassNum: " << custom_classes[i].dClassNum << std::endl;
+        std::cout << "VERSION: " << custom_classes[i].dVersion << std::endl;
+        std::cout << "APPNAME: " << custom_classes[i].sAppName << std::endl;
+        std::cout << "C++CLASSNAME: " << custom_classes[i].sCppClassName << std::endl;
+        std::cout << "CLASSDXFNAME: " << custom_classes[i].sDXFClassName << std::endl;
+        std::cout << "WASAZOMBIE: " << custom_classes[i].bWasAZombie << std::endl;
+        std::cout << "ITEMCLASSID: " << std::hex << custom_classes[i].dItemClassID << std::dec  << std::endl << std::endl;
     }
 
     fDWG.read ( pabyBuf, 2 ); // CLASSES CRC!.
@@ -147,13 +150,13 @@ DWG2000_CLASS DWGFileR2000::ReadClass ( const char * input_array, size_t& bitOff
 {
     DWG2000_CLASS outputResult;
 
-    outputResult.CLASSNUM           = ReadBITSHORT ( input_array, bitOffsetFromStart );
-    outputResult.VERSION            = ReadBITSHORT ( input_array, bitOffsetFromStart );
-    outputResult.APPNAME            = ReadTV ( input_array, bitOffsetFromStart );
-    outputResult.CPLUSPLUSCLASSNAME = ReadTV ( input_array, bitOffsetFromStart );
-    outputResult.CLASSDXFNAME       = ReadTV ( input_array, bitOffsetFromStart );
-    outputResult.WASAZOMBIE         = ReadBIT ( input_array, bitOffsetFromStart );
-    outputResult.ITEMCLASSID        = ReadBITSHORT ( input_array, bitOffsetFromStart );
+    outputResult.dClassNum           = ReadBITSHORT ( input_array, bitOffsetFromStart );
+    outputResult.dVersion            = ReadBITSHORT ( input_array, bitOffsetFromStart );
+    outputResult.sAppName            = ReadTV ( input_array, bitOffsetFromStart );
+    outputResult.sCppClassName = ReadTV ( input_array, bitOffsetFromStart );
+    outputResult.sDXFClassName       = ReadTV ( input_array, bitOffsetFromStart );
+    outputResult.bWasAZombie         = ReadBIT ( input_array, bitOffsetFromStart );
+    outputResult.dItemClassID        = ReadBITSHORT ( input_array, bitOffsetFromStart );
 
     return outputResult;
 }
@@ -178,7 +181,7 @@ int DWGFileR2000::ReadObjectMap()
         pabySectionContent = new char[section_size];
         fDWG.read ( pabySectionContent, section_size );
 
-        while ( ( bitOffsetFromStart / 8 )  < section_size )
+        while ( ( bitOffsetFromStart / 8 ) < section_size )
         {
             ObjHandleOffset tmp;
             tmp.first = ReadMCHAR ( pabySectionContent, bitOffsetFromStart );
@@ -193,10 +196,30 @@ int DWGFileR2000::ReadObjectMap()
     // Rebuild object map so it will store absolute file offset, instead of offset from previous object handle.
     for ( size_t i = 1; i < object_map.size(); ++i )
     {
-        object_map[i].second += object_map[i-1].second;
+        object_map[ i ].second += object_map[ i - 1 ].second;
     }
 
-    std::cout << "OBJECTS STORED: " << object_map.size() << std::endl;
+    // Build geometries map from objectmap.
+    for(size_t i = 0; i < object_map.size(); ++i)
+    {
+        bitOffsetFromStart = 0;
+        pabySectionContent = new char[100];
+        fDWG.seekg( object_map[i].second, std::ios_base::seekdir::beg );
+        fDWG.read( pabySectionContent, 100 );
+
+        DWG2000_CED ced;
+        ced.dLength = ReadMSHORT ( pabySectionContent, bitOffsetFromStart );
+        ced.dType   = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+
+        if (std::find( DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end(), ced.dType )
+                    != DWG_GEOMETRIC_OBJECT_TYPES.end() )
+        {
+            std::cout << "GEOMETRY TYPE: " << DWG_OBJECT_NAMES.at(ced.dType) << std::endl;
+            geometries_map.push_back( object_map[i] );
+        }
+    }
+
+    delete [] pabySectionContent;
 
     return 0;
 }
@@ -208,7 +231,78 @@ int DWGFileR2000::ReadObject( size_t index )
     fDWG.seekg ( object_map[index].second );
     fDWG.read ( pabySectionContent, 100 );
 
-    std::cout << "MODULAR SHORT (LENGTH): " << ReadMSHORT ( pabySectionContent, bitOffsetFromStart ) << std::endl;
-    std::cout << "BITSHORT (TYPE): " << ReadBITSHORT ( pabySectionContent, bitOffsetFromStart ) << std::endl;
-    std::cout << "OBJ SIZE (BITS): " << ReadRAWLONG ( pabySectionContent, bitOffsetFromStart ) << std::endl;
+    DWG2000_CED ced;
+    ced.dLength         = ReadMSHORT ( pabySectionContent, bitOffsetFromStart );
+    ced.dType           = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+    ced.dObjSizeInBits  = ReadRAWLONG ( pabySectionContent, bitOffsetFromStart );
+    ced.hHandle         = ReadHANDLE ( pabySectionContent, bitOffsetFromStart );
+    ced.dNumReactors    = ReadBITLONG ( pabySectionContent, bitOffsetFromStart );
+
+    delete [] pabySectionContent;
+}
+
+int DWGFileR2000::ReadGeometry( size_t index )
+{
+    char * pabySectionContent = new char[100];
+    size_t bitOffsetFromStart = 0;
+    fDWG.seekg ( geometries_map[index].second );
+    fDWG.read ( pabySectionContent, 100 );
+
+    DWG2000_CED ced;
+    ced.dLength         = ReadMSHORT ( pabySectionContent, bitOffsetFromStart );
+    ced.dType           = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+    ced.dObjSizeInBits  = ReadRAWLONG ( pabySectionContent, bitOffsetFromStart );
+    ced.hHandle         = ReadHANDLE ( pabySectionContent, bitOffsetFromStart );
+    // TODO: EED is skipped, but it can be meaningful.
+    ced.dEEDSize        = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+    bitOffsetFromStart += ced.dEEDSize * 8; // skip EED size bytes.
+
+    // TODO: Proxy Entity Graphics also skipped for now. If there is something
+    // (ced.bGraphicPresentFlag is true), than it wont work properly at all.
+    ced.bGraphicPresentFlag = ReadBIT ( pabySectionContent, bitOffsetFromStart );
+
+    ced.dEntMode        = Read2B ( pabySectionContent, bitOffsetFromStart );
+    ced.dNumReactors    = ReadBITLONG ( pabySectionContent, bitOffsetFromStart );
+    ced.bNoLinks        = ReadBIT ( pabySectionContent, bitOffsetFromStart );
+    ced.dCMColorIndex   = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+    ced.dfLtypeScale    = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+    ced.ltype_flags     = Read2B ( pabySectionContent, bitOffsetFromStart );
+    ced.plotstyle_flags = Read2B ( pabySectionContent, bitOffsetFromStart );
+    ced.dInvisibility   = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+    ced.cLineWeight     = ReadCHAR ( pabySectionContent, bitOffsetFromStart );
+
+    // READ DATA DEPENDING ON ced.dType
+    switch ( ced.dType )
+    {
+        case DWG_OBJECT_CIRCLE:
+        {
+            double centerx, centery, centerz;
+            double rad, thickness;
+            char   extrusion;
+            centerx = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            centery = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            centerz = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            rad     = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            thickness = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            break;
+        }
+        case DWG_OBJECT_POINT:
+        {
+            double centerx, centery, centerz;
+            double thickness;
+            char   extrusion;
+            double x_axis_angle;
+            centerx = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            centery = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            centerz = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            thickness = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+        }
+    }
+
+    delete [] pabySectionContent;
+}
+
+int DWGFileR2000::GetGeometriesCount ()
+{
+    return geometries_map.size();
 }

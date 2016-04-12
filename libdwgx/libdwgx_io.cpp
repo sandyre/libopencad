@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <vector>
+#include <iostream>
 
 #include "libdwgx_datatypes.h"
 
@@ -65,9 +66,44 @@ char Read3B ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
+char Read4B ( const char * input_array, size_t& bitOffsetFromStart )
+{
+    unsigned char result = 0;
+    size_t byteOffset      = bitOffsetFromStart / 8;
+    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+
+    const char * p4BByte = input_array + byteOffset;
+    unsigned char a4BBytes[2];
+    memcpy ( a4BBytes, p4BByte, 2 );
+
+    switch ( bitOffsetInByte )
+    {
+        case 5:
+            result  = ( a4BBytes[0] & 0b00000111 ) << 1;
+            result |= ( a4BBytes[1] & 0b10000000 ) >> 7;
+        case 6:
+            result  = ( a4BBytes[0] & 0b00000011 ) << 1;
+            result |= ( a4BBytes[1] & 0b11000000 ) >> 6;
+            break;
+
+        case 7:
+            result  = ( a4BBytes[0] & 0b00000001 ) << 3;
+            result |= ( a4BBytes[1] & 0b11100000 ) >> 5;
+            break;
+
+        default:
+            result  = ( a4BBytes[0] >> ( 4 - bitOffsetInByte ) );
+            result &= 0b00001111;
+            break;
+    }
+
+    bitOffsetFromStart += 4;
+
+    return result;
+}
+
 short ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart )
 {
-    short  result = 0;
     size_t byteOffset      = bitOffsetFromStart / 8;
     size_t bitOffsetInByte = bitOffsetFromStart % 8;
 
@@ -81,23 +117,23 @@ short ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart )
             break;
 
         default:
-            aShortBytes[0]  = ( aShortBytes[0] << bitOffsetInByte );
+            aShortBytes[0]  <<= bitOffsetInByte;
             aShortBytes[0] |= ( aShortBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aShortBytes[1]  = ( aShortBytes[1] >> bitOffsetInByte );
+            aShortBytes[1]  <<= bitOffsetInByte;
             aShortBytes[1] |= ( aShortBytes[2] >> ( 8 - bitOffsetInByte ) );
             break;
     }
 
-    memcpy ( &result, aShortBytes, 2 );
+    void * ptr = aShortBytes;
+    short * result = static_cast<short *>(ptr);
 
     bitOffsetFromStart += 16;
 
-    return result;
+    return * result;
 }
 
 int ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
 {
-    int result = 0;
     size_t byteOffset = bitOffsetFromStart / 8;
     size_t bitOffsetInByte = bitOffsetFromStart % 8;
 
@@ -123,11 +159,12 @@ int ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
             break;
     }
 
-    memcpy ( &result, aLongBytes, 4 );
+    void * ptr = aLongBytes;
+    int * result = static_cast<int *>(ptr);
 
     bitOffsetFromStart += 32;
 
-    return result;
+    return * result;
 }
 
 bool ReadBIT ( const char * input_array, size_t& bitOffsetFromStart )
@@ -402,4 +439,79 @@ double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
     }
 
     return 0.0f;
+}
+
+DWG_HANDLE ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart )
+{
+    DWG_HANDLE result;
+
+    result.code = Read4B ( input_array, bitOffsetFromStart );
+    result.counter = Read4B ( input_array, bitOffsetFromStart );
+
+    result.handle_or_offset = new char[result.counter];
+    for ( size_t i = 0; i < result.counter; ++i )
+    {
+        result.handle_or_offset[ i ] = ReadCHAR (input_array, bitOffsetFromStart);
+    }
+
+    return result;
+}
+
+long ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart )
+{
+    char   BITCODE = Read2B ( input_array, bitOffsetFromStart );
+
+    size_t byteOffset      = bitOffsetFromStart / 8;
+    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+
+    const char * pLongFirstByte = input_array + byteOffset;
+    unsigned char aLongBytes[5]; // maximum bytes a single short can take.
+    memcpy ( aLongBytes, pLongFirstByte, 5 );
+
+    switch( BITCODE )
+    {
+        case BITLONG_NORMAL:
+        {
+            aLongBytes[0]  <<= bitOffsetInByte;
+            aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - bitOffsetInByte ) );
+            aLongBytes[1]  <<= bitOffsetInByte;
+            aLongBytes[1] |= ( aLongBytes[2] >> ( 8 - bitOffsetInByte ) );
+            aLongBytes[2]  <<= bitOffsetInByte;
+            aLongBytes[2] |= ( aLongBytes[3] >> ( 8 - bitOffsetInByte ) );
+            aLongBytes[3]  <<= bitOffsetInByte;
+            aLongBytes[3] |= ( aLongBytes[4] >> ( 8 - bitOffsetInByte ) );
+
+            bitOffsetFromStart += 32;
+
+            void * ptr = aLongBytes;
+            long * result = static_cast < long * > ( ptr );
+
+            return * result;
+        }
+
+        case BITLONG_UNSIGNED_CHAR:
+        {
+            aLongBytes[0]  = ( aLongBytes[0] << bitOffsetInByte );
+            aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - bitOffsetInByte) );
+
+            bitOffsetFromStart += 8;
+
+            return ( unsigned char ) aLongBytes[0];
+        }
+
+        case BITLONG_ZERO_VALUE:
+        {
+            bitOffsetFromStart += 0;
+            return ( short ) 0;
+        }
+
+        case BITLONG_NOT_USED:
+        {
+            std::cout << "THAT SHOULD NEVER HAPPENED! BUG. (in file, or reader, or both.) ReadBITLONG(), case BITLONG_NOT_USED" << std::endl;
+            bitOffsetFromStart += 0;
+            return ( short ) 0;
+        }
+    }
+
+    return -1;
 }

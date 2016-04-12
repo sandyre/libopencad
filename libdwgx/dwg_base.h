@@ -4,6 +4,8 @@
 #include <fstream>
 #include <string>
 
+#include "libdwgx_datatypes.h"
+
 class DWGFile
 {
 public:
@@ -14,6 +16,8 @@ public:
     virtual int ReadClassesSection() { return 0; };
     virtual int ReadObjectMap() { return 0;};
     virtual int ReadObject( size_t index ) { return 0; }
+    virtual int GetGeometriesCount() { return 0; }
+    virtual int ReadGeometry( size_t index ) { return 0; }
 
     std::ifstream fDWG;
 protected:

@@ -15,13 +15,37 @@ using std::pair;
 
 struct DWG2000_CLASS
 {
-    short CLASSNUM; // BITSHORT
-    short VERSION; // BITSHORT
-    string APPNAME; // TV
-    string CPLUSPLUSCLASSNAME; // TV
-    string CLASSDXFNAME; // TV
-    bool WASAZOMBIE; // BIT
-    short ITEMCLASSID; // BITSHORT
+    int16_t     dClassNum; // BITSHORT
+    int16_t     dVersion; // BITSHORT
+    string      sAppName; // TV
+    string      sCppClassName; // TV
+    string      sDXFClassName; // TV
+    bool        bWasAZombie; // BIT
+    int16_t     dItemClassID; // BITSHORT
+};
+
+struct DWG2000_CED
+{
+    int64_t     dLength;
+    int16_t     dType;
+    int32_t     dObjSizeInBits;
+    DWG_HANDLE  hHandle;
+    int16_t     dEEDSize;
+    DWG_EED     eEED;
+    bool        bGraphicPresentFlag;
+
+    int8_t      dEntMode;
+    int32_t     dNumReactors;
+
+    bool        bNoLinks;
+    int16_t     dCMColorIndex;
+    double      dfLtypeScale;
+
+    int8_t      ltype_flags;
+    int8_t      plotstyle_flags;
+
+    int16_t     dInvisibility;
+    int8_t      cLineWeight;
 };
 
 struct DWG2000_HEADER_VARIABLES
@@ -135,9 +159,12 @@ public:
     int ReadClassesSection() override;
     int ReadObjectMap() override;
     int ReadObject( size_t index ) override;
+    int GetGeometriesCount() override;
+    int ReadGeometry( size_t index ) override;
 private:
     DWG2000_CLASS ReadClass( const char * input_array, size_t& bitOffset );
 
+    vector < ObjHandleOffset > geometries_map;
     vector < ObjHandleOffset > object_map;
     vector < DWG2000_CLASS > custom_classes;
     DWGR2000_FILE_HEADER fileHeader;
