@@ -18,6 +18,11 @@
 #define BITDOUBLE_ZERO_VALUE    0x2
 #define BITDOUBLE_NOT_USED      0x3
 
+#define BITDOUBLEWD_DEFAULT_VALUE  0x0
+#define BITDOUBLEWD_4BYTES_PATCHED 0x1
+#define BITDOUBLEWD_6BYTES_PATCHED 0x2
+#define BITDOUBLEWD_FULL_RD        0x3
+
 // Section-Locator Record
 struct SLRecord
 {

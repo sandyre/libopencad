@@ -8,6 +8,7 @@
 long long   ReadRAWLONGLONG ( const char * input_array, size_t& bitOffsetFromStart );
 int         ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart );
 short       ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart );
+double      ReadRAWDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
 char        Read2B ( const char * input_array, size_t& bitOffsetFromStart );
 char        Read3B ( const char * input_array, size_t& bitOffsetFromStart );
 char        Read4B ( const char * input_array, size_t& bitOffsetFromStart );
@@ -18,6 +19,7 @@ char        ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart );
 short       ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart );
 long        ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart );
 double      ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
+double      ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart, double defaultvalue );
 long long   ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
 long long   ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart );
 std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart );

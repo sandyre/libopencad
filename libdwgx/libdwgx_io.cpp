@@ -130,6 +130,49 @@ short ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart )
     return * result;
 }
 
+double ReadRAWDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
+{
+    size_t byteOffset = bitOffsetFromStart / 8;
+    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+
+    const char * pDoubleFirstByte = input_array + byteOffset;
+
+    unsigned char aDoubleBytes[9];
+    memcpy ( aDoubleBytes, pDoubleFirstByte, 9 );
+
+    switch ( bitOffsetInByte )
+    {
+        case 0:
+            break;
+
+        default:
+            aDoubleBytes[0]  <<= bitOffsetInByte;
+            aDoubleBytes[0] |= ( aDoubleBytes[1] >> ( 8 - bitOffsetInByte ) );
+            aDoubleBytes[1]  <<= bitOffsetInByte;
+            aDoubleBytes[1] |= ( aDoubleBytes[2] >> ( 8 - bitOffsetInByte ) );
+            aDoubleBytes[2]  <<= bitOffsetInByte;
+            aDoubleBytes[2] |= ( aDoubleBytes[3] >> ( 8 - bitOffsetInByte ) );
+            aDoubleBytes[3]  <<= bitOffsetInByte;
+            aDoubleBytes[3] |= ( aDoubleBytes[4] >> ( 8 - bitOffsetInByte ) );
+            aDoubleBytes[4]  <<= bitOffsetInByte;
+            aDoubleBytes[4] |= ( aDoubleBytes[5] >> ( 8 - bitOffsetInByte ) );
+            aDoubleBytes[5]  <<= bitOffsetInByte;
+            aDoubleBytes[5] |= ( aDoubleBytes[6] >> ( 8 - bitOffsetInByte ) );
+            aDoubleBytes[6]  <<= bitOffsetInByte;
+            aDoubleBytes[6] |= ( aDoubleBytes[7] >> ( 8 - bitOffsetInByte ) );
+            aDoubleBytes[7]  <<= bitOffsetInByte;
+            aDoubleBytes[7] |= ( aDoubleBytes[8] >> ( 8 - bitOffsetInByte ) );
+            break;
+    }
+
+    void * ptr   = aDoubleBytes;
+    double * result = static_cast<double *>(ptr);
+
+    bitOffsetFromStart += 64;
+
+    return * result;
+}
+
 int ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
 {
     size_t byteOffset = bitOffsetFromStart / 8;
@@ -137,7 +180,7 @@ int ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
 
     const char * pLongFirstByte = input_array + byteOffset;
 
-    char aLongBytes[5];
+    unsigned char aLongBytes[5];
     memcpy ( aLongBytes, pLongFirstByte, 5 );
 
     switch ( bitOffsetInByte )
@@ -148,11 +191,11 @@ int ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
         default:
             aLongBytes[0]   = ( aLongBytes[0] << bitOffsetInByte );
             aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[ 1 ] = ( aLongBytes[ 1 ] << bitOffsetInByte );
+            aLongBytes[1] = ( aLongBytes[ 1 ] << bitOffsetInByte );
             aLongBytes[1] |= ( aLongBytes[2] >> ( 8 - bitOffsetInByte ) );
             aLongBytes[2]   = ( aLongBytes[2] << bitOffsetInByte );
             aLongBytes[2] |= ( aLongBytes[3] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[ 3 ] = ( aLongBytes[ 3 ] << bitOffsetInByte );
+            aLongBytes[3] = ( aLongBytes[ 3 ] << bitOffsetInByte );
             aLongBytes[3] |= ( aLongBytes[4] >> ( 8 - bitOffsetInByte ) );
             break;
     }
@@ -389,21 +432,21 @@ double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
     {
         case BITDOUBLE_NORMAL:
         {
-            aDoubleBytes[ 0 ] <<= bitOffsetInByte;
+            aDoubleBytes[0] <<= bitOffsetInByte;
             aDoubleBytes[0] |= ( aDoubleBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[ 1 ] <<= bitOffsetInByte;
+            aDoubleBytes[1] <<= bitOffsetInByte;
             aDoubleBytes[1] |= ( aDoubleBytes[2] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[ 2 ] <<= bitOffsetInByte;
+            aDoubleBytes[2] <<= bitOffsetInByte;
             aDoubleBytes[2] |= ( aDoubleBytes[3] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[ 3 ] <<= bitOffsetInByte;
+            aDoubleBytes[3] <<= bitOffsetInByte;
             aDoubleBytes[3] |= ( aDoubleBytes[4] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[ 4 ] <<= bitOffsetInByte;
+            aDoubleBytes[4] <<= bitOffsetInByte;
             aDoubleBytes[4] |= ( aDoubleBytes[5] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[ 5 ] <<= bitOffsetInByte;
+            aDoubleBytes[5] <<= bitOffsetInByte;
             aDoubleBytes[5] |= ( aDoubleBytes[6] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[ 6 ] <<= bitOffsetInByte;
+            aDoubleBytes[6] <<= bitOffsetInByte;
             aDoubleBytes[6] |= ( aDoubleBytes[7] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[ 7 ] <<= bitOffsetInByte;
+            aDoubleBytes[7] <<= bitOffsetInByte;
             aDoubleBytes[7] |= ( aDoubleBytes[8] >> ( 8 - bitOffsetInByte ) );
 
             bitOffsetFromStart += 64;
@@ -433,6 +476,69 @@ double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
             bitOffsetFromStart += 0;
 
             return 0.0f;
+        }
+    }
+
+    return 0.0f;
+}
+
+double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart, double defaultvalue )
+{
+    unsigned char aDefaultValueBytes[8];
+    memcpy ( aDefaultValueBytes, &defaultvalue, 8 );
+
+    char BITCODE = Read2B ( input_array, bitOffsetFromStart );
+
+    switch ( BITCODE )
+    {
+        case BITDOUBLEWD_DEFAULT_VALUE:
+        {
+            return defaultvalue;
+        }
+
+        case BITDOUBLEWD_4BYTES_PATCHED:
+        {
+            aDefaultValueBytes[0] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[1] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[2] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[3] = ReadCHAR ( input_array, bitOffsetFromStart );
+
+            void * ptr      = aDefaultValueBytes;
+            double * result = static_cast< double *> ( ptr );
+
+            return * result;
+        }
+
+        case BITDOUBLEWD_6BYTES_PATCHED:
+        {
+            aDefaultValueBytes[0] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[1] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[2] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[3] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[4] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[5] = ReadCHAR ( input_array, bitOffsetFromStart );
+
+            void * ptr      = aDefaultValueBytes;
+            double * result = static_cast< double *> ( ptr );
+
+            return * result;
+        }
+
+        case BITDOUBLEWD_FULL_RD:
+        {
+            aDefaultValueBytes[0] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[1] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[2] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[3] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[4] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[5] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[6] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[7] = ReadCHAR ( input_array, bitOffsetFromStart );
+
+            void * ptr      = aDefaultValueBytes;
+            double * result = static_cast< double *> ( ptr );
+
+            return * result;
         }
     }
 
