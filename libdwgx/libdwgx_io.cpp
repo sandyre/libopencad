@@ -365,6 +365,19 @@ long long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
             aMCharBytes[2] |= ( tmp2 << 7 );
             break;
         }
+        case 4:
+        {
+            unsigned char tmp1 = aMCharBytes[0] & 0b00000111;
+            unsigned char tmp2 = aMCharBytes[1] & 0b00000011;
+            unsigned char tmp3 = aMCharBytes[2] & 0b00000001;
+            aMCharBytes[0] = aMCharBytes[0] >> 3;
+            aMCharBytes[1] = aMCharBytes[1] >> 2;
+            aMCharBytes[2] = aMCharBytes[2] >> 1;
+            aMCharBytes[1] |= ( tmp1 << 5 );
+            aMCharBytes[2] |= ( tmp2 << 6 );
+            aMCharBytes[3] |= ( tmp3 << 7 );
+            break;
+        }
     }
 
     std::reverse ( aMCharBytes, aMCharBytes + MCharBytesCount ); // MSB to LSB
@@ -405,10 +418,10 @@ long long ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart )
     }
     else if ( MShortBytesCount == 4 )
     {
-        aMShortBytes[2] |= ( aMShortBytes[ 1 ] << 7 );
-        aMShortBytes[1]  = ( aMShortBytes[ 1 ] >> 1 );
-        aMShortBytes[1] |= ( aMShortBytes[ 0 ] << 7 );
-        aMShortBytes[0]  = ( aMShortBytes[ 0 ] >> 1 );
+        aMShortBytes[2] |= ( aMShortBytes[1] << 7 );
+        aMShortBytes[1]  = ( aMShortBytes[1] >> 1 );
+        aMShortBytes[1] |= ( aMShortBytes[0] << 7 );
+        aMShortBytes[0]  = ( aMShortBytes[0] >> 1 );
 
         std::reverse (aMShortBytes, aMShortBytes + MShortBytesCount); // MSB to LSB
         memcpy (& result, aMShortBytes, 4);
