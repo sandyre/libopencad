@@ -14,11 +14,13 @@ int main(int argc, char *argv[])
         if ( geom->sGeometryType == libdwgx::DWGGeometries::DWGGeometryType::CIRCLE )
         {
             auto geom1 = ( libdwgx::DWGGeometries::Circle * ) geom;
+            geom1->printInfo ();
             int b = 0;
         }
         else if ( geom->sGeometryType == libdwgx::DWGGeometries::DWGGeometryType::POINT )
         {
             auto geom1 = ( libdwgx::DWGGeometries::Point * ) geom;
+            geom1->printInfo ();
             int b = 0;
         }
         else if ( geom->sGeometryType == libdwgx::DWGGeometries::DWGGeometryType::ELLIPSE)
@@ -29,6 +31,7 @@ int main(int argc, char *argv[])
         else if ( geom->sGeometryType == libdwgx::DWGGeometries::DWGGeometryType::LINE )
         {
             auto geom1 = ( libdwgx::DWGGeometries::Line * ) geom;
+            geom1->printInfo ();
             int c = 0;
         }
 

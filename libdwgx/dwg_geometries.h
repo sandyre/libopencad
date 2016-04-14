@@ -2,6 +2,7 @@
 #define LIBDWGX_DWG_GEOMETRIES_H
 
 #include <string>
+#include <iostream>
 
 namespace libdwgx
 {
@@ -10,8 +11,11 @@ namespace DWGGeometries
 
 enum DWGGeometryType
 {
-    POINT, CIRCLE, POLYLINE, ELLIPSE, LINE
+    POINT, CIRCLE, LWPOLYLINE, ELLIPSE, LINE,
+    POLYLINE3D
 };
+
+// TODO: for every geometry type, printinfo() should be replaced with overloaded << operator.
 
 class Geometry
 {
@@ -34,6 +38,15 @@ public:
         sGeometryType = DWGGeometryType::POINT;
     }
 
+    void printInfo()
+    {
+        std::cout << "Point\nCoords:\t" << dfPointX << " " << dfPointY << " "
+               << dfPointZ << "\nExtrusion:\t " << dfExtrusionX << " "
+               << dfExtrusionY << " " << dfExtrusionZ
+               << "\nAxis angle:\t" << dfXAxisAng
+               << "\nThickness:\t" << dfThickness << std::endl;
+    }
+
     double dfPointX;
     double dfPointY;
     double dfPointZ;
@@ -46,9 +59,26 @@ public:
 class Line : public Geometry
 {
 public:
-    Line()
+    Line() : dfStartX(0.0f),
+             dfStartY(0.0f),
+             dfStartZ(0.0f),
+             dfEndX(0.0f),
+             dfEndY(0.0f),
+             dfEndZ(0.0f),
+             dfExtrusionX(0.0f),
+             dfExtrusionY(0.0f),
+             dfExtrusionZ(0.0f)
     {
         sGeometryType = DWGGeometryType::LINE;
+    }
+
+    void printInfo()
+    {
+        std::cout << "\nLine\nCoords start: \t" << dfStartX << " " << dfStartY << " "
+        << dfStartZ << "\nCoords end: \t" << dfEndX << " " << dfEndY << " " << dfEndZ
+        << "\nExtrusion: \t " << dfExtrusionX << " "
+        << dfExtrusionY << " " << dfExtrusionZ
+        << "\nThickness: \t" << dfThickness << std::endl;
     }
 
     double dfStartX;
@@ -62,12 +92,21 @@ public:
     double dfExtrusionZ;
 };
 
-class Polyline : public Geometry
+class LWPolyline : public Geometry
 {
 public:
-    Polyline ()
+    LWPolyline ()
     {
+        sGeometryType = DWGGeometryType::LWPOLYLINE;
+    }
+};
 
+class Polyline3D : public Geometry
+{
+public:
+    Polyline3D()
+    {
+        sGeometryType = DWGGeometryType::POLYLINE3D;
     }
 };
 
@@ -83,6 +122,15 @@ public:
                 dfRadius (0.0f)
     {
         sGeometryType = DWGGeometryType::CIRCLE;
+    }
+
+    void printInfo()
+    {
+        std::cout << "\nCircle\nCoords: \t" << dfCenterX << " " << dfCenterY << " "
+        << dfCenterY << "\nExtrusion: \t " << dfExtrusionX << " "
+        << dfExtrusionY << " " << dfExtrusionZ
+        << "\nRadius:\t" << dfRadius
+        << "\nThickness:\t" << dfThickness << std::endl;
     }
 
     double dfCenterX;

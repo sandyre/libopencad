@@ -215,7 +215,7 @@ bool ReadBIT ( const char * input_array, size_t& bitOffsetFromStart )
 
     const char * pBoolByte = input_array + byteOffset;
 
-    char result = ( pBoolByte[0] >> ( 7 - bitOffsetInByte ) ) & 0b00000001;
+    unsigned char result = ( pBoolByte[0] >> ( 7 - bitOffsetInByte ) ) & 0b00000001;
 
     ++bitOffsetFromStart;
 
@@ -511,12 +511,12 @@ double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart, d
 
         case BITDOUBLEWD_6BYTES_PATCHED:
         {
+            aDefaultValueBytes[4] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[5] = ReadCHAR ( input_array, bitOffsetFromStart );
             aDefaultValueBytes[0] = ReadCHAR ( input_array, bitOffsetFromStart );
             aDefaultValueBytes[1] = ReadCHAR ( input_array, bitOffsetFromStart );
             aDefaultValueBytes[2] = ReadCHAR ( input_array, bitOffsetFromStart );
             aDefaultValueBytes[3] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[4] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[5] = ReadCHAR ( input_array, bitOffsetFromStart );
 
             void * ptr      = aDefaultValueBytes;
             double * result = static_cast< double *> ( ptr );
