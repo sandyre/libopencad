@@ -20,7 +20,7 @@
     <header>
       <div class="inner">
         <h1>Libdwgx</h1>
-        <h2>OpenSource lib under X/MIT license for everyday use.</h2>
+        <h2>OpenSource lib under X/MIT license to work with DWG files.</h2>
         <a href="https://github.com/sandyre/libdwgx" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
@@ -31,7 +31,51 @@
           <h1>
 <a id="libdwgx" class="anchor" href="#libdwgx" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>libdwgx</h1>
 
-<p>OpenSource lib under X/MIT license for everyday use.</p>
+<p>OpenSource library under X11/MIT license for everyday use. Under development, but some of basic functionality is already available.</p>
+
+<p>All help will be very good for project. A lot of TODO's in code, so you can fix something you want.</p>
+
+<h2>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API</h2>
+
+<p>libdwgx typical usage pipeline is shown below:
+Open .DWG file:</p>
+
+<div class="highlight highlight-source-c++"><pre>DWGFile * opendwg = libdwgx::InitializeDWG(<span class="pl-s"><span class="pl-pds">"</span>/path/to/example.dwg<span class="pl-pds">"</span></span>);
+
+opendwg-&gt;<span class="pl-en">ReadHeader</span>();
+opendwg-&gt;<span class="pl-en">ReadObjectMap</span>();</pre></div>
+
+<p>From now on, you can access geometries like this:</p>
+
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> geometries_count = opendwg-&gt;<span class="pl-en">GetGeometriesCount</span>();
+<span class="pl-k">for</span>(<span class="pl-k">auto</span> i = <span class="pl-c1">0</span>; i &lt; geometries_count; ++i)
+{
+    libdwgx::DWGGeometries::Geometry * geom = dwgfile-&gt;<span class="pl-c1">ReadGeometry</span> (i);
+    <span class="pl-c">// now, geom-&gt;sGeometryType stores a type of returned geometry. Then,</span>
+    <span class="pl-c">// you have to cast it to this class, eg.</span>
+    <span class="pl-k">if</span> ( geom-&gt;<span class="pl-smi">sGeometryType</span> == libdwgx::DWGGeometries::DWGGeometryType::CIRCLE )
+    {
+        libdwgx::DWGGeometries::Circle * circle = geom;
+        <span class="pl-c">// There you go. Now you can get all the data you want, eg.</span>
+        std::cout &lt;&lt; circle-&gt;dfCenterX;
+        std::cout &lt;&lt; circle-&gt;dfCenterY;
+        std::cout &lt;&lt; circle-&gt;dfCenterZ;
+        std::cout &lt;&lt; circle-&gt;dfRadius;
+    }
+}</pre></div>
+
+<p>Now supported DWG version are:</p>
+
+<ol>
+<li>R2000 (read-only). Its under development still, and a lot of geometries are missed, but it will all come with time.</li>
+<li>Next up on the list: R2004.</li>
+</ol>
+
+<h2>
+<a id="build-status" class="anchor" href="#build-status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build status</h2>
+
+<p>Linux: <a href="https://travis-ci.org/sandyre/libdwgx"><img src="https://travis-ci.org/sandyre/libdwgx.svg?branch=master" alt="Build Status"></a></p>
         </section>
 
         <aside id="sidebar">
