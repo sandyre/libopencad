@@ -387,6 +387,58 @@ Geometry * DWGFileR2000::ReadGeometry ( size_t index )
 
             break;
         }
+
+        case DWG_OBJECT_LWPOLYLINE:
+        {
+            LWPolyline * polyline = new LWPolyline();
+            int32_t nVertixesCount = 0, nBulges = 0;
+            int16_t data_flag = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+            if ( data_flag & 4 )
+                polyline->dfConstWidth = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            if ( data_flag & 8 )
+                polyline->dfElevation = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            if ( data_flag & 2 )
+                polyline->dfThickness = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            if ( data_flag & 1 )
+            {
+                polyline->dfExtrusionX = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+                polyline->dfExtrusionY = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+                polyline->dfExtrusionZ = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            }
+
+            nVertixesCount = ReadBITLONG ( pabySectionContent, bitOffsetFromStart );
+
+            if ( data_flag &  16 )
+            {
+                nBulges = ReadBITLONG ( pabySectionContent, bitOffsetFromStart );
+            }
+
+            // First of all, read first vertex.
+            Vertex2D vertex;
+            vertex.X = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            vertex.Y = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            polyline->vertexes.push_back ( vertex );
+
+            // All the others are not raw doubles; bitdoubles with default instead,
+            // where default is previous point coords.
+            for ( size_t i = 1; i < nVertixesCount; ++i )
+            {
+                vertex.X = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart,
+                                             polyline->vertexes[i-1].X );
+                vertex.Y = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart,
+                                             polyline->vertexes[i-1].Y );
+                polyline->vertexes.push_back ( vertex );
+            }
+
+            for ( size_t i = 0; i < nBulges; ++i )
+            {
+                double dfBulgeValue = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+                polyline->bulges.push_back ( dfBulgeValue );
+            }
+
+            readed_geometry = polyline;
+            break;
+        }
     }
 
     delete [] pabySectionContent;

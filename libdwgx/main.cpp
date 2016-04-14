@@ -34,6 +34,12 @@ int main(int argc, char *argv[])
             geom1->printInfo ();
             int c = 0;
         }
+        else if ( geom->sGeometryType == libdwgx::DWGGeometries::DWGGeometryType::LWPOLYLINE )
+        {
+            auto geom1 = ( libdwgx::DWGGeometries::LWPolyline * ) geom;
+            geom1->printInfo ();
+            int c = 0;
+        }
 
         int a = 0;
     }

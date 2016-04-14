@@ -611,7 +611,7 @@ long ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart )
 
         case BITLONG_NOT_USED:
         {
-            std::cout << "THAT SHOULD NEVER HAPPENED! BUG. (in file, or reader, or both.) ReadBITLONG(), case BITLONG_NOT_USED" << std::endl;
+            std::cerr << "THAT SHOULD NEVER HAPPENED! BUG. (in file, or reader, or both.) ReadBITLONG(), case BITLONG_NOT_USED" << std::endl;
             bitOffsetFromStart += 0;
             return ( short ) 0;
         }

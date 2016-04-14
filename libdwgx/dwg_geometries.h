@@ -15,6 +15,54 @@ enum DWGGeometryType
     POLYLINE3D
 };
 
+struct Vertex2D
+{
+    Vertex2D() : X(0.0f),
+                 Y(0.0f)
+    {
+    }
+
+    double X;
+    double Y;
+};
+
+struct Vertex3D
+{
+    Vertex3D() : X(0.0f),
+                 Y(0.0f),
+                 Z(0.0f)
+    {
+    }
+
+    double X;
+    double Y;
+    double Z;
+};
+
+struct Vector2D
+{
+    Vector2D() : X(0.0f),
+                 Y(0.0f)
+    {
+    }
+
+    double X;
+    double Y;
+};
+
+struct Vector3D
+{
+    Vector3D() : X(0.0f),
+                 Y(0.0f),
+                 Z(0.0f)
+    {
+    }
+
+    double X;
+    double Y;
+    double Z;
+};
+
 // TODO: for every geometry type, printinfo() should be replaced with overloaded << operator.
 
 class Geometry
@@ -95,10 +143,46 @@ public:
 class LWPolyline : public Geometry
 {
 public:
-    LWPolyline ()
+    LWPolyline () : dfConstWidth(0.0f),
+                    dfElevation(0.0f),
+                    dfExtrusionX(0.0f),
+                    dfExtrusionY(0.0f),
+                    dfExtrusionZ(0.0f)
     {
         sGeometryType = DWGGeometryType::LWPOLYLINE;
     }
+
+    void printInfo()
+    {
+        std::cout << "\nLWPolyline"
+                  << "\nConst width: " << dfConstWidth
+                  << "\nElevation: " << dfElevation
+                  << "\nExtrusion: " << dfExtrusionX << " "
+                  << dfExtrusionY << " " << dfExtrusionZ
+                  << "\nVertexes: " << std::endl;
+        for ( size_t i = 0; i < vertexes.size(); ++i )
+        {
+            std::cout << "#" << i << " X: \t " << vertexes[i].X
+                    << " Y: \t " << vertexes[i].Y << std::endl;
+        }
+
+        std::cout << "Bulges:\n";
+        for ( size_t i = 0; i < bulges.size(); ++i )
+        {
+            std::cout << "#" << i << " X: \t " << bulges[i] << std::endl;
+        }
+        std::cout << std::endl;
+    }
+
+    double dfConstWidth;
+    double dfElevation;
+    double dfExtrusionX;
+    double dfExtrusionY;
+    double dfExtrusionZ;
+    std::vector< Vertex2D > vertexes;
+    std::vector< double > bulges;
+    std::vector< int16_t > vertexes_id;
+    std::vector< std::pair< double, double > > widths; // start, end.
 };
 
 class Polyline3D : public Geometry
