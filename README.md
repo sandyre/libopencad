@@ -35,8 +35,9 @@ for(auto i = 0; i < geometries_count; ++i)
 ```
 
 Now supported DWG version are:
-1. R2000 (read-only). Its under development still, and a lot of geometries are missed, but it will all come with time.
 
+1. R2000 (read-only). Its under development still, and a lot of geometries are missed, but it will all come with time.
+2. Next up on the list: R2004.
 
 Build status
 ------------
