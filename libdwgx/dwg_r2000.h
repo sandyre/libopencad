@@ -48,6 +48,17 @@ struct DWG2000_CED
     int8_t      cLineWeight;
 };
 
+struct DWG2000_CEHD
+{
+    DWG_HANDLE hOwner;
+    DWG_HANDLE hReactors;
+    DWG_HANDLE hxdibobjhandle;
+    DWG_HANDLE hprev_entity, hnext_entity;
+    DWG_HANDLE hlayer;
+    DWG_HANDLE hltype;
+    DWG_HANDLE hplotstyle;
+};
+
 struct DWG2000_HEADER_VARIABLES
 {
     double Unknown1;
@@ -155,12 +166,17 @@ public:
     DWGFileR2000() {}
     ~DWGFileR2000() override {}
 
-    int ReadHeader() override;
-    int ReadClassesSection() override;
-    int ReadObjectMap() override;
-    int ReadObject( size_t index ) override;
-    int GetGeometriesCount() override;
-    int ReadGeometry( size_t index ) override;
+    int    ReadHeader () override;
+
+    int    ReadClassesSection () override;
+
+    int    ReadObjectMap () override;
+
+    int    ReadObject ( size_t index ) override;
+
+    size_t GetGeometriesCount () override;
+
+    libdwgx::DWGGeometries::Geometry *ReadGeometry ( size_t index ) override;
 private:
     DWG2000_CLASS ReadClass( const char * input_array, size_t& bitOffset );
 

@@ -8,7 +8,6 @@
 #define DWG_VERSION_R2007   "AC1021"
 #define DWG_VERSION_R2010   "AC1024"
 #define DWG_VERSION_R2013   "AC1027"
-#define DWG_VERSION_COUNT   7
 #define DWG_VERSION_SIZE    sizeof ( DWG_VERSION_R13 ) - 1
 
 #endif

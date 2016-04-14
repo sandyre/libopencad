@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "libdwgx_io.h"
+#include "libdwgx.h"
 
 /*                                                          */
 /*               ReadBITSHORT() tests packet.               */

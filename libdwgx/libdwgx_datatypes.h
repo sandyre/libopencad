@@ -18,6 +18,14 @@
 #define BITDOUBLE_ZERO_VALUE    0x2
 #define BITDOUBLE_NOT_USED      0x3
 
+// Section-Locator Record
+struct SLRecord
+{
+    char byRecordNumber;
+    int  dSeeker;
+    int  dSize;
+};
+
 struct DWG_HANDLE
 {
     char code = 0;

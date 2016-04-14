@@ -2,6 +2,7 @@
 #define __LIBDWGX_DWG_IO_H__
 
 #include <string>
+
 #include "libdwgx_datatypes.h"
 
 long long   ReadRAWLONGLONG ( const char * input_array, size_t& bitOffsetFromStart );

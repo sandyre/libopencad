@@ -1,7 +1,7 @@
 #include "dwg_r2000.h"
 #include "dwg_objecttypes.h"
 
-#include <algorithm>
+using namespace libdwgx::DWGGeometries;
 
 int DWGFileR2000::ReadHeader()
 {
@@ -13,22 +13,16 @@ int DWGFileR2000::ReadHeader()
     fDWG.seekg ( 7, std::ios_base::seek_dir::cur ); // meaningless data skipped.
     fDWG.read ( (char *) &dImageSeeker, 4 );
 
-#ifdef _LIBDWGX_DEBUG
     printf ( "Image seeker readed: %d\n", dImageSeeker );
-#endif
 
     fDWG.seekg ( 2, std::ios_base::seek_dir::cur );
     fDWG.read ( (char *) &dCodePage, 2 );
 
-#ifdef _LIBDWGX_DEBUG
     printf ( "DWG Code page: %d\n",dCodePage );
-#endif
 
     fDWG.read ( (char *) &dSLRecords, 4 );
 
-#ifdef _LIBDWGX_DEBUG
     printf ( "Section-locator records count: %d\n", dSLRecords );
-#endif
 
     for ( size_t i = 0; i < dSLRecords; ++i )
     {
@@ -38,11 +32,9 @@ int DWGFileR2000::ReadHeader()
         fDWG.read ( (char *) &readed_record.dSize, 4 );
 
         this->fileHeader.SLRecords.push_back( readed_record );
-#ifdef _LIBDWGX_DEBUG
         printf ( "SL Record #%d : %d %d\n", this->fileHeader.SLRecords[i].byRecordNumber,
                                             this->fileHeader.SLRecords[i].dSeeker,
                                             this->fileHeader.SLRecords[i].dSize );
-#endif
     }
 
 /*      READ HEADER VARIBLES        */
@@ -126,10 +118,7 @@ int DWGFileR2000::ReadClassesSection()
         std::cout << "ITEMCLASSID: " << std::hex << custom_classes[i].dItemClassID << std::dec  << std::endl << std::endl;
     }
 
-    fDWG.read ( pabyBuf, 2 ); // CLASSES CRC!.
-
-    // fDWG.seekg ( this->fileHeader.SLRecords[1].dSeeker + this->fileHeader.SLRecords[1].dSize - 16,
-    //              std::ios_base::seek_dir::beg );
+    fDWG.read (pabyBuf, 2); // CLASSES CRC!. TODO: add CRC computing & checking feature.
 
     fDWG.read ( pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH );
     if ( memcmp ( pabyBuf, DWG_SENTINELS::DS_CLASSES_END, DWG_SENTINELS::SENTINEL_LENGTH ) )
@@ -172,8 +161,7 @@ int DWGFileR2000::ReadObjectMap()
     while ( true )
     {
         fDWG.read ( (char *) &section_size, 2 );
-        swapByteOrder ( section_size );
-
+        SwapEndianness (section_size, sizeof (section_size));
         std::cout << "OBJECT MAP SECTION SIZE: " << section_size << std::endl;
 
         if ( section_size == 2 ) break;
@@ -184,7 +172,7 @@ int DWGFileR2000::ReadObjectMap()
         while ( ( bitOffsetFromStart / 8 ) < section_size )
         {
             ObjHandleOffset tmp;
-            tmp.first = ReadMCHAR ( pabySectionContent, bitOffsetFromStart );
+            tmp.first  = ReadMCHAR (pabySectionContent, bitOffsetFromStart);
             tmp.second = ReadMCHAR ( pabySectionContent, bitOffsetFromStart );
 
             object_map.push_back( tmp );
@@ -239,10 +227,14 @@ int DWGFileR2000::ReadObject( size_t index )
     ced.dNumReactors    = ReadBITLONG ( pabySectionContent, bitOffsetFromStart );
 
     delete [] pabySectionContent;
+
+    return 0;
 }
 
-int DWGFileR2000::ReadGeometry( size_t index )
+Geometry *DWGFileR2000::ReadGeometry ( size_t index )
 {
+    Geometry *readed_geometry;
+
     char * pabySectionContent = new char[100];
     size_t bitOffsetFromStart = 0;
     fDWG.seekg ( geometries_map[index].second );
@@ -276,33 +268,64 @@ int DWGFileR2000::ReadGeometry( size_t index )
     {
         case DWG_OBJECT_CIRCLE:
         {
-            double centerx, centery, centerz;
-            double rad, thickness;
-            char   extrusion;
-            centerx = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
-            centery = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
-            centerz = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
-            rad     = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
-            thickness = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            Circle *circle = new Circle ();
+            circle->dfCenterX   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            circle->dfCenterY   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            circle->dfCenterZ   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            circle->dfRadius    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            circle->dfThickness = ReadBIT (pabySectionContent, bitOffsetFromStart) ?
+                                  0.0f : ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ReadBIT (pabySectionContent, bitOffsetFromStart) )
+            {
+                circle->dfExtrusionX = 0.0f;
+                circle->dfExtrusionY = 0.0f;
+                circle->dfExtrusionZ = 1.0f;
+            }
+            else
+            {
+                circle->dfExtrusionX = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+                circle->dfExtrusionY = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+                circle->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            readed_geometry = circle;
             break;
         }
+
         case DWG_OBJECT_POINT:
         {
-            double centerx, centery, centerz;
-            double thickness;
-            char   extrusion;
-            double x_axis_angle;
-            centerx = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
-            centery = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
-            centerz = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
-            thickness = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            Point *point = new Point ();
+            point->dfPointX    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            point->dfPointY    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            point->dfPointZ    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            point->dfThickness = ReadBIT (pabySectionContent, bitOffsetFromStart) ?
+                                 0.0f : ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ReadBIT (pabySectionContent, bitOffsetFromStart) )
+            {
+                point->dfExtrusionX = 0.0f;
+                point->dfExtrusionY = 0.0f;
+                point->dfExtrusionZ = 1.0f;
+            }
+            else
+            {
+                point->dfExtrusionX = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+                point->dfExtrusionY = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+                point->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            readed_geometry = point;
+            break;
         }
     }
 
     delete [] pabySectionContent;
+
+    return readed_geometry;
 }
 
-int DWGFileR2000::GetGeometriesCount ()
+size_t DWGFileR2000::GetGeometriesCount ()
 {
     return geometries_map.size();
 }

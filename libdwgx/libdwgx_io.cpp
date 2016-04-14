@@ -1,10 +1,7 @@
 #include "libdwgx_io.h"
 
 #include <fstream>
-#include <vector>
 #include <iostream>
-
-#include "libdwgx_datatypes.h"
 
 char Read2B ( const char * input_array, size_t& bitOffsetFromStart )
 {
@@ -81,6 +78,7 @@ char Read4B ( const char * input_array, size_t& bitOffsetFromStart )
         case 5:
             result  = ( a4BBytes[0] & 0b00000111 ) << 1;
             result |= ( a4BBytes[1] & 0b10000000 ) >> 7;
+            break;
         case 6:
             result  = ( a4BBytes[0] & 0b00000011 ) << 1;
             result |= ( a4BBytes[1] & 0b11000000 ) >> 6;
@@ -148,13 +146,13 @@ int ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
             break;
 
         default:
-            aLongBytes[0]  = ( aLongBytes[0] << bitOffsetInByte );
+            aLongBytes[0]   = ( aLongBytes[0] << bitOffsetInByte );
             aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[1]  = ( aLongBytes[1] >> bitOffsetInByte );
+            aLongBytes[ 1 ] = ( aLongBytes[ 1 ] << bitOffsetInByte );
             aLongBytes[1] |= ( aLongBytes[2] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[2]  = ( aLongBytes[2] << bitOffsetInByte );
+            aLongBytes[2]   = ( aLongBytes[2] << bitOffsetInByte );
             aLongBytes[2] |= ( aLongBytes[3] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[3]  = ( aLongBytes[3] >> bitOffsetInByte );
+            aLongBytes[ 3 ] = ( aLongBytes[ 3 ] << bitOffsetInByte );
             aLongBytes[3] |= ( aLongBytes[4] >> ( 8 - bitOffsetInByte ) );
             break;
     }
@@ -384,28 +382,28 @@ double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
     size_t bitOffsetInByte = bitOffsetFromStart % 8;
 
     const char * pDoubleFirstByte = input_array + byteOffset;
-    char aDoubleBytes[9]; // maximum bytes a single double can take.
+    unsigned char aDoubleBytes[9]; // maximum bytes a single double can take.
     memcpy ( aDoubleBytes, pDoubleFirstByte, 9 );
 
     switch ( BITCODE )
     {
         case BITDOUBLE_NORMAL:
         {
-            aDoubleBytes[0]  = ( aDoubleBytes[0] << ( bitOffsetInByte ) );
+            aDoubleBytes[ 0 ] <<= bitOffsetInByte;
             aDoubleBytes[0] |= ( aDoubleBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[1]  = ( aDoubleBytes[1] << ( bitOffsetInByte ) );
+            aDoubleBytes[ 1 ] <<= bitOffsetInByte;
             aDoubleBytes[1] |= ( aDoubleBytes[2] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[2]  = ( aDoubleBytes[2] << ( bitOffsetInByte ) );
+            aDoubleBytes[ 2 ] <<= bitOffsetInByte;
             aDoubleBytes[2] |= ( aDoubleBytes[3] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[3]  = ( aDoubleBytes[3] << ( bitOffsetInByte ) );
+            aDoubleBytes[ 3 ] <<= bitOffsetInByte;
             aDoubleBytes[3] |= ( aDoubleBytes[4] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[4]  = ( aDoubleBytes[4] << ( bitOffsetInByte ) );
+            aDoubleBytes[ 4 ] <<= bitOffsetInByte;
             aDoubleBytes[4] |= ( aDoubleBytes[5] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[5]  = ( aDoubleBytes[5] << ( bitOffsetInByte ) );
+            aDoubleBytes[ 5 ] <<= bitOffsetInByte;
             aDoubleBytes[5] |= ( aDoubleBytes[6] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[6]  = ( aDoubleBytes[6] << ( bitOffsetInByte ) );
+            aDoubleBytes[ 6 ] <<= bitOffsetInByte;
             aDoubleBytes[6] |= ( aDoubleBytes[7] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[7]  = ( aDoubleBytes[7] << ( bitOffsetInByte ) );
+            aDoubleBytes[ 7 ] <<= bitOffsetInByte;
             aDoubleBytes[7] |= ( aDoubleBytes[8] >> ( 8 - bitOffsetInByte ) );
 
             bitOffsetFromStart += 64;
@@ -491,12 +489,12 @@ long ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart )
 
         case BITLONG_UNSIGNED_CHAR:
         {
-            aLongBytes[0]  = ( aLongBytes[0] << bitOffsetInByte );
+            aLongBytes[ 0 ] <<= bitOffsetInByte;
             aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - bitOffsetInByte) );
 
             bitOffsetFromStart += 8;
 
-            return ( unsigned char ) aLongBytes[0];
+            return aLongBytes[ 0 ];
         }
 
         case BITLONG_ZERO_VALUE:

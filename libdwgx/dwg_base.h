@@ -5,6 +5,7 @@
 #include <string>
 
 #include "libdwgx_datatypes.h"
+#include "dwg_geometries.h"
 
 class DWGFile
 {
@@ -16,8 +17,12 @@ public:
     virtual int ReadClassesSection() { return 0; };
     virtual int ReadObjectMap() { return 0;};
     virtual int ReadObject( size_t index ) { return 0; }
-    virtual int GetGeometriesCount() { return 0; }
-    virtual int ReadGeometry( size_t index ) { return 0; }
+
+    virtual size_t GetGeometriesCount ()
+    { return 0; }
+
+    virtual libdwgx::DWGGeometries::Geometry *ReadGeometry ( size_t index )
+    { return 0; }
 
     std::ifstream fDWG;
 protected:

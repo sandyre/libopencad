@@ -7,5 +7,15 @@ int main(int argc, char *argv[])
     dwgfile->ReadHeader();
     dwgfile->ReadObjectMap();
     for(auto i = 0; i < dwgfile->GetGeometriesCount (); ++i )
-        dwgfile->ReadGeometry (i);
+    {
+        auto geom = dwgfile->ReadGeometry (i);
+        if ( "Circle" == geom->sGeometryType )
+        {
+            auto geom1 = ( libdwgx::DWGGeometries::Circle * ) geom;
+            int  a     = 0;
+        }
+
+        int a = 0;
+        delete geom;
+    }
 }
