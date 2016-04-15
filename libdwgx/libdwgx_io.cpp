@@ -1,9 +1,10 @@
 #include "libdwgx_io.h"
+#include "libdwgx.h"
 
 #include <fstream>
 #include <iostream>
 
-char Read2B ( const char * input_array, size_t& bitOffsetFromStart )
+uint8_t Read2B ( const char * input_array, size_t& bitOffsetFromStart )
 {
     unsigned char result = 0;
     size_t byteOffset      = bitOffsetFromStart / 8;
@@ -30,7 +31,7 @@ char Read2B ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-char Read3B ( const char * input_array, size_t& bitOffsetFromStart )
+uint8_t Read3B ( const char * input_array, size_t& bitOffsetFromStart )
 {
     unsigned char result = 0;
     size_t byteOffset      = bitOffsetFromStart / 8;
@@ -63,7 +64,7 @@ char Read3B ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-char Read4B ( const char * input_array, size_t& bitOffsetFromStart )
+uint8_t Read4B ( const char * input_array, size_t& bitOffsetFromStart )
 {
     unsigned char result = 0;
     size_t byteOffset      = bitOffsetFromStart / 8;
@@ -100,7 +101,7 @@ char Read4B ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-short ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart )
+int16_t ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart )
 {
     size_t byteOffset      = bitOffsetFromStart / 8;
     size_t bitOffsetInByte = bitOffsetFromStart % 8;
@@ -173,7 +174,7 @@ double ReadRAWDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
     return * result;
 }
 
-int ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
+int32_t ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
 {
     size_t byteOffset = bitOffsetFromStart / 8;
     size_t bitOffsetInByte = bitOffsetFromStart % 8;
@@ -222,7 +223,7 @@ bool ReadBIT ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-short ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart )
+int16_t ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart )
 {
     char BITCODE = Read2B ( input_array, bitOffsetFromStart );
 
@@ -276,7 +277,7 @@ short ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart )
     return -1;
 }
 
-char ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart )
+uint8_t ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart )
 {
     unsigned char result = 0;
     size_t byteOffset      = bitOffsetFromStart / 8;
@@ -308,7 +309,7 @@ std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-long long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
+int64_t ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
 {
     // TODO: bit offset is calculated, but function has nothing to do with it.
     long long result = 0;
@@ -320,13 +321,15 @@ long long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
     unsigned char aMCharBytes[8]; // 8 bytes is maximum.
     memcpy ( aMCharBytes, pMCharFirstByte, 8 );
 
-    size_t MCharBytesCount = 1;
+    size_t MCharBytesCount = 0;
     for ( size_t i = 0; i < 8; ++i )
     {
         aMCharBytes[i] = ReadCHAR ( input_array, bitOffsetFromStart );
-        if ( !( aMCharBytes[i] & 0b10000000 ) )
-            break;
         ++MCharBytesCount;
+        if ( !( aMCharBytes[i] & 0b10000000 ) )
+        {
+            break;
+        }
     }
 
     std::reverse ( aMCharBytes, aMCharBytes + MCharBytesCount ); // LSB to MSB
@@ -380,7 +383,7 @@ long long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
         }
     }
 
-    std::reverse ( aMCharBytes, aMCharBytes + MCharBytesCount ); // MSB to LSB
+    SwapEndianness ( aMCharBytes, MCharBytesCount ); // MSB to LSB
 
     memcpy ( &result, aMCharBytes, MCharBytesCount );
 
@@ -389,9 +392,9 @@ long long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-long long ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart )
+uint32_t ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart )
 {
-    long long result = 0;
+    uint32_t result = 0;
     size_t byteOffset      = bitOffsetFromStart / 8;
     size_t bitOffsetInByte = bitOffsetFromStart % 8;
 
@@ -402,29 +405,33 @@ long long ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart )
     size_t MShortBytesCount = 2;
     aMShortBytes[0] = ReadCHAR ( input_array, bitOffsetFromStart );
     aMShortBytes[1] = ReadCHAR ( input_array, bitOffsetFromStart );
-    if ( aMShortBytes[0] & 0b10000000 )
+    if ( aMShortBytes[1] & 0b10000000 )
     {
         aMShortBytes[2] = ReadCHAR ( input_array, bitOffsetFromStart );
         aMShortBytes[3] = ReadCHAR ( input_array, bitOffsetFromStart );
         MShortBytesCount = 4;
     }
 
-    std::reverse ( aMShortBytes, aMShortBytes + MShortBytesCount ); // LSB to MSB
+    SwapEndianness ( aMShortBytes, MShortBytesCount );
 
     if( MShortBytesCount == 2 )
     {
-        std::reverse ( aMShortBytes, aMShortBytes + MShortBytesCount ); // MSB to LSB
+        aMShortBytes[0] &= 0b01111111; // drop high order flag bit.
+        SwapEndianness ( aMShortBytes, MShortBytesCount ); // MSB to LSB
         memcpy ( &result, aMShortBytes, 2 );
     }
     else if ( MShortBytesCount == 4 )
     {
+        aMShortBytes[0] &= 0b01111111;
+        aMShortBytes[2] &= 0b01111111;
+
         aMShortBytes[2] |= ( aMShortBytes[1] << 7 );
         aMShortBytes[1]  = ( aMShortBytes[1] >> 1 );
         aMShortBytes[1] |= ( aMShortBytes[0] << 7 );
         aMShortBytes[0]  = ( aMShortBytes[0] >> 1 );
 
-        std::reverse (aMShortBytes, aMShortBytes + MShortBytesCount); // MSB to LSB
-        memcpy (& result, aMShortBytes, 4);
+        SwapEndianness ( aMShortBytes, MShortBytesCount );; // MSB to LSB
+        memcpy ( &result, aMShortBytes, 4 );
     }
 
     return result;
@@ -574,7 +581,7 @@ DWG_HANDLE ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-long ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart )
+int32_t ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart )
 {
     char   BITCODE = Read2B ( input_array, bitOffsetFromStart );
 

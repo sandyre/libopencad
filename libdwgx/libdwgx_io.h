@@ -5,23 +5,23 @@
 
 #include "libdwgx_datatypes.h"
 
-long long   ReadRAWLONGLONG ( const char * input_array, size_t& bitOffsetFromStart );
-int         ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart );
-short       ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart );
+int64_t     ReadRAWLONGLONG ( const char * input_array, size_t& bitOffsetFromStart );
+int32_t     ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart );
+int16_t     ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart );
 double      ReadRAWDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
-char        Read2B ( const char * input_array, size_t& bitOffsetFromStart );
-char        Read3B ( const char * input_array, size_t& bitOffsetFromStart );
-char        Read4B ( const char * input_array, size_t& bitOffsetFromStart );
+uint8_t     Read2B ( const char * input_array, size_t& bitOffsetFromStart );
+uint8_t     Read3B ( const char * input_array, size_t& bitOffsetFromStart );
+uint8_t     Read4B ( const char * input_array, size_t& bitOffsetFromStart );
 DWG_HANDLE  ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart );
 
 bool        ReadBIT ( const char * input_array, size_t& bitOffsetFromStart );
-char        ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart );
-short       ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart );
-long        ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart );
+uint8_t     ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart );
+int16_t     ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart );
+int32_t     ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart );
 double      ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
 double      ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart, double defaultvalue );
-long long   ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
-long long   ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart );
+int64_t     ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
+uint32_t    ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart );
 std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart );
 
 #endif

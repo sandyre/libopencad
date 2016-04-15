@@ -171,18 +171,18 @@ int DWGFileR2000::ReadObjectMap()
         if ( section_size == 2 ) break; // last section is empty.
 
         pabySectionContent = new char[section_size];
-        fDWG.read ( pabySectionContent, section_size );
+        fDWG.read ( pabySectionContent, section_size);
 
         while ( ( bitOffsetFromStart / 8 ) < (section_size - 2) )
         {
             ObjHandleOffset tmp;
             tmp.first  = ReadMCHAR ( pabySectionContent, bitOffsetFromStart );
             tmp.second = ReadMCHAR ( pabySectionContent, bitOffsetFromStart );
-
-            object_map.push_back( tmp );
+            object_map.push_back (tmp);
         }
 
         section_crc = ReadRAWSHORT ( pabySectionContent, bitOffsetFromStart );
+        SwapEndianness ( section_crc, sizeof( section_crc ) );
 
         std::cout << "OBJECTS PARSED: " << object_map.size() << std::endl;
 
@@ -239,20 +239,23 @@ int DWGFileR2000::ReadObject( size_t index )
 
 Geometry * DWGFileR2000::ReadGeometry ( size_t index )
 {
-    Geometry *readed_geometry;
+    Geometry * readed_geometry;
 
     // Get geometric entity size in bytes.
-    char pabySectionSize[2];
+    char pabySectionSize[8];
     size_t bitOffsetFromStart = 0;
+    int k = geometries_map[index].second;
+    fDWG.clear ();
     fDWG.seekg ( geometries_map[index].second, std::ios_base::seekdir::beg );
-    fDWG.read ( ( char * ) pabySectionSize, 2 );
-    int16_t dGeometrySize = ReadMSHORT ( pabySectionSize, bitOffsetFromStart );
+    fDWG.read ( pabySectionSize, 8 );
+    uint32_t dGeometrySize = ReadMSHORT ( pabySectionSize, bitOffsetFromStart );
 
     // And read whole data chunk into memory for future parsing.
     char * pabySectionContent = new char[dGeometrySize];
     bitOffsetFromStart = 0;
-    fDWG.seekg ( -2, std::ios_base::seekdir::cur );
-    fDWG.read( pabySectionContent, dGeometrySize );
+    fDWG.clear();
+    fDWG.seekg ( geometries_map[index].second, std::ios_base::seekdir::beg );
+    fDWG.read ( pabySectionContent, dGeometrySize );
 
     DWG2000_CED ced;
     ced.dLength         = ReadMSHORT ( pabySectionContent, bitOffsetFromStart );
@@ -358,14 +361,14 @@ Geometry * DWGFileR2000::ReadGeometry ( size_t index )
             Line * line = new Line();
             bool bZCoordPresented = ReadBIT ( pabySectionContent, bitOffsetFromStart );
             line->dfStartX = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
-            line->dfEndX   = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart, 10.0f );
+            line->dfEndX   = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart, line->dfStartX );
             line->dfStartY = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
-            line->dfEndY   = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart, 20.0f );
+            line->dfEndY   = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart, line->dfStartY );
 
             if ( !bZCoordPresented )
             {
                 line->dfStartZ = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
-                line->dfEndZ   = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart, 30.0f );
+                line->dfEndZ   = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart, line->dfStartZ );
             }
 
             line->dfThickness = ReadBITDOUBLE ( pabySectionContent, bitOffsetFromStart );
@@ -438,6 +441,34 @@ Geometry * DWGFileR2000::ReadGeometry ( size_t index )
 
             readed_geometry = polyline;
             break;
+        }
+
+        case DWG_OBJECT_ARC:
+        {
+            Arc * arc = new Arc();
+            arc->dfCenterX      = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            arc->dfCenterY      = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            arc->dfCenterZ      = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            arc->dfRadius       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            arc->dfThickness    = ReadBIT (pabySectionContent, bitOffsetFromStart) ?
+                                 0.0f : ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ReadBIT (pabySectionContent, bitOffsetFromStart) )
+            {
+                arc->dfExtrusionX = 0.0f;
+                arc->dfExtrusionY = 0.0f;
+                arc->dfExtrusionZ = 1.0f;
+            }
+            else
+            {
+                arc->dfExtrusionX = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+                arc->dfExtrusionY = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+                arc->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            }
+            arc->dfStartingAngle = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            arc->dfEndingAngle   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+
+            readed_geometry = arc;
         }
     }
 

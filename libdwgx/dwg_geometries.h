@@ -12,7 +12,7 @@ namespace DWGGeometries
 enum DWGGeometryType
 {
     POINT, CIRCLE, LWPOLYLINE, ELLIPSE, LINE,
-    POLYLINE3D
+    POLYLINE3D, TEXT, ARC
 };
 
 struct Vertex2D
@@ -257,6 +257,62 @@ public:
     double dfAxisRatio;
     double dfStartingAngle;
     double dfEndingAngle;
+};
+
+class Text : public Geometry
+{
+public:
+    Text()
+    {
+        sGeometryType = DWGGeometryType::TEXT;
+    }
+};
+
+class Arc : public Geometry
+{
+public:
+    Arc() : dfCenterX(0.0f),
+            dfCenterY(0.0f),
+            dfCenterZ(0.0f),
+            dfRadius(0.0f),
+            dfExtrusionX(0.0f),
+            dfExtrusionY(0.0f),
+            dfExtrusionZ(0.0f),
+            dfStartingAngle(0.0f),
+            dfEndingAngle(0.0f)
+    {
+        sGeometryType = DWGGeometryType::ARC;
+    }
+
+    double dfCenterX;
+    double dfCenterY;
+    double dfCenterZ;
+    double dfRadius;
+    double dfExtrusionX;
+    double dfExtrusionY;
+    double dfExtrusionZ;
+    double dfStartingAngle;
+    double dfEndingAngle;
+};
+
+class Block
+{
+public:
+    Block()
+    {
+    }
+
+    std::vector< Geometry > geometries;
+};
+
+class Layer
+{
+public:
+    Layer()
+    {
+    }
+
+    std::vector< Block > blocks;
 };
 
 }
