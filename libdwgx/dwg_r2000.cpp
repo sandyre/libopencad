@@ -469,6 +469,66 @@ Geometry * DWGFileR2000::ReadGeometry ( size_t index )
             arc->dfEndingAngle   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
 
             readed_geometry = arc;
+            break;
+        }
+
+        case DWG_OBJECT_TEXT:
+        {
+            Text * text = new Text();
+            int8_t DataFlag = ReadCHAR ( pabySectionContent, bitOffsetFromStart );
+
+            if( !( DataFlag & 0x01 ) )
+                text->dfElevation = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
+
+            text->dfInsertionX = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
+            text->dfInsertionY = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
+
+            if( !( DataFlag & 0x02 ) )
+            {
+                text->dfAlignmentX = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart, 10.0f );
+                text->dfAlignmentY = ReadBITDOUBLEWD ( pabySectionContent, bitOffsetFromStart, 20.0f );
+            }
+
+            if ( ReadBIT (pabySectionContent, bitOffsetFromStart) )
+            {
+                text->dfExtrusionX = 0.0f;
+                text->dfExtrusionY = 0.0f;
+                text->dfExtrusionZ = 1.0f;
+            }
+            else
+            {
+                text->dfExtrusionX = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+                text->dfExtrusionY = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+                text->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            text->dfThickness = ReadBIT (pabySectionContent, bitOffsetFromStart) ?
+                                0.0f : ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( !( DataFlag & 0x04 ) )
+                text->dfObliqueAngle  = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
+
+            if ( !( DataFlag & 0x08 ) )
+                text->dfRotationAngle = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
+
+            text->dfHeight        = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
+
+            if ( !( DataFlag & 0x10 ) )
+                text->dfWidthFactor   = ReadRAWDOUBLE ( pabySectionContent, bitOffsetFromStart );
+
+            text->strTextValue    = ReadTV ( pabySectionContent, bitOffsetFromStart );
+
+            if ( !( DataFlag & 0x20 ) )
+                text->dGeneration = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+
+            if ( !( DataFlag & 0x40 ) )
+                text->dHorizontalAlignment = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+
+            if ( !( DataFlag & 0x80 ) )
+                text->dVerticalAlignment   = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+
+            readed_geometry = text;
+            break;
         }
     }
 

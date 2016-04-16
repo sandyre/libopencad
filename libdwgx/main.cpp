@@ -19,6 +19,7 @@ int main(int argc, char *argv[])
     int pline_count = 0;
     int point_count = 0;
     int arc_count = 0;
+    int text_count = 0;
     std::cout << "Geometries readed: " << g << std::endl;
     for(auto i = 0; i < dwgfile->GetGeometriesCount (); ++i )
     {
@@ -58,6 +59,11 @@ int main(int argc, char *argv[])
 //            geom1->printInfo ();
             arc_count++;
         }
+        else if ( geom->sGeometryType == libdwgx::DWGGeometries::DWGGeometryType::TEXT )
+        {
+            auto geom1 = ( libdwgx::DWGGeometries::Text * ) geom;
+            text_count++;
+        }
     }
 
     std::cout << "Points: " << point_count << std::endl;
@@ -66,4 +72,5 @@ int main(int argc, char *argv[])
     std::cout << "Plines count: " << pline_count << std::endl;
     std::cout << "Circles count: " << circles_count << std::endl;
     std::cout << "Arcs count: " << arc_count << std::endl;
+    std::cout << "Texts count: " << text_count << std::endl;
 }

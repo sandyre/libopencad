@@ -262,10 +262,41 @@ public:
 class Text : public Geometry
 {
 public:
-    Text()
+    Text() : dfElevation(0.0f),
+             dfInsertionX(0.0f),
+             dfInsertionY(0.0f),
+             dfAlignmentX(0.0f),
+             dfAlignmentY(0.0f),
+             dfExtrusionX(0.0f),
+             dfExtrusionY(0.0f),
+             dfExtrusionZ(0.0f),
+             dfObliqueAngle(0.0f),
+             dfRotationAngle(0.0f),
+             dfHeight(0.0f),
+             dfWidthFactor(0.0f),
+             dGeneration(0),
+             dHorizontalAlignment(0),
+             dVerticalAlignment(0)
     {
         sGeometryType = DWGGeometryType::TEXT;
     }
+
+    double dfElevation;
+    double dfInsertionX;
+    double dfInsertionY;
+    double dfAlignmentX;
+    double dfAlignmentY;
+    double dfExtrusionX;
+    double dfExtrusionY;
+    double dfExtrusionZ;
+    double dfObliqueAngle;
+    double dfRotationAngle;
+    double dfHeight;
+    double dfWidthFactor;
+    std::string strTextValue;
+    int16_t dGeneration;
+    int16_t dHorizontalAlignment;
+    int16_t dVerticalAlignment;
 };
 
 class Arc : public Geometry
