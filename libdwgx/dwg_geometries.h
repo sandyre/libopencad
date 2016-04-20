@@ -192,6 +192,8 @@ public:
     {
         sGeometryType = DWGGeometryType::POLYLINE3D;
     }
+
+    std::vector< Vertex3D > vertexes;
 };
 
 class Circle : public Geometry

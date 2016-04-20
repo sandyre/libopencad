@@ -8,9 +8,11 @@ int main(int argc, char *argv[])
 //    DWGFile *dwgfile = libdwgx::InitializeDWG( "/users/Aleksandr/libdwgx/dwg_samples/mysamples/Ситплан КГКМ.dwg" );
 //    DWGFile *dwgfile = libdwgx::InitializeDWG( "/users/Aleksandr/libdwgx/dwg_samples/circle_2000.dwg" );
 //    DWGFile *dwgfile = libdwgx::InitializeDWG( "/users/Aleksandr/libdwgx/dwg_samples/polyline2d_line_2000.dwg" );
-    DWGFile *dwgfile = libdwgx::InitializeDWG( "/users/Aleksandr/libdwgx/dwg_samples/mysamples/triple_circle.dwg" );
+//    DWGFile *dwgfile = libdwgx::InitializeDWG( "/users/Aleksandr/libdwgx/dwg_samples/mysamples/triple_circle.dwg" );
+    DWGFile *dwgfile = libdwgx::InitializeDWG( "/users/Aleksandr/libdwgx/dwg_samples/mysamples/polyline3d.dwg" );
     if (dwgfile == nullptr) return 0;
     dwgfile->ReadHeader();
+    dwgfile->ReadClassesSection ();
     dwgfile->ReadObjectMap();
     int g = dwgfile->GetGeometriesCount ();
     int circles_count = 0;

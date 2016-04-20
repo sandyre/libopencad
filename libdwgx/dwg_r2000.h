@@ -182,6 +182,7 @@ private:
 
     vector < ObjHandleOffset > geometries_map;
     vector < ObjHandleOffset > object_map;
+    vector < vector < ObjHandleOffset > > object_map_sections;
     vector < DWG2000_CLASS > custom_classes;
     DWGR2000_FILE_HEADER fileHeader;
 };

@@ -1,8 +1,19 @@
 #include "libdwgx_io.h"
 #include "libdwgx.h"
 
-#include <fstream>
-#include <iostream>
+int16_t CalculateCRC8 ( uint16_t initial_val, const char * ptr, int32_t num )
+{
+    unsigned char al;
+    while ( num-- > 0 )
+    {
+        al = ( unsigned char )( ( *ptr ) ^ ( ( char ) ( initial_val & 0xFF ) ) );
+        initial_val = ( initial_val >> 8 ) & 0xFF;
+        initial_val = initial_val ^ CRC8_TABLE[al & 0xFF];
+        ptr++;
+    }
+
+    return initial_val;
+}
 
 uint8_t Read2B ( const char * input_array, size_t& bitOffsetFromStart )
 {
@@ -81,7 +92,7 @@ uint8_t Read4B ( const char * input_array, size_t& bitOffsetFromStart )
             result |= ( a4BBytes[1] & 0b10000000 ) >> 7;
             break;
         case 6:
-            result  = ( a4BBytes[0] & 0b00000011 ) << 1;
+            result  = ( a4BBytes[0] & 0b00000011 ) << 2;
             result |= ( a4BBytes[1] & 0b11000000 ) >> 6;
             break;
 
@@ -297,14 +308,17 @@ uint8_t ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart )
 
 std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart )
 {
+    // TODO: due to CLion issues with copying text from output window, all string readed are now not zero-terminated. Will fix soon.
     short string_length = ReadBITSHORT ( input_array, bitOffsetFromStart );
 
     std::string result;
 
-    for ( size_t i = 0; i < string_length; ++i )
+    for ( size_t i = 0; i < string_length - 1; ++i )
     {
         result += ReadCHAR ( input_array, bitOffsetFromStart );
     }
+
+    bitOffsetFromStart += 8;
 
     return result;
 }

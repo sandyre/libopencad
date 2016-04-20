@@ -37,7 +37,7 @@ int DWGFileR2000::ReadHeader()
                                             this->fileHeader.SLRecords[i].dSize );
     }
 
-/*      READ HEADER VARIBLES        */
+/*      READ HEADER VARIABLES        */
     size_t dHeaderVarsSectionLength = 0;
 
     fDWG.seekg ( this->fileHeader.SLRecords[0].dSeeker, std::ios_base::seek_dir::beg );
@@ -118,7 +118,7 @@ int DWGFileR2000::ReadClassesSection()
         std::cout << "ITEMCLASSID: " << std::hex << custom_classes[i].dItemClassID << std::dec  << std::endl << std::endl;
     }
 
-    fDWG.read (pabyBuf, 2); // CLASSES CRC!. TODO: add CRC computing & checking feature.
+    fDWG.read ( pabyBuf, 2 ); // CLASSES CRC!. TODO: add CRC computing & checking feature.
 
     fDWG.read ( pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH );
     if ( memcmp ( pabyBuf, DWG_SENTINELS::DS_CLASSES_END, DWG_SENTINELS::SENTINEL_LENGTH ) )
@@ -142,7 +142,7 @@ DWG2000_CLASS DWGFileR2000::ReadClass ( const char * input_array, size_t& bitOff
     outputResult.dClassNum           = ReadBITSHORT ( input_array, bitOffsetFromStart );
     outputResult.dVersion            = ReadBITSHORT ( input_array, bitOffsetFromStart );
     outputResult.sAppName            = ReadTV ( input_array, bitOffsetFromStart );
-    outputResult.sCppClassName = ReadTV ( input_array, bitOffsetFromStart );
+    outputResult.sCppClassName       = ReadTV ( input_array, bitOffsetFromStart );
     outputResult.sDXFClassName       = ReadTV ( input_array, bitOffsetFromStart );
     outputResult.bWasAZombie         = ReadBIT ( input_array, bitOffsetFromStart );
     outputResult.dItemClassID        = ReadBITSHORT ( input_array, bitOffsetFromStart );
@@ -160,11 +160,13 @@ int DWGFileR2000::ReadObjectMap()
 
     fDWG.seekg ( this->fileHeader.SLRecords[2].dSeeker, std::ios_base::seek_dir::beg );
 
+    int current_section = 0;
     while ( true )
     {
         bitOffsetFromStart = 0;
+        vector < ObjHandleOffset > obj_map_section;
         fDWG.read ( ( char * ) &section_size, 2 );
-        SwapEndianness ( section_size, sizeof ( section_size ) );
+        SwapEndianness ( section_size, sizeof( section_size ) );
 
         std::cout << "OBJECT MAP SECTION SIZE: " << section_size << std::endl;
 
@@ -178,42 +180,62 @@ int DWGFileR2000::ReadObjectMap()
             ObjHandleOffset tmp;
             tmp.first  = ReadMCHAR ( pabySectionContent, bitOffsetFromStart );
             tmp.second = ReadMCHAR ( pabySectionContent, bitOffsetFromStart );
-            object_map.push_back (tmp);
+            obj_map_section.push_back (tmp);
         }
+
 
         section_crc = ReadRAWSHORT ( pabySectionContent, bitOffsetFromStart );
         SwapEndianness ( section_crc, sizeof( section_crc ) );
 
-        std::cout << "OBJECTS PARSED: " << object_map.size() << std::endl;
+        object_map_sections.push_back ( obj_map_section );
+        std::cout << "OBJECTS PARSED: " << object_map_sections[current_section].size() << std::endl;
 
+        current_section++;
         delete [] pabySectionContent;
     }
 
     // Rebuild object map so it will store absolute file offset, instead of offset from previous object handle.
-    for ( size_t i = 1; i < object_map.size(); ++i )
+    for ( size_t index = 0; index < object_map_sections.size(); ++index )
     {
-        object_map[ i ].second += object_map[ i - 1 ].second;
-    }
-
-    // Build geometries map from objectmap.
-    pabySectionContent = new char[100];
-    for(size_t i = 0; i < object_map.size(); ++i)
-    {
-        bitOffsetFromStart = 0;
-        fDWG.seekg ( object_map[i].second, std::ios_base::seekdir::beg );
-        fDWG.read ( pabySectionContent, 100 );
-
-        DWG2000_CED ced;
-        ced.dLength = ReadMSHORT ( pabySectionContent, bitOffsetFromStart );
-        ced.dType   = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
-
-        if (std::find( DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end(), ced.dType )
-                    != DWG_GEOMETRIC_OBJECT_TYPES.end() )
+        for ( size_t i = 1; i < object_map_sections[index].size (); ++i )
         {
-            std::cout << "GEOMETRY TYPE: " << DWG_OBJECT_NAMES.at(ced.dType) << std::endl;
-            geometries_map.push_back( object_map[i] );
+            object_map_sections[index][i].second += object_map_sections[index][i - 1].second;
         }
     }
+
+    pabySectionContent = new char[100];
+
+    for ( size_t i = 0; i < object_map_sections.size(); ++i )
+    {
+        for ( size_t j = 0; j < object_map_sections[i].size(); ++j )
+        {
+            bitOffsetFromStart = 0;
+            fDWG.seekg ( object_map_sections[i][j].second, std::ios_base::seekdir::beg );
+            fDWG.read ( pabySectionContent, 100 );
+
+            DWG2000_CED ced;
+            ced.dLength = ReadMSHORT ( pabySectionContent, bitOffsetFromStart );
+            ced.dType   = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
+
+            try
+            {
+                DWG_OBJECT_NAMES.at ( ced.dType );
+                std::cout << "OBJECT TYPE: " << DWG_OBJECT_NAMES.at ( ced.dType ) << std::endl;
+            }
+            catch ( std::exception e )
+            {
+                std::cout << "OBJECT TYPE: " << custom_classes[ced.dType - 500].sCppClassName << std::endl;
+            }
+
+            if (std::find( DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end(), ced.dType )
+                != DWG_GEOMETRIC_OBJECT_TYPES.end() )
+            {
+                std::cout << "GEOMETRY TYPE: " << DWG_OBJECT_NAMES.at(ced.dType) << std::endl;
+                geometries_map.push_back( object_map_sections[i][j] );
+            }
+        }
+    }
+
 
     delete [] pabySectionContent;
 
@@ -313,13 +335,13 @@ Geometry * DWGFileR2000::ReadGeometry ( size_t index )
         case DWG_OBJECT_ELLIPSE:
         {
             Ellipse * ellipse        = new Ellipse ();
-            ellipse->dfCenterX      = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
-            ellipse->dfCenterY      = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
-            ellipse->dfCenterZ      = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
-            ellipse->dfWCSX         = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
-            ellipse->dfWCSY         = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
-            ellipse->dfWCSZ         = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
-            ellipse->dfExtrusionX   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            ellipse->dfCenterX       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            ellipse->dfCenterY       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            ellipse->dfCenterZ       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            ellipse->dfWCSX          = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            ellipse->dfWCSY          = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            ellipse->dfWCSZ          = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
+            ellipse->dfExtrusionX    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             ellipse->dfExtrusionY    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             ellipse->dfExtrusionZ    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             ellipse->dfAxisRatio     = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
@@ -439,6 +461,11 @@ Geometry * DWGFileR2000::ReadGeometry ( size_t index )
                 polyline->bulges.push_back ( dfBulgeValue );
             }
 
+            DWG_HANDLE prev = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            DWG_HANDLE next = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            DWG_HANDLE layer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            DWG_HANDLE ltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
             readed_geometry = polyline;
             break;
         }
@@ -528,6 +555,16 @@ Geometry * DWGFileR2000::ReadGeometry ( size_t index )
                 text->dVerticalAlignment   = ReadBITSHORT ( pabySectionContent, bitOffsetFromStart );
 
             readed_geometry = text;
+            break;
+        }
+
+        case DWG_OBJECT_POLYLINE3D:
+        {
+            Polyline3D * pline = new Polyline3D();
+
+            int8_t DataFlag = ReadCHAR ( pabySectionContent, bitOffsetFromStart );
+
+            readed_geometry = pline;
             break;
         }
     }
