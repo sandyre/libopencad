@@ -39,24 +39,25 @@
 <a id="api" class="anchor" href="#api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API</h2>
 
 <p>libdwgx typical usage pipeline is shown below:
-Open .DWG file:</p>
+Open CAD file:</p>
 
-<div class="highlight highlight-source-c++"><pre>DWGFile * opendwg = libdwgx::InitializeDWG(<span class="pl-s"><span class="pl-pds">"</span>/path/to/example.dwg<span class="pl-pds">"</span></span>);
+<div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">"</span>libopencad_api.h<span class="pl-pds">"</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">libopencad</span><span class="pl-k">;</span>
 
-opendwg-&gt;<span class="pl-en">ReadHeader</span>();
-opendwg-&gt;<span class="pl-en">ReadObjectMap</span>();</pre></div>
+CADFile * opendwg = OpenCADFile(<span class="pl-s"><span class="pl-pds">"</span>/path/to/example.dwg/dxf<span class="pl-pds">"</span></span>);</pre></div>
 
 <p>From now on, you can access geometries like this:</p>
 
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> geometries_count = opendwg-&gt;<span class="pl-en">GetGeometriesCount</span>();
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> geometries_count = opendwg-&gt;<span class="pl-en">getGeometriesCount</span>();
 <span class="pl-k">for</span>(<span class="pl-k">auto</span> i = <span class="pl-c1">0</span>; i &lt; geometries_count; ++i)
 {
-    libdwgx::DWGGeometries::Geometry * geom = dwgfile-&gt;<span class="pl-c1">ReadGeometry</span> (i);
+    CADGeometries::CADGeometry * geom = dwgfile-&gt;<span class="pl-c1">getGeometry</span> (i);
     <span class="pl-c">// now, geom-&gt;sGeometryType stores a type of returned geometry. Then,</span>
     <span class="pl-c">// you have to cast it to this class, eg.</span>
-    <span class="pl-k">if</span> ( geom-&gt;<span class="pl-smi">sGeometryType</span> == libdwgx::DWGGeometries::DWGGeometryType::CIRCLE )
+    <span class="pl-k">if</span> ( geom-&gt;<span class="pl-smi">sGeometryType</span> == CADGeometries::CADGeometryType::CIRCLE )
     {
-        libdwgx::DWGGeometries::Circle * circle = geom;
+        CADGeometries::Circle * circle = geom;
         <span class="pl-c">// There you go. Now you can get all the data you want, eg.</span>
         std::cout &lt;&lt; circle-&gt;dfCenterX;
         std::cout &lt;&lt; circle-&gt;dfCenterY;
@@ -65,7 +66,7 @@ opendwg-&gt;<span class="pl-en">ReadObjectMap</span>();</pre></div>
     }
 }</pre></div>
 
-<p>Now supported DWG version are:</p>
+<p>Now supported CAD files version are:</p>
 
 <ol>
 <li>R2000 (read-only). Its under development still, and a lot of geometries are missed, but it will all come with time.</li>
