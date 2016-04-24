@@ -1,12 +1,14 @@
-/************************************************************************************
- *  Name: dwg_base.h
- *  Project: libOpenCAD OpenSource CAD formats support library
+/*******************************************************************************
+ *  Project: libopencad
+ *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
- ************************************************************************************
+ *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,32 +27,23 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ************************************************************************************/
+ *******************************************************************************/
 
-#ifndef LIB_DWG_BASE_H
-#define LIB_DWG_BASE_H
+#ifndef OPENCAD_API_H
+#define OPENCAD_API_H
 
-#include "../cadfile.h"
+#include "cadfile.h"
 
-namespace libopencad
-{
-namespace dwg
-{
-
-class DWGFile : public CADFile
-{
-public:
-    DWGFile()
-    {
-    }
-
-protected:
-    virtual void ReadHeader() {};
-    virtual void ReadClassesSection() {};
-    virtual void ReadObjectMap() {};
+enum CADErrorCodes{
+    SUCCESS = 0,          /** operation successefull executed*/
+    FILE_OPEN_FAILED,     /** filed to open cad file */
+    UNSUPPORTED_VERSION,  /** unsupported file version */
+    FILE_PARSE_FAILED     /** parse file failed */
 };
 
-}
-}
+EXTERN int GetVersion();
+EXTERN const char* GetVersionString();
+EXTERN CADFile* OpenCADFile( const char * pszFileName );
+EXTERN int GetLastErrorCode();
 
-#endif //LIB_DWG_BASE_H
+#endif // OPENCAD_API_H

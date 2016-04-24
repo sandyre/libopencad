@@ -1,12 +1,14 @@
-/************************************************************************************
- *  Name: cadfile.cpp
- *  Project: libOpenCAD OpenSource CAD formats support library
- *  Author: Alexander Borzykh, mush3d at gmail.com
+/*******************************************************************************
+ *  Project: libopencad
+ *  Purpose: OpenSource CAD formats support library
+ *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
- ************************************************************************************
+ *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,15 +27,23 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ************************************************************************************/
+ *******************************************************************************/
 
 
-#include "include/cadfile.h"
+#include "cadfile.h"
+#include "opencad_api.h"
 
 #include <iostream>
 
-namespace libopencad
+CADFile::CADFile(const char *pszFileName)
 {
+    m_pszFileName = pszFileName;
+}
+
+CADFile::~CADFile()
+{
+    m_oFileStream.close();
+}
 
 size_t CADFile::getGeometriesCount ()
 {
@@ -78,10 +88,17 @@ CADGeometry * CADFile::getGeometry ( size_t index )
     return( nullptr );
 }
 
-void CADFile::parseFile ()
+int CADFile::ParseFile()
 {
-    std::cerr << "CADFile::parseFile() called from abstract class.\n"
-              << "This method should be overrided in derived classes. Abort.\n";
-}
+    m_oFileStream = std::ifstream( m_pszFileName, std::ios_base::in |
+                             std::ios_base::binary );
+    if ( m_oFileStream.is_open () )
+    {
+        ReadHeader ();
+        ReadClassesSection ();
+        ReadObjectMap ();
 
+        return CADErrorCodes::SUCCESS;
+    }
+    return CADErrorCodes::FILE_PARSE_FAILED;
 }

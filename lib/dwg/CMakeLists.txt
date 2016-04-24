@@ -28,27 +28,24 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 #*******************************************************************************
- 
+
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
+project(dwg)
 
-project(libopencad)
+set(HHEADERS
+    constants.h
+    data_structs.h
+    io.h
+    r2000.h
+)
 
-# some init settings
-set(CMAKE_COLOR_MAKEFILE ON)
-# set path to additional CMake modules
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+set(CSOURCES
+    io.cpp
+    r2000.cpp
+)
 
-include(GNUInstallDirs)
-set(INSTALL_BIN_DIR ${CMAKE_INSTALL_BINDIR} CACHE INTERNAL "Installation directory for executables" FORCE)
-set(INSTALL_LIB_DIR ${CMAKE_INSTALL_LIBDIR} CACHE INTERNAL "Installation directory for libraries" FORCE)
-set(INSTALL_INC_DIR ${CMAKE_INSTALL_INCLUDEDIR} CACHE INTERNAL "Installation directory for headers" FORCE)
+add_library(${PROJECT_NAME} OBJECT ${CSOURCES} ${HHEADERS})
 
-configure_file(${CMAKE_MODULE_PATH}/uninstall.cmake.in ${CMAKE_BINARY_DIR}/cmake_uninstall.cmake IMMEDIATE @ONLY)
+set(OBJ_LIB ${OBJ_LIB} $<TARGET_OBJECTS:${PROJECT_NAME}> PARENT_SCOPE)
 
-set(TARGET_LINK)
-add_subdirectory(lib)
-add_subdirectory(apps)
-#TODO: add_subdirectory(tests)
 
-# uninstall
-add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)

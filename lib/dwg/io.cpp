@@ -27,17 +27,11 @@
  *  SOFTWARE.
  ************************************************************************************/
 
-#include "../../include/dwg/dwg_io.h"
-#include "../../include/dwg/dwg_constants.h"
+#include "io.h"
+#include "constants.h"
 
 #include <iostream>
-
-namespace libopencad
-{
-namespace dwg
-{
-namespace io
-{
+#include <cstring>
 
 //int16_t CalculateCRC8 ( uint16_t initial_val, const char * ptr, int32_t num )
 //{
@@ -617,9 +611,9 @@ double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart, d
     return 0.0f;
 }
 
-DWG_HANDLE ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart )
+struct DWG_HANDLE ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart )
 {
-    DWG_HANDLE result;
+    struct DWG_HANDLE result;
 
     result.code = Read4B ( input_array, bitOffsetFromStart );
     result.counter = Read4B ( input_array, bitOffsetFromStart );
@@ -690,8 +684,4 @@ int32_t ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart )
     }
 
     return -1;
-}
-
-}
-}
 }
