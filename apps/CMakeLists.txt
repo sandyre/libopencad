@@ -42,3 +42,11 @@ set(CSOURCES
 add_executable(cadinfo ${CSOURCES})
 
 target_link_libraries(cadinfo ${TARGET_LINK})
+
+if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
+    install(TARGETS cadinfo
+        RUNTIME DESTINATION ${INSTALL_BIN_DIR} COMPONENT applications
+        ARCHIVE DESTINATION ${INSTALL_LIB_DIR} COMPONENT applications
+        LIBRARY DESTINATION ${INSTALL_LIB_DIR} COMPONENT applications
+    )
+endif()
