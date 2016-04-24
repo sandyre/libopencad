@@ -1,5 +1,5 @@
 /************************************************************************************
- *  Name: cadfile.h
+ *  Name: dwg_data_structs.h
  *  Project: libOpenCAD OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
  *  Language: C++
@@ -27,38 +27,28 @@
  *  SOFTWARE.
  ************************************************************************************/
 
-#ifndef LIB_CADFILE_H
-#define LIB_CADFILE_H
+#ifndef LIB_DWG_DATA_STRUCTS_H
+#define LIB_DWG_DATA_STRUCTS_H
 
-#include "cadgeometries.h"
-
-#include <fstream>
-
-using namespace libopencad::CADGeometries;
-
-namespace libopencad
+struct DWG_HANDLE
 {
-
-class CADFile
-{
-public:
-    CADFile ()
-    {
-    }
-
-    virtual size_t getGeometriesCount();
-    virtual size_t getLayersCount();
-    virtual size_t getBlocksCount();
-    virtual CADGeometry * getGeometry( size_t index );
-    virtual CADBlock * getBlock( size_t index );
-    virtual CADLayer * getLayer( size_t index );
-
-    virtual void parseFile();
-
-    std::ifstream fileStream;
+    char code = 0;
+    char counter = 0;
+    char * handle_or_offset;
 };
 
-}
+struct SLRecord
+{
+    char byRecordNumber;
+    int  dSeeker;
+    int  dSize;
+};
+
+struct DWG_EED
+{
+    short length;
+    DWG_HANDLE application_handle;
+};
 
 
-#endif //LIB_CADFILE_H
+#endif //LIB_DWG_DATA_STRUCTS_H

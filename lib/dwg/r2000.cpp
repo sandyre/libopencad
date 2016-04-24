@@ -27,21 +27,12 @@
  *  SOFTWARE.
  ************************************************************************************/
 
-#include "../../include/dwg/dwg_r2000.h"
-#include "../../include/dwg/dwg_constants.h"
-#include "../../include/dwg/dwg_io.h"
-#include "../../include/dwg/dwg_data_structs.h"
-#include "../../include/cadgeometries.h"
+#include "r2000.h"
+#include "io.h"
+#include "cadgeometries.h"
 
 #include <iostream>
-
-using namespace libopencad::CADGeometries;
-using namespace libopencad::dwg::io;
-
-namespace libopencad
-{
-namespace dwg
-{
+#include <cstring>
 
 void DWGFileR2000::ReadHeader ()
 {
@@ -49,27 +40,27 @@ void DWGFileR2000::ReadHeader ()
     int32_t dImageSeeker, dSLRecords;
     int16_t dCodePage;
 
-    fileStream.seekg (6, std::ios_base::seek_dir::beg); // file version skipped.
-    fileStream.seekg (7, std::ios_base::seek_dir::cur); // meaningless data skipped.
-    fileStream.read (( char * ) & dImageSeeker, 4);
+    m_oFileStream.seekg (6, std::ios_base::beg); // file version skipped.
+    m_oFileStream.seekg (7, std::ios_base::cur); // meaningless data skipped.
+    m_oFileStream.read (( char * ) & dImageSeeker, 4);
 
     printf ("Image seeker readed: %d\n", dImageSeeker);
 
-    fileStream.seekg (2, std::ios_base::seek_dir::cur);
-    fileStream.read (( char * ) & dCodePage, 2);
+    m_oFileStream.seekg (2, std::ios_base::cur);
+    m_oFileStream.read (( char * ) & dCodePage, 2);
 
     printf ("DWG Code page: %d\n", dCodePage);
 
-    fileStream.read (( char * ) & dSLRecords, 4);
+    m_oFileStream.read (( char * ) & dSLRecords, 4);
 
     printf ("Section-locator records count: %d\n", dSLRecords);
 
     for ( size_t i = 0; i < dSLRecords; ++i )
     {
         SLRecord readed_record;
-        fileStream.read (( char * ) & readed_record.byRecordNumber, 1);
-        fileStream.read (( char * ) & readed_record.dSeeker, 4);
-        fileStream.read (( char * ) & readed_record.dSize, 4);
+        m_oFileStream.read (( char * ) & readed_record.byRecordNumber, 1);
+        m_oFileStream.read (( char * ) & readed_record.dSeeker, 4);
+        m_oFileStream.read (( char * ) & readed_record.dSize, 4);
 
         this->fileHeader.SLRecords.push_back (readed_record);
         printf ("SL Record #%d : %d %d\n", this->fileHeader.SLRecords[i].byRecordNumber,
@@ -80,9 +71,9 @@ void DWGFileR2000::ReadHeader ()
 /*      READ HEADER VARIABLES        */
     size_t dHeaderVarsSectionLength = 0;
 
-    fileStream.seekg (this->fileHeader.SLRecords[0].dSeeker, std::ios_base::seek_dir::beg);
+    m_oFileStream.seekg (this->fileHeader.SLRecords[0].dSeeker, std::ios_base::beg);
 
-    fileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
+    m_oFileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_START, DWG_SENTINELS::SENTINEL_LENGTH) )
     {
         printf ("File is corrupted (wrong pointer to HEADER_VARS section,"
@@ -93,13 +84,13 @@ void DWGFileR2000::ReadHeader ()
         return;
     }
 
-    fileStream.read (( char * ) & dHeaderVarsSectionLength, 4);
+    m_oFileStream.read (( char * ) & dHeaderVarsSectionLength, 4);
     printf ("Header variables section length: %ld\n", dHeaderVarsSectionLength);
 
-    fileStream.seekg (this->fileHeader.SLRecords[0].dSeeker + this->fileHeader.SLRecords[0].dSize - 16,
-                std::ios_base::seek_dir::beg);
+    m_oFileStream.seekg (this->fileHeader.SLRecords[0].dSeeker + this->fileHeader.SLRecords[0].dSize - 16,
+                std::ios_base::beg);
 
-    fileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
+    m_oFileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_END, DWG_SENTINELS::SENTINEL_LENGTH) )
     {
         printf ("File is corrupted (HEADERVARS section ending sentinel doesnt match.)");
@@ -120,9 +111,9 @@ void DWGFileR2000::ReadClassesSection ()
     char    *pabyBuf     = new char[100];
     int32_t section_size = 0;
 
-    fileStream.seekg (this->fileHeader.SLRecords[1].dSeeker, std::ios_base::seekdir::beg);
+    m_oFileStream.seekg (this->fileHeader.SLRecords[1].dSeeker, std::ios_base::beg);
 
-    fileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
+    m_oFileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::DS_CLASSES_START, DWG_SENTINELS::SENTINEL_LENGTH) )
     {
         std::cerr << "File is corrupted (wrong pointer to CLASSES section,"
@@ -133,11 +124,11 @@ void DWGFileR2000::ReadClassesSection ()
         return;
     }
 
-    fileStream.read (( char * ) & section_size, 4);
+    m_oFileStream.read (( char * ) & section_size, 4);
     printf ("Classes section length: %d\n", section_size);
 
     pabySectionContent = new char[section_size];
-    fileStream.read (pabySectionContent, section_size);
+    m_oFileStream.read (pabySectionContent, section_size);
 
     size_t bitOffsetFromStart = 0;
 
@@ -159,9 +150,9 @@ void DWGFileR2000::ReadClassesSection ()
         std::endl;
     }
 
-    fileStream.read (pabyBuf, 2); // CLASSES CRC!. TODO: add CRC computing & checking feature.
+    m_oFileStream.read (pabyBuf, 2); // CLASSES CRC!. TODO: add CRC computing & checking feature.
 
-    fileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
+    m_oFileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::DS_CLASSES_END, DWG_SENTINELS::SENTINEL_LENGTH) )
     {
         std::cerr << "File is corrupted (CLASSES section ending sentinel doesnt match.)\n";
@@ -199,14 +190,14 @@ void DWGFileR2000::ReadObjectMap ()
     uint16_t section_size       = 0;
     size_t   bitOffsetFromStart = 0;
 
-    fileStream.seekg (this->fileHeader.SLRecords[2].dSeeker, std::ios_base::seek_dir::beg);
+    m_oFileStream.seekg (this->fileHeader.SLRecords[2].dSeeker, std::ios_base::beg);
 
     int current_section = 0;
     while ( true )
     {
         bitOffsetFromStart = 0;
         std::vector <ObjHandleOffset> obj_map_section;
-        fileStream.read (( char * ) & section_size, 2);
+        m_oFileStream.read (( char * ) & section_size, 2);
         SwapEndianness (section_size, sizeof (section_size));
 
         std::cout << "OBJECT MAP SECTION SIZE: " << section_size << std::endl;
@@ -214,7 +205,7 @@ void DWGFileR2000::ReadObjectMap ()
         if ( section_size == 2 ) break; // last section is empty.
 
         pabySectionContent = new char[section_size];
-        fileStream.read (pabySectionContent, section_size);
+        m_oFileStream.read (pabySectionContent, section_size);
 
         while ( ( bitOffsetFromStart / 8 ) < ( section_size - 2 ) )
         {
@@ -251,8 +242,8 @@ void DWGFileR2000::ReadObjectMap ()
         for ( size_t j = 0; j < object_map_sections[i].size (); ++j )
         {
             bitOffsetFromStart = 0;
-            fileStream.seekg (object_map_sections[i][j].second, std::ios_base::seekdir::beg);
-            fileStream.read (pabySectionContent, 100);
+            m_oFileStream.seekg (object_map_sections[i][j].second, std::ios_base::beg);
+            m_oFileStream.read (pabySectionContent, 100);
 
             DWG2000_CED ced;
             ced.dLength = ReadMSHORT (pabySectionContent, bitOffsetFromStart);
@@ -308,17 +299,17 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
     char   pabySectionSize[8];
     size_t bitOffsetFromStart = 0;
     int    k                  = geometries_map[index].second;
-    fileStream.clear ();
-    fileStream.seekg (geometries_map[index].second, std::ios_base::seekdir::beg);
-    fileStream.read (pabySectionSize, 8);
+    m_oFileStream.clear ();
+    m_oFileStream.seekg (geometries_map[index].second, std::ios_base::beg);
+    m_oFileStream.read (pabySectionSize, 8);
     uint32_t dGeometrySize = ReadMSHORT (pabySectionSize, bitOffsetFromStart);
 
     // And read whole data chunk into memory for future parsing.
     char *pabySectionContent = new char[dGeometrySize];
     bitOffsetFromStart = 0;
-    fileStream.clear ();
-    fileStream.seekg (geometries_map[index].second, std::ios_base::seekdir::beg);
-    fileStream.read (pabySectionContent, dGeometrySize);
+    m_oFileStream.clear ();
+    m_oFileStream.seekg (geometries_map[index].second, std::ios_base::beg);
+    m_oFileStream.read (pabySectionContent, dGeometrySize);
 
     DWG2000_CED ced;
     ced.dLength        = ReadMSHORT (pabySectionContent, bitOffsetFromStart);
@@ -620,12 +611,13 @@ size_t DWGFileR2000::getGeometriesCount ()
     return geometries_map.size ();
 }
 
-void DWGFileR2000::parseFile ()
+DWGFileR2000::DWGFileR2000(const char *pszFileName) :
+    CADFile(pszFileName)
 {
-    this->ReadHeader ();
-    this->ReadClassesSection ();
-    this->ReadObjectMap ();
-}
 
 }
+
+DWGFileR2000::~DWGFileR2000()
+{
+
 }

@@ -30,3 +30,9 @@
 # Mac OSX files
 .DS_Store
 .idea
+
+# Temp
+*~
+*.user
+/build*
+/inst

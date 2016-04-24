@@ -30,18 +30,13 @@
 #ifndef LIB_DWG_R2000_H_H
 #define LIB_DWG_R2000_H_H
 
-#include "dwg_base.h"
-#include "dwg_data_structs.h"
-#include "dwg_constants.h"
+#include "data_structs.h"
+#include "constants.h"
+#include "cadfile.h"
 
 #include <string>
 #include <map>
 #include <vector>
-
-namespace libopencad
-{
-namespace dwg
-{
 
 struct DWG2000_CLASS
 {
@@ -190,36 +185,32 @@ struct DWGR2000_FILE_HEADER
 
 typedef std::pair< long long, long long > ObjHandleOffset;
 
-class DWGFileR2000 : public DWGFile
+class DWGFileR2000 : public CADFile
 {
 public:
-    DWGFileR2000()
-    {
-    }
+    DWGFileR2000(const char *pszFileName);
+    virtual ~DWGFileR2000();
 
-    size_t getGeometriesCount();
+    virtual size_t getGeometriesCount();
 //    size_t getLayersCount();
 //    size_t getBlocksCount();
-    CADGeometry * getGeometry( size_t index );
+    virtual CADGeometry * getGeometry( size_t index );
 //    CADBlock * getBlock( size_t index );
 //    CADLayer * getLayer( size_t index );
 
 protected:
-    void parseFile();
-    void ReadHeader();
-    void ReadClassesSection();
-    void ReadObjectMap();
+    virtual void ReadHeader();
+    virtual void ReadClassesSection();
+    virtual void ReadObjectMap();
 
     DWG2000_CLASS ReadClass( const char * input_array, size_t& bitOffset );
 
+protected:
     std::vector < ObjHandleOffset > geometries_map;
     std::vector < ObjHandleOffset > object_map;
     std::vector < std::vector < ObjHandleOffset > > object_map_sections;
     std::vector < DWG2000_CLASS > custom_classes;
     DWGR2000_FILE_HEADER fileHeader;
 };
-
-}
-}
 
 #endif //LIB_DWG_R2000_H_H

@@ -1,12 +1,14 @@
-/************************************************************************************
- *  Name: cadgeometries.h
- *  Project: libOpenCAD OpenSource CAD formats support library
+/*******************************************************************************
+ *  Project: libopencad
+ *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
- ************************************************************************************
+ *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,24 +27,14 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ************************************************************************************/
+ *******************************************************************************/
 
 #ifndef LIB_CADGEOMETRIES_H
 #define LIB_CADGEOMETRIES_H
 
 #include <vector>
 #include <string>
-
-namespace libopencad
-{
-namespace CADGeometries
-{
-
-enum CADGeometryType
-{
-    POINT, CIRCLE, LWPOLYLINE, ELLIPSE, LINE,
-    POLYLINE3D, TEXT, ARC
-};
+#include <stdint.h>
 
 struct Vertex2D
 {
@@ -95,8 +87,24 @@ struct Vector3D
 
 class CADGeometry
 {
-public:
-    CADGeometryType sGeometryType;
+ public:
+    /**
+     * @brief The CAD geometry types enum
+     */
+    enum CADGeometryType
+    {
+        POINT = 1,
+        CIRCLE,
+        LWPOLYLINE,
+        ELLIPSE,
+        LINE,
+        POLYLINE3D,
+        TEXT,
+        ARC
+    };
+
+public: //TODO: protected
+    CADGeometryType stGeometryType;
     double          dfThickness;
 };
 
@@ -111,7 +119,7 @@ public:
                dfExtrusionZ (0.0f),
                dfXAxisAng (0.0f)
     {
-        sGeometryType = CADGeometryType::POINT;
+        stGeometryType = POINT;
     }
 
     double dfPointX;
@@ -136,7 +144,7 @@ public:
              dfExtrusionY(0.0f),
              dfExtrusionZ(0.0f)
     {
-        sGeometryType = CADGeometryType::LINE;
+        stGeometryType = LINE;
     }
 
     double dfStartX;
@@ -159,7 +167,7 @@ public:
                     dfExtrusionY(0.0f),
                     dfExtrusionZ(0.0f)
     {
-        sGeometryType = CADGeometryType::LWPOLYLINE;
+        stGeometryType = LWPOLYLINE;
     }
 
     double dfConstWidth;
@@ -178,7 +186,7 @@ class Polyline3D : public CADGeometry
 public:
     Polyline3D()
     {
-        sGeometryType = CADGeometryType::POLYLINE3D;
+        stGeometryType = POLYLINE3D;
     }
 
     std::vector< Vertex3D > vertexes;
@@ -195,7 +203,7 @@ public:
                 dfExtrusionZ (0.0f),
                 dfRadius (0.0f)
     {
-        sGeometryType = CADGeometryType::CIRCLE;
+        stGeometryType = CIRCLE;
     }
 
     double dfCenterX;
@@ -223,7 +231,7 @@ public:
                 dfStartingAngle(0.0f),
                 dfEndingAngle(0.0f)
     {
-        sGeometryType = CADGeometryType::ELLIPSE;
+        stGeometryType = ELLIPSE;
     }
 
     double dfCenterX;
@@ -259,7 +267,7 @@ public:
              dHorizontalAlignment(0),
              dVerticalAlignment(0)
     {
-        sGeometryType = CADGeometryType::TEXT;
+        stGeometryType = TEXT;
     }
 
     double dfElevation;
@@ -293,7 +301,7 @@ public:
             dfStartingAngle(0.0f),
             dfEndingAngle(0.0f)
     {
-        sGeometryType = CADGeometryType::ARC;
+        stGeometryType = ARC;
     }
 
     double dfCenterX;
@@ -327,7 +335,5 @@ public:
     std::vector< CADBlock > blocks;
 };
 
-}
-}
 
 #endif //LIB_CADGEOMETRIES_H

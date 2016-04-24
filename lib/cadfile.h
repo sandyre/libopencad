@@ -1,12 +1,14 @@
-/************************************************************************************
- *  Name: dwg_data_structs.h
- *  Project: libOpenCAD OpenSource CAD formats support library
+/*******************************************************************************
+ *  Project: libopencad
+ *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
- ************************************************************************************
+ *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,37 +27,40 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ************************************************************************************/
+ *******************************************************************************/
 
-#ifndef LIB_DWG_DATA_STRUCTS_H
-#define LIB_DWG_DATA_STRUCTS_H
+#ifndef LIB_CADFILE_H
+#define LIB_CADFILE_H
 
-namespace libopencad
-{
-namespace dwg
-{
+#include "cadgeometries.h"
 
-struct DWG_HANDLE
+#include "opencad.h"
+
+#include <fstream>
+
+class EXTERN CADFile
 {
-    char code = 0;
-    char counter = 0;
-    char * handle_or_offset;
+public:
+    CADFile (const char *pszFileName);
+    virtual ~CADFile();
+
+    virtual size_t getGeometriesCount();
+    virtual size_t getLayersCount();
+    virtual size_t getBlocksCount();
+    virtual CADGeometry * getGeometry( size_t index );
+    virtual CADBlock * getBlock( size_t index );
+    virtual CADLayer * getLayer( size_t index );
+    virtual int ParseFile();
+
+protected:
+    virtual void ReadHeader() = 0;
+    virtual void ReadClassesSection() = 0;
+    virtual void ReadObjectMap() = 0;
+
+protected:
+    std::ifstream m_oFileStream;
+    const char *m_pszFileName;
 };
 
-struct SLRecord
-{
-    char byRecordNumber;
-    int  dSeeker;
-    int  dSize;
-};
 
-struct DWG_EED
-{
-    short length;
-    DWG_HANDLE application_handle;
-};
-
-}
-}
-
-#endif //LIB_DWG_DATA_STRUCTS_H
+#endif //LIB_CADFILE_H

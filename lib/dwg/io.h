@@ -30,21 +30,16 @@
 #ifndef LIB_DWG_IO_H
 #define LIB_DWG_IO_H
 
-#include "dwg_data_structs.h"
+#include "data_structs.h"
 
 #include "stdint.h"
 #include <string>
+#include <algorithm>
 
-namespace libopencad
-{
-namespace dwg
-{
-namespace io
-{
 
 // TODO: probably it would be better to have no dependencies on <algorithm>.
 template<typename T, typename S>
-void SwapEndianness ( T &object, S &&size )
+inline void SwapEndianness ( T &object, S &&size )
 {
     std::reverse (( char * ) & object, ( char * ) & object + size);
 }
@@ -58,7 +53,7 @@ double      ReadRAWDOUBLE ( const char * input_array, size_t& bitOffsetFromStart
 uint8_t     Read2B ( const char * input_array, size_t& bitOffsetFromStart );
 uint8_t     Read3B ( const char * input_array, size_t& bitOffsetFromStart );
 uint8_t     Read4B ( const char * input_array, size_t& bitOffsetFromStart );
-DWG_HANDLE  ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart );
+struct DWG_HANDLE  ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart );
 
 bool        ReadBIT ( const char * input_array, size_t& bitOffsetFromStart );
 uint8_t     ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart );
@@ -70,8 +65,5 @@ int64_t     ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
 uint32_t    ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart );
 std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart );
 
-}
-}
-}
 
 #endif //LIB_DWG_IO_H
