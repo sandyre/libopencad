@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <stdarg.h>
 
 static int gLastError = 0;
 
@@ -106,4 +107,14 @@ const char* GetVersionString()
 int GetLastErrorCode()
 {
     return gLastError;
+}
+
+void DebugMsg(const char *format, ...)
+{
+#ifdef _DEBUG
+    va_list argptr;
+    va_start(argptr, format);
+    vfprintf(stdout, format, argptr);
+    va_end(argptr);
+#endif //_DEBUG
 }

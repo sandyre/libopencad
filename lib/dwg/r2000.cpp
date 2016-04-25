@@ -40,20 +40,19 @@ void DWGFileR2000::ReadHeader ()
     int32_t dImageSeeker, dSLRecords;
     int16_t dCodePage;
 
-    m_oFileStream.seekg (6, std::ios_base::beg); // file version skipped.
-    m_oFileStream.seekg (7, std::ios_base::cur); // meaningless data skipped.
+    m_oFileStream.seekg (DWG_VERSION_SIZE + 7, std::ios_base::beg); // file version and meaningless data skipped.
     m_oFileStream.read (( char * ) & dImageSeeker, 4);
 
-    printf ("Image seeker readed: %d\n", dImageSeeker);
+    DebugMsg("Image seeker readed: %d\n", dImageSeeker);
 
     m_oFileStream.seekg (2, std::ios_base::cur);
     m_oFileStream.read (( char * ) & dCodePage, 2);
 
-    printf ("DWG Code page: %d\n", dCodePage);
+    DebugMsg("DWG Code page: %d\n", dCodePage);
 
     m_oFileStream.read (( char * ) & dSLRecords, 4);
 
-    printf ("Section-locator records count: %d\n", dSLRecords);
+    DebugMsg("Section-locator records count: %d\n", dSLRecords);
 
     for ( size_t i = 0; i < dSLRecords; ++i )
     {
@@ -63,7 +62,7 @@ void DWGFileR2000::ReadHeader ()
         m_oFileStream.read (( char * ) & readed_record.dSize, 4);
 
         this->fileHeader.SLRecords.push_back (readed_record);
-        printf ("SL Record #%d : %d %d\n", this->fileHeader.SLRecords[i].byRecordNumber,
+        DebugMsg("SL Record #%d : %d %d\n", this->fileHeader.SLRecords[i].byRecordNumber,
                 this->fileHeader.SLRecords[i].dSeeker,
                 this->fileHeader.SLRecords[i].dSize);
     }
@@ -76,7 +75,7 @@ void DWGFileR2000::ReadHeader ()
     m_oFileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_START, DWG_SENTINELS::SENTINEL_LENGTH) )
     {
-        printf ("File is corrupted (wrong pointer to HEADER_VARS section,"
+        DebugMsg("File is corrupted (wrong pointer to HEADER_VARS section,"
                         "or HEADERVARS starting sentinel corrupted.)");
 
         delete[] pabyBuf;
@@ -85,7 +84,7 @@ void DWGFileR2000::ReadHeader ()
     }
 
     m_oFileStream.read (( char * ) & dHeaderVarsSectionLength, 4);
-    printf ("Header variables section length: %ld\n", dHeaderVarsSectionLength);
+    DebugMsg("Header variables section length: %ld\n", dHeaderVarsSectionLength);
 
     m_oFileStream.seekg (this->fileHeader.SLRecords[0].dSeeker + this->fileHeader.SLRecords[0].dSize - 16,
                 std::ios_base::beg);
@@ -93,7 +92,7 @@ void DWGFileR2000::ReadHeader ()
     m_oFileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_END, DWG_SENTINELS::SENTINEL_LENGTH) )
     {
-        printf ("File is corrupted (HEADERVARS section ending sentinel doesnt match.)");
+        DebugMsg("File is corrupted (HEADERVARS section ending sentinel doesnt match.)");
 
         delete[] pabyBuf;
 
