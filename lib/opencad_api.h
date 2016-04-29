@@ -35,7 +35,7 @@
 #include "cadfile.h"
 
 enum CADErrorCodes{
-    SUCCESS = 0,          /** operation successefull executed*/
+    SUCCESS = 0,          /** operation successfully executed*/
     FILE_OPEN_FAILED,     /** filed to open cad file */
     UNSUPPORTED_VERSION,  /** unsupported file version */
     FILE_PARSE_FAILED     /** parse file failed */

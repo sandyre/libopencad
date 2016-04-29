@@ -38,6 +38,9 @@
 
 #include <fstream>
 
+/**
+ * @brief The abstact CAD file class
+ */
 class EXTERN CADFile
 {
 public:

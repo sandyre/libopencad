@@ -42,7 +42,7 @@ static int gLastError = 0;
 /**
  * @brief Open CAD file
  * @param path to cad file
- * @return CADFile pointer or NULL if failed
+ * @return CADFile pointer or NULL if failed. The pointer need to be freed by user.
  */
 CADFile* OpenCADFile( const char *pszFileName )
 {

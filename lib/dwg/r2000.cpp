@@ -40,17 +40,18 @@ void DWGFileR2000::ReadHeader ()
     int32_t dImageSeeker, dSLRecords;
     int16_t dCodePage;
 
-    m_oFileStream.seekg (DWG_VERSION_SIZE + 7, std::ios_base::beg); // file version and meaningless data skipped.
+     // file version and meaningless data skipped. Usually 6 + 7 = 13
+    m_oFileStream.seekg (DWG_VERSION_SIZE + 7, std::ios_base::beg);
     m_oFileStream.read (( char * ) & dImageSeeker, 4);
 
     DebugMsg("Image seeker readed: %d\n", dImageSeeker);
 
-    m_oFileStream.seekg (2, std::ios_base::cur);
+    m_oFileStream.seekg (2, std::ios_base::cur); // 19
     m_oFileStream.read (( char * ) & dCodePage, 2);
 
     DebugMsg("DWG Code page: %d\n", dCodePage);
 
-    m_oFileStream.read (( char * ) & dSLRecords, 4);
+    m_oFileStream.read (( char * ) & dSLRecords, 4); // 21
 
     DebugMsg("Section-locator records count: %d\n", dSLRecords);
 
