@@ -76,6 +76,6 @@
 #   endif
 #endif
 
-void DebugMsg(const char * format, ...);
+void DebugMsg(const char* format, ...);
 
 #endif // OPENCAD_H

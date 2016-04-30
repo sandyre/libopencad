@@ -103,11 +103,11 @@ int main(int argc, char *argv[])
     int point_count = 0;
     int arc_count = 0;
     int text_count = 0;
-    std::cout << "Layers count: " << poCadFile->getLayersCount () << std::endl;
-    std::cout << "Geometries readed: " << poCadFile->getGeometriesCount () << std::endl;
-    for(int i = 0; i < poCadFile->getGeometriesCount (); ++i )
+    std::cout << "Layers count: " << poCadFile->GetLayersCount () << std::endl;
+    std::cout << "Geometries readed: " << poCadFile->GetGeometriesCount () << std::endl;
+    for(int i = 0; i < poCadFile->GetGeometriesCount (); ++i )
     {
-        CADGeometry* geom = poCadFile->getGeometry (i);
+        CADGeometry* geom = poCadFile->GetGeometry (i);
         if ( geom->stGeometryType == CADGeometry::CIRCLE )
         {
             Circle* geom1 = ( Circle * ) geom;

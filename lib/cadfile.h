@@ -29,8 +29,8 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-#ifndef LIB_CADFILE_H
-#define LIB_CADFILE_H
+#ifndef CADFILE_H
+#define CADFILE_H
 
 #include "opencad.h"
 #include "cadfileio.h"
@@ -45,12 +45,12 @@ public:
     CADFile (CADFileIO* poFileIO);
     virtual ~CADFile();
 
-    virtual size_t getGeometriesCount();
-    virtual size_t getLayersCount();
-    virtual size_t getBlocksCount();
-    virtual CADGeometry * getGeometry( size_t index );
-    virtual CADBlock * getBlock( size_t index );
-    virtual CADLayer * getLayer( size_t index );
+    virtual size_t GetGeometriesCount();
+    virtual size_t GetLayersCount();
+    virtual size_t GetBlocksCount();
+    virtual CADGeometry* GetGeometry( size_t index );
+    virtual CADBlock* GetBlock( size_t index );
+    virtual CADLayer* GetLayer( size_t index );
     virtual int ParseFile();
 
 protected:
@@ -63,4 +63,4 @@ protected:
 };
 
 
-#endif //LIB_CADFILE_H
+#endif // CADFILE_H

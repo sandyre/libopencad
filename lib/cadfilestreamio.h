@@ -40,14 +40,14 @@ class CADFileStreamIO : public CADFileIO
 public:
     CADFileStreamIO(const char* pszFilePath);
     virtual ~CADFileStreamIO();
-    virtual const char *ReadLine();
+    virtual const char* ReadLine();
     virtual bool Eof();
     virtual bool Open(int mode);
     virtual bool Close();
     virtual int Seek(long int offset, SeekOrigin origin);
     virtual long int Tell();
-    virtual size_t Read(void * ptr, size_t size);
-    virtual size_t Write(void * ptr, size_t size);
+    virtual size_t Read(void* ptr, size_t size);
+    virtual size_t Write(void* ptr, size_t size);
     virtual void Rewind();
 protected:
     std::ifstream m_oFileStream;

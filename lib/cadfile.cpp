@@ -35,7 +35,7 @@
 
 #include <iostream>
 
-CADFile::CADFile(CADFileIO *poFileIO)
+CADFile::CADFile(CADFileIO* poFileIO)
 {
     m_poFileIO = poFileIO;
 }
@@ -46,42 +46,42 @@ CADFile::~CADFile()
         delete m_poFileIO;
 }
 
-size_t CADFile::getGeometriesCount ()
+size_t CADFile::GetGeometriesCount ()
 {
     std::cerr << "CADFile::getGeometriesCount() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( 0 );
 }
 
-size_t CADFile::getLayersCount ()
+size_t CADFile::GetLayersCount ()
 {
     std::cerr << "CADFile::getLayersCount() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( 0 );
 }
 
-size_t CADFile::getBlocksCount ()
+size_t CADFile::GetBlocksCount ()
 {
     std::cerr << "CADFile::getBlocksCount() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( 0 );
 }
 
-CADBlock * CADFile::getBlock ( size_t index )
+CADBlock * CADFile::GetBlock ( size_t index )
 {
     std::cerr << "CADFile::getBlock() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( nullptr );
 }
 
-CADLayer * CADFile::getLayer ( size_t index )
+CADLayer * CADFile::GetLayer ( size_t index )
 {
     std::cerr << "CADFile::getLayer() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( nullptr );
 }
 
-CADGeometry * CADFile::getGeometry ( size_t index )
+CADGeometry * CADFile::GetGeometry ( size_t index )
 {
     std::cerr << "CADFile::getGeometry() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";

@@ -66,7 +66,7 @@ public:
         if(IsOpened())
             Close();
     }
-    virtual const char *ReadLine() = 0;
+    virtual const char* ReadLine() = 0;
     virtual bool Eof() = 0;
     virtual bool Open(int mode) = 0;
     virtual bool IsOpened()
@@ -81,8 +81,8 @@ public:
 
     virtual int Seek(long int offset, SeekOrigin origin) = 0;
     virtual long int Tell() = 0;
-    virtual size_t Read(void * ptr, size_t size) = 0;
-    virtual size_t Write(void * ptr, size_t size) = 0;
+    virtual size_t Read(void* ptr, size_t size) = 0;
+    virtual size_t Write(void* ptr, size_t size) = 0;
     virtual void Rewind() = 0;
     const char* GetFilePath()
     {

@@ -709,7 +709,7 @@ DWGObject * DWGFileR2000::getObject ( size_t section, size_t index )
 //    return 0;
 //}
 
-CADGeometry * DWGFileR2000::getGeometry ( size_t index )
+CADGeometry * DWGFileR2000::GetGeometry ( size_t index )
 {
     CADGeometry * readed_geometry;
 
@@ -1219,11 +1219,11 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
     return readed_geometry;
 }
 
-CADLayer * DWGFileR2000::getLayer ( size_t index )
+CADLayer * DWGFileR2000::GetLayer ( size_t index )
 {
     CADLayer * layer = new CADLayer();
 
-    for ( size_t i = 0; i < getGeometriesCount (); ++i )
+    for ( size_t i = 0; i < GetGeometriesCount (); ++i )
     {
 
     }
@@ -1231,12 +1231,12 @@ CADLayer * DWGFileR2000::getLayer ( size_t index )
     return layer;
 }
 
-size_t DWGFileR2000::getGeometriesCount ()
+size_t DWGFileR2000::GetGeometriesCount ()
 {
     return geometries_map.size ();
 }
 
-size_t DWGFileR2000::getLayersCount ()
+size_t DWGFileR2000::GetLayersCount ()
 {
     return layer_map.size();
 }

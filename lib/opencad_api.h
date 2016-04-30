@@ -63,9 +63,9 @@ enum CADErrorCodes
 
 EXTERN int GetVersion();
 EXTERN const char* GetVersionString();
-EXTERN CADFile *OpenCADFile( CADFileIO* pCADFileIO );
+EXTERN CADFile* OpenCADFile( CADFileIO* pCADFileIO );
 EXTERN int GetLastErrorCode();
-EXTERN CADFileIO *GetDeafultFileIO(const char * pszFileName);
+EXTERN CADFileIO* GetDeafultFileIO(const char* pszFileName);
 EXTERN int IdentifyCADFile( CADFileIO* pCADFileIO );
 
 #endif // OPENCAD_API_H

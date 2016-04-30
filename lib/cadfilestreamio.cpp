@@ -30,7 +30,7 @@
 *******************************************************************************/
 #include "cadfilestreamio.h"
 
-CADFileStreamIO::CADFileStreamIO(const char *pszFilePath) : CADFileIO(pszFilePath)
+CADFileStreamIO::CADFileStreamIO(const char* pszFilePath) : CADFileIO(pszFilePath)
 {
 
 }
@@ -40,7 +40,7 @@ CADFileStreamIO::~CADFileStreamIO()
 
 }
 
-const char *CADFileStreamIO::ReadLine()
+const char* CADFileStreamIO::ReadLine()
 {
     // TODO: getline
     return NULL;
@@ -53,7 +53,7 @@ bool CADFileStreamIO::Eof()
 
 bool CADFileStreamIO::Open(int mode)
 {
-    std::ios_base::openmode io_mode = std::ios_base::in;
+    std::ios_base::openmode io_mode = std::ios_base::in; // as we use ifstream
     if(mode & OpenMode::binary)
         io_mode |= std::ios_base::binary;
 
@@ -99,12 +99,12 @@ long CADFileStreamIO::Tell()
     return m_oFileStream.tellg();
 }
 
-size_t CADFileStreamIO::Read(void *ptr, size_t size)
+size_t CADFileStreamIO::Read(void* ptr, size_t size)
 {
     return m_oFileStream.read((char*)ptr, size).gcount();
 }
 
-size_t CADFileStreamIO::Write(void *ptr, size_t size)
+size_t CADFileStreamIO::Write(void* ptr, size_t size)
 {
     // unsupported
     return 0;

@@ -41,7 +41,7 @@
 
 static int gLastError = CADErrorCodes::SUCCESS;
 
-static int CheckCADFile(CADFileIO *pCADFileIO)
+static int CheckCADFile(CADFileIO* pCADFileIO)
 {
     if(NULL == pCADFileIO)
         return 0;
@@ -69,10 +69,10 @@ static int CheckCADFile(CADFileIO *pCADFileIO)
 
 /**
  * @brief Open CAD file
- * @param path to CAD file
+ * @param path to CAD file reader pointer
  * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
  */
-CADFile* OpenCADFile( CADFileIO *pCADFileIO )
+CADFile* OpenCADFile( CADFileIO* pCADFileIO )
 {
     int nCADFileVersion = CheckCADFile(pCADFileIO);
     CADFile * poCAD = NULL;
@@ -116,6 +116,10 @@ const char* GetVersionString()
     return OCAD_VERSION;
 }
 
+/**
+ * @brief Get last error code
+ * @return last error code
+ */
 int GetLastErrorCode()
 {
     return gLastError;
@@ -127,7 +131,7 @@ int GetLastErrorCode()
  * @return CADFileIO pointer or null if error. The pointer have to be freed by
  * user
  */
-CADFileIO *GetDeafultFileIO(const char * pszFileName)
+CADFileIO* GetDeafultFileIO(const char* pszFileName)
 {
     return new CADFileStreamIO(pszFileName);
 }
@@ -145,7 +149,7 @@ int IdentifyCADFile( CADFileIO* pCADFileIO )
     return result;
 }
 
-void DebugMsg(const char *format, ...)
+void DebugMsg(const char* format, ...)
 {
 #ifdef _DEBUG
     va_list argptr;

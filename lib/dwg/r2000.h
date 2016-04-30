@@ -367,12 +367,12 @@ public:
     DWGFileR2000(CADFileIO* poFileIO);
     virtual ~DWGFileR2000();
 
-    virtual size_t getGeometriesCount();
-    virtual size_t getLayersCount();
+    virtual size_t GetGeometriesCount();
+    virtual size_t GetLayersCount();
 //    size_t getBlocksCount();
-    virtual CADGeometry * getGeometry( size_t index );
+    virtual CADGeometry * GetGeometry( size_t index );
 //    CADBlock * getBlock( size_t index );
-    virtual CADLayer * getLayer( size_t index );
+    virtual CADLayer * GetLayer( size_t index );
 
 protected:
     virtual void ReadHeader();
