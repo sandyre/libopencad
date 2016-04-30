@@ -1,12 +1,14 @@
-/************************************************************************************
- *  Name: dwg_data_structs.h
- *  Project: libOpenCAD OpenSource CAD formats support library
+/*******************************************************************************
+ *  Project: libopencad
+ *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
- ************************************************************************************
+ *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,31 +27,30 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ************************************************************************************/
+ ******************************************************************************/
+#ifndef CADFILESTREAMIO_H
+#define CADFILESTREAMIO_H
 
-#ifndef DATA_STRUCTS_H
-#define DATA_STRUCTS_H
+#include "cadfileio.h"
 
-struct DWG_HANDLE
+#include <fstream>
+
+class CADFileStreamIO : public CADFileIO
 {
-    char code = 0;
-    char counter = 0;
-    char * handle_or_offset = 0;
+public:
+    CADFileStreamIO(const char* pszFilePath);
+    virtual ~CADFileStreamIO();
+    virtual const char *ReadLine();
+    virtual bool Eof();
+    virtual bool Open(int mode);
+    virtual bool Close();
+    virtual int Seek(long int offset, SeekOrigin origin);
+    virtual long int Tell();
+    virtual size_t Read(void * ptr, size_t size);
+    virtual size_t Write(void * ptr, size_t size);
+    virtual void Rewind();
+protected:
+    std::ifstream m_oFileStream;
 };
 
-struct SLRecord
-{
-    char byRecordNumber = 0;
-    int  dSeeker        = 0;
-    int  dSize          = 0;
-};
-
-struct DWG_EED
-{
-    short length = 0;
-    DWG_HANDLE application_handle;
-    char * data;
-};
-
-
-#endif // DATA_STRUCTS_H
+#endif // CADFILESTREAMIO_H

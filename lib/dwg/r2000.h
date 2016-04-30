@@ -31,7 +31,6 @@
 #define LIB_DWG_R2000_H_H
 
 #include "data_structs.h"
-#include "objects.h"
 #include "constants.h"
 #include "cadfile.h"
 
@@ -365,7 +364,7 @@ typedef std::pair< long long, long long > ObjHandleOffset;
 class DWGFileR2000 : public CADFile
 {
 public:
-    DWGFileR2000(const char *pszFileName);
+    DWGFileR2000(CADFileIO* poFileIO);
     virtual ~DWGFileR2000();
 
     virtual size_t getGeometriesCount();
@@ -381,9 +380,9 @@ protected:
     virtual void ReadObjectMap();
 
     DWG2000_CLASS ReadClass( const char * input_array, size_t& bitOffset );
-    DWGObject * getObject( size_t section, size_t index );
+//    DWGObject * getObject( size_t section, size_t index );
 protected:
-    std::vector < DWGObject * > objects;
+//    std::vector < DWGObject * > objects;
     std::vector < ObjHandleOffset > layer_map;
     std::vector < ObjHandleOffset > geometries_map;
     std::vector < std::vector < ObjHandleOffset > > object_map_sections;

@@ -1,10 +1,10 @@
 #include "gtest/gtest.h"
-#include "../../lib/opencad_api.h"
+#include "opencad_api.h"
 
 TEST(reading_circles, triplet)
 {
     using namespace std;
-    auto opened_dwg = OpenCADFile ("./data/triple_circles.dwg");
+    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/triple_circles.dwg"));
 
     // First circle. Should be 0,0,0 (x,y,z)
     // Radius 16.6 Thickness 1.2

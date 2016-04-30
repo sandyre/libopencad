@@ -35,14 +35,15 @@
 
 #include <iostream>
 
-CADFile::CADFile(const char *pszFileName)
+CADFile::CADFile(CADFileIO *poFileIO)
 {
-    m_pszFileName = pszFileName;
+    m_poFileIO = poFileIO;
 }
 
 CADFile::~CADFile()
 {
-    m_oFileStream.close();
+    if(NULL != m_poFileIO)
+        delete m_poFileIO;
 }
 
 size_t CADFile::getGeometriesCount ()
@@ -90,15 +91,18 @@ CADGeometry * CADFile::getGeometry ( size_t index )
 
 int CADFile::ParseFile()
 {
-    m_oFileStream = std::ifstream( m_pszFileName, std::ios_base::in |
-                             std::ios_base::binary );
-    if ( m_oFileStream.is_open () )
-    {
-        ReadHeader ();
-        ReadClassesSection ();
-        ReadObjectMap ();
+    if(NULL == m_poFileIO)
+        return CADErrorCodes::FILE_OPEN_FAILED;
 
-        return CADErrorCodes::SUCCESS;
+    if(!m_poFileIO->IsOpened())
+    {
+        if(!m_poFileIO->Open(CADFileIO::read | CADFileIO::binary))
+            return CADErrorCodes::FILE_OPEN_FAILED;
     }
-    return CADErrorCodes::FILE_PARSE_FAILED;
-}
+
+    ReadHeader ();
+    ReadClassesSection ();
+    ReadObjectMap ();
+
+    return CADErrorCodes::SUCCESS;
+ }

@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    CADFile *poCadFile = OpenCADFile( pszCADFilePath );
+    CADFile *poCadFile = OpenCADFile( GetDeafultFileIO(pszCADFilePath) );
 
     if (poCadFile == NULL)
     {

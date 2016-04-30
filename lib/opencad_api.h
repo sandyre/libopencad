@@ -34,17 +34,38 @@
 
 #include "cadfile.h"
 
+enum CADVersions
+{
+    DWG_R13 = 1012,
+    DWG_R14 = 1014,
+    DWG_R2000 = 1015,
+    DWG_R2004 = 1018,
+    DWG_R2007 = 1021,
+    DWG_R2010 = 1024,
+    DWG_R2013 = 1027,
+    DXF_UNDEF = -1000,
+    DXF_R13 = -DWG_R13,
+    DXF_R14 = -DWG_R14,
+    DXF_R2000 = -DWG_R2000,
+    DXF_R2004 = -DWG_R2004,
+    DXF_R2007 = -DWG_R2007,
+    DXF_R2010 = -DWG_R2010,
+    DXF_R2013 = -DWG_R2013
+};
+
 enum CADErrorCodes
 {
-    SUCCESS = 0,          /** operation successfully executed*/
-    FILE_OPEN_FAILED,     /** filed to open cad file */
-    UNSUPPORTED_VERSION,  /** unsupported file version */
-    FILE_PARSE_FAILED     /** parse file failed */
+    SUCCESS = 0,          /**< operation successfully executed */
+    FILE_OPEN_FAILED,     /**< failed to open CAD file */
+    UNSUPPORTED_VERSION,  /**< unsupported CAD file version */
+    FILE_PARSE_FAILED     /**< failed to parse file */
 };
 
 EXTERN int GetVersion();
 EXTERN const char* GetVersionString();
-EXTERN CADFile* OpenCADFile( const char * pszFileName );
+EXTERN CADFile *OpenCADFile( CADFileIO* pCADFileIO );
 EXTERN int GetLastErrorCode();
+EXTERN CADFileIO *GetDeafultFileIO(const char * pszFileName);
+EXTERN int IdentifyCADFile( CADFileIO* pCADFileIO );
 
 #endif // OPENCAD_API_H
