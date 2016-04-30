@@ -27,40 +27,71 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- *******************************************************************************/
+ ******************************************************************************/
+#ifndef CADFILEIO_H
+#define CADFILEIO_H
 
-#ifndef CADFILE_H
-#define CADFILE_H
-
-#include "opencad.h"
-#include "cadfileio.h"
-#include "cadgeometries.h"
+#include <cstddef>
 
 /**
- * @brief The abstact CAD file class
+ * @brief The CADFileIO class provides in/out file operations as read, write,
+ * seek, etc. This is abstract class.
  */
-class EXTERN CADFile
+class CADFileIO
 {
 public:
-    CADFile (CADFileIO* poFileIO);
-    virtual ~CADFile();
+    enum SeekOrigin
+    {
+        BEG, /**< Begin of the file */
+        CUR, /**< Current position of the pointer */
+        END  /**< End of file */
+    };
 
-    virtual size_t GetGeometriesCount();
-    virtual size_t GetLayersCount();
-    virtual size_t GetBlocksCount();
-    virtual CADGeometry* GetGeometry( size_t index );
-    virtual CADBlock* GetBlock( size_t index );
-    virtual CADLayer* GetLayer( size_t index );
-    virtual int ParseFile();
+    enum OpenMode
+    {
+        binary 		= 1L << 2,
+        read		= 1L << 3,
+        write 		= 1L << 4
+    };
+
+public:
+    CADFileIO(const char* pszFileName)
+    {
+        m_pszFilePath = pszFileName;
+        m_bIsOpened = false;
+    }
+
+    virtual ~CADFileIO()
+    {
+        if(IsOpened())
+            Close();
+    }
+    virtual const char* ReadLine() = 0;
+    virtual bool Eof() = 0;
+    virtual bool Open(int mode) = 0;
+    virtual bool IsOpened()
+    {
+        return m_bIsOpened;
+    }
+    virtual bool Close()
+    {
+        m_bIsOpened = false;
+        return true;
+    }
+
+    virtual int Seek(long int offset, SeekOrigin origin) = 0;
+    virtual long int Tell() = 0;
+    virtual size_t Read(void* ptr, size_t size) = 0;
+    virtual size_t Write(void* ptr, size_t size) = 0;
+    virtual void Rewind() = 0;
+    const char* GetFilePath()
+    {
+        return m_pszFilePath;
+    }
 
 protected:
-    virtual void ReadHeader() = 0;
-    virtual void ReadClassesSection() = 0;
-    virtual void ReadObjectMap() = 0;
-
-protected:
-    CADFileIO* m_poFileIO;
+    const char* m_pszFilePath;
+    bool m_bIsOpened;
 };
 
-
-#endif // CADFILE_H
+#endif // CADFILEIO_H

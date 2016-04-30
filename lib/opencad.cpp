@@ -30,55 +30,69 @@
  *******************************************************************************/
 
 #include "opencad_api.h"
+#include "cadfilestreamio.h"
 #include "dwg/constants.h"
 #include "dwg/r2000.h"
 
-#include <iostream>
+#include <cctype>
+#include <cstdarg>
 #include <cstring>
+#include <iostream>
 
-static int gLastError = 0;
+static int gLastError = CADErrorCodes::SUCCESS;
 
-/**
- * @brief Open CAD file
- * @param path to cad file
- * @return CADFile pointer or NULL if failed
- */
-CADFile* OpenCADFile( const char *pszFileName )
+static int CheckCADFile(CADFileIO* pCADFileIO)
 {
-    CADFile * poCAD = NULL;
-    std::ifstream oCADFile ( pszFileName, std::ios_base::in |
-                             std::ios_base::binary );
+    if(NULL == pCADFileIO)
+        return 0;
 
-    if ( !oCADFile.is_open () )
+    if(!pCADFileIO->IsOpened())
+        pCADFileIO->Open(CADFileIO::read | CADFileIO::binary);
+
+    const char* pszFilePath = pCADFileIO->GetFilePath();
+    int nPathLen = strlen(pszFilePath);
+    if(toupper(pszFilePath[nPathLen - 3]) == 'D' &&
+       toupper(pszFilePath[nPathLen - 2]) == 'X' &&
+       toupper(pszFilePath[nPathLen - 1]) == 'F')
     {
-        gLastError = CADErrorCodes::FILE_OPEN_FAILED;
-        return NULL;
-    }
-
-    // check if dxf - last 3 chars in path (case insensitive)
-    // check if binary dxf
-
-    char pabyDWGVersion[DWG_VERSION_SIZE];
-    oCADFile.read ( pabyDWGVersion, DWG_VERSION_SIZE);
-    oCADFile.close();
-
-    if ( memcmp ( pabyDWGVersion, DWG_VERSION_R2000, DWG_VERSION_SIZE ) == 0 )
-    {
-        poCAD = new DWGFileR2000 (pszFileName);
+        //TODO: "AutoCAD Binary DXF"
+        std::cerr << "DXF ASCII and binary is not supported yet";
     }
     else
     {
+        char pabyDWGVersion[DWG_VERSION_STR_SIZE + 1] = {0};
+        pCADFileIO->Read( pabyDWGVersion, DWG_VERSION_STR_SIZE);
+        return atoi(pabyDWGVersion + 2);
+    }
+    return 0;
+}
+
+/**
+ * @brief Open CAD file
+ * @param path to CAD file reader pointer
+ * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
+ */
+CADFile* OpenCADFile( CADFileIO* pCADFileIO )
+{
+    int nCADFileVersion = CheckCADFile(pCADFileIO);
+    CADFile * poCAD = NULL;
+
+    switch (nCADFileVersion) {
+    case CADVersions::DWG_R2000:
+        poCAD = new DWGFileR2000 (pCADFileIO);
+        break;
+    default:
         gLastError = CADErrorCodes::UNSUPPORTED_VERSION;
+        delete pCADFileIO;
+        return NULL;
     }
 
-    if(NULL != poCAD)
+    gLastError = poCAD->ParseFile();
+    if(gLastError != CADErrorCodes::SUCCESS)
     {
-        gLastError = poCAD->ParseFile();
-        if(gLastError != CADErrorCodes::SUCCESS)
-        {
-            delete poCAD;
-            poCAD = NULL;
-        }
+        delete poCAD;
+        delete pCADFileIO;
+        return NULL;
     }
 
     return poCAD;
@@ -102,7 +116,45 @@ const char* GetVersionString()
     return OCAD_VERSION;
 }
 
+/**
+ * @brief Get last error code
+ * @return last error code
+ */
 int GetLastErrorCode()
 {
     return gLastError;
+}
+
+/**
+ * @brief GetDeafultFileIO return default file in/out class.
+ * @param pszFileName CAD file path
+ * @return CADFileIO pointer or null if error. The pointer have to be freed by
+ * user
+ */
+CADFileIO* GetDeafultFileIO(const char* pszFileName)
+{
+    return new CADFileStreamIO(pszFileName);
+}
+
+/**
+ * @brief IdentifyCADFile
+ * @param pCADFileIO pointer to file in/out class
+ * @return positive number for dwg version, negative for dxf version, 0 if error
+ * occured
+ */
+int IdentifyCADFile( CADFileIO* pCADFileIO )
+{
+    int result = CheckCADFile(pCADFileIO);
+    delete pCADFileIO;
+    return result;
+}
+
+void DebugMsg(const char* format, ...)
+{
+#ifdef _DEBUG
+    va_list argptr;
+    va_start(argptr, format);
+    vfprintf(stdout, format, argptr);
+    va_end(argptr);
+#endif //_DEBUG
 }

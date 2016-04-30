@@ -35,52 +35,53 @@
 
 #include <iostream>
 
-CADFile::CADFile(const char *pszFileName)
+CADFile::CADFile(CADFileIO* poFileIO)
 {
-    m_pszFileName = pszFileName;
+    m_poFileIO = poFileIO;
 }
 
 CADFile::~CADFile()
 {
-    m_oFileStream.close();
+    if(NULL != m_poFileIO)
+        delete m_poFileIO;
 }
 
-size_t CADFile::getGeometriesCount ()
+size_t CADFile::GetGeometriesCount ()
 {
     std::cerr << "CADFile::getGeometriesCount() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( 0 );
 }
 
-size_t CADFile::getLayersCount ()
+size_t CADFile::GetLayersCount ()
 {
     std::cerr << "CADFile::getLayersCount() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( 0 );
 }
 
-size_t CADFile::getBlocksCount ()
+size_t CADFile::GetBlocksCount ()
 {
     std::cerr << "CADFile::getBlocksCount() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( 0 );
 }
 
-CADBlock * CADFile::getBlock ( size_t index )
+CADBlock * CADFile::GetBlock ( size_t index )
 {
     std::cerr << "CADFile::getBlock() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( nullptr );
 }
 
-CADLayer * CADFile::getLayer ( size_t index )
+CADLayer * CADFile::GetLayer ( size_t index )
 {
     std::cerr << "CADFile::getLayer() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( nullptr );
 }
 
-CADGeometry * CADFile::getGeometry ( size_t index )
+CADGeometry * CADFile::GetGeometry ( size_t index )
 {
     std::cerr << "CADFile::getGeometry() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
@@ -90,15 +91,18 @@ CADGeometry * CADFile::getGeometry ( size_t index )
 
 int CADFile::ParseFile()
 {
-    m_oFileStream = std::ifstream( m_pszFileName, std::ios_base::in |
-                             std::ios_base::binary );
-    if ( m_oFileStream.is_open () )
-    {
-        ReadHeader ();
-        ReadClassesSection ();
-        ReadObjectMap ();
+    if(NULL == m_poFileIO)
+        return CADErrorCodes::FILE_OPEN_FAILED;
 
-        return CADErrorCodes::SUCCESS;
+    if(!m_poFileIO->IsOpened())
+    {
+        if(!m_poFileIO->Open(CADFileIO::read | CADFileIO::binary))
+            return CADErrorCodes::FILE_OPEN_FAILED;
     }
-    return CADErrorCodes::FILE_PARSE_FAILED;
-}
+
+    ReadHeader ();
+    ReadClassesSection ();
+    ReadObjectMap ();
+
+    return CADErrorCodes::SUCCESS;
+ }

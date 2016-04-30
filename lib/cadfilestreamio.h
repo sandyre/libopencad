@@ -27,40 +27,30 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- *******************************************************************************/
+ ******************************************************************************/
+#ifndef CADFILESTREAMIO_H
+#define CADFILESTREAMIO_H
 
-#ifndef CADFILE_H
-#define CADFILE_H
-
-#include "opencad.h"
 #include "cadfileio.h"
-#include "cadgeometries.h"
 
-/**
- * @brief The abstact CAD file class
- */
-class EXTERN CADFile
+#include <fstream>
+
+class CADFileStreamIO : public CADFileIO
 {
 public:
-    CADFile (CADFileIO* poFileIO);
-    virtual ~CADFile();
-
-    virtual size_t GetGeometriesCount();
-    virtual size_t GetLayersCount();
-    virtual size_t GetBlocksCount();
-    virtual CADGeometry* GetGeometry( size_t index );
-    virtual CADBlock* GetBlock( size_t index );
-    virtual CADLayer* GetLayer( size_t index );
-    virtual int ParseFile();
-
+    CADFileStreamIO(const char* pszFilePath);
+    virtual ~CADFileStreamIO();
+    virtual const char* ReadLine();
+    virtual bool Eof();
+    virtual bool Open(int mode);
+    virtual bool Close();
+    virtual int Seek(long int offset, SeekOrigin origin);
+    virtual long int Tell();
+    virtual size_t Read(void* ptr, size_t size);
+    virtual size_t Write(void* ptr, size_t size);
+    virtual void Rewind();
 protected:
-    virtual void ReadHeader() = 0;
-    virtual void ReadClassesSection() = 0;
-    virtual void ReadObjectMap() = 0;
-
-protected:
-    CADFileIO* m_poFileIO;
+    std::ifstream m_oFileStream;
 };
 
-
-#endif // CADFILE_H
+#endif // CADFILESTREAMIO_H

@@ -1,5 +1,5 @@
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-include_directories(libopencad)
+include_directories(${CMAKE_SOURCE_DIR}/lib)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -9,4 +9,4 @@ add_executable(run_libopencad_tests
 file(COPY data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(run_libopencad_tests gtest gtest_main)
-target_link_libraries(run_libopencad_tests opencadstatic)
+target_link_libraries(run_libopencad_tests ${TARGET_LINK})

@@ -1,14 +1,14 @@
 #include "gtest/gtest.h"
-#include "../../lib/opencad_api.h"
+#include "opencad_api.h"
 
 TEST(reading_circles, triplet)
 {
     using namespace std;
-    auto opened_dwg = OpenCADFile ("./data/triple_circles.dwg");
+    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/triple_circles.dwg"));
 
     // First circle. Should be 0,0,0 (x,y,z)
     // Radius 16.6 Thickness 1.2
-    CADGeometry *geometry = opened_dwg->getGeometry (0);
+    CADGeometry *geometry = opened_dwg->GetGeometry (0);
     ASSERT_EQ (geometry->stGeometryType, CADGeometry::CADGeometryType::CIRCLE);
     Circle *circle = ( Circle * ) geometry;
     ASSERT_NEAR (circle->dfCenterX, 0.0f, 0.0001f);
@@ -22,7 +22,7 @@ TEST(reading_circles, triplet)
     // Second circle. Should be 10,10,10 (x,y,z)
     // Radius 10 Thickness 1.8
 
-    geometry = opened_dwg->getGeometry (1);
+    geometry = opened_dwg->GetGeometry (1);
     ASSERT_EQ (geometry->stGeometryType, CADGeometry::CADGeometryType::CIRCLE);
     circle = ( Circle * ) geometry;
 
@@ -37,7 +37,7 @@ TEST(reading_circles, triplet)
     // Third circle. Should be -15,0,0 (x,y,z)
     // Radius 9.5 Thickness 0.8
 
-    geometry = opened_dwg->getGeometry (2);
+    geometry = opened_dwg->GetGeometry (2);
     ASSERT_EQ (geometry->stGeometryType, CADGeometry::CADGeometryType::CIRCLE);
     circle = ( Circle * ) geometry;
 

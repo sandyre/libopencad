@@ -27,8 +27,8 @@
  *  SOFTWARE.
  ************************************************************************************/
 
-#ifndef LIB_DWG_DATA_STRUCTS_H
-#define LIB_DWG_DATA_STRUCTS_H
+#ifndef DATA_STRUCTS_H
+#define DATA_STRUCTS_H
 
 struct DWG_HANDLE
 {
@@ -52,4 +52,4 @@ struct DWG_EED
 };
 
 
-#endif //LIB_DWG_DATA_STRUCTS_H
+#endif // DATA_STRUCTS_H

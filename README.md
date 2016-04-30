@@ -42,4 +42,4 @@ Now supported CAD files version are:
 
 Build status
 ------------
-Linux: [![Build Status](https://travis-ci.org/sandyre/libdwgx.svg?branch=master)](https://travis-ci.org/sandyre/libdwgx)
+Linux: [![Build Status](https://travis-ci.org/sandyre/libopencad.svg?branch=master)](https://travis-ci.org/sandyre/libopencad)

@@ -52,15 +52,17 @@ set(HHEADERS
     opencad.h
     opencad_api.h
     cadfile.h
+    cadfileio.h
     cadgeometries.h)
 
-set(HHEADER_PRIV
-
+set(HHEADER_PRIV    
+    cadfilestreamio.h
     )
 
 set(CSOURCES
     opencad.cpp
     cadfile.cpp
+    cadfilestreamio.cpp
     )
 
 set(LIB_NAME)
