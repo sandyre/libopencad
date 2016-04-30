@@ -332,7 +332,16 @@ public:
     {
     }
 
-    std::vector< CADBlock > blocks;
+    std::string sLayerName;
+    bool bFrozen;
+    bool bOn;
+    bool bFrozenByDefaultInNewVPORT;
+    bool bLocked;
+    bool bPlottingFlag;
+    int16_t dLineWeight;
+    int16_t dColor;
+
+    std::vector< CADGeometry * > geometries;
 };
 
 

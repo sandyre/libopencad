@@ -33,19 +33,19 @@
 #include <iostream>
 #include <cstring>
 
-//int16_t CalculateCRC8 ( uint16_t initial_val, const char * ptr, int32_t num )
-//{
-//    unsigned char al;
-//    while ( num-- > 0 )
-//    {
-//        al = ( unsigned char )( ( *ptr ) ^ ( ( char ) ( initial_val & 0xFF ) ) );
-//        initial_val = ( initial_val >> 8 ) & 0xFF;
-//        initial_val = initial_val ^ CRC8_TABLE[al & 0xFF];
-//        ptr++;
-//    }
-//
-//    return initial_val;
-//}
+int16_t CalculateCRC8 ( uint16_t initial_val, const char * ptr, int32_t num )
+{
+    unsigned char al;
+    while ( num-- > 0 )
+    {
+        al = ( unsigned char )( ( *ptr ) ^ ( ( char ) ( initial_val & 0xFF ) ) );
+        initial_val = ( initial_val >> 8 ) & 0xFF;
+        initial_val = initial_val ^ CRC8_TABLE[al & 0xFF];
+        ptr++;
+    }
+
+    return initial_val;
+}
 
 uint8_t Read2B ( const char * input_array, size_t& bitOffsetFromStart )
 {
@@ -65,10 +65,10 @@ uint8_t Read2B ( const char * input_array, size_t& bitOffsetFromStart )
             break;
         default:
             result  = ( a2BBytes[0] >> ( 6 - bitOffsetInByte ) );
-            result &= 0b00000011;
             break;
     }
 
+    result &= 0b00000011;
     bitOffsetFromStart += 2;
 
     return result;
@@ -98,10 +98,10 @@ uint8_t Read3B ( const char * input_array, size_t& bitOffsetFromStart )
 
         default:
             result  = ( a3BBytes[0] >> ( 5 - bitOffsetInByte ) );
-            result &= 0b00000111;
             break;
     }
 
+    result &= 0b00000111;
     bitOffsetFromStart += 3;
 
     return result;
@@ -135,10 +135,10 @@ uint8_t Read4B ( const char * input_array, size_t& bitOffsetFromStart )
 
         default:
             result  = ( a4BBytes[0] >> ( 4 - bitOffsetInByte ) );
-            result &= 0b00001111;
             break;
     }
 
+    result &= 0b00001111;
     bitOffsetFromStart += 4;
 
     return result;
@@ -233,13 +233,13 @@ int32_t ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
             break;
 
         default:
-            aLongBytes[0]   = ( aLongBytes[0] << bitOffsetInByte );
+            aLongBytes[0]  <<= bitOffsetInByte;
             aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[1] = ( aLongBytes[ 1 ] << bitOffsetInByte );
+            aLongBytes[1]  <<= bitOffsetInByte;
             aLongBytes[1] |= ( aLongBytes[2] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[2]   = ( aLongBytes[2] << bitOffsetInByte );
+            aLongBytes[2]  <<= bitOffsetInByte;
             aLongBytes[2] |= ( aLongBytes[3] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[3] = ( aLongBytes[ 3 ] << bitOffsetInByte );
+            aLongBytes[3]  <<= bitOffsetInByte;
             aLongBytes[3] |= ( aLongBytes[4] >> ( 8 - bitOffsetInByte ) );
             break;
     }
@@ -345,12 +345,85 @@ std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart )
 
     std::string result;
 
-    for ( size_t i = 0; i < string_length - 1; ++i )
+    for ( size_t i = 0; i < string_length; ++i )
     {
         result += ReadCHAR ( input_array, bitOffsetFromStart );
     }
 
-    bitOffsetFromStart += 8;
+    return result;
+}
+
+int64_t ReadUMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
+{
+    // TODO: bit offset is calculated, but function has nothing to do with it.
+    long long result = 0;
+    bool   negative = false;
+    size_t byteOffset      = bitOffsetFromStart / 8;
+    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+
+    const char * pMCharFirstByte = input_array + byteOffset;
+    unsigned char aMCharBytes[8]; // 8 bytes is maximum.
+    memcpy ( aMCharBytes, pMCharFirstByte, 8 );
+
+    size_t MCharBytesCount = 0;
+    for ( size_t i = 0; i < 8; ++i )
+    {
+        aMCharBytes[i] = ReadCHAR ( input_array, bitOffsetFromStart );
+        ++MCharBytesCount;
+        if ( !( aMCharBytes[i] & 0b10000000 ) )
+        {
+            break;
+        }
+    }
+
+    SwapEndianness ( aMCharBytes, MCharBytesCount ); // LSB to MSB
+
+    for ( size_t i = 0; i < MCharBytesCount; ++i )
+    {
+        aMCharBytes[i] &= 0b01111111;
+    }
+
+    // TODO: this code doesnt cover case when char.bytescount > 3, but its possible on large files.
+    // I just cant write an algorithm that does this.
+    switch ( MCharBytesCount )
+    {
+        case 1:
+            break;
+        case 2:
+        {
+            char tmp = aMCharBytes[0] & 0b00000001;
+            aMCharBytes[0] = aMCharBytes[0] >> 1;
+            aMCharBytes[1] |= (tmp << 7);
+            break;
+        }
+        case 3:
+        {
+            unsigned char tmp1 = aMCharBytes[0] & 0b00000011;
+            unsigned char tmp2 = aMCharBytes[1] & 0b00000001;
+            aMCharBytes[0] = aMCharBytes[0] >> 2;
+            aMCharBytes[1] = aMCharBytes[1] >> 1;
+            aMCharBytes[1] |= ( tmp1 << 6 );
+            aMCharBytes[2] |= ( tmp2 << 7 );
+            break;
+        }
+        case 4:
+        {
+            unsigned char tmp1 = aMCharBytes[0] & 0b00000111;
+            unsigned char tmp2 = aMCharBytes[1] & 0b00000011;
+            unsigned char tmp3 = aMCharBytes[2] & 0b00000001;
+            aMCharBytes[0] = aMCharBytes[0] >> 3;
+            aMCharBytes[1] = aMCharBytes[1] >> 2;
+            aMCharBytes[2] = aMCharBytes[2] >> 1;
+            aMCharBytes[1] |= ( tmp1 << 5 );
+            aMCharBytes[2] |= ( tmp2 << 6 );
+            aMCharBytes[3] |= ( tmp3 << 7 );
+            break;
+        }
+    }
+
+    SwapEndianness ( aMCharBytes, MCharBytesCount ); // MSB to LSB
+
+    memcpy ( &result, aMCharBytes, MCharBytesCount );
 
     return result;
 }
@@ -378,7 +451,7 @@ int64_t ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
         }
     }
 
-    std::reverse ( aMCharBytes, aMCharBytes + MCharBytesCount ); // LSB to MSB
+    SwapEndianness ( aMCharBytes, MCharBytesCount ); // LSB to MSB
 
     if ( ( aMCharBytes[0] & 0b01000000 ) == 0b01000000 )
     {
@@ -621,7 +694,23 @@ struct DWG_HANDLE ReadHANDLE ( const char * input_array, size_t& bitOffsetFromSt
     result.handle_or_offset = new char[result.counter];
     for ( size_t i = 0; i < result.counter; ++i )
     {
-        result.handle_or_offset[ i ] = ReadCHAR (input_array, bitOffsetFromStart);
+        result.handle_or_offset[i] = ReadCHAR (input_array, bitOffsetFromStart);
+    }
+
+    return result;
+}
+
+struct DWG_HANDLE ReadHANDLE8BLENGTH ( const char * input_array, size_t& bitOffsetFromStart )
+{
+    struct DWG_HANDLE result;
+
+    result.code = 0;
+    result.counter = (unsigned char) ReadCHAR ( input_array, bitOffsetFromStart );
+
+    result.handle_or_offset = new char[result.counter];
+    for ( size_t i = 0; i < result.counter; ++i )
+    {
+        result.handle_or_offset[i] = ReadCHAR (input_array, bitOffsetFromStart);
     }
 
     return result;

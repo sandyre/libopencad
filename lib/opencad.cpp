@@ -64,7 +64,7 @@ CADFile* OpenCADFile( const char *pszFileName )
 
     if ( memcmp ( pabyDWGVersion, DWG_VERSION_R2000, DWG_VERSION_SIZE ) == 0 )
     {
-        poCAD = new DWGFileR2000(pszFileName);
+        poCAD = new DWGFileR2000 (pszFileName);
     }
     else
     {
@@ -83,7 +83,6 @@ CADFile* OpenCADFile( const char *pszFileName )
 
     return poCAD;
 }
-
 
 /**
  * @brief Get library version number as major * 10000 + minor * 100 + rev

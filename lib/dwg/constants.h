@@ -32,6 +32,7 @@
 
 #include <map>
 #include <vector>
+#include <string>
 
 /* DWG Versions constants */
 #define DWG_VERSION_R13     "AC1012"
@@ -257,7 +258,7 @@ public:
 
     static constexpr const char * DS_PREVIEW_START
                                         = "\x1F\x25\x6D\x07\xD4\x36\x28\x28\x9D\x57\xCA\x3F\x9D\x44\x10\x2B";
-    static constexpr const char* DS_PREVIEW_END
+    static constexpr const char * DS_PREVIEW_END
                                         = "\xE0\xDA\x92\xF8\x2B\xc9\xD7\xD7\x62\xA8\x35\xC0\x62\xBB\xEF\xD4";
 
     static constexpr const char * DS_CLASSES_START
