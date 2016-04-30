@@ -34,20 +34,21 @@ struct DWG_HANDLE
 {
     char code = 0;
     char counter = 0;
-    char * handle_or_offset;
+    char * handle_or_offset = 0;
 };
 
 struct SLRecord
 {
-    char byRecordNumber;
-    int  dSeeker;
-    int  dSize;
+    char byRecordNumber = 0;
+    int  dSeeker        = 0;
+    int  dSize          = 0;
 };
 
 struct DWG_EED
 {
-    short length;
+    short length = 0;
     DWG_HANDLE application_handle;
+    char * data;
 };
 
 

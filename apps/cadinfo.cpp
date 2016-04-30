@@ -95,16 +95,17 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    int g = poCadFile->getGeometriesCount ();
     int circles_count = 0;
     int lines_count = 0;
     int ellipses_count = 0;
     int pline_count = 0;
+    int pline3d_count = 0;
     int point_count = 0;
     int arc_count = 0;
     int text_count = 0;
-    std::cout << "Geometries readed: " << g << std::endl;
-    for(int i = 0; i < g; ++i )
+    std::cout << "Layers count: " << poCadFile->getLayersCount () << std::endl;
+    std::cout << "Geometries readed: " << poCadFile->getGeometriesCount () << std::endl;
+    for(int i = 0; i < poCadFile->getGeometriesCount (); ++i )
     {
         CADGeometry* geom = poCadFile->getGeometry (i);
         if ( geom->stGeometryType == CADGeometry::CIRCLE )
@@ -147,12 +148,18 @@ int main(int argc, char *argv[])
             Text * geom1 = ( Text * ) geom;
             text_count++;
         }
+        else if ( geom->stGeometryType == CADGeometry::POLYLINE3D )
+        {
+            Polyline3D * geom1 = ( Polyline3D * ) geom;
+            pline3d_count++;
+        }
     }
 
     std::cout << "Points: " << point_count << std::endl;
     std::cout << "Ellipses: " << ellipses_count << std::endl;
     std::cout << "Lines count: " << lines_count << std::endl;
     std::cout << "Plines count: " << pline_count << std::endl;
+    std::cout << "Plines3d count: " << pline3d_count << std::endl;
     std::cout << "Circles count: " << circles_count << std::endl;
     std::cout << "Arcs count: " << arc_count << std::endl;
     std::cout << "Texts count: " << text_count << std::endl;

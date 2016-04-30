@@ -29,6 +29,7 @@
 
 #include "r2000.h"
 #include "io.h"
+#include "objects.h"
 #include "cadgeometries.h"
 
 #include <iostream>
@@ -84,11 +85,360 @@ void DWGFileR2000::ReadHeader ()
         return;
     }
 
+    delete[] pabyBuf;
+
     m_oFileStream.read (( char * ) & dHeaderVarsSectionLength, 4);
     DebugMsg("Header variables section length: %ld\n", dHeaderVarsSectionLength);
 
-    m_oFileStream.seekg (this->fileHeader.SLRecords[0].dSeeker + this->fileHeader.SLRecords[0].dSize - 16,
-                std::ios_base::beg);
+    size_t bitOffsetFromStart = 0;
+    pabyBuf = new char[dHeaderVarsSectionLength];
+    m_oFileStream.read ( pabyBuf, dHeaderVarsSectionLength + 2 );
+
+    header_variables.Unknown1   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.Unknown2   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.Unknown3   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.Unknown4   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.Unknown5   = ReadTV (pabyBuf, bitOffsetFromStart);
+    header_variables.Unknown6   = ReadTV (pabyBuf, bitOffsetFromStart);
+    header_variables.Unknown7   = ReadTV (pabyBuf, bitOffsetFromStart);
+    header_variables.Unknown8   = ReadTV (pabyBuf, bitOffsetFromStart);
+    header_variables.Unknown9   = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    header_variables.Unknown10  = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+
+    header_variables.current_viewport_ent_header = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMASO     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMSHO     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.PLINEGEN   = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.ORTHOMODE  = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.REGENMODE  = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.FILLMODE   = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.QTEXTMODE  = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.PSLTSCALE  = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.LIMCHECK   = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.USRTIMER   = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.SKPOLY     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.ANGDIR     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.SPLFRAME   = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.MIRRTEXT   = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.WORDLVIEW  = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.TILEMODE   = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.PLIMCHECK  = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.VISRETAIN  = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DISPSILH   = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.PELLIPSE   = ReadBIT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.PROXYGRAPHICS  = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.TREEDEPTH      = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.LUNITS         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.LUPREC         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.AUNITS         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.AUPREC         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.ATTMODE        = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.PDMODE         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.USERI1         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.USERI2         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.USERI3         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.USERI4         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.USERI5         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.SPLINESEGS     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.SURFU          = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.SURFV          = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.SURFTYPE       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.SURFTAB1       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.SURFTAB2       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.SPLINETYPE     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.SHADEDGE       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.SHADEDIF       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.UNITMODE       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.MAXACTVP       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.ISOLINES       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.CMLJUST        = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.TEXTQLTY       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.LTSCALE        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.TEXTSIZE       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.TRACEWID       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.SKETCHINC      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.FILLETRAD      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.THICKNESS      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.ANGBASE        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PDSIZE         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PLINEWID       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.USERR1         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.USERR2         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.USERR3         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.USERR4         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.USERR5         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.CHAMFERA       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.CHAMFERB       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.CHAMFERC       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.CHAMFERD       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.FACETRES       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.CMLSCALE       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.CELTSCALE      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.MENUNAME       = ReadTV (pabyBuf, bitOffsetFromStart);
+
+    header_variables.TDCREATE_DAY   = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    header_variables.TDCREATE_MS    = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    header_variables.TDUPDATE_DAY   = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    header_variables.TDUPDATE_MS    = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    header_variables.TDINDWG_DAY    = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    header_variables.TDINDWG_MS     = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    header_variables.TDUSRTIMER_DAY = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    header_variables.TDUSRTIMER_MS  = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+
+    header_variables.CECOLOR        = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.HANDSEED       = ReadHANDLE8BLENGTH (pabyBuf, bitOffsetFromStart); // CHECK THIS CASE.
+
+    header_variables.CLAYER         = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.TEXTSTYLE      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.CELTYPE        = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMSTYLE       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.CMLSTYLE       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.PSVPSCALE          = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.INSBASE_PSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.INSBASE_PSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.INSBASE_PSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMIN_PSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMIN_PSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMIN_PSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMAX_PSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMAX_PSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMAX_PSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.LIMMIN_PSPACE.X    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LIMMIN_PSPACE.Y    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LIMMAX_PSPACE.X    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LIMMAX_PSPACE.Y    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.ELEVATION_PSPACE   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORG_PSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORG_PSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORG_PSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSXDIR_PSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSXDIR_PSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSXDIR_PSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSYDIR_PSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSYDIR_PSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSYDIR_PSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.UCSNAME_PSPACE     = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORTHOREF       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.PUCSORTHOVIEW      = ReadBITSHORT (pabyBuf, bitOffsetFromStart)
+            ;
+    header_variables.PUCSBASE           = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.PUCSORGTOP.X       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGTOP.Y       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGTOP.Z       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGBOTTOM.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGBOTTOM.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGBOTTOM.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGLEFT.X      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGLEFT.Y      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGLEFT.Z      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGRIGHT.X     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGRIGHT.Y     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGRIGHT.Z     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGFRONT.X     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGFRONT.Y     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGFRONT.Z     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGBACK.X      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGBACK.Y      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORGBACK.Z      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.INSBASE_MSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.INSBASE_MSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.INSBASE_MSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMIN_MSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMIN_MSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMIN_MSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMAX_MSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMAX_MSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.EXTMAX_MSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.LIMMIN_MSPACE.X    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LIMMIN_MSPACE.Y    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LIMMAX_MSPACE.X    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LIMMAX_MSPACE.Y    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.ELEVATION_MSPACE   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORG_MSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORG_MSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORG_MSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSXDIR_MSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSXDIR_MSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSXDIR_MSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSYDIR_MSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSYDIR_MSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSYDIR_MSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.UCSNAME_MSPACE     = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.PUCSORTHOREF       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.PUCSORTHOVIEW      = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.PUCSBASE           = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.UCSORGTOP.X        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGTOP.Y        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGTOP.Z        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGBOTTOM.X     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGBOTTOM.Y     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGBOTTOM.Z     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGLEFT.X       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGLEFT.Y       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGLEFT.Z       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGRIGHT.X      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGRIGHT.Y      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGRIGHT.Z      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGFRONT.X      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGFRONT.Y      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGFRONT.Z      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGBACK.X       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGBACK.Y       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCSORGBACK.Z       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMPOST    = ReadTV (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMAPOST   = ReadTV (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMSCALE   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMASZ     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMEXO     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMDLI     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMEXE     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMRND     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMDLE     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTP      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTM      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMTOL     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMLIM     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTIH     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTOH     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMSE1     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMSE2     = ReadBIT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMTAD     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMZIN     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMAZIN    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMTXT     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMCEN     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTSZ     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMALTF    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMLFAC    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTVP     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTFAC    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMGAP     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMALTRND  = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMALT     = ReadBIT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMALTD    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMTOFL    = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMSAH     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTIX     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMSOXD    = ReadBIT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMCLRD    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMCLRE    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMCLRT    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMADEC    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMDEC     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTDEC    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMALTU    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMALTTD   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMAUNIT   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMFRAC    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMLUNIT   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMDSEP    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTMOVE   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMJUST    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMSD1     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMSD2     = ReadBIT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMTOLJ    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMTZIN    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMALTZ    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMALTTZ   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMUPT     = ReadBIT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMATFIT   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMTXSTY   = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMLDRBLK  = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMBLK     = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMBLK1    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMBLK2    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DIMLWD     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMLWE     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.BLOCK_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LAYER_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.STYLE_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LINETYPE_CONTROL_OBJ   = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.VIEW_CONTROL_OBJ       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.UCS_CONTROL_OBJ        = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.VPORT_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.APPID_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DIMSTYLE               = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.VIEWPORT_ENT_HEADER_CONTROL_OBJ = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DICTIONARY_ACAD_GROUP      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DICTIONARY_ACAD_MLINESTYLE = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DICTIONARY_NAMED_OBJECTS   = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.TSTACKALIGN    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.TSTACKSIZE     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.HYPERLINKBASE  = ReadTV (pabyBuf, bitOffsetFromStart);
+    header_variables.STYLESHEET     = ReadTV (pabyBuf, bitOffsetFromStart);
+
+    header_variables.DICTIONARY_LAYOUTS         = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DICTIONARY_PLOTSETTINGS    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.DICTIONARY_PLOTSTYLES      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    int32_t Flags               = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    header_variables.CELWEIGHT  = Flags & 0x001F;
+    header_variables.ENDCAPS    = Flags & 0x0060;
+    header_variables.JOINSTYLE  = Flags & 0x0180;
+    header_variables.LWDISPLAY  = !(Flags & 0x0200);
+    header_variables.XEDIT      = !(Flags & 0x0400);
+    header_variables.EXTNAMES   = Flags & 0x0800;
+    header_variables.PSTYLEMODE = Flags & 0x2000;
+    header_variables.OLESTARTUP = Flags & 0x4000;
+
+    header_variables.INSUNITS   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.CEPSNTYPE  = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    if ( header_variables.CEPSNTYPE == 3 )
+        header_variables.CPSNID = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.FINGERPRINTGUID = ReadTV (pabyBuf, bitOffsetFromStart);
+    header_variables.VERSIONGUID     = ReadTV (pabyBuf, bitOffsetFromStart);
+
+    header_variables.BLOCK_RECORD_PSPACE    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.BLOCK_RECORD_MSPACE    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LTYPE_BYLAYER          = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LTYPE_BYBLOCK          = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    header_variables.LTYPE_CONTINUOUS       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+
+    header_variables.UnknownShortInEnd1     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.UnknownShortInEnd2     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.UnknownShortInEnd3     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    header_variables.UnknownShortInEnd4     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+
+    header_variables.CRC        = ReadRAWSHORT (pabyBuf, bitOffsetFromStart);
+    uint16_t calculated_crc     = CalculateCRC8 ((unsigned short)0xC0C1, pabyBuf, dHeaderVarsSectionLength); // TODO: CRC is calculated wrong every time.
 
     m_oFileStream.read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_END, DWG_SENTINELS::SENTINEL_LENGTH) )
@@ -210,7 +560,7 @@ void DWGFileR2000::ReadObjectMap ()
         while ( ( bitOffsetFromStart / 8 ) < ( section_size - 2 ) )
         {
             ObjHandleOffset tmp;
-            tmp.first  = ReadMCHAR (pabySectionContent, bitOffsetFromStart);
+            tmp.first  = ReadUMCHAR (pabySectionContent, bitOffsetFromStart);
             tmp.second = ReadMCHAR (pabySectionContent, bitOffsetFromStart);
             obj_map_section.push_back (tmp);
         }
@@ -231,11 +581,12 @@ void DWGFileR2000::ReadObjectMap ()
     {
         for ( size_t i = 1; i < object_map_sections[index].size (); ++i )
         {
-            object_map_sections[index][i].second += object_map_sections[index][i - 1].second;
+            object_map_sections[index][i].first  += object_map_sections[index][i-1].first;
+            object_map_sections[index][i].second += object_map_sections[index][i-1].second;
         }
     }
 
-    pabySectionContent = new char[100];
+    pabySectionContent = new char[400];
 
     for ( size_t i = 0; i < object_map_sections.size (); ++i )
     {
@@ -243,7 +594,7 @@ void DWGFileR2000::ReadObjectMap ()
         {
             bitOffsetFromStart = 0;
             m_oFileStream.seekg (object_map_sections[i][j].second, std::ios_base::beg);
-            m_oFileStream.read (pabySectionContent, 100);
+            m_oFileStream.read (pabySectionContent, 400);
 
             DWG2000_CED ced;
             ced.dLength = ReadMSHORT (pabySectionContent, bitOffsetFromStart);
@@ -252,17 +603,19 @@ void DWGFileR2000::ReadObjectMap ()
             try
             {
                 DWG_OBJECT_NAMES.at (ced.dType);
-                std::cout << "OBJECT TYPE: " << DWG_OBJECT_NAMES.at (ced.dType) << std::endl;
+                std::cout << "OBJECT TYPE: " << DWG_OBJECT_NAMES.at (ced.dType) << " HANDLE: " << object_map_sections[i][j].first << std::endl;
+
+                if ( ced.dType == DWG_OBJECT_LAYER )
+                    layer_map.push_back (object_map_sections[i][j]);
             }
             catch ( std::exception e )
             {
                 std::cout << "OBJECT TYPE: " << custom_classes[ced.dType - 500].sCppClassName << std::endl;
             }
 
-            if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (), ced.dType)
+            if ( std::find ( DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (), ced.dType )
                  != DWG_GEOMETRIC_OBJECT_TYPES.end () )
             {
-                std::cout << "GEOMETRY TYPE: " << DWG_OBJECT_NAMES.at (ced.dType) << std::endl;
                 geometries_map.push_back (object_map_sections[i][j]);
             }
         }
@@ -272,6 +625,67 @@ void DWGFileR2000::ReadObjectMap ()
     delete[] pabySectionContent;
 
     return;
+}
+
+DWGObject * DWGFileR2000::getObject ( size_t section, size_t index )
+{
+    DWGObject * readed_object;
+
+    char pabyObjectSize[8];
+    size_t bitOffsetFromStart = 0;
+    m_oFileStream.clear ();
+    m_oFileStream.seekg (object_map_sections[section][index].second, std::ios_base::beg);
+    m_oFileStream.read (pabyObjectSize, 8);
+    uint32_t dObjectSize = ReadMSHORT (pabyObjectSize, bitOffsetFromStart);
+
+    // And read whole data chunk into memory for future parsing.
+    char * pabySectionContent = new char[dObjectSize];
+    bitOffsetFromStart = 0;
+    m_oFileStream.clear ();
+    m_oFileStream.seekg (geometries_map[index].second, std::ios_base::beg);
+    m_oFileStream.read (pabySectionContent, dObjectSize);
+
+    dObjectSize = ReadMSHORT (pabySectionContent, bitOffsetFromStart);
+    int16_t dObjectType = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
+    switch ( dObjectType )
+    {
+        case DWG_OBJECT_LAYER:
+        {
+            DWGLayer * layer = new DWGLayer();
+            layer->dObjLength = dObjectSize;
+            layer->dObjBitLength = ReadRAWLONG (pabySectionContent, bitOffsetFromStart);
+            layer->hObjHandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            int16_t dEEDSize = 0;
+            while ( (dEEDSize = ReadBITSHORT (pabySectionContent, bitOffsetFromStart)) != 0 )
+            {
+                DWG_EED dwg_eed;
+                dwg_eed.length = dEEDSize;
+                dwg_eed.application_handle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+                dwg_eed.data = new char[dEEDSize];
+                for ( size_t i = 0; i < dEEDSize; ++i )
+                {
+                    dwg_eed.data[i] = ReadCHAR (pabySectionContent, bitOffsetFromStart);
+                }
+                layer->astObjEED.push_back (dwg_eed);
+            }
+            layer->dObjNumReactors = ReadBITLONG (pabySectionContent, bitOffsetFromStart);
+            layer->sLayerName = ReadTV (pabySectionContent, bitOffsetFromStart);
+            layer->bFlag64 = ReadBIT (pabySectionContent, bitOffsetFromStart);
+            layer->dXRefIndex = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
+            layer->bXDep = ReadBIT (pabySectionContent, bitOffsetFromStart);
+
+            int16_t bFlags = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
+            if ( bFlags & 1 ) layer->bFrozen = true;
+            if ( bFlags & 2 ) layer->bOn = true;
+            if ( bFlags & 4 ) layer->bFrozenByDefaultInNewViewports = true;
+            if ( bFlags & 8 ) layer->bLocked = true;
+            if ( bFlags & 16 ) layer->bPlottingFlag = true;
+            layer->dLineWeight = bFlags & 0x03E0;
+            layer->dCMColorIndex = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
+
+            readed_object = layer;
+        }
+    }
 }
 
 //int DWGFileR2000::ReadObject ( size_t index )
@@ -293,23 +707,24 @@ void DWGFileR2000::ReadObjectMap ()
 
 CADGeometry * DWGFileR2000::getGeometry ( size_t index )
 {
-    CADGeometry *readed_geometry;
+    CADGeometry * readed_geometry;
 
     // Get geometric entity size in bytes.
     char   pabySectionSize[8];
     size_t bitOffsetFromStart = 0;
-    int    k                  = geometries_map[index].second;
     m_oFileStream.clear ();
     m_oFileStream.seekg (geometries_map[index].second, std::ios_base::beg);
     m_oFileStream.read (pabySectionSize, 8);
     uint32_t dGeometrySize = ReadMSHORT (pabySectionSize, bitOffsetFromStart);
 
     // And read whole data chunk into memory for future parsing.
-    char *pabySectionContent = new char[dGeometrySize];
+    // +6 is because dGeometrySize does not cover ced.dLength length, and CRC length (so, ced.dLength can be
+    // maximum 4 bytes long, and crc is 2 bytes long).
+    char * pabySectionContent = new char[dGeometrySize + 6];
     bitOffsetFromStart = 0;
     m_oFileStream.clear ();
     m_oFileStream.seekg (geometries_map[index].second, std::ios_base::beg);
-    m_oFileStream.read (pabySectionContent, dGeometrySize);
+    m_oFileStream.read (pabySectionContent, dGeometrySize + 6);
 
     DWG2000_CED ced;
     ced.dLength        = ReadMSHORT (pabySectionContent, bitOffsetFromStart);
@@ -317,6 +732,8 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
     ced.dObjSizeInBits = ReadRAWLONG (pabySectionContent, bitOffsetFromStart);
     ced.hHandle        = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
     // TODO: EED is skipped, but it can be meaningful.
+    // TODO: Also, EED is not a single struct; it can be repeated, so, need to
+    // parse it ASAP, because it can cause errors.
     ced.dEEDSize       = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
     bitOffsetFromStart += ced.dEEDSize * 8; // skip EED size bytes.
 
@@ -339,7 +756,7 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
     {
         case DWG_OBJECT_CIRCLE:
         {
-            Circle *circle = new Circle ();
+            Circle * circle = new Circle ();
             circle->dfCenterX   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             circle->dfCenterY   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             circle->dfCenterZ   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
@@ -360,13 +777,37 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
                 circle->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             }
 
+            DWG2000_CEHD common_entity_handle_data;
+            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( !ced.bNoLinks )
+            {
+                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ced.ltype_flags == 0x03 )
+            {
+                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            if ( ced.plotstyle_flags == 0x03 )
+            {
+                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            bitOffsetFromStart += 8 - ( bitOffsetFromStart % 8 );
+            int16_t crc = ReadRAWSHORT (pabySectionContent, bitOffsetFromStart);
+
             readed_geometry = circle;
             break;
         }
 
         case DWG_OBJECT_ELLIPSE:
         {
-            Ellipse *ellipse = new Ellipse ();
+            Ellipse * ellipse = new Ellipse ();
             ellipse->dfCenterX       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             ellipse->dfCenterY       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             ellipse->dfCenterZ       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
@@ -380,13 +821,37 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
             ellipse->dfStartingAngle = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             ellipse->dfEndingAngle   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
 
+            DWG2000_CEHD common_entity_handle_data;
+            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( !ced.bNoLinks )
+            {
+                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ced.ltype_flags == 0x03 )
+            {
+                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            if ( ced.plotstyle_flags == 0x03 )
+            {
+                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            bitOffsetFromStart += 8 - ( bitOffsetFromStart % 8 );
+            int16_t crc = ReadRAWSHORT (pabySectionContent, bitOffsetFromStart);
+
             readed_geometry = ellipse;
             break;
         }
 
         case DWG_OBJECT_POINT:
         {
-            Point *point = new Point ();
+            Point * point = new Point ();
             point->dfPointX    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             point->dfPointY    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             point->dfPointZ    = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
@@ -406,13 +871,37 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
                 point->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             }
 
+            DWG2000_CEHD common_entity_handle_data;
+            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( !ced.bNoLinks )
+            {
+                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ced.ltype_flags == 0x03 )
+            {
+                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            if ( ced.plotstyle_flags == 0x03 )
+            {
+                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            bitOffsetFromStart += 8 - ( bitOffsetFromStart % 8 );
+            int16_t crc = ReadRAWSHORT (pabySectionContent, bitOffsetFromStart);
+
             readed_geometry = point;
             break;
         }
 
         case DWG_OBJECT_LINE:
         {
-            Line *line            = new Line ();
+            Line * line            = new Line ();
             bool bZCoordPresented = ReadBIT (pabySectionContent, bitOffsetFromStart);
             line->dfStartX = ReadRAWDOUBLE (pabySectionContent, bitOffsetFromStart);
             line->dfEndX   = ReadBITDOUBLEWD (pabySectionContent, bitOffsetFromStart, line->dfStartX);
@@ -440,6 +929,30 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
                 line->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             }
 
+            DWG2000_CEHD common_entity_handle_data;
+            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( !ced.bNoLinks )
+            {
+                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ced.ltype_flags == 0x03 )
+            {
+                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            if ( ced.plotstyle_flags == 0x03 )
+            {
+                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            bitOffsetFromStart += 8 - ( bitOffsetFromStart % 8 );
+            int16_t crc = ReadRAWSHORT (pabySectionContent, bitOffsetFromStart);
+
             readed_geometry = line;
 
             break;
@@ -447,9 +960,9 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
 
         case DWG_OBJECT_LWPOLYLINE:
         {
-            LWPolyline *polyline      = new LWPolyline ();
-            int32_t    nVertixesCount = 0, nBulges = 0;
-            int16_t    data_flag      = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
+            LWPolyline * polyline      = new LWPolyline ();
+            int32_t    nVertixesCount  = 0, nBulges = 0;
+            int16_t    data_flag       = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
             if ( data_flag & 4 )
                 polyline->dfConstWidth = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             if ( data_flag & 8 )
@@ -493,10 +1006,29 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
                 polyline->bulges.push_back (dfBulgeValue);
             }
 
-            DWG_HANDLE prev  = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
-            DWG_HANDLE next  = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
-            DWG_HANDLE layer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
-            DWG_HANDLE ltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            DWG2000_CEHD common_entity_handle_data;
+            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( !ced.bNoLinks )
+            {
+                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ced.ltype_flags == 0x03 )
+            {
+                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            if ( ced.plotstyle_flags == 0x03 )
+            {
+                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            bitOffsetFromStart += 8 - ( bitOffsetFromStart % 8 );
+            int16_t crc = ReadRAWSHORT (pabySectionContent, bitOffsetFromStart);
 
             readed_geometry = polyline;
             break;
@@ -504,7 +1036,7 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
 
         case DWG_OBJECT_ARC:
         {
-            Arc *arc = new Arc ();
+            Arc * arc = new Arc ();
             arc->dfCenterX       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             arc->dfCenterY       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             arc->dfCenterZ       = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
@@ -527,13 +1059,37 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
             arc->dfStartingAngle = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
             arc->dfEndingAngle   = ReadBITDOUBLE (pabySectionContent, bitOffsetFromStart);
 
+            DWG2000_CEHD common_entity_handle_data;
+            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( !ced.bNoLinks )
+            {
+                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ced.ltype_flags == 0x03 )
+            {
+                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            if ( ced.plotstyle_flags == 0x03 )
+            {
+                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            bitOffsetFromStart += 8 - ( bitOffsetFromStart % 8 );
+            int16_t crc = ReadRAWSHORT (pabySectionContent, bitOffsetFromStart);
+
             readed_geometry = arc;
             break;
         }
 
         case DWG_OBJECT_TEXT:
         {
-            Text   *text    = new Text ();
+            Text   * text    = new Text ();
             int8_t DataFlag = ReadCHAR (pabySectionContent, bitOffsetFromStart);
 
             if ( !( DataFlag & 0x01 ) )
@@ -586,15 +1142,68 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
             if ( !( DataFlag & 0x80 ) )
                 text->dVerticalAlignment = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
 
+            DWG2000_CEHD common_entity_handle_data;
+            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( !ced.bNoLinks )
+            {
+                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ced.ltype_flags == 0x03 )
+            {
+                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            if ( ced.plotstyle_flags == 0x03 )
+            {
+                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            bitOffsetFromStart += 8 - ( bitOffsetFromStart % 8 );
+            int16_t crc = ReadRAWSHORT (pabySectionContent, bitOffsetFromStart);
+
             readed_geometry = text;
             break;
         }
 
         case DWG_OBJECT_POLYLINE3D:
         {
-            Polyline3D *pline = new Polyline3D ();
+            Polyline3D * pline = new Polyline3D ();
 
             int8_t DataFlag = ReadCHAR (pabySectionContent, bitOffsetFromStart);
+            int8_t DataFlag2 = ReadCHAR (pabySectionContent, bitOffsetFromStart);
+
+            DWG2000_CEHD common_entity_handle_data;
+            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( !ced.bNoLinks )
+            {
+                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            if ( ced.ltype_flags == 0x03 )
+            {
+                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            if ( ced.plotstyle_flags == 0x03 )
+            {
+                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            }
+
+            DWG_HANDLE firstvertex = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            DWG_HANDLE lastvertex  = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            DWG_HANDLE seqend      = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+
+            bitOffsetFromStart += 8 - ( bitOffsetFromStart % 8 );
+            int16_t crc = ReadRAWSHORT (pabySectionContent, bitOffsetFromStart);
 
             readed_geometry = pline;
             break;
@@ -606,9 +1215,26 @@ CADGeometry * DWGFileR2000::getGeometry ( size_t index )
     return readed_geometry;
 }
 
+CADLayer * DWGFileR2000::getLayer ( size_t index )
+{
+    CADLayer * layer = new CADLayer();
+
+    for ( size_t i = 0; i < getGeometriesCount (); ++i )
+    {
+
+    }
+
+    return layer;
+}
+
 size_t DWGFileR2000::getGeometriesCount ()
 {
     return geometries_map.size ();
+}
+
+size_t DWGFileR2000::getLayersCount ()
+{
+    return layer_map.size();
 }
 
 DWGFileR2000::DWGFileR2000(const char *pszFileName) :

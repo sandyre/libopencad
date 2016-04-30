@@ -52,8 +52,7 @@ set(HHEADERS
     opencad.h
     opencad_api.h
     cadfile.h
-    cadgeometries.h
-    )
+    cadgeometries.h)
 
 set(HHEADER_PRIV
 

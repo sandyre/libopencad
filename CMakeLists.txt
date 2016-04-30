@@ -52,6 +52,7 @@ configure_file(${CMAKE_MODULE_PATH}/uninstall.cmake.in ${CMAKE_BINARY_DIR}/cmake
 set(TARGET_LINK)
 add_subdirectory(lib)
 add_subdirectory(apps)
+add_subdirectory(tests)
 #TODO: add_subdirectory(tests)
 
 # uninstall
