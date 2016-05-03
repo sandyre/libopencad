@@ -27,15 +27,10 @@
  *  SOFTWARE.
  ************************************************************************************/
 
-#ifndef DATA_STRUCTS_H
-#define DATA_STRUCTS_H
+#ifndef OC_DATA_STRUCTS_H
+#define OC_DATA_STRUCTS_H
 
-struct DWG_HANDLE
-{
-    char code = 0;
-    char counter = 0;
-    char * handle_or_offset = 0;
-};
+// TODO: unique structure names. Camel style or all in uppercase but uniq.
 
 struct SLRecord
 {
@@ -52,4 +47,4 @@ struct DWG_EED
 };
 
 
-#endif // DATA_STRUCTS_H
+#endif // OC_DATA_STRUCTS_H

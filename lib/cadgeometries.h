@@ -29,8 +29,8 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-#ifndef LIB_CADGEOMETRIES_H
-#define LIB_CADGEOMETRIES_H
+#ifndef CADGEOMETRIES_H
+#define CADGEOMETRIES_H
 
 #include <vector>
 #include <string>
@@ -345,4 +345,4 @@ public:
 };
 
 
-#endif //LIB_CADGEOMETRIES_H
+#endif // CADGEOMETRIES_H

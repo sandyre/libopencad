@@ -27,14 +27,12 @@
  *  SOFTWARE.
  ************************************************************************************/
 
-#ifndef LIB_DWG_CONSTANTS_H
-#define LIB_DWG_CONSTANTS_H
+#ifndef OC_CONSTANTS_H
+#define OC_CONSTANTS_H
 
 #include <map>
 #include <vector>
 #include <string>
-
-#define DWG_VERSION_STR_SIZE  6
 
 /* DATA TYPES CONSTANTS */
 
@@ -264,4 +262,4 @@ public:
                                         = "\x2B\x84\xDE\x31\xD7\x6C\x60\x40\xAC\xDB\xBF\xF6\xED\xC3\x55\xFE";
 };
 
-#endif //LIB_DWG_CONSTANTS_H
+#endif // OC_CONSTANTS_H

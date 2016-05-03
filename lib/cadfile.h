@@ -32,7 +32,7 @@
 #ifndef CADFILE_H
 #define CADFILE_H
 
-#include "opencad.h"
+#include "cadheader.h"
 #include "cadfileio.h"
 #include "cadgeometries.h"
 
@@ -45,6 +45,10 @@ public:
     CADFile (CADFileIO* poFileIO);
     virtual ~CADFile();
 
+public:
+    const CADHeader* GetHeader() const;
+
+public:
     virtual size_t GetGeometriesCount();
     virtual size_t GetLayersCount();
     virtual size_t GetBlocksCount();
@@ -54,12 +58,13 @@ public:
     virtual int ParseFile();
 
 protected:
-    virtual void ReadHeader() = 0;
-    virtual void ReadClassesSection() = 0;
-    virtual void ReadObjectMap() = 0;
+    virtual int ReadHeader() = 0;
+    virtual int ReadClassesSection() = 0;
+    virtual int ReadObjectMap() = 0;
 
 protected:
     CADFileIO* m_poFileIO;
+    CADHeader* m_poHeader;
 };
 
 

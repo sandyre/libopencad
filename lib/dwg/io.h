@@ -27,12 +27,11 @@
  *  SOFTWARE.
  ************************************************************************************/
 
-#ifndef LIB_DWG_IO_H
-#define LIB_DWG_IO_H
+#ifndef DWG_IO_H
+#define DWG_IO_H
 
-#include "data_structs.h"
+#include "cadheader.h"
 
-#include "stdint.h"
 #include <string>
 #include <algorithm>
 
@@ -91,28 +90,28 @@ static const int CRC8_TABLE[256] =
     0x4100, 0x81C1, 0x8081, 0x4040
 };
 
-int16_t     CalculateCRC8 ( uint16_t initial_val, const char * ptr, int32_t num );
+short CalculateCRC8 ( unsigned short initial_val, const char * ptr, int num );
 
-int64_t     ReadRAWLONGLONG ( const char * input_array, size_t& bitOffsetFromStart );
-int32_t     ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart );
-int16_t     ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart );
-double      ReadRAWDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
-uint8_t     Read2B ( const char * input_array, size_t& bitOffsetFromStart );
-uint8_t     Read3B ( const char * input_array, size_t& bitOffsetFromStart );
-uint8_t     Read4B ( const char * input_array, size_t& bitOffsetFromStart );
-struct DWG_HANDLE  ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart );
-struct DWG_HANDLE ReadHANDLE8BLENGTH ( const char * input_array, size_t & bitOffsetFromStart );
+long ReadRAWLONGLONG ( const char * input_array, size_t& bitOffsetFromStart );
+int ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart );
+short ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart );
+double ReadRAWDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
+unsigned char Read2B ( const char * input_array, size_t& bitOffsetFromStart );
+unsigned char Read3B ( const char * input_array, size_t& bitOffsetFromStart );
+unsigned char Read4B ( const char * input_array, size_t& bitOffsetFromStart );
+struct CADHandle ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart );
+struct CADHandle ReadHANDLE8BLENGTH ( const char * input_array, size_t & bitOffsetFromStart );
 
 bool        ReadBIT ( const char * input_array, size_t& bitOffsetFromStart );
-uint8_t     ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart );
-int16_t     ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart );
-int32_t     ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart );
-double      ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
-double      ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart, double defaultvalue );
-int64_t     ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
-int64_t     ReadUMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
-uint32_t    ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart );
+unsigned char ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart );
+short ReadBITSHORT ( const char * input_array, size_t& bitOffsetFromStart );
+int ReadBITLONG ( const char * input_array, size_t& bitOffsetFromStart );
+double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
+double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart, double defaultvalue );
+long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
+long ReadUMCHAR ( const char * input_array, size_t& bitOffsetFromStart );
+unsigned int ReadMSHORT ( const char * input_array, size_t& bitOffsetFromStart );
 std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart );
 
 
-#endif //LIB_DWG_IO_H
+#endif // DWG_IO_H
