@@ -491,15 +491,21 @@ void DWGFileR2000::ReadClassesSection ()
 
     for ( int i = 0; i < custom_classes.size (); ++i )
     {
-        std::cout << "/////// CLASS INFO ////////" << std::endl;
-        std::cout << "dClassNum: " << custom_classes[i].dClassNum << std::endl;
-        std::cout << "VERSION: " << custom_classes[i].dVersion << std::endl;
-        std::cout << "APPNAME: " << custom_classes[i].sAppName << std::endl;
-        std::cout << "C++CLASSNAME: " << custom_classes[i].sCppClassName << std::endl;
-        std::cout << "CLASSDXFNAME: " << custom_classes[i].sDXFClassName << std::endl;
-        std::cout << "WASAZOMBIE: " << custom_classes[i].bWasAZombie << std::endl;
-        std::cout << "ITEMCLASSID: " << std::hex << custom_classes[i].dItemClassID << std::dec << std::endl <<
-        std::endl;
+        DebugMsg ("CLASS INFO\n"
+                          "Class Number: %d\n"
+                          "Version: %d\n"
+                          "App name: %s\n"
+                          "C++ Class Name: %s\n"
+                          "DXF Class name: %s\n"
+                          "Was a zombie? %x\n"
+                          "Item class ID: %d\n\n",
+                  custom_classes[i].dClassNum,
+                  custom_classes[i].dVersion,
+                  custom_classes[i].sAppName.c_str(),
+                  custom_classes[i].sCppClassName.c_str(),
+                  custom_classes[i].sDXFClassName.c_str(),
+                  custom_classes[i].bWasAZombie,
+                  custom_classes[i].dItemClassID);
     }
 
     m_poFileIO->Read (pabyBuf, 2); // CLASSES CRC!. TODO: add CRC computing & checking feature.
@@ -605,14 +611,20 @@ void DWGFileR2000::ReadObjectMap ()
             try
             {
                 DWG_OBJECT_NAMES.at (ced.dType);
-                std::cout << "OBJECT TYPE: " << DWG_OBJECT_NAMES.at (ced.dType) << " HANDLE: " << object_map_sections[i][j].first << std::endl;
+//                DebugMsg ( "Object type: %s"
+//                                   " Handle: %d\n",
+//                           DWG_OBJECT_NAMES.at(ced.dType).c_str(),
+//                           object_map_sections[i][j].first
+//                );
 
                 if ( ced.dType == DWG_OBJECT_LAYER )
                     layer_map.push_back (object_map_sections[i][j]);
             }
             catch ( std::exception e )
             {
-                std::cout << "OBJECT TYPE: " << custom_classes[ced.dType - 500].sCppClassName << std::endl;
+//                DebugMsg ( "Object type: %s\n",
+//                           custom_classes[ced.dType - 500].sCppClassName.c_str()
+//                );
             }
 
             if ( std::find ( DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (), ced.dType )
@@ -722,14 +734,14 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t index )
     uint32_t dGeometrySize = ReadMSHORT (pabySectionSize, bitOffsetFromStart);
 
     // And read whole data chunk into memory for future parsing.
-    // +6 is because dGeometrySize does not cover ced.dLength length, and CRC length (so, ced.dLength can be
+    // +N is because dGeometrySize does not cover ced.dLength length, and CRC length (so, ced.dLength can be
     // maximum 4 bytes long, and crc is 2 bytes long).
-    char * pabySectionContent = new char[dGeometrySize + 6];
-    bitOffsetFromStart = 0;
+    char * pabySectionContent = new char[dGeometrySize + (bitOffsetFromStart / 8 + 2)];
     // m_oFileStream.clear ();
     m_poFileIO->Seek (geometries_map[index].second, CADFileIO::BEG);
-    m_poFileIO->Read (pabySectionContent, dGeometrySize + 6);
+    m_poFileIO->Read (pabySectionContent, dGeometrySize + (bitOffsetFromStart / 8 + 2));
 
+    bitOffsetFromStart = 0;
     DWG2000_CED ced;
     ced.dLength        = ReadMSHORT (pabySectionContent, bitOffsetFromStart);
     ced.dType          = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
