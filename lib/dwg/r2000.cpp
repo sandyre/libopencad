@@ -61,7 +61,6 @@ int DWGFileR2000::ReadHeader ()
     memset(pabyBuf, 0, DWG_VERSION_STR_SIZE + 1);
     m_poFileIO->Read(pabyBuf, DWG_VERSION_STR_SIZE);
     m_poHeader->AddValue(CADHeader::ACADVER, pabyBuf);
-
     memset(pabyBuf, 0, 8);
     m_poFileIO->Read(pabyBuf, 7);
     m_poHeader->AddValue(CADHeader::ACADMAINTVER, pabyBuf);
@@ -550,15 +549,21 @@ int DWGFileR2000::ReadClassesSection ()
 
     for ( int i = 0; i < custom_classes.size (); ++i )
     {
-        std::cout << "/////// CLASS INFO ////////" << std::endl;
-        std::cout << "dClassNum: " << custom_classes[i].dClassNum << std::endl;
-        std::cout << "VERSION: " << custom_classes[i].dVersion << std::endl;
-        std::cout << "APPNAME: " << custom_classes[i].sAppName << std::endl;
-        std::cout << "C++CLASSNAME: " << custom_classes[i].sCppClassName << std::endl;
-        std::cout << "CLASSDXFNAME: " << custom_classes[i].sDXFClassName << std::endl;
-        std::cout << "WASAZOMBIE: " << custom_classes[i].bWasAZombie << std::endl;
-        std::cout << "ITEMCLASSID: " << std::hex << custom_classes[i].dItemClassID << std::dec << std::endl <<
-        std::endl;
+        DebugMsg ("CLASS INFO\n"
+                          "Class Number: %d\n"
+                          "Version: %d\n"
+                          "App name: %s\n"
+                          "C++ Class Name: %s\n"
+                          "DXF Class name: %s\n"
+                          "Was a zombie? %x\n"
+                          "Item class ID: %d\n\n",
+                  custom_classes[i].dClassNum,
+                  custom_classes[i].dVersion,
+                  custom_classes[i].sAppName.c_str(),
+                  custom_classes[i].sCppClassName.c_str(),
+                  custom_classes[i].sDXFClassName.c_str(),
+                  custom_classes[i].bWasAZombie,
+                  custom_classes[i].dItemClassID);
     }
 
     m_poFileIO->Read (pabyBuf, 2); // CLASSES CRC!. TODO: add CRC computing & checking feature.
@@ -664,14 +669,20 @@ int DWGFileR2000::ReadObjectMap ()
             try
             {
                 DWG_OBJECT_NAMES.at (ced.dType);
-                std::cout << "OBJECT TYPE: " << DWG_OBJECT_NAMES.at (ced.dType) << " HANDLE: " << object_map_sections[i][j].first << std::endl;
+//                DebugMsg ( "Object type: %s"
+//                                   " Handle: %d\n",
+//                           DWG_OBJECT_NAMES.at(ced.dType).c_str(),
+//                           object_map_sections[i][j].first
+//                );
 
                 if ( ced.dType == DWG_OBJECT_LAYER )
                     layer_map.push_back (object_map_sections[i][j]);
             }
             catch ( std::exception e )
             {
-                std::cout << "OBJECT TYPE: " << custom_classes[ced.dType - 500].sCppClassName << std::endl;
+//                DebugMsg ( "Object type: %s\n",
+//                           custom_classes[ced.dType - 500].sCppClassName.c_str()
+//                );
             }
 
             if ( std::find ( DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (), ced.dType )
@@ -698,7 +709,7 @@ DWGObject * DWGFileR2000::getObject ( size_t section, size_t index )
     // m_oFileStream.clear (); Do we need it?
     m_poFileIO->Seek (object_map_sections[section][index].second, CADFileIO::BEG);
     m_poFileIO->Read (pabyObjectSize, 8);
-    uint32_t dObjectSize = ReadMSHORT (pabyObjectSize, bitOffsetFromStart));
+    uint32_t dObjectSize = ReadMSHORT (pabyObjectSize, bitOffsetFromStart);
 
     // And read whole data chunk into memory for future parsing.
     char * pabySectionContent = new char[dObjectSize];
@@ -707,43 +718,43 @@ DWGObject * DWGFileR2000::getObject ( size_t section, size_t index )
     m_poFileIO->Seek (geometries_map[index].second, CADFileIO::BEG);
     m_poFileIO->Read (pabySectionContent, dObjectSize);
 
-    dObjectSize = ReadMSHORT (pabySectionContent, bitOffsetFromStart));
-    int16_t dObjectType = ReadBITSHORT (pabySectionContent, bitOffsetFromStart));
+    dObjectSize = ReadMSHORT (pabySectionContent, bitOffsetFromStart);
+    int16_t dObjectType = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
     switch ( dObjectType )
     {
         case DWG_OBJECT_LAYER:
         {
             DWGLayer * layer = new DWGLayer();
             layer->dObjLength = dObjectSize;
-            layer->dObjBitLength = ReadRAWLONG (pabySectionContent, bitOffsetFromStart));
-            layer->hObjHandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart));
+            layer->dObjBitLength = ReadRAWLONG (pabySectionContent, bitOffsetFromStart);
+            layer->hObjHandle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
             int16_t dEEDSize = 0;
             while ( (dEEDSize = ReadBITSHORT (pabySectionContent, bitOffsetFromStart)) != 0 )
             {
                 DWG_EED dwg_eed;
                 dwg_eed.length = dEEDSize;
-                dwg_eed.application_handle = ReadHANDLE (pabySectionContent, bitOffsetFromStart));
+                dwg_eed.application_handle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
                 dwg_eed.data = new char[dEEDSize];
                 for ( size_t i = 0; i < dEEDSize; ++i )
                 {
-                    dwg_eed.data[i] = ReadCHAR (pabySectionContent, bitOffsetFromStart));
+                    dwg_eed.data[i] = ReadCHAR (pabySectionContent, bitOffsetFromStart);
                 }
                 layer->astObjEED.push_back (dwg_eed);
             }
-            layer->dObjNumReactors = ReadBITLONG (pabySectionContent, bitOffsetFromStart));
-            layer->sLayerName = ReadTV (pabySectionContent, bitOffsetFromStart));
-            layer->bFlag64 = ReadBIT (pabySectionContent, bitOffsetFromStart));
-            layer->dXRefIndex = ReadBITSHORT (pabySectionContent, bitOffsetFromStart));
-            layer->bXDep = ReadBIT (pabySectionContent, bitOffsetFromStart));
+            layer->dObjNumReactors = ReadBITLONG (pabySectionContent, bitOffsetFromStart);
+            layer->sLayerName = ReadTV (pabySectionContent, bitOffsetFromStart);
+            layer->bFlag64 = ReadBIT (pabySectionContent, bitOffsetFromStart);
+            layer->dXRefIndex = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
+            layer->bXDep = ReadBIT (pabySectionContent, bitOffsetFromStart);
 
-            int16_t bFlags = ReadBITSHORT (pabySectionContent, bitOffsetFromStart));
+            int16_t bFlags = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
             if ( bFlags & 1 ) layer->bFrozen = true;
             if ( bFlags & 2 ) layer->bOn = true;
             if ( bFlags & 4 ) layer->bFrozenByDefaultInNewViewports = true;
             if ( bFlags & 8 ) layer->bLocked = true;
             if ( bFlags & 16 ) layer->bPlottingFlag = true;
             layer->dLineWeight = bFlags & 0x03E0;
-            layer->dCMColorIndex = ReadBITSHORT (pabySectionContent, bitOffsetFromStart));
+            layer->dCMColorIndex = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
 
             readed_object = layer;
         }
@@ -759,11 +770,11 @@ DWGObject * DWGFileR2000::getObject ( size_t section, size_t index )
 //    fileStream.read (pabySectionContent, 100);
 //
 //    DWG2000_CED ced;
-//    ced.dLength        = ReadMSHORT (pabySectionContent, bitOffsetFromStart));
-//    ced.dType          = ReadBITSHORT (pabySectionContent, bitOffsetFromStart));
-//    ced.dObjSizeInBits = ReadRAWLONG (pabySectionContent, bitOffsetFromStart));
-//    ced.hHandle        = ReadHANDLE (pabySectionContent, bitOffsetFromStart));
-//    ced.dNumReactors   = ReadBITLONG (pabySectionContent, bitOffsetFromStart));
+//    ced.dLength        = ReadMSHORT (pabySectionContent, bitOffsetFromStart);
+//    ced.dType          = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
+//    ced.dObjSizeInBits = ReadRAWLONG (pabySectionContent, bitOffsetFromStart);
+//    ced.hHandle        = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+//    ced.dNumReactors   = ReadBITLONG (pabySectionContent, bitOffsetFromStart);
 //
 //    return 0;
 //}
@@ -781,14 +792,14 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t index )
     uint32_t dGeometrySize = ReadMSHORT (pabySectionSize, bitOffsetFromStart);
 
     // And read whole data chunk into memory for future parsing.
-    // +6 is because dGeometrySize does not cover ced.dLength length, and CRC length (so, ced.dLength can be
+    // +N is because dGeometrySize does not cover ced.dLength length, and CRC length (so, ced.dLength can be
     // maximum 4 bytes long, and crc is 2 bytes long).
-    char * pabySectionContent = new char[dGeometrySize + 6];
-    bitOffsetFromStart = 0;
+    char * pabySectionContent = new char[dGeometrySize + (bitOffsetFromStart / 8 + 2)];
     // m_oFileStream.clear ();
     m_poFileIO->Seek (geometries_map[index].second, CADFileIO::SeekOrigin::BEG);
-    m_poFileIO->Read (pabySectionContent, dGeometrySize + 6);
+    m_poFileIO->Read (pabySectionContent, dGeometrySize + (bitOffsetFromStart / 8 + 2));
 
+    bitOffsetFromStart = 0;
     DWG2000_CED ced;
     ced.dLength        = ReadMSHORT (pabySectionContent, bitOffsetFromStart);
     ced.dType          = ReadBITSHORT (pabySectionContent, bitOffsetFromStart);
