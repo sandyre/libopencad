@@ -36,7 +36,7 @@
 #include <string>
 #include <vector>
 
-class CADHandle
+class EXTERN CADHandle
 {
 public:
     CADHandle(char code = 0);
