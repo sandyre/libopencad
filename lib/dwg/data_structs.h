@@ -27,15 +27,12 @@
  *  SOFTWARE.
  ************************************************************************************/
 
-#ifndef DATA_STRUCTS_H
-#define DATA_STRUCTS_H
+#ifndef OC_DATA_STRUCTS_H
+#define OC_DATA_STRUCTS_H
 
-struct DWG_HANDLE
-{
-    char code = 0;
-    char counter = 0;
-    char * handle_or_offset = 0;
-};
+#include "cadheader.h"
+
+// TODO: unique structure names. Camel style or all in uppercase but uniq.
 
 struct SLRecord
 {
@@ -47,9 +44,9 @@ struct SLRecord
 struct DWG_EED
 {
     short length = 0;
-    DWG_HANDLE application_handle;
+    CADHandle application_handle;
     char * data;
 };
 
 
-#endif // DATA_STRUCTS_H
+#endif // OC_DATA_STRUCTS_H

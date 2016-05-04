@@ -30,24 +30,48 @@
 #include "r2000.h"
 #include "io.h"
 #include "cadgeometries.h"
+#include "opencad_api.h"
 
 #include <iostream>
 #include <cstring>
 
-void DWGFileR2000::ReadHeader ()
+#define UNKNOWN1 CADHeader::MAX_HEADER_CONSTANT + 1
+#define UNKNOWN2 CADHeader::MAX_HEADER_CONSTANT + 2
+#define UNKNOWN3 CADHeader::MAX_HEADER_CONSTANT + 3
+#define UNKNOWN4 CADHeader::MAX_HEADER_CONSTANT + 4
+#define UNKNOWN5 CADHeader::MAX_HEADER_CONSTANT + 5
+#define UNKNOWN6 CADHeader::MAX_HEADER_CONSTANT + 6
+#define UNKNOWN7 CADHeader::MAX_HEADER_CONSTANT + 7
+#define UNKNOWN8 CADHeader::MAX_HEADER_CONSTANT + 8
+#define UNKNOWN9 CADHeader::MAX_HEADER_CONSTANT + 9
+#define UNKNOWN10 CADHeader::MAX_HEADER_CONSTANT + 10
+#define UNKNOWN11 CADHeader::MAX_HEADER_CONSTANT + 11
+#define UNKNOWN12 CADHeader::MAX_HEADER_CONSTANT + 12
+#define UNKNOWN13 CADHeader::MAX_HEADER_CONSTANT + 13
+#define UNKNOWN14 CADHeader::MAX_HEADER_CONSTANT + 14
+#define UNKNOWN15 CADHeader::MAX_HEADER_CONSTANT + 15
+
+int DWGFileR2000::ReadHeader ()
 {
     char    *pabyBuf = new char[100];
-    int32_t dImageSeeker, dSLRecords;
-    int16_t dCodePage;
+    int dImageSeeker, dSLRecords;
+    short dCodePage;
 
-     // file version and meaningless data skipped. Usually 6 + 7 = 13
-    m_poFileIO->Seek (DWG_VERSION_STR_SIZE + 7, CADFileIO::BEG);
+    m_poFileIO->Rewind();
+    memset(pabyBuf, 0, DWG_VERSION_STR_SIZE + 1);
+    m_poFileIO->Read(pabyBuf, DWG_VERSION_STR_SIZE);
+    m_poHeader->AddValue(CADHeader::ACADVER, pabyBuf);
+    memset(pabyBuf, 0, 8);
+    m_poFileIO->Read(pabyBuf, 7);
+    m_poHeader->AddValue(CADHeader::ACADMAINTVER, pabyBuf);
+
     m_poFileIO->Read (&dImageSeeker, 4);
 
     DebugMsg("Image seeker readed: %d\n", dImageSeeker);
 
-    m_poFileIO->Seek (2, CADFileIO::CUR); // 19
+    m_poFileIO->Seek (2, CADFileIO::SeekOrigin::CUR); // 19
     m_poFileIO->Read (&dCodePage, 2);
+    m_poHeader->AddValue(CADHeader::DWGCODEPAGE, dCodePage);
 
     DebugMsg("DWG Code page: %d\n", dCodePage);
 
@@ -62,17 +86,17 @@ void DWGFileR2000::ReadHeader ()
         m_poFileIO->Read (&readed_record.dSeeker, 4);
         m_poFileIO->Read (&readed_record.dSize, 4);
 
-        file_header.SLRecords.push_back (readed_record);
+        SLRecords.push_back (readed_record);
         DebugMsg("SL Record #%d : %d %d\n",
-                 file_header.SLRecords[i].byRecordNumber,
-                 file_header.SLRecords[i].dSeeker,
-                 file_header.SLRecords[i].dSize);
+                 SLRecords[i].byRecordNumber,
+                 SLRecords[i].dSeeker,
+                 SLRecords[i].dSize);
     }
 
 /*      READ HEADER VARIABLES        */
     size_t dHeaderVarsSectionLength = 0;
 
-    m_poFileIO->Seek (file_header.SLRecords[0].dSeeker, CADFileIO::BEG);
+    m_poFileIO->Seek (SLRecords[0].dSeeker, CADFileIO::SeekOrigin::BEG);
     m_poFileIO->Read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_START,
                  DWG_SENTINELS::SENTINEL_LENGTH) )
@@ -82,7 +106,7 @@ void DWGFileR2000::ReadHeader ()
 
         delete[] pabyBuf;
 
-        return;
+        return CADErrorCodes::HEADER_SECTION_READ_FAILED;
     }
 
     delete[] pabyBuf;
@@ -94,351 +118,385 @@ void DWGFileR2000::ReadHeader ()
     pabyBuf = new char[dHeaderVarsSectionLength];
     m_poFileIO->Read ( pabyBuf, dHeaderVarsSectionLength + 2 );
 
-    header_variables.Unknown1   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.Unknown2   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.Unknown3   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.Unknown4   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.Unknown5   = ReadTV (pabyBuf, bitOffsetFromStart);
-    header_variables.Unknown6   = ReadTV (pabyBuf, bitOffsetFromStart);
-    header_variables.Unknown7   = ReadTV (pabyBuf, bitOffsetFromStart);
-    header_variables.Unknown8   = ReadTV (pabyBuf, bitOffsetFromStart);
-    header_variables.Unknown9   = ReadBITLONG (pabyBuf, bitOffsetFromStart);
-    header_variables.Unknown10  = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(UNKNOWN1, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN2, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN3, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN4, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN5, ReadTV (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN6, ReadTV (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN7, ReadTV (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN8, ReadTV (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN9, ReadBITLONG (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN10, ReadBITLONG (pabyBuf, bitOffsetFromStart));
 
-    header_variables.current_viewport_ent_header = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stCurrentViewportTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
 
-    header_variables.DIMASO     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMSHO     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.PLINEGEN   = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.ORTHOMODE  = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.REGENMODE  = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.FILLMODE   = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.QTEXTMODE  = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.PSLTSCALE  = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.LIMCHECK   = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.USRTIMER   = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.SKPOLY     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.ANGDIR     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.SPLFRAME   = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.MIRRTEXT   = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.WORDLVIEW  = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.TILEMODE   = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.PLIMCHECK  = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.VISRETAIN  = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DISPSILH   = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.PELLIPSE   = ReadBIT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMASO, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMSHO, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::PLINEGEN, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::ORTHOMODE, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::REGENMODE, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::FILLMODE, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::QTEXTMODE, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::PSLTSCALE, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::LIMCHECK, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USRTIMER, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SKPOLY, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::ANGDIR, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SPLFRAME, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::MIRRTEXT, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::WORDLVIEW, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::TILEMODE, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::PLIMCHECK, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::VISRETAIN, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DISPSILH, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::PELLIPSE, ReadBIT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.PROXYGRAPHICS  = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.TREEDEPTH      = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.LUNITS         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.LUPREC         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.AUNITS         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.AUPREC         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.ATTMODE        = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.PDMODE         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.USERI1         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.USERI2         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.USERI3         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.USERI4         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.USERI5         = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.SPLINESEGS     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.SURFU          = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.SURFV          = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.SURFTYPE       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.SURFTAB1       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.SURFTAB2       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.SPLINETYPE     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.SHADEDGE       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.SHADEDIF       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.UNITMODE       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.MAXACTVP       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.ISOLINES       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.CMLJUST        = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.TEXTQLTY       = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PROXYGRAPHICS, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::TREEDEPTH, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::LUNITS, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::LUPREC, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::AUNITS, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::AUPREC, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::ATTMODE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::PDMODE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERI1, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERI2, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERI3, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERI4, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERI5, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SPLINESEGS, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SURFU, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SURFV, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SURFTYPE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SURFTAB1, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SURFTAB2, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SPLINETYPE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SHADEDGE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SHADEDIF, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::UNITMODE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::MAXACTVP, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::ISOLINES, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::CMLJUST, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::TEXTQLTY, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.LTSCALE        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.TEXTSIZE       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.TRACEWID       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.SKETCHINC      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.FILLETRAD      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.THICKNESS      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.ANGBASE        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PDSIZE         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PLINEWID       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.USERR1         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.USERR2         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.USERR3         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.USERR4         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.USERR5         = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.CHAMFERA       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.CHAMFERB       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.CHAMFERC       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.CHAMFERD       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.FACETRES       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.CMLSCALE       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.CELTSCALE      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::LTSCALE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::TEXTSIZE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::TRACEWID, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::SKETCHINC, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::FILLETRAD, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::THICKNESS, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::ANGBASE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::PDSIZE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::PLINEWID, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERR1, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERR2, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERR3, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERR4, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::USERR5, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::CHAMFERA, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::CHAMFERB, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::CHAMFERC, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::CHAMFERD, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::FACETRES, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::CMLSCALE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::CELTSCALE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.MENUNAME       = ReadTV (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::MENU, ReadTV (pabyBuf, bitOffsetFromStart));
 
-    header_variables.TDCREATE_DAY   = ReadBITLONG (pabyBuf, bitOffsetFromStart);
-    header_variables.TDCREATE_MS    = ReadBITLONG (pabyBuf, bitOffsetFromStart);
-    header_variables.TDUPDATE_DAY   = ReadBITLONG (pabyBuf, bitOffsetFromStart);
-    header_variables.TDUPDATE_MS    = ReadBITLONG (pabyBuf, bitOffsetFromStart);
-    header_variables.TDINDWG_DAY    = ReadBITLONG (pabyBuf, bitOffsetFromStart);
-    header_variables.TDINDWG_MS     = ReadBITLONG (pabyBuf, bitOffsetFromStart);
-    header_variables.TDUSRTIMER_DAY = ReadBITLONG (pabyBuf, bitOffsetFromStart);
-    header_variables.TDUSRTIMER_MS  = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    long juliandate, millisec;
+    juliandate = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    millisec = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::TDCREATE, juliandate, millisec);
+    juliandate = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    millisec = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::TDUPDATE, juliandate, millisec);
+    juliandate = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    millisec = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::TDINDWG, juliandate, millisec);
+    juliandate = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    millisec = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::TDUSRTIMER, juliandate, millisec);
 
-    header_variables.CECOLOR        = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::CECOLOR, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.HANDSEED       = ReadHANDLE8BLENGTH (pabyBuf, bitOffsetFromStart); // CHECK THIS CASE.
+    m_poHeader->AddValue(CADHeader::HANDSEED, ReadHANDLE8BLENGTH (pabyBuf, bitOffsetFromStart)); // CHECK THIS CASE.
 
-    header_variables.CLAYER         = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.TEXTSTYLE      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.CELTYPE        = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMSTYLE       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.CMLSTYLE       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::CLAYER, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::TEXTSTYLE, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::CELTYPE, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMSTYLE, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::CMLSTYLE, ReadHANDLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.PSVPSCALE          = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.INSBASE_PSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.INSBASE_PSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.INSBASE_PSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMIN_PSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMIN_PSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMIN_PSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMAX_PSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMAX_PSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMAX_PSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PSVPSCALE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    double dX, dY, dZ;
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PINSBASE, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PEXTMIN, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PEXTMAX, dX, dY, dZ);
+    dX = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PLIMMIN, dX, dY);
+    dX = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PLIMMAX, dX, dY);
 
-    header_variables.LIMMIN_PSPACE.X    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LIMMIN_PSPACE.Y    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LIMMAX_PSPACE.X    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LIMMAX_PSPACE.Y    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PELEVATION, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.ELEVATION_PSPACE   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORG_PSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORG_PSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORG_PSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSXDIR_PSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSXDIR_PSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSXDIR_PSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSYDIR_PSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSYDIR_PSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSYDIR_PSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSORG, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSXDIR, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSYDIR, dX, dY, dZ);
 
-    header_variables.UCSNAME_PSPACE     = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORTHOREF       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSNAME, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::PUCSORTHOREF, ReadHANDLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.PUCSORTHOVIEW      = ReadBITSHORT (pabyBuf, bitOffsetFromStart)
-            ;
-    header_variables.PUCSBASE           = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSORTHOVIEW, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::PUCSBASE, ReadHANDLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.PUCSORGTOP.X       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGTOP.Y       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGTOP.Z       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGBOTTOM.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGBOTTOM.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGBOTTOM.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGLEFT.X      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGLEFT.Y      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGLEFT.Z      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGRIGHT.X     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGRIGHT.Y     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGRIGHT.Z     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGFRONT.X     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGFRONT.Y     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGFRONT.Z     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGBACK.X      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGBACK.Y      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORGBACK.Z      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSORGTOP, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSORGBOTTOM, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSORGLEFT, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSORGRIGHT, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSORGFRONT, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::PUCSORGBACK, dX, dY, dZ);
 
-    header_variables.INSBASE_MSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.INSBASE_MSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.INSBASE_MSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMIN_MSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMIN_MSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMIN_MSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMAX_MSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMAX_MSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.EXTMAX_MSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::INSBASE, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::EXTMIN, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::EXTMAX, dX, dY, dZ);
+    dX = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::LIMMIN, dX, dY);
+    dX = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::LIMMAX, dX, dY);
 
-    header_variables.LIMMIN_MSPACE.X    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LIMMIN_MSPACE.Y    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LIMMAX_MSPACE.X    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LIMMAX_MSPACE.Y    = ReadRAWDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::ELEVATION, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSORG, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSXDIR, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSYDIR, dX, dY, dZ);
 
-    header_variables.ELEVATION_MSPACE   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORG_MSPACE.X    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORG_MSPACE.Y    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORG_MSPACE.Z    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSXDIR_MSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSXDIR_MSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSXDIR_MSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSYDIR_MSPACE.X   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSYDIR_MSPACE.Y   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSYDIR_MSPACE.Z   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSNAME, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::UCSORTHOREF, ReadHANDLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.UCSNAME_MSPACE     = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.PUCSORTHOREF       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSORTHOVIEW, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.PUCSORTHOVIEW      = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSBASE, ReadHANDLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.PUCSBASE           = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSORGTOP, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSORGBOTTOM, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSORGLEFT, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSORGRIGHT, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSORGFRONT, dX, dY, dZ);
+    dX = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dY = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    dZ = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::UCSORGBACK, dX, dY, dZ);
 
-    header_variables.UCSORGTOP.X        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGTOP.Y        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGTOP.Z        = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGBOTTOM.X     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGBOTTOM.Y     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGBOTTOM.Z     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGLEFT.X       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGLEFT.Y       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGLEFT.Z       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGRIGHT.X      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGRIGHT.Y      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGRIGHT.Z      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGFRONT.X      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGFRONT.Y      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGFRONT.Z      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGBACK.X       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGBACK.Y       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCSORGBACK.Z       = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMPOST, ReadTV (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMAPOST, ReadTV (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMPOST    = ReadTV (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMAPOST   = ReadTV (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMSCALE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMASZ, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMEXO, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMDLI, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMEXE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMRND, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMDLE, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTP, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTM, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMSCALE   = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMASZ     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMEXO     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMDLI     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMEXE     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMRND     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMDLE     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTP      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTM      = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMTOL, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMLIM, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTIH, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTOH, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMSE1, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMSE2, ReadBIT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMTOL     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMLIM     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTIH     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTOH     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMSE1     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMSE2     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMTAD, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMZIN, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMAZIN, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMTAD     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMZIN     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMAZIN    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMTXT, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMCEN, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTSZ, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMALTF, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMLFAC, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTVP, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTFAC, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMGAP, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMALTRND, ReadBITDOUBLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMTXT     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMCEN     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTSZ     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMALTF    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMLFAC    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTVP     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTFAC    = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMGAP     = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMALTRND  = ReadBITDOUBLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMALT, ReadBIT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMALT     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMALTD, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMALTD    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMTOFL, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMSAH, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTIX, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMSOXD, ReadBIT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMTOFL    = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMSAH     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTIX     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMSOXD    = ReadBIT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMCLRD, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMCLRE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMCLRT, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMADEC, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMDEC, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTDEC, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMALTU, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMALTTD, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMAUNIT, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMFRAC, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMLUNIT, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMDSEP, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTMOVE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMJUST, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMCLRD    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMCLRE    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMCLRT    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMADEC    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMDEC     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTDEC    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMALTU    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMALTTD   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMAUNIT   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMFRAC    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMLUNIT   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMDSEP    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTMOVE   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMJUST    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMSD1, ReadBIT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMSD2, ReadBIT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMSD1     = ReadBIT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMSD2     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMTOLJ, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMTZIN, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMALTZ, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMALTTZ, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMTOLJ    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMTZIN    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMALTZ    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMALTTZ   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMUPT, ReadBIT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMUPT     = ReadBIT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMATFIT, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMATFIT   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMTXSTY, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMLDRBLK, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMBLK, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMBLK1, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMBLK2, ReadHANDLE (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMTXSTY   = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMLDRBLK  = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMBLK     = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMBLK1    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMBLK2    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMLWD, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::DIMLWE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.DIMLWD     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMLWE     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    CADHandle stBlocksTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stLayersTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stStyleTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stLineTypesTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stViewTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stUCSTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stViewportTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stAPPIDTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::DIMSTYLE, ReadHANDLE (pabyBuf, bitOffsetFromStart));
+    CADHandle stEntityTable = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stACADGroupDict = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stACADMLineStyleDict = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stNamedObjectsDict = ReadHANDLE (pabyBuf, bitOffsetFromStart);
 
-    header_variables.BLOCK_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LAYER_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.STYLE_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LINETYPE_CONTROL_OBJ   = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.VIEW_CONTROL_OBJ       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.UCS_CONTROL_OBJ        = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.VPORT_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.APPID_CONTROL_OBJ      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DIMSTYLE               = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.VIEWPORT_ENT_HEADER_CONTROL_OBJ = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DICTIONARY_ACAD_GROUP      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DICTIONARY_ACAD_MLINESTYLE = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DICTIONARY_NAMED_OBJECTS   = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::TSTACKALIGN, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::TSTACKSIZE, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.TSTACKALIGN    = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.TSTACKSIZE     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::HYPERLINKBASE, ReadTV (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::STYLESHEET, ReadTV (pabyBuf, bitOffsetFromStart));
 
-    header_variables.HYPERLINKBASE  = ReadTV (pabyBuf, bitOffsetFromStart);
-    header_variables.STYLESHEET     = ReadTV (pabyBuf, bitOffsetFromStart);
+    CADHandle stLayoutsDict = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stPlotSettingsDict = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stPlotStylesDict = ReadHANDLE (pabyBuf, bitOffsetFromStart);
 
-    header_variables.DICTIONARY_LAYOUTS         = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DICTIONARY_PLOTSETTINGS    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.DICTIONARY_PLOTSTYLES      = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    int Flags = ReadBITLONG (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::CELWEIGHT, Flags & 0x001F);
+    m_poHeader->AddValue(CADHeader::ENDCAPS, Flags & 0x0060);
+    m_poHeader->AddValue(CADHeader::JOINSTYLE, Flags & 0x0180);
+    m_poHeader->AddValue(CADHeader::LWDISPLAY, !(Flags & 0x0200));
+    m_poHeader->AddValue(CADHeader::XEDIT, !(Flags & 0x0400));
+    m_poHeader->AddValue(CADHeader::EXTNAMES, Flags & 0x0800);
+    m_poHeader->AddValue(CADHeader::PSTYLEMODE, Flags & 0x2000);
+    m_poHeader->AddValue(CADHeader::OLESTARTUP, Flags & 0x4000);
 
-    int32_t Flags               = ReadBITLONG (pabyBuf, bitOffsetFromStart);
-    header_variables.CELWEIGHT  = Flags & 0x001F;
-    header_variables.ENDCAPS    = Flags & 0x0060;
-    header_variables.JOINSTYLE  = Flags & 0x0180;
-    header_variables.LWDISPLAY  = !(Flags & 0x0200);
-    header_variables.XEDIT      = !(Flags & 0x0400);
-    header_variables.EXTNAMES   = Flags & 0x0800;
-    header_variables.PSTYLEMODE = Flags & 0x2000;
-    header_variables.OLESTARTUP = Flags & 0x4000;
+    m_poHeader->AddValue(CADHeader::INSUNITS, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    short nCEPSNTYPE = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::CEPSNTYPE, nCEPSNTYPE);
 
-    header_variables.INSUNITS   = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.CEPSNTYPE  = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
+    if ( nCEPSNTYPE == 3 )
+        m_poHeader->AddValue(CADHeader::CEPSNID, ReadHANDLE (pabyBuf, bitOffsetFromStart));
 
-    if ( header_variables.CEPSNTYPE == 3 )
-        header_variables.CPSNID = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(CADHeader::FINGERPRINTGUID, ReadTV (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(CADHeader::VERSIONGUID, ReadTV (pabyBuf, bitOffsetFromStart));
 
-    header_variables.FINGERPRINTGUID = ReadTV (pabyBuf, bitOffsetFromStart);
-    header_variables.VERSIONGUID     = ReadTV (pabyBuf, bitOffsetFromStart);
+    CADHandle stBlockRecordPaperSpace = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle stBlockRecordModelSpace = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    // TODO: is this part of the header?
+    CADHandle LTYPE_BYLAYER = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle LTYPE_BYBLOCK = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    CADHandle LTYPE_CONTINUOUS = ReadHANDLE (pabyBuf, bitOffsetFromStart);
 
-    header_variables.BLOCK_RECORD_PSPACE    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.BLOCK_RECORD_MSPACE    = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LTYPE_BYLAYER          = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LTYPE_BYBLOCK          = ReadHANDLE (pabyBuf, bitOffsetFromStart);
-    header_variables.LTYPE_CONTINUOUS       = ReadHANDLE (pabyBuf, bitOffsetFromStart);
+    m_poHeader->AddValue(UNKNOWN11, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN12, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN13, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
+    m_poHeader->AddValue(UNKNOWN14, ReadBITSHORT (pabyBuf, bitOffsetFromStart));
 
-    header_variables.UnknownShortInEnd1     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.UnknownShortInEnd2     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.UnknownShortInEnd3     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-    header_variables.UnknownShortInEnd4     = ReadBITSHORT (pabyBuf, bitOffsetFromStart);
-
-    header_variables.CRC        = ReadRAWSHORT (pabyBuf, bitOffsetFromStart);
-    uint16_t calculated_crc     = CalculateCRC8 ((unsigned short)0xC0C1, pabyBuf, dHeaderVarsSectionLength); // TODO: CRC is calculated wrong every time.
+    short nCRC = ReadRAWSHORT (pabyBuf, bitOffsetFromStart);
+    uint16_t calculated_crc = CalculateCRC8 ((unsigned short)0xC0C1, pabyBuf, dHeaderVarsSectionLength); // TODO: CRC is calculated wrong every time.
 
     m_poFileIO->Read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_END,
@@ -448,21 +506,21 @@ void DWGFileR2000::ReadHeader ()
 
         delete[] pabyBuf;
 
-        return;
+        return CADErrorCodes::HEADER_SECTION_READ_FAILED;
     }
 
     delete[] pabyBuf;
 
-    return;
+    return CADErrorCodes::SUCCESS;
 }
 
-void DWGFileR2000::ReadClassesSection ()
+int DWGFileR2000::ReadClassesSection ()
 {
     char    *pabySectionContent;
     char    *pabyBuf     = new char[100];
     int32_t section_size = 0;
 
-    m_poFileIO->Seek (file_header.SLRecords[1].dSeeker, CADFileIO::BEG);
+    m_poFileIO->Seek (SLRecords[1].dSeeker, CADFileIO::SeekOrigin::BEG);
 
     m_poFileIO->Read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::DS_CLASSES_START,
@@ -473,7 +531,7 @@ void DWGFileR2000::ReadClassesSection ()
 
         delete[] pabyBuf;
 
-        return;
+        return CADErrorCodes::OBJECTS_SECTION_READ_FAILED;
     }
 
     m_poFileIO->Read (&section_size, 4);
@@ -517,12 +575,12 @@ void DWGFileR2000::ReadClassesSection ()
 
         delete[] pabyBuf;
 
-        return;
+        return CADErrorCodes::OBJECTS_SECTION_READ_FAILED;
     }
 
     delete[] pabyBuf;
 
-    return;
+    return CADErrorCodes::SUCCESS;
 }
 
 DWG2000_CLASS DWGFileR2000::ReadClass ( const char *input_array, size_t &bitOffsetFromStart )
@@ -540,7 +598,7 @@ DWG2000_CLASS DWGFileR2000::ReadClass ( const char *input_array, size_t &bitOffs
     return outputResult;
 }
 
-void DWGFileR2000::ReadObjectMap ()
+int DWGFileR2000::ReadObjectMap ()
 {
     // Seems like ODA specification is completely awful. CRC is included in section size.
     char     *pabySectionContent;
@@ -548,7 +606,7 @@ void DWGFileR2000::ReadObjectMap ()
     uint16_t section_size       = 0;
     size_t   bitOffsetFromStart = 0;
 
-    m_poFileIO->Seek (file_header.SLRecords[2].dSeeker, CADFileIO::BEG);
+    m_poFileIO->Seek (SLRecords[2].dSeeker, CADFileIO::SeekOrigin::BEG);
 
     int current_section = 0;
     while ( true )
@@ -601,7 +659,7 @@ void DWGFileR2000::ReadObjectMap ()
         for ( size_t j = 0; j < object_map_sections[i].size (); ++j )
         {
             bitOffsetFromStart = 0;
-            m_poFileIO->Seek (object_map_sections[i][j].second, CADFileIO::BEG);
+            m_poFileIO->Seek (object_map_sections[i][j].second, CADFileIO::SeekOrigin::BEG);
             m_poFileIO->Read (pabySectionContent, 400);
 
             DWG2000_CED ced;
@@ -638,7 +696,7 @@ void DWGFileR2000::ReadObjectMap ()
 
     delete[] pabySectionContent;
 
-    return;
+    return CADErrorCodes::SUCCESS;
 }
 
 /*
@@ -729,7 +787,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t index )
     char   pabySectionSize[8];
     size_t bitOffsetFromStart = 0;
     // m_oFileStream.clear ();
-    m_poFileIO->Seek (geometries_map[index].second, CADFileIO::BEG);
+    m_poFileIO->Seek (geometries_map[index].second, CADFileIO::SeekOrigin::BEG);
     m_poFileIO->Read (pabySectionSize, 8);
     uint32_t dGeometrySize = ReadMSHORT (pabySectionSize, bitOffsetFromStart);
 
@@ -738,7 +796,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t index )
     // maximum 4 bytes long, and crc is 2 bytes long).
     char * pabySectionContent = new char[dGeometrySize + (bitOffsetFromStart / 8 + 2)];
     // m_oFileStream.clear ();
-    m_poFileIO->Seek (geometries_map[index].second, CADFileIO::BEG);
+    m_poFileIO->Seek (geometries_map[index].second, CADFileIO::SeekOrigin::BEG);
     m_poFileIO->Read (pabySectionContent, dGeometrySize + (bitOffsetFromStart / 8 + 2));
 
     bitOffsetFromStart = 0;
@@ -1214,9 +1272,9 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t index )
                 common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
             }
 
-            DWG_HANDLE firstvertex = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
-            DWG_HANDLE lastvertex  = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
-            DWG_HANDLE seqend      = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            CADHandle firstvertex = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            CADHandle lastvertex  = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
+            CADHandle seqend      = ReadHANDLE (pabySectionContent, bitOffsetFromStart);
 
             bitOffsetFromStart += 8 - ( bitOffsetFromStart % 8 );
             int16_t crc = ReadRAWSHORT (pabySectionContent, bitOffsetFromStart);
@@ -1255,7 +1313,7 @@ size_t DWGFileR2000::GetLayersCount ()
 
 DWGFileR2000::DWGFileR2000(CADFileIO* poFileIO) : CADFile(poFileIO)
 {
-
+    m_poHeader->AddValue(CADHeader::OPENCADVER, CADVersions::DWG_R2000);
 }
 
 DWGFileR2000::~DWGFileR2000()

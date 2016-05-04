@@ -38,12 +38,19 @@
 CADFile::CADFile(CADFileIO* poFileIO)
 {
     m_poFileIO = poFileIO;
+    m_poHeader = new CADHeader();
 }
 
 CADFile::~CADFile()
 {
-    if(NULL != m_poFileIO)
+    delete m_poHeader;
+    if(nullptr != m_poFileIO)
         delete m_poFileIO;
+}
+
+const CADHeader *CADFile::GetHeader() const
+{
+    return m_poHeader;
 }
 
 size_t CADFile::GetGeometriesCount ()
@@ -91,7 +98,7 @@ CADGeometry * CADFile::GetGeometry ( size_t index )
 
 int CADFile::ParseFile()
 {
-    if(NULL == m_poFileIO)
+    if(nullptr == m_poFileIO)
         return CADErrorCodes::FILE_OPEN_FAILED;
 
     if(!m_poFileIO->IsOpened())
@@ -100,9 +107,15 @@ int CADFile::ParseFile()
             return CADErrorCodes::FILE_OPEN_FAILED;
     }
 
-    ReadHeader ();
-    ReadClassesSection ();
-    ReadObjectMap ();
+    int nResultCode = ReadHeader ();
+    if(nResultCode != CADErrorCodes::SUCCESS)
+        return nResultCode;
+    nResultCode = ReadClassesSection ();
+    if(nResultCode != CADErrorCodes::SUCCESS)
+        return nResultCode;
+    nResultCode = ReadObjectMap ();
+    if(nResultCode != CADErrorCodes::SUCCESS)
+        return nResultCode;
 
     return CADErrorCodes::SUCCESS;
  }

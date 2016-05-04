@@ -43,7 +43,7 @@ CADFileStreamIO::~CADFileStreamIO()
 const char* CADFileStreamIO::ReadLine()
 {
     // TODO: getline
-    return NULL;
+    return nullptr;
 }
 
 bool CADFileStreamIO::Eof()
@@ -53,7 +53,7 @@ bool CADFileStreamIO::Eof()
 
 bool CADFileStreamIO::Open(int mode)
 {
-    std::ios_base::openmode io_mode = std::ios_base::in; // as we use ifstream
+    auto io_mode = std::ios_base::in; // as we use ifstream
     if(mode & OpenMode::binary)
         io_mode |= std::ios_base::binary;
 

@@ -40,7 +40,7 @@
 class CADFileIO
 {
 public:
-    enum SeekOrigin
+    enum class SeekOrigin
     {
         BEG, /**< Begin of the file */
         CUR, /**< Current position of the pointer */

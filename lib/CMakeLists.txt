@@ -53,6 +53,7 @@ set(HHEADERS
     opencad_api.h
     cadfile.h
     cadfileio.h
+    cadheader.h
     cadgeometries.h)
 
 set(HHEADER_PRIV    
@@ -63,6 +64,7 @@ set(CSOURCES
     opencad.cpp
     cadfile.cpp
     cadfilestreamio.cpp
+    cadheader.cpp
     )
 
 set(LIB_NAME)

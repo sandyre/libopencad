@@ -49,6 +49,7 @@
     (OCAD_VERSION_MAJOR == (major) && OCAD_VERSION_MINOR > (minor)) || \
     (OCAD_VERSION_MAJOR == (major) && OCAD_VERSION_MINOR == (minor) && OCAD_VERSION_REV >= (release)))
 
+#define DWG_VERSION_STR_SIZE  6
 
 #ifdef OCAD_STATIC
   #define EXTERN extern

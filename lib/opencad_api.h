@@ -55,10 +55,27 @@ enum CADVersions
 
 enum CADErrorCodes
 {
-    SUCCESS = 0,          /**< operation successfully executed */
-    FILE_OPEN_FAILED,     /**< failed to open CAD file */
-    UNSUPPORTED_VERSION,  /**< unsupported CAD file version */
-    FILE_PARSE_FAILED     /**< failed to parse file */
+    SUCCESS = 0,                    /**< operation successfully executed */
+    FILE_OPEN_FAILED,               /**< failed to open CAD file */
+    UNSUPPORTED_VERSION,            /**< unsupported CAD file version */
+    FILE_PARSE_FAILED,              /**< failed to parse file */
+    HEADER_SECTION_READ_FAILED,     /**< failed to read header section */
+    CLASSES_SECTION_READ_FAILED,    /**< failed to read classes section */
+    TABLES_SECTION_READ_FAILED,     /**< failed to read tables section */
+    BLOCKS_SECTION_READ_FAILED,     /**< failed to read blocks section */
+    ENTITIES_SECTION_READ_FAILED,   /**< failed to read entities section */
+    OBJECTS_SECTION_READ_FAILED,    /**< failed to read objects section */
+    THUMBNAILIMAGE_SECTION_READ_FAILED,   /**< failed to read thumbnailimage section */
+    APPID_TABLE_READ_FAILED,        /**< failed to read appid table*/
+    BLOCK_RECORD_TABLE_READ_FAILED, /**< failed to read block record table*/
+    DIMSTYLE_TABLE_READ_FAILED,     /**< failed to read dimstyle table*/
+    LAYER_TABLE_READ_FAILED,        /**< failed to read layer table*/
+    LTYPE_TABLE_READ_FAILED,        /**< failed to read ltype table*/
+    STYLE_TABLE_READ_FAILED,        /**< failed to read style table*/
+    UCS_TABLE_READ_FAILED,          /**< failed to read ucs table*/
+    VIEW_TABLE_READ_FAILED,         /**< failed to read view table*/
+    VPORT_TABLE_READ_FAILED,        /**< failed to read vport table*/
+    VALUE_EXISTS                    /**< the value already exist in the header */
 };
 
 EXTERN int GetVersion();
