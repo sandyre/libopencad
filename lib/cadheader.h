@@ -104,7 +104,8 @@ public:
      * @brief The CAD нeader сonstants enum get from dxf reference:
      *        http://help.autodesk.com/view/ACD/2016/ENU/?guid=GUID-A85E8E67-27CD-4C59-BE61-4DC9FADBE74A
      */
-    enum CADHeaderConstants{
+    enum CADHeaderConstants
+    {
         OPENCADVER = 1,  /**< enum CADVersions value*/
         ACADMAINTVER,    /**< Maintenance version number (should be ignored) */
         ACADVER,         /**< The AutoCAD drawing database version number:

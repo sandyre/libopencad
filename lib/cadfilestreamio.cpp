@@ -48,7 +48,7 @@ const char* CADFileStreamIO::ReadLine()
 
 bool CADFileStreamIO::Eof()
 {
-    m_oFileStream.eof();
+    return m_oFileStream.eof();
 }
 
 bool CADFileStreamIO::Open(int mode)
