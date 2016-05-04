@@ -99,8 +99,8 @@ double ReadRAWDOUBLE ( const char * input_array, size_t& bitOffsetFromStart );
 unsigned char Read2B ( const char * input_array, size_t& bitOffsetFromStart );
 unsigned char Read3B ( const char * input_array, size_t& bitOffsetFromStart );
 unsigned char Read4B ( const char * input_array, size_t& bitOffsetFromStart );
-struct CADHandle ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart );
-struct CADHandle ReadHANDLE8BLENGTH ( const char * input_array, size_t & bitOffsetFromStart );
+CADHandle ReadHANDLE ( const char * input_array, size_t& bitOffsetFromStart );
+CADHandle ReadHANDLE8BLENGTH ( const char * input_array, size_t & bitOffsetFromStart );
 
 bool        ReadBIT ( const char * input_array, size_t& bitOffsetFromStart );
 unsigned char ReadCHAR ( const char * input_array, size_t& bitOffsetFromStart );

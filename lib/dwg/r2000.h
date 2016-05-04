@@ -54,7 +54,7 @@ struct DWG2000_CED
     int64_t     dLength;
     int16_t     dType;
     int32_t     dObjSizeInBits;
-    DWG_HANDLE  hHandle;
+    CADHandle   hHandle;
     int16_t     dEEDSize;
     DWG_EED     eEED;
     bool        bGraphicPresentFlag;
@@ -75,13 +75,13 @@ struct DWG2000_CED
 
 struct DWG2000_CEHD
 {
-    DWG_HANDLE hOwner;
-    DWG_HANDLE hReactors;
-    DWG_HANDLE hxdibobjhandle;
-    DWG_HANDLE hprev_entity, hnext_entity;
-    DWG_HANDLE hlayer;
-    DWG_HANDLE hltype;
-    DWG_HANDLE hplotstyle;
+    CADHandle hOwner;
+    CADHandle hReactors;
+    CADHandle hxdibobjhandle;
+    CADHandle hprev_entity, hnext_entity;
+    CADHandle hlayer;
+    CADHandle hltype;
+    CADHandle hplotstyle;
 };
 
 typedef std::pair< long long, long long > ObjHandleOffset;

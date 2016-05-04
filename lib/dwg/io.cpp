@@ -689,35 +689,29 @@ double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart,
     return 0.0f;
 }
 
-struct CADHandle ReadHANDLE ( const char * input_array,
+CADHandle ReadHANDLE ( const char * input_array,
                               size_t& bitOffsetFromStart )
 {
-    struct DWG_HANDLE result;
-
-    result.code = Read4B ( input_array, bitOffsetFromStart );
-    result.counter = Read4B ( input_array, bitOffsetFromStart );
-
-    result.handle_or_offset = new char[result.counter];
-    for ( size_t i = 0; i < result.counter; ++i )
+    CADHandle result(Read4B ( input_array, bitOffsetFromStart ) );
+    unsigned char counter = (unsigned char) Read4B ( input_array, bitOffsetFromStart );
+    for ( unsigned char i = 0; i < counter; ++i )
     {
-        result.handle_or_offset[i] = ReadCHAR (input_array, bitOffsetFromStart);
+        result.AddOffset(ReadCHAR (input_array, bitOffsetFromStart));
     }
 
     return result;
 }
 
-struct CADHandle ReadHANDLE8BLENGTH ( const char * input_array,
+CADHandle ReadHANDLE8BLENGTH ( const char * input_array,
                                       size_t& bitOffsetFromStart )
 {
-    struct DWG_HANDLE result;
+    CADHandle result;
 
-    result.code = 0;
-    result.counter = (unsigned char) ReadCHAR ( input_array, bitOffsetFromStart );
+    unsigned char counter = (unsigned char) ReadCHAR ( input_array, bitOffsetFromStart );
 
-    result.handle_or_offset = new char[result.counter];
-    for ( size_t i = 0; i < result.counter; ++i )
+    for ( unsigned char i = 0; i < counter; ++i )
     {
-        result.handle_or_offset[i] = ReadCHAR (input_array, bitOffsetFromStart);
+        result.AddOffset(ReadCHAR (input_array, bitOffsetFromStart));
     }
 
     return result;

@@ -34,18 +34,22 @@
 #include "opencad.h"
 #include <map>
 #include <string>
+#include <vector>
 
-struct CADHandle
-{
-    char nCode = 0;
-    char nCounter = 0;
-    char *pHandleOrOffset = 0;
-};
-
-class EXTERN CADVariant
+class CADHandle
 {
 public:
-    enum DataType
+    CADHandle(char code = 0);
+    void AddOffset(char val);
+protected:
+    char m_nCode;
+    std::vector<char> m_HandleOrOffset;
+};
+
+class EXTERN CADVariant final
+{
+public:
+    enum class DataType
     {
         INVALID = 0,
         DECIMAL,
@@ -63,8 +67,9 @@ public:
     CADVariant(short val);
     CADVariant(double val);
     CADVariant(double x, double y, double z = 0);
-    CADVariant(const struct CADHandle& val);
+    CADVariant(const CADHandle& val);
     CADVariant(const std::string &val);
+    CADVariant(time_t val);
 public:
     CADVariant(const CADVariant& orig);
     CADVariant& operator = (const CADVariant& orig);
@@ -76,7 +81,7 @@ public:
     double GetX() const;
     double GetY() const;
     double GetZ() const;
-    struct CADHandle GetHandle() const;
+    const CADHandle &GetHandle() const;
 protected:
     enum DataType m_eType;
     long m_nDecimal;
@@ -84,8 +89,8 @@ protected:
     double m_dY;
     double m_dZ;
     std::string m_sString;
-    char m_nCode;
-    char m_nCounter;
+    CADHandle m_Handle;
+    time_t m_DateTime;
 };
 
 
@@ -660,6 +665,14 @@ public:
         SPLFRAME,        /** ? */
         WORDLVIEW,       /** ? */
         PELLIPSE,        /** ? */
+        ISOLINES,        /** ? */
+        TEXTQLTY,        /** ? */
+        FACETRES,        /** ? */
+        DIMFRAC,         /** ? */
+        OLESTARTUP,      /** ? */
+        STYLESHEET,      /** ? */
+        TSTACKALIGN,     /**< default = 1 (not present in DXF) */
+        TSTACKSIZE,      /**< default = 70 (not present in DXF) */
         MAX_HEADER_CONSTANT = 1000 /**< max + num for user constants */
 
     };
@@ -678,6 +691,8 @@ public:
     int AddValue(short code, double val);
     int AddValue(short code, const std::string& val);
     int AddValue(short code, bool val);
+    int AddValue(short code, double x, double y, double z = 0);
+    int AddValue(short code, long julianday, long milliseconds);
     int GetGroupCode(short code) const;
     const CADVariant& GetValue(short code, const CADVariant& val = CADVariant()) const;
     const char* GetValueName(short code) const;
