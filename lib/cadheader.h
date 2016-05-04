@@ -41,6 +41,7 @@ class EXTERN CADHandle
 public:
     CADHandle(char code = 0);
     void AddOffset(char val);
+    long GetAsLong() const;
 protected:
     char m_nCode;
     std::vector<char> m_HandleOrOffset;

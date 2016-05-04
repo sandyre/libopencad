@@ -86,6 +86,19 @@ struct DWG2000_CEHD
 
 typedef std::pair< long long, long long > ObjHandleOffset;
 
+struct ObjectMapRecord
+{
+    char      dObjectType;
+    CADHandle hHandle;
+    CADHandle hLayer;
+};
+
+struct Layer
+{
+    CADHandle hHandle;
+    std::vector < struct ObjectMapRecord > vStoredObjects;
+};
+
 class DWGFileR2000 : public CADFile
 {
 public:
@@ -108,6 +121,8 @@ protected:
 //    DWGObject * getObject( size_t section, size_t index );
 protected:
 //    std::vector < DWGObject * > objects;
+//    std::vector < struct Layer > layer_object_map;
+//    std::vector < CADLayer > layer_file_map;
     std::vector < ObjHandleOffset > layer_map;
     std::vector < ObjHandleOffset > geometries_map;
     std::vector < std::vector < ObjHandleOffset > > object_map_sections;

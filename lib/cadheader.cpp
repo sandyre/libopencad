@@ -28,6 +28,7 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
+#include <dwg/io.h>
 #include "cadheader.h"
 #include "opencad_api.h"
 
@@ -270,6 +271,14 @@ CADHandle::CADHandle(char code)
 void CADHandle::AddOffset(char val)
 {
     m_HandleOrOffset.push_back(val);
+}
+
+long CADHandle::GetAsLong () const
+{
+    long result = 0;
+    memcpy ( &result, m_HandleOrOffset.data(), m_HandleOrOffset.size() );
+    SwapEndianness ( result, m_HandleOrOffset.size() );
+    return result;
 }
 
 //------------------------------------------------------------------------------

@@ -47,44 +47,44 @@ short CalculateCRC8 ( unsigned short initial_val, const char * ptr, int num )
     return initial_val;
 }
 
-unsigned char Read2B ( const char * input_array, size_t& bitOffsetFromStart )
+unsigned char Read2B ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     unsigned char result = 0;
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * p2BByte = input_array + byteOffset;
+    const char * p2BByte = pabyInput + nByteOffset;
     unsigned char a2BBytes[2];
     memcpy ( a2BBytes, p2BByte, 2 );
 
-    switch ( bitOffsetInByte )
+    switch ( nBitOffsetInByte )
     {
         case 7:
             result  = ( a2BBytes[0] & 0b00000001 ) << 1;
             result |= ( a2BBytes[1] & 0b10000000 ) >> 7;
             break;
         default:
-            result  = ( a2BBytes[0] >> ( 6 - bitOffsetInByte ) );
+            result  = ( a2BBytes[0] >> ( 6 - nBitOffsetInByte ) );
             break;
     }
 
     result &= 0b00000011;
-    bitOffsetFromStart += 2;
+    nBitOffsetFromStart += 2;
 
     return result;
 }
 
-unsigned char Read3B ( const char * input_array, size_t& bitOffsetFromStart )
+unsigned char Read3B ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     unsigned char result = 0;
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * p3BByte = input_array + byteOffset;
+    const char * p3BByte = pabyInput + nByteOffset;
     unsigned char a3BBytes[2];
     memcpy ( a3BBytes, p3BByte, 2 );
 
-    switch ( bitOffsetInByte )
+    switch ( nBitOffsetInByte )
     {
         case 6:
             result  = ( a3BBytes[0] & 0b00000011 ) << 1;
@@ -97,27 +97,27 @@ unsigned char Read3B ( const char * input_array, size_t& bitOffsetFromStart )
             break;
 
         default:
-            result  = ( a3BBytes[0] >> ( 5 - bitOffsetInByte ) );
+            result  = ( a3BBytes[0] >> ( 5 - nBitOffsetInByte ) );
             break;
     }
 
     result &= 0b00000111;
-    bitOffsetFromStart += 3;
+    nBitOffsetFromStart += 3;
 
     return result;
 }
 
-unsigned char Read4B ( const char * input_array, size_t& bitOffsetFromStart )
+unsigned char Read4B ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     unsigned char result = 0;
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * p4BByte = input_array + byteOffset;
+    const char * p4BByte = pabyInput + nByteOffset;
     unsigned char a4BBytes[2];
     memcpy ( a4BBytes, p4BByte, 2 );
 
-    switch ( bitOffsetInByte )
+    switch ( nBitOffsetInByte )
     {
         case 5:
             result  = ( a4BBytes[0] & 0b00000111 ) << 1;
@@ -134,146 +134,146 @@ unsigned char Read4B ( const char * input_array, size_t& bitOffsetFromStart )
             break;
 
         default:
-            result  = ( a4BBytes[0] >> ( 4 - bitOffsetInByte ) );
+            result  = ( a4BBytes[0] >> ( 4 - nBitOffsetInByte ) );
             break;
     }
 
     result &= 0b00001111;
-    bitOffsetFromStart += 4;
+    nBitOffsetFromStart += 4;
 
     return result;
 }
 
-short ReadRAWSHORT ( const char * input_array, size_t& bitOffsetFromStart )
+short ReadRAWSHORT ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pShortFirstByte = input_array + byteOffset;
+    const char * pShortFirstByte = pabyInput + nByteOffset;
     unsigned char aShortBytes[3];
     memcpy ( aShortBytes, pShortFirstByte, 3 );
 
-    switch ( bitOffsetInByte )
+    switch ( nBitOffsetInByte )
     {
         case 0:
             break;
 
         default:
-            aShortBytes[0]  <<= bitOffsetInByte;
-            aShortBytes[0] |= ( aShortBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aShortBytes[1]  <<= bitOffsetInByte;
-            aShortBytes[1] |= ( aShortBytes[2] >> ( 8 - bitOffsetInByte ) );
+            aShortBytes[0]  <<= nBitOffsetInByte;
+            aShortBytes[0] |= ( aShortBytes[1] >> ( 8 - nBitOffsetInByte ) );
+            aShortBytes[1]  <<= nBitOffsetInByte;
+            aShortBytes[1] |= ( aShortBytes[2] >> ( 8 - nBitOffsetInByte ) );
             break;
     }
 
     void * ptr = aShortBytes;
     short * result = static_cast<short *>(ptr);
 
-    bitOffsetFromStart += 16;
+    nBitOffsetFromStart += 16;
 
     return * result;
 }
 
-double ReadRAWDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
+double ReadRAWDOUBLE ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    size_t byteOffset = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pDoubleFirstByte = input_array + byteOffset;
+    const char * pDoubleFirstByte = pabyInput + nByteOffset;
 
     unsigned char aDoubleBytes[9];
     memcpy ( aDoubleBytes, pDoubleFirstByte, 9 );
 
-    switch ( bitOffsetInByte )
+    switch ( nBitOffsetInByte )
     {
         case 0:
             break;
 
         default:
-            aDoubleBytes[0]  <<= bitOffsetInByte;
-            aDoubleBytes[0] |= ( aDoubleBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[1]  <<= bitOffsetInByte;
-            aDoubleBytes[1] |= ( aDoubleBytes[2] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[2]  <<= bitOffsetInByte;
-            aDoubleBytes[2] |= ( aDoubleBytes[3] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[3]  <<= bitOffsetInByte;
-            aDoubleBytes[3] |= ( aDoubleBytes[4] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[4]  <<= bitOffsetInByte;
-            aDoubleBytes[4] |= ( aDoubleBytes[5] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[5]  <<= bitOffsetInByte;
-            aDoubleBytes[5] |= ( aDoubleBytes[6] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[6]  <<= bitOffsetInByte;
-            aDoubleBytes[6] |= ( aDoubleBytes[7] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[7]  <<= bitOffsetInByte;
-            aDoubleBytes[7] |= ( aDoubleBytes[8] >> ( 8 - bitOffsetInByte ) );
+            aDoubleBytes[0]  <<= nBitOffsetInByte;
+            aDoubleBytes[0] |= ( aDoubleBytes[1] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[1]  <<= nBitOffsetInByte;
+            aDoubleBytes[1] |= ( aDoubleBytes[2] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[2]  <<= nBitOffsetInByte;
+            aDoubleBytes[2] |= ( aDoubleBytes[3] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[3]  <<= nBitOffsetInByte;
+            aDoubleBytes[3] |= ( aDoubleBytes[4] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[4]  <<= nBitOffsetInByte;
+            aDoubleBytes[4] |= ( aDoubleBytes[5] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[5]  <<= nBitOffsetInByte;
+            aDoubleBytes[5] |= ( aDoubleBytes[6] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[6]  <<= nBitOffsetInByte;
+            aDoubleBytes[6] |= ( aDoubleBytes[7] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[7]  <<= nBitOffsetInByte;
+            aDoubleBytes[7] |= ( aDoubleBytes[8] >> ( 8 - nBitOffsetInByte ) );
             break;
     }
 
     void * ptr   = aDoubleBytes;
     double * result = static_cast<double *>(ptr);
 
-    bitOffsetFromStart += 64;
+    nBitOffsetFromStart += 64;
 
     return * result;
 }
 
-int ReadRAWLONG ( const char * input_array, size_t& bitOffsetFromStart )
+int ReadRAWLONG ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    size_t byteOffset = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pLongFirstByte = input_array + byteOffset;
+    const char * pLongFirstByte = pabyInput + nByteOffset;
 
     unsigned char aLongBytes[5];
     memcpy ( aLongBytes, pLongFirstByte, 5 );
 
-    switch ( bitOffsetInByte )
+    switch ( nBitOffsetInByte )
     {
         case 0:
             break;
 
         default:
-            aLongBytes[0]  <<= bitOffsetInByte;
-            aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[1]  <<= bitOffsetInByte;
-            aLongBytes[1] |= ( aLongBytes[2] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[2]  <<= bitOffsetInByte;
-            aLongBytes[2] |= ( aLongBytes[3] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[3]  <<= bitOffsetInByte;
-            aLongBytes[3] |= ( aLongBytes[4] >> ( 8 - bitOffsetInByte ) );
+            aLongBytes[0]  <<= nBitOffsetInByte;
+            aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - nBitOffsetInByte ) );
+            aLongBytes[1]  <<= nBitOffsetInByte;
+            aLongBytes[1] |= ( aLongBytes[2] >> ( 8 - nBitOffsetInByte ) );
+            aLongBytes[2]  <<= nBitOffsetInByte;
+            aLongBytes[2] |= ( aLongBytes[3] >> ( 8 - nBitOffsetInByte ) );
+            aLongBytes[3]  <<= nBitOffsetInByte;
+            aLongBytes[3] |= ( aLongBytes[4] >> ( 8 - nBitOffsetInByte ) );
             break;
     }
 
     void * ptr = aLongBytes;
     int * result = static_cast<int *>(ptr);
 
-    bitOffsetFromStart += 32;
+    nBitOffsetFromStart += 32;
 
     return * result;
 }
 
-bool ReadBIT ( const char * input_array, size_t& bitOffsetFromStart )
+bool ReadBIT ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pBoolByte = input_array + byteOffset;
+    const char * pBoolByte = pabyInput + nByteOffset;
 
-    unsigned char result = ( pBoolByte[0] >> ( 7 - bitOffsetInByte ) ) & 0b00000001;
+    unsigned char result = ( pBoolByte[0] >> ( 7 - nBitOffsetInByte ) ) & 0b00000001;
 
-    ++bitOffsetFromStart;
+    ++nBitOffsetFromStart;
 
     return result;
 }
 
-short ReadBITSHORT( const char * input_array, size_t& bitOffsetFromStart )
+short ReadBITSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    char BITCODE = Read2B ( input_array, bitOffsetFromStart );
+    char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
 
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pShortFirstByte = input_array + byteOffset;
+    const char * pShortFirstByte = pabyInput + nByteOffset;
     unsigned char aShortBytes[4]; // maximum bytes a single short can take.
     memcpy ( aShortBytes, pShortFirstByte, 4 );
 
@@ -281,12 +281,12 @@ short ReadBITSHORT( const char * input_array, size_t& bitOffsetFromStart )
     {
         case BITSHORT_NORMAL:
         {
-            aShortBytes[0]  = ( aShortBytes[0] << bitOffsetInByte );
-            aShortBytes[0] |= ( aShortBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aShortBytes[1]  = ( aShortBytes[1] << bitOffsetInByte );
-            aShortBytes[1] |= ( aShortBytes[2] >> ( 8 - bitOffsetInByte ) );
+            aShortBytes[0]  = ( aShortBytes[0] << nBitOffsetInByte );
+            aShortBytes[0] |= ( aShortBytes[1] >> ( 8 - nBitOffsetInByte ) );
+            aShortBytes[1]  = ( aShortBytes[1] << nBitOffsetInByte );
+            aShortBytes[1] |= ( aShortBytes[2] >> ( 8 - nBitOffsetInByte ) );
 
-            bitOffsetFromStart += 16;
+            nBitOffsetFromStart += 16;
 
             void * ptr = aShortBytes;
             short * result = static_cast < short * > ( ptr );
@@ -296,23 +296,23 @@ short ReadBITSHORT( const char * input_array, size_t& bitOffsetFromStart )
 
         case BITSHORT_UNSIGNED_CHAR:
         {
-            aShortBytes[0]  = ( aShortBytes[0] << bitOffsetInByte );
-            aShortBytes[0] |= ( aShortBytes[1] >> ( 8 - bitOffsetInByte) );
+            aShortBytes[0]  = ( aShortBytes[0] << nBitOffsetInByte );
+            aShortBytes[0] |= ( aShortBytes[1] >> ( 8 - nBitOffsetInByte) );
 
-            bitOffsetFromStart += 8;
+            nBitOffsetFromStart += 8;
 
             return ( unsigned char ) aShortBytes[0];
         }
 
         case BITSHORT_ZERO_VALUE:
         {
-            bitOffsetFromStart += 0;
+            nBitOffsetFromStart += 0;
             return ( short ) 0;
         }
 
         case BITSHORT_256:
         {
-            bitOffsetFromStart += 0;
+            nBitOffsetFromStart += 0;
             return ( short ) 256;
         }
     }
@@ -320,56 +320,56 @@ short ReadBITSHORT( const char * input_array, size_t& bitOffsetFromStart )
     return -1;
 }
 
-unsigned char ReadCHAR( const char * input_array, size_t& bitOffsetFromStart )
+unsigned char ReadCHAR( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     unsigned char result = 0;
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pCharFirstByte = input_array + byteOffset;
+    const char * pCharFirstByte = pabyInput + nByteOffset;
     unsigned char aCharBytes[2]; // maximum bytes a single char can take.
     memcpy ( aCharBytes, pCharFirstByte, 2 );
 
-    result  = ( aCharBytes[0] << bitOffsetInByte );
-    result |= ( aCharBytes[1] >> ( 8 - bitOffsetInByte ) );
+    result  = ( aCharBytes[0] << nBitOffsetInByte );
+    result |= ( aCharBytes[1] >> ( 8 - nBitOffsetInByte ) );
 
-    bitOffsetFromStart += 8;
+    nBitOffsetFromStart += 8;
 
     return result;
 }
 
-std::string ReadTV ( const char * input_array, size_t& bitOffsetFromStart )
+std::string ReadTV ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     // TODO: due to CLion issues with copying text from output window, all
     //       string readed are now not zero-terminated. Will fix soon.
-    short string_length = ReadBITSHORT ( input_array, bitOffsetFromStart );
+    short string_length = ReadBITSHORT ( pabyInput, nBitOffsetFromStart );
 
     std::string result;
 
     for ( size_t i = 0; i < string_length; ++i )
     {
-        result += ReadCHAR ( input_array, bitOffsetFromStart );
+        result += ReadCHAR ( pabyInput, nBitOffsetFromStart );
     }
 
     return result;
 }
 
-long ReadUMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
+long ReadUMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     // TODO: bit offset is calculated, but function has nothing to do with it.
     long long result = 0;
     bool   negative = false;
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pMCharFirstByte = input_array + byteOffset;
+    const char * pMCharFirstByte = pabyInput + nByteOffset;
     unsigned char aMCharBytes[8]; // 8 bytes is maximum.
     memcpy ( aMCharBytes, pMCharFirstByte, 8 );
 
     size_t MCharBytesCount = 0;
     for ( size_t i = 0; i < 8; ++i )
     {
-        aMCharBytes[i] = ReadCHAR ( input_array, bitOffsetFromStart );
+        aMCharBytes[i] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
         ++MCharBytesCount;
         if ( !( aMCharBytes[i] & 0b10000000 ) )
         {
@@ -430,22 +430,22 @@ long ReadUMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
+long ReadMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     // TODO: bit offset is calculated, but function has nothing to do with it.
     long long result = 0;
     bool   negative = false;
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pMCharFirstByte = input_array + byteOffset;
+    const char * pMCharFirstByte = pabyInput + nByteOffset;
     unsigned char aMCharBytes[8]; // 8 bytes is maximum.
     memcpy ( aMCharBytes, pMCharFirstByte, 8 );
 
     size_t MCharBytesCount = 0;
     for ( size_t i = 0; i < 8; ++i )
     {
-        aMCharBytes[i] = ReadCHAR ( input_array, bitOffsetFromStart );
+        aMCharBytes[i] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
         ++MCharBytesCount;
         if ( !( aMCharBytes[i] & 0b10000000 ) )
         {
@@ -514,24 +514,24 @@ long ReadMCHAR ( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-unsigned int ReadMSHORT( const char * input_array, size_t& bitOffsetFromStart )
+unsigned int ReadMSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     unsigned int result = 0;
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pMShortFirstByte = input_array + byteOffset;
+    const char * pMShortFirstByte = pabyInput + nByteOffset;
     unsigned char aMShortBytes[8]; // 8 bytes is maximum.
 
     // TODO: this function doesnot support MSHORTS longer than 4 bytes. ODA says
     //       its impossible, but not sure.
     size_t MShortBytesCount = 2;
-    aMShortBytes[0] = ReadCHAR ( input_array, bitOffsetFromStart );
-    aMShortBytes[1] = ReadCHAR ( input_array, bitOffsetFromStart );
+    aMShortBytes[0] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+    aMShortBytes[1] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
     if ( aMShortBytes[1] & 0b10000000 )
     {
-        aMShortBytes[2] = ReadCHAR ( input_array, bitOffsetFromStart );
-        aMShortBytes[3] = ReadCHAR ( input_array, bitOffsetFromStart );
+        aMShortBytes[2] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+        aMShortBytes[3] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
         MShortBytesCount = 4;
     }
 
@@ -560,14 +560,14 @@ unsigned int ReadMSHORT( const char * input_array, size_t& bitOffsetFromStart )
     return result;
 }
 
-double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
+double ReadBITDOUBLE ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    char BITCODE = Read2B ( input_array, bitOffsetFromStart );
+    char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
 
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pDoubleFirstByte = input_array + byteOffset;
+    const char * pDoubleFirstByte = pabyInput + nByteOffset;
     unsigned char aDoubleBytes[9]; // maximum bytes a single double can take.
     memcpy ( aDoubleBytes, pDoubleFirstByte, 9 );
 
@@ -575,24 +575,24 @@ double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
     {
         case BITDOUBLE_NORMAL:
         {
-            aDoubleBytes[0] <<= bitOffsetInByte;
-            aDoubleBytes[0] |= ( aDoubleBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[1] <<= bitOffsetInByte;
-            aDoubleBytes[1] |= ( aDoubleBytes[2] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[2] <<= bitOffsetInByte;
-            aDoubleBytes[2] |= ( aDoubleBytes[3] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[3] <<= bitOffsetInByte;
-            aDoubleBytes[3] |= ( aDoubleBytes[4] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[4] <<= bitOffsetInByte;
-            aDoubleBytes[4] |= ( aDoubleBytes[5] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[5] <<= bitOffsetInByte;
-            aDoubleBytes[5] |= ( aDoubleBytes[6] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[6] <<= bitOffsetInByte;
-            aDoubleBytes[6] |= ( aDoubleBytes[7] >> ( 8 - bitOffsetInByte ) );
-            aDoubleBytes[7] <<= bitOffsetInByte;
-            aDoubleBytes[7] |= ( aDoubleBytes[8] >> ( 8 - bitOffsetInByte ) );
+            aDoubleBytes[0] <<= nBitOffsetInByte;
+            aDoubleBytes[0] |= ( aDoubleBytes[1] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[1] <<= nBitOffsetInByte;
+            aDoubleBytes[1] |= ( aDoubleBytes[2] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[2] <<= nBitOffsetInByte;
+            aDoubleBytes[2] |= ( aDoubleBytes[3] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[3] <<= nBitOffsetInByte;
+            aDoubleBytes[3] |= ( aDoubleBytes[4] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[4] <<= nBitOffsetInByte;
+            aDoubleBytes[4] |= ( aDoubleBytes[5] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[5] <<= nBitOffsetInByte;
+            aDoubleBytes[5] |= ( aDoubleBytes[6] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[6] <<= nBitOffsetInByte;
+            aDoubleBytes[6] |= ( aDoubleBytes[7] >> ( 8 - nBitOffsetInByte ) );
+            aDoubleBytes[7] <<= nBitOffsetInByte;
+            aDoubleBytes[7] |= ( aDoubleBytes[8] >> ( 8 - nBitOffsetInByte ) );
 
-            bitOffsetFromStart += 64;
+            nBitOffsetFromStart += 64;
 
             void * ptr = aDoubleBytes;
             double * result = static_cast< double *> ( ptr );
@@ -602,21 +602,21 @@ double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
 
         case BITDOUBLE_ONE_VALUE:
         {
-            bitOffsetFromStart += 0;
+            nBitOffsetFromStart += 0;
 
             return 1.0f;
         }
 
         case BITDOUBLE_ZERO_VALUE:
         {
-            bitOffsetFromStart += 0;
+            nBitOffsetFromStart += 0;
 
             return 0.0f;
         }
 
         case BITDOUBLE_NOT_USED:
         {
-            bitOffsetFromStart += 0;
+            nBitOffsetFromStart += 0;
 
             return 0.0f;
         }
@@ -625,13 +625,13 @@ double ReadBITDOUBLE ( const char * input_array, size_t& bitOffsetFromStart )
     return 0.0f;
 }
 
-double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart,
+double ReadBITDOUBLEWD ( const char * pabyInput, size_t& nBitOffsetFromStart,
                          double defaultvalue )
 {
     unsigned char aDefaultValueBytes[8];
     memcpy ( aDefaultValueBytes, &defaultvalue, 8 );
 
-    char BITCODE = Read2B ( input_array, bitOffsetFromStart );
+    char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
 
     switch ( BITCODE )
     {
@@ -642,10 +642,10 @@ double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart,
 
         case BITDOUBLEWD_4BYTES_PATCHED:
         {
-            aDefaultValueBytes[0] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[1] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[2] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[3] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[0] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[1] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[2] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[3] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
 
             void * ptr      = aDefaultValueBytes;
             double * result = static_cast< double *> ( ptr );
@@ -655,12 +655,12 @@ double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart,
 
         case BITDOUBLEWD_6BYTES_PATCHED:
         {
-            aDefaultValueBytes[4] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[5] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[0] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[1] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[2] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[3] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[4] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[5] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[0] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[1] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[2] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[3] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
 
             void * ptr      = aDefaultValueBytes;
             double * result = static_cast< double *> ( ptr );
@@ -670,14 +670,14 @@ double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart,
 
         case BITDOUBLEWD_FULL_RD:
         {
-            aDefaultValueBytes[0] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[1] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[2] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[3] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[4] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[5] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[6] = ReadCHAR ( input_array, bitOffsetFromStart );
-            aDefaultValueBytes[7] = ReadCHAR ( input_array, bitOffsetFromStart );
+            aDefaultValueBytes[0] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[1] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[2] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[3] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[4] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[5] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[6] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+            aDefaultValueBytes[7] = ReadCHAR ( pabyInput, nBitOffsetFromStart );
 
             void * ptr      = aDefaultValueBytes;
             double * result = static_cast< double *> ( ptr );
@@ -689,42 +689,42 @@ double ReadBITDOUBLEWD ( const char * input_array, size_t& bitOffsetFromStart,
     return 0.0f;
 }
 
-CADHandle ReadHANDLE ( const char * input_array,
-                              size_t& bitOffsetFromStart )
+CADHandle ReadHANDLE ( const char * pabyInput,
+                       size_t& nBitOffsetFromStart )
 {
-    CADHandle result(Read4B ( input_array, bitOffsetFromStart ) );
-    unsigned char counter = (unsigned char) Read4B ( input_array, bitOffsetFromStart );
+    CADHandle result(Read4B ( pabyInput, nBitOffsetFromStart ) );
+    unsigned char counter = (unsigned char) Read4B ( pabyInput, nBitOffsetFromStart );
     for ( unsigned char i = 0; i < counter; ++i )
     {
-        result.AddOffset(ReadCHAR (input_array, bitOffsetFromStart));
+        result.AddOffset(ReadCHAR (pabyInput, nBitOffsetFromStart));
     }
 
     return result;
 }
 
-CADHandle ReadHANDLE8BLENGTH ( const char * input_array,
-                                      size_t& bitOffsetFromStart )
+CADHandle ReadHANDLE8BLENGTH ( const char * pabyInput,
+                               size_t& nBitOffsetFromStart )
 {
     CADHandle result;
 
-    unsigned char counter = (unsigned char) ReadCHAR ( input_array, bitOffsetFromStart );
+    unsigned char counter = (unsigned char) ReadCHAR ( pabyInput, nBitOffsetFromStart );
 
     for ( unsigned char i = 0; i < counter; ++i )
     {
-        result.AddOffset(ReadCHAR (input_array, bitOffsetFromStart));
+        result.AddOffset(ReadCHAR (pabyInput, nBitOffsetFromStart));
     }
 
     return result;
 }
 
-int ReadBITLONG( const char * input_array, size_t& bitOffsetFromStart )
+int ReadBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    char   BITCODE = Read2B ( input_array, bitOffsetFromStart );
+    char   BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
 
-    size_t byteOffset      = bitOffsetFromStart / 8;
-    size_t bitOffsetInByte = bitOffsetFromStart % 8;
+    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pLongFirstByte = input_array + byteOffset;
+    const char * pLongFirstByte = pabyInput + nByteOffset;
     unsigned char aLongBytes[5]; // maximum bytes a single short can take.
     memcpy ( aLongBytes, pLongFirstByte, 5 );
 
@@ -732,16 +732,16 @@ int ReadBITLONG( const char * input_array, size_t& bitOffsetFromStart )
     {
         case BITLONG_NORMAL:
         {
-            aLongBytes[0]  <<= bitOffsetInByte;
-            aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[1]  <<= bitOffsetInByte;
-            aLongBytes[1] |= ( aLongBytes[2] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[2]  <<= bitOffsetInByte;
-            aLongBytes[2] |= ( aLongBytes[3] >> ( 8 - bitOffsetInByte ) );
-            aLongBytes[3]  <<= bitOffsetInByte;
-            aLongBytes[3] |= ( aLongBytes[4] >> ( 8 - bitOffsetInByte ) );
+            aLongBytes[0]  <<= nBitOffsetInByte;
+            aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - nBitOffsetInByte ) );
+            aLongBytes[1]  <<= nBitOffsetInByte;
+            aLongBytes[1] |= ( aLongBytes[2] >> ( 8 - nBitOffsetInByte ) );
+            aLongBytes[2]  <<= nBitOffsetInByte;
+            aLongBytes[2] |= ( aLongBytes[3] >> ( 8 - nBitOffsetInByte ) );
+            aLongBytes[3]  <<= nBitOffsetInByte;
+            aLongBytes[3] |= ( aLongBytes[4] >> ( 8 - nBitOffsetInByte ) );
 
-            bitOffsetFromStart += 32;
+            nBitOffsetFromStart += 32;
 
             void * ptr = aLongBytes;
             long * result = static_cast < long * > ( ptr );
@@ -751,24 +751,24 @@ int ReadBITLONG( const char * input_array, size_t& bitOffsetFromStart )
 
         case BITLONG_UNSIGNED_CHAR:
         {
-            aLongBytes[ 0 ] <<= bitOffsetInByte;
-            aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - bitOffsetInByte) );
+            aLongBytes[0] <<= nBitOffsetInByte;
+            aLongBytes[0] |= ( aLongBytes[1] >> ( 8 - nBitOffsetInByte) );
 
-            bitOffsetFromStart += 8;
+            nBitOffsetFromStart += 8;
 
-            return aLongBytes[ 0 ];
+            return aLongBytes[0];
         }
 
         case BITLONG_ZERO_VALUE:
         {
-            bitOffsetFromStart += 0;
+            nBitOffsetFromStart += 0;
             return ( short ) 0;
         }
 
         case BITLONG_NOT_USED:
         {
             std::cerr << "THAT SHOULD NEVER HAPPENED! BUG. (in file, or reader, or both.) ReadBITLONG(), case BITLONG_NOT_USED" << std::endl;
-            bitOffsetFromStart += 0;
+            nBitOffsetFromStart += 0;
             return ( short ) 0;
         }
     }

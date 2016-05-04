@@ -100,7 +100,8 @@ class CADGeometry
         LINE,
         POLYLINE3D,
         TEXT,
-        ARC
+        ARC,
+        SPLINE
     };
 
 public: //TODO: protected
@@ -315,6 +316,16 @@ public:
     double dfEndingAngle;
 };
 
+class Spline : public CADGeometry
+{
+public:
+    // TODO: understand what should Spline consist of.
+    Spline()
+    {
+        stGeometryType = SPLINE;
+    }
+};
+
 class CADBlock
 {
 public:
@@ -341,7 +352,9 @@ public:
     int16_t dLineWeight;
     int16_t dColor;
 
-    std::vector< CADGeometry * > geometries;
+    std::vector < CADGeometry * > geometries;
+
+    CADHandle hHandle;
 };
 
 
