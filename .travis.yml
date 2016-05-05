@@ -11,7 +11,7 @@ before_install:
 - echo $LC_ALL
 script: cmake CMakeLists.txt
 after_success:
-- cd gtest/tests
+- cd /home/travis/build/sandyre/libopencad/tests/
 - ./run_libdwgx_tests
 branches:
   only:
