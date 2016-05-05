@@ -11,7 +11,7 @@ before_install:
 - echo $LC_ALL
 script: cmake CMakeLists.txt
 after_success:
-- cd build/sandyre/libopencad/
+- cd /home/travis/build/sandyre/libopencad
 - make test
 branches:
   only:
