@@ -12,7 +12,7 @@ before_install:
 script: cmake CMakeLists.txt
 after_success:
 - cd /home/travis/build/sandyre/libopencad/tests/
-- ./run_libdwgx_tests
+- ./run_libopencad_tests
 branches:
   only:
   - master
