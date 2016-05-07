@@ -38,21 +38,20 @@
 <h2>
 <a id="api" class="anchor" href="#api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API</h2>
 
-<p>libdwgx typical usage pipeline is shown below:
+<p>Typical usage pipeline is shown below:
 Open CAD file:</p>
 
 <div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">"</span>libopencad_api.h<span class="pl-pds">"</span></span>
-<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">libopencad</span><span class="pl-k">;</span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">"</span>opencad_api.h<span class="pl-pds">"</span></span>
 
 CADFile * opendwg = OpenCADFile(<span class="pl-s"><span class="pl-pds">"</span>/path/to/example.dwg/dxf<span class="pl-pds">"</span></span>);</pre></div>
 
 <p>From now on, you can access geometries like this:</p>
 
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> geometries_count = opendwg-&gt;<span class="pl-en">getGeometriesCount</span>();
+<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> geometries_count = opendwg-&gt;<span class="pl-en">GetGeometriesCount</span>();
 <span class="pl-k">for</span>(<span class="pl-k">auto</span> i = <span class="pl-c1">0</span>; i &lt; geometries_count; ++i)
 {
-    CADGeometries::CADGeometry * geom = dwgfile-&gt;<span class="pl-c1">getGeometry</span> (i);
+    CADGeometries::CADGeometry * geom = dwgfile-&gt;<span class="pl-c1">GetGeometry</span> (i);
     <span class="pl-c">// now, geom-&gt;sGeometryType stores a type of returned geometry. Then,</span>
     <span class="pl-c">// you have to cast it to this class, eg.</span>
     <span class="pl-k">if</span> ( geom-&gt;<span class="pl-smi">sGeometryType</span> == CADGeometries::CADGeometryType::CIRCLE )
@@ -76,7 +75,7 @@ CADFile * opendwg = OpenCADFile(<span class="pl-s"><span class="pl-pds">"</span>
 <h2>
 <a id="build-status" class="anchor" href="#build-status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build status</h2>
 
-<p>Linux: <a href="https://travis-ci.org/sandyre/libdwgx"><img src="https://travis-ci.org/sandyre/libdwgx.svg?branch=master" alt="Build Status"></a></p>
+<p>Linux (gcc + clang): <a href="https://travis-ci.org/sandyre/libopencad"><img src="https://travis-ci.org/sandyre/libopencad.svg?branch=master" alt="Build Status"></a></p>
         </section>
 
         <aside id="sidebar">
