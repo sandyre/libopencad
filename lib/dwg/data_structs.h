@@ -41,11 +41,11 @@ struct SLRecord
     int  dSize          = 0;
 };
 
-struct DWG_EED
+struct CAD_EED
 {
     short length = 0;
     CADHandle application_handle;
-    char * data;
+    std::vector < char > data;
 };
 
 

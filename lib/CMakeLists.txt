@@ -54,7 +54,7 @@ set(HHEADERS
     cadfile.h
     cadfileio.h
     cadheader.h
-    cadgeometries.h)
+    cadgeometries.h cadobjects.h)
 
 set(HHEADER_PRIV    
     cadfilestreamio.h

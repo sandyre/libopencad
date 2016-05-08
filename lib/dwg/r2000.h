@@ -55,8 +55,7 @@ struct DWG2000_CED
     int16_t     dType;
     int32_t     dObjSizeInBits;
     CADHandle   hHandle;
-    int16_t     dEEDSize;
-    DWG_EED     eEED;
+    std::vector < CAD_EED > eEED;
     bool        bGraphicPresentFlag;
 
     int8_t      dEntMode;
@@ -86,18 +85,6 @@ struct DWG2000_CEHD
 
 typedef std::pair< long long, long long > ObjHandleOffset;
 
-struct ObjectMapRecord
-{
-    char      dObjectType;
-    CADHandle hHandle;
-    CADHandle hLayer;
-};
-
-struct Layer
-{
-    CADHandle hHandle;
-    std::vector < struct ObjectMapRecord > vStoredObjects;
-};
 
 class DWGFileR2000 : public CADFile
 {
@@ -110,7 +97,7 @@ public:
 //    size_t getBlocksCount();
     virtual CADGeometry * GetGeometry( size_t index );
 //    CADBlock * getBlock( size_t index );
-    virtual CADLayer * GetLayer( size_t index );
+//    virtual CADLayer * GetLayer( size_t index );
 
 protected:
     virtual int ReadHeader();
@@ -118,10 +105,10 @@ protected:
     virtual int ReadObjectMap();
 
     DWG2000_CLASS ReadClass( const char * input_array, size_t& bitOffset );
-//    DWGObject * getObject( size_t section, size_t index );
+
+    CADObject * GetObject( size_t section, size_t index );
+
 protected:
-//    std::vector < DWGObject * > objects;
-//    std::vector < struct Layer > layer_object_map;
 //    std::vector < CADLayer > layer_file_map;
     std::vector < ObjHandleOffset > layer_map;
     std::vector < ObjHandleOffset > geometries_map;

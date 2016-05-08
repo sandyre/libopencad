@@ -34,6 +34,7 @@
 
 #include "cadheader.h"
 #include "cadfileio.h"
+#include "cadobjects.h"
 #include "cadgeometries.h"
 
 /**

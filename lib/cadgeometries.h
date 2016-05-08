@@ -84,7 +84,9 @@ struct Vector3D
     double Z;
 };
 
-
+/**
+ * @brief Base CAD geometry class
+ */
 class CADGeometry
 {
  public:
@@ -109,6 +111,9 @@ public: //TODO: protected
     double          dfThickness;
 };
 
+/**
+ * @brief Geometry class which a single Point
+ */
 class Point : public CADGeometry
 {
 public:
@@ -132,6 +137,9 @@ public:
     double dfXAxisAng;
 };
 
+/**
+ * @brief Geometry class which represents a simple Line
+ */
 class Line : public CADGeometry
 {
 public:
@@ -159,6 +167,9 @@ public:
     double dfExtrusionZ;
 };
 
+/**
+ * @brief Geometry class which represents Lwpolyline
+ */
 class LWPolyline : public CADGeometry
 {
 public:
@@ -182,6 +193,9 @@ public:
     std::vector< std::pair< double, double > > widths; // start, end.
 };
 
+/**
+ * @brief Geometry class which represents Polyline 3D
+ */
 class Polyline3D : public CADGeometry
 {
 public:
@@ -193,6 +207,9 @@ public:
     std::vector< Vertex3D > vertexes;
 };
 
+/**
+ * @brief Geometry class which represents Circle
+ */
 class Circle : public CADGeometry
 {
 public:
@@ -216,6 +233,9 @@ public:
     double dfRadius;
 };
 
+/**
+ * @brief Geometry class which represents Ellipse
+ */
 class Ellipse : public CADGeometry
 {
 public:
@@ -249,6 +269,9 @@ public:
     double dfEndingAngle;
 };
 
+/**
+ * @brief Geometry class which represents Text
+ */
 class Text : public CADGeometry
 {
 public:
@@ -289,6 +312,9 @@ public:
     int16_t dVerticalAlignment;
 };
 
+/**
+ * @brief Geometry class which represents Arc
+ */
 class Arc : public CADGeometry
 {
 public:
@@ -316,6 +342,9 @@ public:
     double dfEndingAngle;
 };
 
+/**
+ * @brief Geometry class which represents Spline
+ */
 class Spline : public CADGeometry
 {
 public:
@@ -326,36 +355,26 @@ public:
     }
 };
 
-class CADBlock
-{
-public:
-    CADBlock()
-    {
-    }
-
-    std::vector< CADGeometry > geometries;
-};
-
-class CADLayer
-{
-public:
-    CADLayer()
-    {
-    }
-
-    std::string sLayerName;
-    bool bFrozen;
-    bool bOn;
-    bool bFrozenByDefaultInNewVPORT;
-    bool bLocked;
-    bool bPlottingFlag;
-    int16_t dLineWeight;
-    int16_t dColor;
-
-    std::vector < CADGeometry * > geometries;
-
-    CADHandle hHandle;
-};
+//class CADLayer
+//{
+//public:
+//    CADLayer()
+//    {
+//    }
+//
+//    std::string sLayerName;
+//    bool bFrozen;
+//    bool bOn;
+//    bool bFrozenByDefaultInNewVPORT;
+//    bool bLocked;
+//    bool bPlottingFlag;
+//    int16_t dLineWeight;
+//    int16_t dColor;
+//
+//    CADHandle hHandle;
+//
+//    std::vector < CADObject * > objects;
+//};
 
 
 #endif // CADGEOMETRIES_H
