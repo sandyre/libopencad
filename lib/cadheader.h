@@ -42,6 +42,7 @@ public:
     CADHandle(char code = 0);
     void AddOffset(char val);
     long GetAsLong() const;
+    long GetAsLong( CADHandle& ref_handle );
 protected:
     char m_nCode;
     std::vector<char> m_HandleOrOffset;

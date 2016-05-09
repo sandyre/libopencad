@@ -273,6 +273,40 @@ void CADHandle::AddOffset(char val)
     m_HandleOrOffset.push_back(val);
 }
 
+long CADHandle::GetAsLong( CADHandle& ref_handle )
+{
+    long result = 0;
+    switch ( m_nCode )
+    {
+        case 0x06:
+        {
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), m_HandleOrOffset.size() );
+            SwapEndianness ( result, m_HandleOrOffset.size() );
+            return result + 1;
+        }
+        case 0x08:
+        {
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), m_HandleOrOffset.size() );
+            SwapEndianness ( result, m_HandleOrOffset.size() );
+            return result - 1;
+        }
+        case 0x0A:
+        {
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), m_HandleOrOffset.size() );
+            SwapEndianness ( result, m_HandleOrOffset.size() );
+            return result + this->GetAsLong ();
+        }
+        case 0x0C:
+        {
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), m_HandleOrOffset.size() );
+            SwapEndianness ( result, m_HandleOrOffset.size() );
+            return result - this->GetAsLong ();
+        }
+    }
+
+    return this->GetAsLong ();
+}
+
 long CADHandle::GetAsLong () const
 {
     long result = 0;

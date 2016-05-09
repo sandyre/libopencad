@@ -254,6 +254,7 @@ public:
     {
         dObjectType = ATTDEF;
     }
+    char   DataFlags;
     double dfElevation;
     Vertex2D vertInsetionPoint;
     Vertex2D vertAlignmentPoint;
@@ -269,6 +270,8 @@ public:
     short  dVertAlign;
     char   dVersion; // R2010+
     std::string sTag;
+    short  nFieldLength;
+    char   nFlags;
     std::string sPrompt;
     bool   bLockPosition;
 
@@ -416,7 +419,9 @@ public:
     {
         dObjectType = POLYLINE2D;
     }
-    short dCurveNSmoothSurfType;
+
+    short  dFlags;
+    short  dCurveNSmoothSurfType;
     double dfStartWidth;
     double dfEndWidth;
     double dfThickness;

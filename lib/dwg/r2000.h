@@ -109,7 +109,9 @@ protected:
     CADObject * GetObject( size_t section, size_t index );
 
 protected:
-//    std::vector < CADLayer > layer_file_map;
+    std::vector < CADLayer * > presented_layers;
+    std::vector < std::vector < CADEntity * > > layers_presented_entities;
+
     std::vector < ObjHandleOffset > layer_map;
     std::vector < ObjHandleOffset > geometries_map;
     std::vector < std::vector < ObjHandleOffset > > object_map_sections;
