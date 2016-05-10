@@ -92,7 +92,7 @@ public:
     virtual ~DWGFileR2000();
 
     virtual size_t GetLayersCount();
-    virtual CADGeometry * GetGeometry( size_t index );
+    virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
 
 protected:
     virtual int ReadHeader();

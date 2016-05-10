@@ -582,4 +582,22 @@ public:
     Vector3D vectVector;
 };
 
+class CADLWPolyline : public CADEntity
+{
+public:
+    CADLWPolyline()
+    {
+        dObjectType = LWPOLYLINE;
+    }
+
+    double dfConstWidth;
+    double dfElevation;
+    double dfThickness;
+    Vector3D vectExtrusion;
+    std::vector< Vertex2D > vertexes;
+    std::vector< double > bulges;
+    std::vector< int16_t > vertexes_id;
+    std::vector< std::pair< double, double > > widths; // start, end.
+};
+
 #endif //CADOBJECTS_H

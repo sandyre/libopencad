@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <MacTypes.h>
 
 #define UNKNOWN1 CADHeader::MAX_HEADER_CONSTANT + 1
 #define UNKNOWN2 CADHeader::MAX_HEADER_CONSTANT + 2
@@ -613,6 +614,7 @@ int DWGFileR2000::ReadObjectMap ()
     std::vector < int > aObjectMapSectionsSize;
     while ( true )
     {
+        int niRecordsInSection = 0;
         nBitOffsetFromStart = 0;
         std::vector<ObjHandleOffset> obj_map_section;
         m_poFileIO->Read (& dSectionSize, 2);
@@ -621,8 +623,6 @@ int DWGFileR2000::ReadObjectMap ()
         DebugMsg ("Object map section #%d size: %d\n", iCurrentSection, dSectionSize);
 
         if ( dSectionSize == 2 ) break; // last section is empty.
-
-        aObjectMapSectionsSize.push_back ( dSectionSize );
 
         pabySectionContent = new char[dSectionSize];
         m_poFileIO->Read (pabySectionContent, dSectionSize);
@@ -633,7 +633,10 @@ int DWGFileR2000::ReadObjectMap ()
             tmp.first  = ReadUMCHAR (pabySectionContent, nBitOffsetFromStart);
             tmp.second = ReadMCHAR (pabySectionContent, nBitOffsetFromStart);
             astObjectMap.push_back ( tmp );
+            ++niRecordsInSection;
         }
+
+        aObjectMapSectionsSize.push_back (niRecordsInSection);
 
         dSectionCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
         SwapEndianness (dSectionCRC, sizeof (dSectionCRC));
@@ -643,7 +646,7 @@ int DWGFileR2000::ReadObjectMap ()
     }
 
     int niCurrentSectionIndex = 0;
-    int niCurrentObjectMapRecordIndex = 0;
+    int niCurrentObjectMapRecordIndex = 1;
     for ( size_t index = 1; index < astObjectMap.size (); ++index )
     {
         if ( niCurrentObjectMapRecordIndex == aObjectMapSectionsSize[niCurrentSectionIndex] )
@@ -651,7 +654,7 @@ int DWGFileR2000::ReadObjectMap ()
             astObjectMap[index].first = astObjectMap[index].first;
             astObjectMap[index].second = astObjectMap[index].second;
 
-            niCurrentObjectMapRecordIndex = 0;
+            niCurrentObjectMapRecordIndex = 1;
             ++niCurrentSectionIndex;
         }
         else
@@ -708,12 +711,11 @@ int DWGFileR2000::ReadObjectMap ()
         {
             // TODO: only objects with fixed Type code is handled. Others which are based on custom_classes are skipped.
             DWG_OBJECT_NAMES.at (ced.dType);
-            DebugMsg ("Object type: %s"
-                              " Handle: %d\n",
-                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
-                      astObjectMap[i].first
-            );
-
+//            DebugMsg ("Object type: %s"
+//                              " Handle: %d\n",
+//                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
+//                      astObjectMap[i].first
+//            );
 
             if ( ced.dType != DWG_OBJECT_LAYER )
             {
@@ -727,9 +729,9 @@ int DWGFileR2000::ReadObjectMap ()
                         if ( ent->ched.hLayer.GetAsLong (ent->ced.hObjectHandle) ==
                                 astPresentedCADLayers[ind]->hObjectHandle.GetAsLong () )
                         {
-                            DebugMsg ("Object with type: %s is attached to layer named: %s\n",
-                                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
-                                      astPresentedCADLayers[ind]->sLayerName.c_str ());
+//                            DebugMsg ("Object with type: %s is attached to layer named: %s\n",
+//                                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
+//                                      astPresentedCADLayers[ind]->sLayerName.c_str ());
                             astPresentedLayers[ind]->astAttachedObjects.push_back ( std::make_pair ( i, ent->dObjectType ) );
 
                             if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (), ced.dType)
@@ -744,9 +746,9 @@ int DWGFileR2000::ReadObjectMap ()
         }
         catch ( std::exception e )
         {
-            DebugMsg ("Object type: %s\n",
-                      custom_classes[ced.dType - 500].sCppClassName.c_str ()
-            );
+//            DebugMsg ("Object type: %s\n",
+//                      custom_classes[ced.dType - 500].sCppClassName.c_str ()
+//            );
         }
     }
 
@@ -1110,7 +1112,8 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                     line->vertEnd.Z   = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart, line->vertStart.Z);
                 }
 
-                line->dfThickness = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                line->dfThickness = ReadBIT (pabySectionContent, nBitOffsetFromStart) ?
+                                    0.0f : ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
 
                 if ( ReadBIT (pabySectionContent, nBitOffsetFromStart) )
                 {
@@ -1528,7 +1531,90 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 readed_object = attdef;
                 break;
+            }
 
+            case DWG_OBJECT_LWPOLYLINE:
+            {
+                CADLWPolyline * polyline   = new CADLWPolyline ();
+
+                polyline->dObjectSize = dObjectSize;
+                polyline->ced = common_entity_data;
+
+                int32_t    nVertixesCount  = 0, nBulges = 0;
+                int16_t    data_flag       = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                if ( data_flag & 4 )
+                    polyline->dfConstWidth = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                if ( data_flag & 8 )
+                    polyline->dfElevation  = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                if ( data_flag & 2 )
+                    polyline->dfThickness  = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                if ( data_flag & 1 )
+                {
+                    polyline->vectExtrusion.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    polyline->vectExtrusion.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    polyline->vectExtrusion.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                nVertixesCount = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+
+                if ( data_flag & 16 )
+                {
+                    nBulges = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                // First of all, read first vertex.
+                Vertex2D vertex;
+                vertex.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                vertex.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                polyline->vertexes.push_back (vertex);
+
+                // All the others are not raw doubles; bitdoubles with default instead,
+                // where default is previous point coords.
+                for ( size_t i = 1; i < nVertixesCount; ++i )
+                {
+                    vertex.X = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart,
+                                                polyline->vertexes[i - 1].X);
+                    vertex.Y = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart,
+                                                polyline->vertexes[i - 1].Y);
+                    polyline->vertexes.push_back (vertex);
+                }
+
+                for ( size_t i = 0; i < nBulges; ++i )
+                {
+                    double dfBulgeValue = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    polyline->bulges.push_back (dfBulgeValue);
+                }
+
+                if (polyline->ced.bbEntMode == 0 )
+                    polyline->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < polyline->ced.nNumReactors; ++i )
+                    polyline->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                polyline->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !polyline->ced.bNoLinks )
+                {
+                    polyline->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    polyline->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                polyline->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( polyline->ced.bbLTypeFlags == 0x03 )
+                {
+                    polyline->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                if ( polyline->ced.bbPlotStyleFlags == 0x03 )
+                {
+                    polyline->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                readed_object = polyline;
                 break;
             }
 
@@ -1557,8 +1643,15 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                     arc->vectExtrusion.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
                     arc->vectExtrusion.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
                 }
+
                 arc->dfStartAngle = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
                 arc->dfEndAngle   = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                if (arc->ced.bbEntMode == 0 )
+                    arc->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < arc->ced.nNumReactors; ++i )
+                    arc->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
 
                 arc->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
 
@@ -1587,7 +1680,6 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
         }
-
     }
 
     else
@@ -1659,501 +1751,112 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
     return readed_object;
 }
 
-CADGeometry * DWGFileR2000::GetGeometry ( size_t index )
+// TODO: this function doesnot free memory.
+CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
 {
-    CADGeometry * readed_geometry;
+    CADGeometry * result_geometry = nullptr;
+    CADObject * readed_object = this->GetObject ( astPresentedLayers[layer_index]->astAttachedGeometries[index].first );
 
-    // Get geometric entity size in bytes.
-    char   pabySectionSize[8];
-    size_t nBitOffsetFromStart = 0;
-    // m_oFileStream.clear ();
-    m_poFileIO->Seek (geometries_map[index].second, CADFileIO::SeekOrigin::BEG);
-    m_poFileIO->Read (pabySectionSize, 8);
-    uint32_t dGeometrySize = ReadMSHORT (pabySectionSize, nBitOffsetFromStart);
-
-    // And read whole data chunk into memory for future parsing.
-    // +N is because dGeometrySize does not cover ced.dLength length, and CRC length (so, ced.dLength can be
-    // maximum 4 bytes long, and crc is 2 bytes long).
-    char * pabySectionContent = new char[dGeometrySize + (nBitOffsetFromStart / 8 + 2)];
-    // m_oFileStream.clear ();
-    m_poFileIO->Seek (geometries_map[index].second, CADFileIO::SeekOrigin::BEG);
-    m_poFileIO->Read (pabySectionContent, dGeometrySize + (nBitOffsetFromStart / 8 + 2));
-
-    nBitOffsetFromStart = 0;
-    DWG2000_CED ced;
-    ced.dLength        = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
-    ced.dType          = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
-    ced.dObjSizeInBits = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
-    ced.hHandle        = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-    // TODO: EED is readed now, but not used.
-    int16_t dEEDSize = 0;
-    while ( (dEEDSize = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart)) != 0 )
+    switch ( readed_object->dObjectType )
     {
-        CAD_EED dwg_eed;
-        dwg_eed.length = dEEDSize;
-        dwg_eed.application_handle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-        for ( size_t i = 0; i < dEEDSize; ++i )
+        case DWG_OBJECT_ARC:
         {
-            dwg_eed.data.push_back(ReadCHAR (pabySectionContent, nBitOffsetFromStart));
-        }
-        ced.eEED.push_back (dwg_eed);
-    }
+            Arc * arc = new Arc();
+            CADArc * cadArc = ( CADArc * ) readed_object;
 
-    // TODO: Proxy Entity Graphics also skipped for now. If there is something
-    // (ced.bGraphicPresentFlag is true), than it wont work properly at all.
-    ced.bGraphicPresentFlag = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+            arc->vertPosition = cadArc->vertPosition;
+            arc->vectExtrusion = cadArc->vectExtrusion;
+            arc->dfRadius = cadArc->dfRadius;
+            arc->dfThickness = cadArc->dfThickness;
+            arc->dfStartingAngle = cadArc->dfStartAngle;
+            arc->dfEndingAngle = cadArc->dfEndAngle;
 
-    ced.dEntMode        = Read2B (pabySectionContent, nBitOffsetFromStart);
-    ced.dNumReactors    = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
-    ced.bNoLinks        = ReadBIT (pabySectionContent, nBitOffsetFromStart);
-    ced.dCMColorIndex   = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
-    ced.dfLtypeScale    = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-    ced.ltype_flags     = Read2B (pabySectionContent, nBitOffsetFromStart);
-    ced.plotstyle_flags = Read2B (pabySectionContent, nBitOffsetFromStart);
-    ced.dInvisibility   = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
-    ced.cLineWeight     = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+            // TODO: delete cadArc & same delete below;
 
-    // READ DATA DEPENDING ON ced.dType
-    switch ( ced.dType )
-    {
-        case DWG_OBJECT_CIRCLE:
-        {
-            Circle * circle = new Circle ();
-            circle->dfCenterX   = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            circle->dfCenterY   = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            circle->dfCenterZ   = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            circle->dfRadius    = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            circle->dfThickness = ReadBIT (pabySectionContent, nBitOffsetFromStart) ?
-                                  0.0f : ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( ReadBIT (pabySectionContent, nBitOffsetFromStart) )
-            {
-                circle->dfExtrusionX = 0.0f;
-                circle->dfExtrusionY = 0.0f;
-                circle->dfExtrusionZ = 1.0f;
-            }
-            else
-            {
-                circle->dfExtrusionX = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                circle->dfExtrusionY = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                circle->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            DWG2000_CEHD common_entity_handle_data;
-            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !ced.bNoLinks )
-            {
-                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( ced.ltype_flags == 0x03 )
-            {
-                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            if ( ced.plotstyle_flags == 0x03 )
-            {
-                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
-            int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            readed_geometry = circle;
-            break;
-        }
-
-        case DWG_OBJECT_ELLIPSE:
-        {
-            Ellipse * ellipse = new Ellipse ();
-            ellipse->dfCenterX       = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfCenterY       = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfCenterZ       = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfWCSX          = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfWCSY          = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfWCSZ          = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfExtrusionX    = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfExtrusionY    = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfExtrusionZ    = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfAxisRatio     = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfStartingAngle = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            ellipse->dfEndingAngle   = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-
-            DWG2000_CEHD common_entity_handle_data;
-            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !ced.bNoLinks )
-            {
-                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( ced.ltype_flags == 0x03 )
-            {
-                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            if ( ced.plotstyle_flags == 0x03 )
-            {
-                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
-            int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            readed_geometry = ellipse;
+            result_geometry = arc;
             break;
         }
 
         case DWG_OBJECT_POINT:
         {
-            Point * point = new Point ();
-            point->dfPointX    = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            point->dfPointY    = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            point->dfPointZ    = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            point->dfThickness = ReadBIT (pabySectionContent, nBitOffsetFromStart) ?
-                                 0.0f : ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+            Point3D * point = new Point3D();
+            CADPoint * cadPoint = ( CADPoint * ) readed_object;
 
-            if ( ReadBIT (pabySectionContent, nBitOffsetFromStart) )
-            {
-                point->dfExtrusionX = 0.0f;
-                point->dfExtrusionY = 0.0f;
-                point->dfExtrusionZ = 1.0f;
-            }
-            else
-            {
-                point->dfExtrusionX = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                point->dfExtrusionY = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                point->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            }
+            point->vertPosition = cadPoint->vertPosition;
+            point->vectExtrusion = cadPoint->vectExtrusion;
+            point->dfXAxisAng = cadPoint->dfXAxisAng;
+            point->dfThickness = cadPoint->dfThickness;
 
-            DWG2000_CEHD common_entity_handle_data;
-            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !ced.bNoLinks )
-            {
-                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( ced.ltype_flags == 0x03 )
-            {
-                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            if ( ced.plotstyle_flags == 0x03 )
-            {
-                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
-            int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            readed_geometry = point;
-            break;
-        }
-
-        case DWG_OBJECT_LINE:
-        {
-            Line * line             = new Line ();
-            bool bZCoordPresented   = ReadBIT (pabySectionContent, nBitOffsetFromStart);
-
-
-
-            DWG2000_CEHD common_entity_handle_data;
-            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !ced.bNoLinks )
-            {
-                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( ced.ltype_flags == 0x03 )
-            {
-                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            if ( ced.plotstyle_flags == 0x03 )
-            {
-                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
-            int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            readed_geometry = line;
-
+            result_geometry = point;
             break;
         }
 
         case DWG_OBJECT_LWPOLYLINE:
         {
-            LWPolyline * polyline      = new LWPolyline ();
-            int32_t    nVertixesCount  = 0, nBulges = 0;
-            int16_t    data_flag       = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
-            if ( data_flag & 4 )
-                polyline->dfConstWidth = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            if ( data_flag & 8 )
-                polyline->dfElevation  = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            if ( data_flag & 2 )
-                polyline->dfThickness  = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            if ( data_flag & 1 )
-            {
-                polyline->dfExtrusionX = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                polyline->dfExtrusionY = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                polyline->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            }
+            LWPolyline * lwPolyline = new LWPolyline();
+            CADLWPolyline * cadlwPolyline = ( CADLWPolyline * ) readed_object;
 
-            nVertixesCount = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+            lwPolyline->dfConstWidth = cadlwPolyline->dfConstWidth;
+            lwPolyline->dfElevation = cadlwPolyline->dfElevation;
+            lwPolyline->vertexes = cadlwPolyline->vertexes;
+            lwPolyline->vectExtrusion = cadlwPolyline->vectExtrusion;
+            lwPolyline->bulges = cadlwPolyline->bulges;
+            lwPolyline->widths = cadlwPolyline->widths;
 
-            if ( data_flag & 16 )
-            {
-                nBulges = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            // First of all, read first vertex.
-            Vertex2D vertex;
-            vertex.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            vertex.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            polyline->vertexes.push_back (vertex);
-
-            // All the others are not raw doubles; bitdoubles with default instead,
-            // where default is previous point coords.
-            for ( size_t i = 1; i < nVertixesCount; ++i )
-            {
-                vertex.X = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart,
-                                            polyline->vertexes[i - 1].X);
-                vertex.Y = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart,
-                                            polyline->vertexes[i - 1].Y);
-                polyline->vertexes.push_back (vertex);
-            }
-
-            for ( size_t i = 0; i < nBulges; ++i )
-            {
-                double dfBulgeValue = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                polyline->bulges.push_back (dfBulgeValue);
-            }
-
-            DWG2000_CEHD common_entity_handle_data;
-            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !ced.bNoLinks )
-            {
-                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( ced.ltype_flags == 0x03 )
-            {
-                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            if ( ced.plotstyle_flags == 0x03 )
-            {
-                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
-            int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            readed_geometry = polyline;
+            result_geometry = lwPolyline;
             break;
         }
 
-        case DWG_OBJECT_ARC:
+        case DWG_OBJECT_CIRCLE:
         {
-            Arc * arc = new Arc ();
-            arc->dfCenterX       = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            arc->dfCenterY       = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            arc->dfCenterZ       = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            arc->dfRadius        = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            arc->dfThickness     = ReadBIT (pabySectionContent, nBitOffsetFromStart) ?
-                                   0.0f : ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+            Circle * circle = new Circle();
+            CADCircle * cadCircle = ( CADCircle * ) readed_object;
 
-            if ( ReadBIT (pabySectionContent, nBitOffsetFromStart) )
-            {
-                arc->dfExtrusionX = 0.0f;
-                arc->dfExtrusionY = 0.0f;
-                arc->dfExtrusionZ = 1.0f;
-            }
-            else
-            {
-                arc->dfExtrusionX = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                arc->dfExtrusionY = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                arc->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            }
-            arc->dfStartingAngle = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            arc->dfEndingAngle   = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+            circle->vertPosition = cadCircle->vertPosition;
+            circle->vectExtrusion = cadCircle->vectExtrusion;
+            circle->dfRadius = cadCircle->dfRadius;
+            circle->dfThickness = cadCircle->dfThickness;
 
-            DWG2000_CEHD common_entity_handle_data;
-            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !ced.bNoLinks )
-            {
-                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( ced.ltype_flags == 0x03 )
-            {
-                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            if ( ced.plotstyle_flags == 0x03 )
-            {
-                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
-            int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            readed_geometry = arc;
+            result_geometry = circle;
             break;
         }
 
-        case DWG_OBJECT_TEXT:
+        case DWG_OBJECT_ELLIPSE:
         {
-            Text   * text    = new Text ();
-            int8_t DataFlag = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+            Ellipse * ellipse = new Ellipse();
+            CADEllipse * cadEllipse = ( CADEllipse * ) readed_object;
 
-            if ( !( DataFlag & 0x01 ) )
-                text->dfElevation = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+            ellipse->vertPosition = cadEllipse->vertPosition;
+            ellipse->vectExtrusion = cadEllipse->vectExtrusion;
+            ellipse->vectWCS = cadEllipse->vectSMAxis; // FIXME: WCS for both or SMAxis?
+            ellipse->dfAxisRatio = cadEllipse->dfAxisRatio;
+            ellipse->dfEndingAngle = cadEllipse->dfEndAngle;
+            ellipse->dfStartingAngle = cadEllipse->dfBegAngle;
 
-            text->dfInsertionX = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            text->dfInsertionY = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !( DataFlag & 0x02 ) )
-            {
-                text->dfAlignmentX = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart, 10.0f);
-                text->dfAlignmentY = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart, 20.0f);
-            }
-
-            if ( ReadBIT (pabySectionContent, nBitOffsetFromStart) )
-            {
-                text->dfExtrusionX = 0.0f;
-                text->dfExtrusionY = 0.0f;
-                text->dfExtrusionZ = 1.0f;
-            }
-            else
-            {
-                text->dfExtrusionX = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                text->dfExtrusionY = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                text->dfExtrusionZ = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            text->dfThickness = ReadBIT (pabySectionContent, nBitOffsetFromStart) ?
-                                0.0f : ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !( DataFlag & 0x04 ) )
-                text->dfObliqueAngle = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !( DataFlag & 0x08 ) )
-                text->dfRotationAngle = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
-
-            text->dfHeight = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !( DataFlag & 0x10 ) )
-                text->dfWidthFactor = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
-
-            text->strTextValue = ReadTV (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !( DataFlag & 0x20 ) )
-                text->dGeneration = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !( DataFlag & 0x40 ) )
-                text->dHorizontalAlignment = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !( DataFlag & 0x80 ) )
-                text->dVerticalAlignment = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            DWG2000_CEHD common_entity_handle_data;
-            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !ced.bNoLinks )
-            {
-                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( ced.ltype_flags == 0x03 )
-            {
-                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            if ( ced.plotstyle_flags == 0x03 )
-            {
-                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
-            int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            readed_geometry = text;
+            result_geometry = ellipse;
             break;
         }
 
-        case DWG_OBJECT_POLYLINE3D:
+        case DWG_OBJECT_LINE:
         {
-            Polyline3D * pline = new Polyline3D ();
+            Line * line = new Line();
+            CADLine * cadLine = ( CADLine * ) readed_object;
 
-            int8_t DataFlag = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
-            int8_t DataFlag2 = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+            line->vertStart = cadLine->vertStart;
+            line->vertEnd = cadLine->vertEnd;
+            line->dfThickness = cadLine->dfThickness;
 
-            DWG2000_CEHD common_entity_handle_data;
-            common_entity_handle_data.hxdibobjhandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( !ced.bNoLinks )
-            {
-                common_entity_handle_data.hprev_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-                common_entity_handle_data.hnext_entity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            common_entity_handle_data.hlayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            if ( ced.ltype_flags == 0x03 )
-            {
-                common_entity_handle_data.hltype = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            if ( ced.plotstyle_flags == 0x03 )
-            {
-                common_entity_handle_data.hplotstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            }
-
-            CADHandle firstvertex = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            CADHandle lastvertex  = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-            CADHandle seqend      = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-
-            nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
-            int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
-
-            readed_geometry = pline;
+            result_geometry = line;
             break;
+        }
+
+        default:
+        {
+            std::cerr << "Asked geometry has unsupported type.\n";
         }
     }
 
-    delete[] pabySectionContent;
-
-    return readed_geometry;
+    return result_geometry;
 }
 
 size_t DWGFileR2000::GetLayersCount ()

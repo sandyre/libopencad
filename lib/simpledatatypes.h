@@ -2,13 +2,11 @@
  *  Project: libopencad
  *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
- *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
  *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
- *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -29,48 +27,55 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-#ifndef CADFILE_H
-#define CADFILE_H
+#ifndef SIMPLEDATATYPES_H
+#define SIMPLEDATATYPES_H
 
-#include "cadheader.h"
-#include "cadfileio.h"
-#include "cadobjects.h"
-
-class Layer;
-class CADGeometry;
-
-/**
- * @brief The abstact CAD file class
- */
-class EXTERN CADFile
+struct Vertex2D
 {
-    friend class Layer;
-public:
-    CADFile (CADFileIO* poFileIO);
-    virtual ~CADFile();
+    Vertex2D() : X(0.0f),
+                 Y(0.0f)
+    {
+    }
 
-public:
-    const CADHeader* GetHeader() const;
-
-public:
-    virtual size_t GetLayersCount();
-    virtual size_t GetBlocksCount();
-    virtual Layer * GetLayer( size_t index );
-    virtual CADBlock* GetBlock( size_t index );
-    virtual int ParseFile();
-
-protected:
-    virtual CADObject * GetObject( size_t index ) { return nullptr; }
-    virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
-
-    virtual int ReadHeader() = 0;
-    virtual int ReadClassesSection() = 0;
-    virtual int ReadObjectMap() = 0;
-
-protected:
-    CADFileIO* m_poFileIO;
-    CADHeader* m_poHeader;
+    double X;
+    double Y;
 };
 
+struct Vertex3D
+{
+    Vertex3D() : X(0.0f),
+                 Y(0.0f),
+                 Z(0.0f)
+    {
+    }
 
-#endif // CADFILE_H
+    double X;
+    double Y;
+    double Z;
+};
+
+struct Vector2D
+{
+    Vector2D() : X(0.0f),
+                 Y(0.0f)
+    {
+    }
+
+    double X;
+    double Y;
+};
+
+struct Vector3D
+{
+    Vector3D() : X(0.0f),
+                 Y(0.0f),
+                 Z(0.0f)
+    {
+    }
+
+    double X;
+    double Y;
+    double Z;
+};
+
+#endif //SIMPLEDATATYPES_H

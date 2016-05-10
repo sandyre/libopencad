@@ -81,7 +81,7 @@ Layer * CADFile::GetLayer ( size_t index )
     return( nullptr );
 }
 
-CADGeometry * CADFile::GetGeometry ( size_t index )
+CADGeometry * CADFile::GetGeometry ( size_t layer_index, size_t index )
 {
     std::cerr << "CADFile::getGeometry() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
