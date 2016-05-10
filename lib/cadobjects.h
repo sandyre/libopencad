@@ -33,7 +33,7 @@
 #define CADOBJECTS_H
 
 #include <stdint.h>
-#include "cadgeometries.h"
+#include "simpledatatypes.h"
 #include "dwg/data_structs.h"
 
 class CADObject
@@ -526,6 +526,60 @@ public:
     CADHandle hMaterial;
     CADHandle hLType;
     CADHandle hUnknownHandle;
+};
+
+class CADPoint : public CADEntity
+{
+public:
+    CADPoint()
+    {
+        dObjectType = POINT;
+    }
+
+    Vertex3D vertPosition;
+    double   dfThickness;
+    Vector3D vectExtrusion;
+    double   dfXAxisAng;
+};
+
+class CADEllipse : public CADEntity
+{
+public:
+    CADEllipse()
+    {
+        dObjectType = ELLIPSE;
+    }
+
+    Vertex3D vertPosition;
+    Vector3D vectSMAxis;
+    Vector3D vectExtrusion;
+    double   dfAxisRatio;
+    double   dfBegAngle;
+    double   dfEndAngle;
+};
+
+class CADRay : public CADEntity
+{
+public:
+    CADRay()
+    {
+        dObjectType = RAY;
+    }
+
+    Vertex3D vertPosition;
+    Vector3D vectVector;
+};
+
+class CADXLine : public CADEntity
+{
+public:
+    CADXLine()
+    {
+        dObjectType = XLINE;
+    }
+
+    Vertex3D vertPosition;
+    Vector3D vectVector;
 };
 
 #endif //CADOBJECTS_H

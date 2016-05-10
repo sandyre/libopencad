@@ -37,7 +37,7 @@ set(HHEADERS
     data_structs.h
     io.h
     r2000.h
-)
+        ../simpledatatypes.h)
 
 set(CSOURCES
     io.cpp

@@ -35,13 +35,16 @@
 #include "cadheader.h"
 #include "cadfileio.h"
 #include "cadobjects.h"
-#include "cadgeometries.h"
+
+class Layer;
+class CADGeometry;
 
 /**
  * @brief The abstact CAD file class
  */
 class EXTERN CADFile
 {
+    friend class Layer;
 public:
     CADFile (CADFileIO* poFileIO);
     virtual ~CADFile();
@@ -50,15 +53,16 @@ public:
     const CADHeader* GetHeader() const;
 
 public:
-    virtual size_t GetGeometriesCount();
     virtual size_t GetLayersCount();
     virtual size_t GetBlocksCount();
-    virtual CADGeometry* GetGeometry( size_t index );
+    virtual Layer * GetLayer( size_t index );
     virtual CADBlock* GetBlock( size_t index );
-    virtual CADLayer* GetLayer( size_t index );
     virtual int ParseFile();
 
 protected:
+    virtual CADObject * GetObject( size_t index ) { return nullptr; }
+    virtual CADGeometry * GetGeometry( size_t index );
+
     virtual int ReadHeader() = 0;
     virtual int ReadClassesSection() = 0;
     virtual int ReadObjectMap() = 0;

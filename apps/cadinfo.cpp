@@ -104,56 +104,56 @@ int main(int argc, char *argv[])
     int arc_count = 0;
     int text_count = 0;
     std::cout << "Layers count: " << poCadFile->GetLayersCount () << std::endl;
-    std::cout << "Geometries readed: " << poCadFile->GetGeometriesCount () << std::endl;
-    for(int i = 0; i < poCadFile->GetGeometriesCount (); ++i )
-    {
-        CADGeometry* geom = poCadFile->GetGeometry (i);
-        if ( geom->stGeometryType == CADGeometry::CIRCLE )
-        {
-            Circle* geom1 = ( Circle * ) geom;
-//            geom1->printInfo ();
-            circles_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::POINT )
-        {
-            Point * geom1 = ( Point * ) geom;
-//            geom1->printInfo ();
-            point_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::ELLIPSE)
-        {
-            Ellipse * geom1 = ( Ellipse * ) geom;
-            ellipses_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::LINE )
-        {
-            Line * geom1 = ( Line * ) geom;
-//            geom1->printInfo ();
-            lines_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::LWPOLYLINE )
-        {
-            LWPolyline * geom1 = ( LWPolyline * ) geom;
-//            geom1->printInfo ();
-            pline_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::ARC )
-        {
-            Arc * geom1 = ( Arc * ) geom;
-//            geom1->printInfo ();
-            arc_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::TEXT )
-        {
-            Text * geom1 = ( Text * ) geom;
-            text_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::POLYLINE3D )
-        {
-            Polyline3D * geom1 = ( Polyline3D * ) geom;
-            pline3d_count++;
-        }
-    }
+
+//    for(int i = 0; i < poCadFile->GetGeometriesCount (); ++i )
+//    {
+////        CADGeometry* geom = poCadFile->GetGeometry (i);
+//        if ( geom->stGeometryType == CADGeometry::CIRCLE )
+//        {
+//            Circle* geom1 = ( Circle * ) geom;
+////            geom1->printInfo ();
+//            circles_count++;
+//        }
+//        else if ( geom->stGeometryType == CADGeometry::POINT )
+//        {
+//            Point * geom1 = ( Point * ) geom;
+////            geom1->printInfo ();
+//            point_count++;
+//        }
+//        else if ( geom->stGeometryType == CADGeometry::ELLIPSE)
+//        {
+//            Ellipse * geom1 = ( Ellipse * ) geom;
+//            ellipses_count++;
+//        }
+//        else if ( geom->stGeometryType == CADGeometry::LINE )
+//        {
+//            Line * geom1 = ( Line * ) geom;
+////            geom1->printInfo ();
+//            lines_count++;
+//        }
+//        else if ( geom->stGeometryType == CADGeometry::LWPOLYLINE )
+//        {
+//            LWPolyline * geom1 = ( LWPolyline * ) geom;
+////            geom1->printInfo ();
+//            pline_count++;
+//        }
+//        else if ( geom->stGeometryType == CADGeometry::ARC )
+//        {
+//            Arc * geom1 = ( Arc * ) geom;
+////            geom1->printInfo ();
+//            arc_count++;
+//        }
+//        else if ( geom->stGeometryType == CADGeometry::TEXT )
+//        {
+//            Text * geom1 = ( Text * ) geom;
+//            text_count++;
+//        }
+//        else if ( geom->stGeometryType == CADGeometry::POLYLINE3D )
+//        {
+//            Polyline3D * geom1 = ( Polyline3D * ) geom;
+//            pline3d_count++;
+//        }
+//    }
 
     std::cout << "Points: " << point_count << std::endl;
     std::cout << "Ellipses: " << ellipses_count << std::endl;

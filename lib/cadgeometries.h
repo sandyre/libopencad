@@ -35,54 +35,9 @@
 #include <vector>
 #include <string>
 #include <stdint.h>
-
-struct Vertex2D
-{
-    Vertex2D() : X(0.0f),
-                 Y(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-};
-
-struct Vertex3D
-{
-    Vertex3D() : X(0.0f),
-                 Y(0.0f),
-                 Z(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-    double Z;
-};
-
-struct Vector2D
-{
-    Vector2D() : X(0.0f),
-                 Y(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-};
-
-struct Vector3D
-{
-    Vector3D() : X(0.0f),
-                 Y(0.0f),
-                 Z(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-    double Z;
-};
+#include "cadobjects.h"
+#include "cadfile.h"
+#include "simpledatatypes.h"
 
 /**
  * @brief Base CAD geometry class
@@ -355,26 +310,33 @@ public:
     }
 };
 
-//class CADLayer
-//{
-//public:
-//    CADLayer()
-//    {
-//    }
-//
-//    std::string sLayerName;
-//    bool bFrozen;
-//    bool bOn;
-//    bool bFrozenByDefaultInNewVPORT;
-//    bool bLocked;
-//    bool bPlottingFlag;
-//    int16_t dLineWeight;
-//    int16_t dColor;
-//
-//    CADHandle hHandle;
-//
-//    std::vector < CADObject * > objects;
-//};
+typedef size_t ObjMapRecordID;
+class Layer
+{
+public:
+    Layer(CADFile * pCADFile)
+    {
+        pstCADFile_m = pCADFile;
+    }
+
+    size_t dLayerID;
+
+    std::string sLayerName;
+    bool bFrozen;
+    bool bOn;
+    bool bFrozenByDefaultInNewVPORT;
+    bool bLocked;
+    bool bPlottingFlag;
+    int16_t dLineWeight;
+    int16_t dColor;
+
+    CADFile * pstCADFile_m;
+
+//    CADGeometry * GetGeometry( size_t index ) { pstCADFile_m->GetGeometry( dLayerID, index ); }
+
+    std::vector < std::pair < ObjMapRecordID, short > > astAttachedGeometries;
+    std::vector < std::pair < ObjMapRecordID, short > > astAttachedObjects;
+};
 
 
 #endif // CADGEOMETRIES_H
