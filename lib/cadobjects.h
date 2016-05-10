@@ -375,6 +375,10 @@ public:
     {
         dObjectType = VERTEX3D;
     }
+    ~CADVertex3D ()
+    {
+    }
+
     Vertex3D vertPosition;
 };
 

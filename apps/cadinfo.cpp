@@ -126,8 +126,20 @@ int main(int argc, char *argv[])
                         ++pline_count;
                         break;
                     case CADGeometry::CADGeometryType::POLYLINE3D:
+                    {
+                        Polyline3D * poly = ( Polyline3D * ) geom;
+                        std::cout << "|---------Polyline3D---------|\n";
+                        for ( size_t i = 0; i < poly->vertexes.size(); ++i )
+                        {
+                            std::cout << "#" << i << "\t" << poly->vertexes[i].X <<
+                                                   "\t" << poly->vertexes[i].Y
+                                    << "\t" << poly->vertexes[i].Z << std::endl;
+                        }
+                        std::cout << std::endl;
+
                         ++pline3d_count;
                         break;
+                    }
                     case CADGeometry::CADGeometryType::ARC:
                         ++arc_count;
                         break;

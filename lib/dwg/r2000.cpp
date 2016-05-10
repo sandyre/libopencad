@@ -711,11 +711,11 @@ int DWGFileR2000::ReadObjectMap ()
         {
             // TODO: only objects with fixed Type code is handled. Others which are based on custom_classes are skipped.
             DWG_OBJECT_NAMES.at (ced.dType);
-//            DebugMsg ("Object type: %s"
-//                              " Handle: %d\n",
-//                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
-//                      astObjectMap[i].first
-//            );
+            DebugMsg ("Object type: %s"
+                              " Handle: %d\n",
+                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
+                      astObjectMap[i].first
+            );
 
             if ( ced.dType != DWG_OBJECT_LAYER )
             {
@@ -729,9 +729,9 @@ int DWGFileR2000::ReadObjectMap ()
                         if ( ent->ched.hLayer.GetAsLong (ent->ced.hObjectHandle) ==
                                 astPresentedCADLayers[ind]->hObjectHandle.GetAsLong () )
                         {
-//                            DebugMsg ("Object with type: %s is attached to layer named: %s\n",
-//                                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
-//                                      astPresentedCADLayers[ind]->sLayerName.c_str ());
+                            DebugMsg ("Object with type: %s is attached to layer named: %s\n",
+                                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
+                                      astPresentedCADLayers[ind]->sLayerName.c_str ());
                             astPresentedLayers[ind]->astAttachedObjects.push_back ( std::make_pair ( i, ent->dObjectType ) );
 
                             if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (), ced.dType)
@@ -746,9 +746,9 @@ int DWGFileR2000::ReadObjectMap ()
         }
         catch ( std::exception e )
         {
-//            DebugMsg ("Object type: %s\n",
-//                      custom_classes[ced.dType - 500].sCppClassName.c_str ()
-//            );
+            DebugMsg ("Object type: %s\n",
+                      custom_classes[ced.dType - 500].sCppClassName.c_str ()
+            );
         }
     }
 
@@ -1788,6 +1788,31 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             point->dfThickness = cadPoint->dfThickness;
 
             result_geometry = point;
+            break;
+        }
+
+        case DWG_OBJECT_POLYLINE3D:
+        {
+            Polyline3D * polyline = new Polyline3D();
+            CADPolyline3D * cadPolyline3D = ( CADPolyline3D * ) readed_object;
+
+            for ( size_t i = 0; i < astPresentedLayers[layer_index]->astAttachedObjects.size(); ++i )
+            {
+                if ( astPresentedLayers[layer_index]->astAttachedObjects[i].second == DWG_OBJECT_VERTEX3D )
+                {
+                    CADVertex3D * cadVertex3D = ( CADVertex3D * ) this->GetObject
+                            ( astPresentedLayers[layer_index]->astAttachedObjects[i].first );
+
+                    // It means that vertex is attached to this polyline.
+                    if ( cadVertex3D->ched.hOwner.GetAsLong (cadVertex3D->ced.hObjectHandle) ==
+                            cadPolyline3D->ced.hObjectHandle.GetAsLong () )
+                    {
+                        polyline->vertexes.push_back (cadVertex3D->vertPosition);
+                    }
+                }
+            }
+
+            result_geometry = polyline;
             break;
         }
 

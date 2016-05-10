@@ -280,26 +280,26 @@ long CADHandle::GetAsLong( CADHandle& ref_handle )
     {
         case 0x06:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), m_HandleOrOffset.size() );
-            SwapEndianness ( result, m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), ref_handle.m_HandleOrOffset.size() );
+            SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
             return result + 1;
         }
         case 0x08:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), m_HandleOrOffset.size() );
-            SwapEndianness ( result, m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), ref_handle.m_HandleOrOffset.size() );
+            SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
             return result - 1;
         }
         case 0x0A:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), m_HandleOrOffset.size() );
-            SwapEndianness ( result, m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), ref_handle.m_HandleOrOffset.size() );
+            SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
             return result + this->GetAsLong ();
         }
         case 0x0C:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), m_HandleOrOffset.size() );
-            SwapEndianness ( result, m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), ref_handle.m_HandleOrOffset.size() );
+            SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
             return result - this->GetAsLong ();
         }
     }
