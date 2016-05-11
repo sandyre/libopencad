@@ -694,6 +694,12 @@ int DWGFileR2000::ReadObjectMap ()
             astPresentedLayers.push_back (layer);
             astPresentedCADLayers.push_back (obj_layer);
         }
+
+        if ( ced.dType == DWG_OBJECT_DICTIONARY )
+        {
+            auto kek = ( CADDictionary * ) this->GetObject ( i );
+            int a = 0;
+        }
     }
 
     // Now, fill vector of layers with objects associated with those layers.
@@ -1686,6 +1692,59 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
     {
         switch ( dObjectType )
         {
+            case DWG_OBJECT_DICTIONARY:
+            {
+                /*
+                 * FIXME: ODA has a lot of mistypes in spec. for this objects,
+                 * it doesnt work for now (error begins in handles stream).
+                 * Nonetheless, dictionary->sItemNames is 100% array,
+                 * not a single obj as pointer by their docs.
+                 */
+                CADDictionary * dictionary = new CADDictionary();
+
+                dictionary->dObjectSize = dObjectSize;
+                dictionary->nObjectSizeInBits = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
+                dictionary->hObjectHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                int16_t dEEDSize = 0;
+                while ( (dEEDSize = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart)) != 0 )
+                {
+                    CAD_EED dwg_eed;
+                    dwg_eed.length = dEEDSize;
+                    dwg_eed.application_handle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                    for ( size_t i = 0; i < dEEDSize; ++i )
+                    {
+                        dwg_eed.data.push_back(ReadCHAR (pabySectionContent, nBitOffsetFromStart));
+                    }
+
+                    dictionary->aEED.push_back (dwg_eed);
+                }
+
+                dictionary->nNumReactors = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                dictionary->nNumItems = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                dictionary->dCloningFlag = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                dictionary->dHardOwnerFlag = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+
+                dictionary->sDictionaryEntryName = ReadTV (pabySectionContent, nBitOffsetFromStart);
+                for ( size_t i = 0; i < dictionary->nNumItems; ++i )
+                    dictionary->sItemNames.push_back ( ReadTV (pabySectionContent, nBitOffsetFromStart) );
+
+                dictionary->hParentHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < dictionary->nNumReactors; ++i )
+                    dictionary->hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart) );
+                dictionary->hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                for ( size_t i = 0; i < dictionary->nNumItems; ++i )
+                    dictionary->hItemHandles.push_back ( ReadHANDLE (pabySectionContent, nBitOffsetFromStart) );
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                dictionary->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                readed_object = dictionary;
+                break;
+            }
+
             case DWG_OBJECT_LAYER:
             {
                 CADLayer * layer = new CADLayer();

@@ -236,6 +236,15 @@ public:
     {
         stGeometryType = SPLINE;
     }
+
+    double dfDegree;
+    double dfTol;
+    Vector3D vectBegTangDir;
+    Vector3D vectEndTangDir;
+
+    std::vector < double > adfKnots;
+    std::vector < Vertex3D > avertCtrlPoints;
+    std::vector < Vertex3D > averFitPoints;
 };
 
 typedef size_t ObjMapRecordID;

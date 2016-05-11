@@ -586,6 +586,32 @@ public:
     Vector3D vectVector;
 };
 
+class CADDictionary : public CADObject
+{
+public:
+    CADDictionary()
+    {
+        dObjectType = DICTIONARY;
+    }
+
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long nNumItems;
+    short dCloningFlag;
+    char  dHardOwnerFlag;
+
+    std::string sDictionaryEntryName;
+    std::vector < std::string > sItemNames;
+
+    CADHandle hParentHandle;
+    std::vector < CADHandle > hReactors;
+    CADHandle hXDictionary;
+    std::vector < CADHandle > hItemHandles;
+};
+
 class CADLWPolyline : public CADEntity
 {
 public:

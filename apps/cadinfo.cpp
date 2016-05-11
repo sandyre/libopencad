@@ -120,11 +120,30 @@ int main(int argc, char *argv[])
                 switch ( geom->stGeometryType )
                 {
                     case CADGeometry::CADGeometryType::CIRCLE:
+                    {
+                        Circle * circle = ( Circle * ) geom;
+                        std::cout << "|---------Circle---------|\n";
+                        std::cout << "Position: " << "\t" << circle->vertPosition.X <<
+                                "\t" << circle->vertPosition.Y << "\t" << circle->vertPosition.Z << std::endl;
+                        std::cout << "Radius: " << circle->dfRadius << std::endl << std::endl;
+
                         ++circles_count;
                         break;
+                    }
                     case CADGeometry::CADGeometryType::LWPOLYLINE:
+                    {
+                        LWPolyline * poly = ( LWPolyline * ) geom;
+                        std::cout << "|---------LWPolyline---------|\n";
+                        for ( size_t i = 0; i < poly->vertexes.size(); ++i )
+                        {
+                            std::cout << "#" << i << "\t" << poly->vertexes[i].X <<
+                                "\t" << poly->vertexes[i].Y << std::endl;
+                        }
+                        std::cout << std::endl;
+
                         ++pline_count;
                         break;
+                    }
                     case CADGeometry::CADGeometryType::POLYLINE3D:
                     {
                         Polyline3D * poly = ( Polyline3D * ) geom;
@@ -132,7 +151,7 @@ int main(int argc, char *argv[])
                         for ( size_t i = 0; i < poly->vertexes.size(); ++i )
                         {
                             std::cout << "#" << i << "\t" << poly->vertexes[i].X <<
-                                                   "\t" << poly->vertexes[i].Y
+                                    "\t" << poly->vertexes[i].Y
                                     << "\t" << poly->vertexes[i].Z << std::endl;
                         }
                         std::cout << std::endl;
@@ -141,17 +160,52 @@ int main(int argc, char *argv[])
                         break;
                     }
                     case CADGeometry::CADGeometryType::ARC:
+                    {
+                        Arc * arc = ( Arc * ) geom;
+                        std::cout << "|---------Arc---------|\n";
+                        std::cout << "Position: " << "\t" << arc->vertPosition.X <<
+                                "\t" << arc->vertPosition.Y << "\t" << arc->vertPosition.Z << std::endl;
+                        std::cout << "Radius: " << "\t" << arc->dfRadius << std::endl;
+                        std::cout << "Beg & End angles: " << "\t" << arc->dfStartingAngle << "\t"
+                                << arc->dfEndingAngle << std::endl << std::endl;
+
                         ++arc_count;
                         break;
+                    }
                     case CADGeometry::CADGeometryType::POINT:
+                    {
+                        Point3D * point = ( Point3D * ) geom;
+                        std::cout << "|---------Point---------|\n";
+                        std::cout << "Position: " << "\t" << point->vertPosition.X <<
+                            "\t" << point->vertPosition.Y << "\t" << point->vertPosition.Z << std::endl << std::endl;
+
                         ++point_count;
                         break;
+                    }
                     case CADGeometry::CADGeometryType::ELLIPSE:
+                    {
+                        Ellipse * ellipse = ( Ellipse * ) geom;
+                        std::cout << "|---------Ellipse---------|\n";
+                        std::cout << "Position: " << "\t" << ellipse->vertPosition.X <<
+                            "\t" << ellipse->vertPosition.Y << "\t" << ellipse->vertPosition.Z << std::endl;
+                        std::cout << "Beg & End angles: " << "\t" << ellipse->dfStartingAngle << "\t"
+                            << ellipse->dfEndingAngle << std::endl << std::endl;
+
                         ++ellipses_count;
                         break;
+                    }
                     case CADGeometry::CADGeometryType::LINE:
+                    {
+                        Line * line = ( Line * ) geom;
+                        std::cout << "|---------Line---------|\n";
+                        std::cout << "Start Position: " << "\t" << line->vertStart.X <<
+                            "\t" << line->vertStart.Y << "\t" << line->vertStart.Z << std::endl;
+                        std::cout << "End Position: " << "\t" << line->vertEnd.X <<
+                            "\t" << line->vertEnd.Y << "\t" << line->vertEnd.Z << std::endl << std::endl;
+
                         ++lines_count;
                         break;
+                    }
                 }
             }
         }
