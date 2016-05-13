@@ -108,6 +108,7 @@ protected:
     std::vector < Layer * > astPresentedLayers; // output usage
     std::vector < CADLayer * > astPresentedCADLayers; // internal usage
 
+    std::map < long long, long long > amapObjectMap;
     std::vector < ObjHandleOffset > astObjectMap;
     std::vector < ObjHandleOffset > geometries_map;
     std::vector < DWG2000_CLASS > custom_classes;

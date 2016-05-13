@@ -276,8 +276,8 @@ public:
         return pstCADFile_m->GetGeometry ( dLayerID, index );
     }
 
-    std::vector < std::pair < ObjMapRecordID, short > > astAttachedGeometries;
-    std::vector < std::pair < ObjMapRecordID, short > > astAttachedObjects;
+    std::vector < std::pair < long long, short > > astAttachedGeometries;
+    std::vector < std::pair < long long, short > > astAttachedObjects;
 };
 
 

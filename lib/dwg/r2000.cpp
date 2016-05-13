@@ -666,11 +666,17 @@ int DWGFileR2000::ReadObjectMap ()
         }
     }
 
+    // Filling the amapObjectMap with astObjectMap.
+    for ( size_t i = 0; i < astObjectMap.size(); ++i )
+    {
+        amapObjectMap.insert ( astObjectMap[i] );
+    }
+
     pabySectionContent = new char[400];
-    for ( size_t i = 0; i < astObjectMap.size (); ++i )
+    for ( auto iterator = amapObjectMap.begin (); iterator != amapObjectMap.end(); ++iterator )
     {
         nBitOffsetFromStart = 0;
-        m_poFileIO->Seek (astObjectMap[i].second, CADFileIO::SeekOrigin::BEG);
+        m_poFileIO->Seek (iterator->second, CADFileIO::SeekOrigin::BEG);
         m_poFileIO->Read (pabySectionContent, 400);
 
         DWG2000_CED ced;
@@ -680,7 +686,7 @@ int DWGFileR2000::ReadObjectMap ()
         if ( ced.dType == DWG_OBJECT_LAYER )
         {
             Layer * layer = new Layer(this);
-            CADLayer * obj_layer = ( CADLayer * ) this->GetObject (i);
+            CADLayer * obj_layer = ( CADLayer * ) this->GetObject (iterator->first);
 
             layer->sLayerName = obj_layer->sLayerName;
             layer->bFrozen = obj_layer->bFrozen;
@@ -694,19 +700,13 @@ int DWGFileR2000::ReadObjectMap ()
             astPresentedLayers.push_back (layer);
             astPresentedCADLayers.push_back (obj_layer);
         }
-
-        if ( ced.dType == DWG_OBJECT_DICTIONARY )
-        {
-            auto kek = ( CADDictionary * ) this->GetObject ( i );
-            int a = 0;
-        }
     }
 
     // Now, fill vector of layers with objects associated with those layers.
-    for ( size_t i = 0; i < astObjectMap.size (); ++i )
+    for ( auto iterator = amapObjectMap.begin (); iterator != amapObjectMap.end(); ++iterator )
     {
         nBitOffsetFromStart = 0;
-        m_poFileIO->Seek (astObjectMap[i].second, CADFileIO::SeekOrigin::BEG);
+        m_poFileIO->Seek (iterator->second, CADFileIO::SeekOrigin::BEG);
         m_poFileIO->Read (pabySectionContent, 400);
 
         DWG2000_CED ced;
@@ -720,7 +720,7 @@ int DWGFileR2000::ReadObjectMap ()
             DebugMsg ("Object type: %s"
                               " Handle: %d\n",
                       DWG_OBJECT_NAMES.at (ced.dType).c_str (),
-                      astObjectMap[i].first
+                      iterator->first
             );
 
             if ( ced.dType != DWG_OBJECT_LAYER )
@@ -728,7 +728,7 @@ int DWGFileR2000::ReadObjectMap ()
                 if ( std::find (DWG_ENTITIES_CODES.begin (), DWG_ENTITIES_CODES.end (), ced.dType) !=
                      DWG_ENTITIES_CODES.end () )
                 {
-                    CADEntity *ent = ( CADEntity * ) this->GetObject (i);
+                    CADEntity *ent = ( CADEntity * ) this->GetObject (iterator->first);
 
                     for ( size_t ind = 0; ind < astPresentedLayers.size (); ++ind )
                     {
@@ -738,12 +738,12 @@ int DWGFileR2000::ReadObjectMap ()
                             DebugMsg ("Object with type: %s is attached to layer named: %s\n",
                                       DWG_OBJECT_NAMES.at (ced.dType).c_str (),
                                       astPresentedCADLayers[ind]->sLayerName.c_str ());
-                            astPresentedLayers[ind]->astAttachedObjects.push_back ( std::make_pair ( i, ent->dObjectType ) );
+                            astPresentedLayers[ind]->astAttachedObjects.push_back ( std::make_pair ( iterator->first, ent->dObjectType ) );
 
                             if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (), ced.dType)
                                  != DWG_GEOMETRIC_OBJECT_TYPES.end () )
                             {
-                                astPresentedLayers[ind]->astAttachedGeometries.push_back ( std::make_pair ( i, ent->dObjectType ) );
+                                astPresentedLayers[ind]->astAttachedGeometries.push_back ( std::make_pair ( iterator->first, ent->dObjectType ) );
                             }
                         }
                     }
@@ -769,14 +769,14 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
     char pabyObjectSize[8];
     size_t nBitOffsetFromStart = 0;
-    m_poFileIO->Seek (astObjectMap[index].second, CADFileIO::SeekOrigin::BEG);
+    m_poFileIO->Seek (amapObjectMap[index], CADFileIO::SeekOrigin::BEG);
     m_poFileIO->Read (pabyObjectSize, 8);
     uint32_t dObjectSize = ReadMSHORT (pabyObjectSize, nBitOffsetFromStart);
 
     // And read whole data chunk into memory for future parsing.
     // + nBitOffsetFromStart/8 + 2 is because dObjectSize doesnot cover CRC and itself.
     char * pabySectionContent = new char[dObjectSize + nBitOffsetFromStart/8 + 2];
-    m_poFileIO->Seek (astObjectMap[index].second, CADFileIO::SeekOrigin::BEG);
+    m_poFileIO->Seek (amapObjectMap[index], CADFileIO::SeekOrigin::BEG);
     m_poFileIO->Read (pabySectionContent, dObjectSize + nBitOffsetFromStart/8 + 2);
 
     nBitOffsetFromStart = 0;
@@ -1810,7 +1810,6 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
     return readed_object;
 }
 
-// TODO: this function doesnot free memory.
 CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
 {
     CADGeometry * result_geometry = nullptr;
@@ -1830,7 +1829,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             arc->dfStartingAngle = cadArc->dfStartAngle;
             arc->dfEndingAngle = cadArc->dfEndAngle;
 
-            // TODO: delete cadArc & same delete below;
+            delete( cadArc );
 
             result_geometry = arc;
             break;
@@ -1846,6 +1845,8 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             point->dfXAxisAng = cadPoint->dfXAxisAng;
             point->dfThickness = cadPoint->dfThickness;
 
+            delete( cadPoint );
+
             result_geometry = point;
             break;
         }
@@ -1855,21 +1856,34 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             Polyline3D * polyline = new Polyline3D();
             CADPolyline3D * cadPolyline3D = ( CADPolyline3D * ) readed_object;
 
-            for ( size_t i = 0; i < astPresentedLayers[layer_index]->astAttachedObjects.size(); ++i )
+            // TODO: code can be much simplified if CADHandle will be used.
+            // to do so, == and ++ operators should be implemented.
+            CADVertex3D * vertex;
+            long long currentVertexH = cadPolyline3D->hVertexes[0].GetAsLong ();
+            while ( currentVertexH != 0 )
             {
-                if ( astPresentedLayers[layer_index]->astAttachedObjects[i].second == DWG_OBJECT_VERTEX3D )
+                vertex = ( CADVertex3D * ) this->GetObject (currentVertexH);
+                currentVertexH = vertex->ced.hObjectHandle.GetAsLong ();
+                polyline->vertexes.push_back ( vertex->vertPosition );
+                if ( vertex->ced.bNoLinks == true )
                 {
-                    CADVertex3D * cadVertex3D = ( CADVertex3D * ) this->GetObject
-                            ( astPresentedLayers[layer_index]->astAttachedObjects[i].first );
+                    ++currentVertexH;
+                }
+                else
+                {
+                    currentVertexH = vertex->ched.hNextEntity.GetAsLong (vertex->ced.hObjectHandle );
+                }
 
-                    // It means that vertex is attached to this polyline.
-                    if ( cadVertex3D->ched.hOwner.GetAsLong (cadVertex3D->ced.hObjectHandle) ==
-                            cadPolyline3D->ced.hObjectHandle.GetAsLong () )
-                    {
-                        polyline->vertexes.push_back (cadVertex3D->vertPosition);
-                    }
+                // Last vertex is reached. read it and break reading.
+                if ( currentVertexH == cadPolyline3D->hVertexes[1].GetAsLong () )
+                {
+                    vertex = ( CADVertex3D * ) this->GetObject (currentVertexH);
+                    polyline->vertexes.push_back ( vertex->vertPosition );
+                    break;
                 }
             }
+
+            delete( cadPolyline3D );
 
             result_geometry = polyline;
             break;
@@ -1887,6 +1901,8 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             lwPolyline->bulges = cadlwPolyline->bulges;
             lwPolyline->widths = cadlwPolyline->widths;
 
+            delete( cadlwPolyline );
+
             result_geometry = lwPolyline;
             break;
         }
@@ -1900,6 +1916,8 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             circle->vectExtrusion = cadCircle->vectExtrusion;
             circle->dfRadius = cadCircle->dfRadius;
             circle->dfThickness = cadCircle->dfThickness;
+
+            delete( cadCircle );
 
             result_geometry = circle;
             break;
@@ -1917,6 +1935,8 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             ellipse->dfEndingAngle = cadEllipse->dfEndAngle;
             ellipse->dfStartingAngle = cadEllipse->dfBegAngle;
 
+            delete( cadEllipse );
+
             result_geometry = ellipse;
             break;
         }
@@ -1929,6 +1949,8 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             line->vertStart = cadLine->vertStart;
             line->vertEnd = cadLine->vertEnd;
             line->dfThickness = cadLine->dfThickness;
+
+            delete( cadLine );
 
             result_geometry = line;
             break;
