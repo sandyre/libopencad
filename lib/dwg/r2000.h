@@ -105,6 +105,27 @@ protected:
     CADObject * GetObject( size_t index );
 
 protected:
+    CADHandle stBlocksTable;
+    CADHandle stLayersTable;
+    CADHandle stStyleTable;
+    CADHandle stLineTypesTable;
+    CADHandle stViewTable;
+    CADHandle stUCSTable;
+    CADHandle stViewportTable;
+    CADHandle stAPPIDTable;
+    CADHandle stEntityTable;
+    CADHandle stACADGroupDict;
+    CADHandle stACADMLineStyleDict;
+    CADHandle stNamedObjectsDict;
+    CADHandle stLayoutsDict;
+    CADHandle stPlotSettingsDict;
+    CADHandle stPlotStylesDict;
+    CADHandle stBlockRecordPaperSpace;
+    CADHandle stBlockRecordModelSpace;
+    CADHandle LTYPE_BYLAYER;
+    CADHandle LTYPE_BYBLOCK;
+    CADHandle LTYPE_CONTINUOUS;
+
     std::vector < Layer * > astPresentedLayers; // output usage
     std::vector < CADLayer * > astPresentedCADLayers; // internal usage
 

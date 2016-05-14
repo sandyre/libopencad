@@ -441,19 +441,19 @@ int DWGFileR2000::ReadHeader ()
     m_poHeader->AddValue(CADHeader::DIMLWD, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
     m_poHeader->AddValue(CADHeader::DIMLWE, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
 
-    CADHandle stBlocksTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stLayersTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stStyleTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stLineTypesTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stViewTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stUCSTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stAPPIDTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stBlocksTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stLayersTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stStyleTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stLineTypesTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stViewTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stUCSTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stAPPIDTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
     m_poHeader->AddValue(CADHeader::DIMSTYLE, ReadHANDLE (pabyBuf, nBitOffsetFromStart));
-    CADHandle stEntityTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stACADGroupDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stACADMLineStyleDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stNamedObjectsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stEntityTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stACADGroupDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stACADMLineStyleDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stNamedObjectsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
 
     m_poHeader->AddValue(CADHeader::TSTACKALIGN, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
     m_poHeader->AddValue(CADHeader::TSTACKSIZE, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
@@ -461,9 +461,9 @@ int DWGFileR2000::ReadHeader ()
     m_poHeader->AddValue(CADHeader::HYPERLINKBASE, ReadTV (pabyBuf, nBitOffsetFromStart));
     m_poHeader->AddValue(CADHeader::STYLESHEET, ReadTV (pabyBuf, nBitOffsetFromStart));
 
-    CADHandle stLayoutsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stPlotSettingsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stPlotStylesDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stLayoutsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stPlotSettingsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stPlotStylesDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
 
     int Flags = ReadBITLONG (pabyBuf, nBitOffsetFromStart);
     m_poHeader->AddValue(CADHeader::CELWEIGHT, Flags & 0x001F);
@@ -485,12 +485,12 @@ int DWGFileR2000::ReadHeader ()
     m_poHeader->AddValue(CADHeader::FINGERPRINTGUID, ReadTV (pabyBuf, nBitOffsetFromStart));
     m_poHeader->AddValue(CADHeader::VERSIONGUID, ReadTV (pabyBuf, nBitOffsetFromStart));
 
-    CADHandle stBlockRecordPaperSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle stBlockRecordModelSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stBlockRecordPaperSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stBlockRecordModelSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
     // TODO: is this part of the header?
-    CADHandle LTYPE_BYLAYER = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle LTYPE_BYBLOCK = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    CADHandle LTYPE_CONTINUOUS = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    LTYPE_BYLAYER = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    LTYPE_BYBLOCK = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    LTYPE_CONTINUOUS = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
 
     m_poHeader->AddValue(UNKNOWN11, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
     m_poHeader->AddValue(UNKNOWN12, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
@@ -672,41 +672,27 @@ int DWGFileR2000::ReadObjectMap ()
         amapObjectMap.insert ( astObjectMap[i] );
     }
 
-    pabySectionContent = new char[400];
-    for ( auto iterator = amapObjectMap.begin (); iterator != amapObjectMap.end(); ++iterator )
+    // Reading Layer Control obj, and layers.
+    CADLayerControl * layerControl = ( CADLayerControl * ) this->GetObject (stLayersTable.GetAsLong ());
+    for ( size_t i = 0; i < layerControl->hLayers.size(); ++i )
     {
-        nBitOffsetFromStart = 0;
-        m_poFileIO->Seek (iterator->second, CADFileIO::SeekOrigin::BEG);
-        m_poFileIO->Read (pabySectionContent, 400);
+        Layer * layer = new Layer(this);
+        CADLayer * obj_layer = ( CADLayer * ) this->GetObject (layerControl->hLayers[i].GetAsLong ());
 
-        DWG2000_CED ced;
-        ced.dLength = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
-        ced.dType   = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+        layer->sLayerName = obj_layer->sLayerName;
+        layer->bFrozen = obj_layer->bFrozen;
+        layer->bOn = obj_layer->bOn;
+        layer->bFrozenByDefaultInNewVPORT = obj_layer->bFrozenInNewVPORT;
+        layer->bLocked = obj_layer->bLocked;
+        layer->dLineWeight = obj_layer->dLineWeight;
+        layer->dColor = obj_layer->dCMColor;
+        layer->dLayerID = astPresentedLayers.size();
 
-        if ( ced.dType == DWG_OBJECT_LAYER_CONTROL_OBJ )
-        {
-            auto layctrl = ( CADLayerControl * ) this->GetObject (iterator->first);
-        }
-
-        if ( ced.dType == DWG_OBJECT_LAYER )
-        {
-            Layer * layer = new Layer(this);
-            CADLayer * obj_layer = ( CADLayer * ) this->GetObject (iterator->first);
-
-            layer->sLayerName = obj_layer->sLayerName;
-            layer->bFrozen = obj_layer->bFrozen;
-            layer->bOn = obj_layer->bOn;
-            layer->bFrozenByDefaultInNewVPORT = obj_layer->bFrozenInNewVPORT;
-            layer->bLocked = obj_layer->bLocked;
-            layer->dLineWeight = obj_layer->dLineWeight;
-            layer->dColor = obj_layer->dCMColor;
-            layer->dLayerID = astPresentedLayers.size();
-
-            astPresentedLayers.push_back (layer);
-            astPresentedCADLayers.push_back (obj_layer);
-        }
+        astPresentedLayers.push_back (layer);
+        astPresentedCADLayers.push_back (obj_layer);
     }
 
+    pabySectionContent = new char[400];
     // Now, fill vector of layers with objects associated with those layers.
     for ( auto iterator = amapObjectMap.begin (); iterator != amapObjectMap.end(); ++iterator )
     {
