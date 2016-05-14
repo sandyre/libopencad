@@ -683,6 +683,11 @@ int DWGFileR2000::ReadObjectMap ()
         ced.dLength = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
         ced.dType   = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
 
+        if ( ced.dType == DWG_OBJECT_LAYER_CONTROL_OBJ )
+        {
+            auto layctrl = ( CADLayerControl * ) this->GetObject (iterator->first);
+        }
+
         if ( ced.dType == DWG_OBJECT_LAYER )
         {
             Layer * layer = new Layer(this);
@@ -2039,6 +2044,46 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                     DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = layer;
+                break;
+            }
+
+            case DWG_OBJECT_LAYER_CONTROL_OBJ:
+            {
+                CADLayerControl * layerControl = new CADLayerControl();
+
+                layerControl->dObjectSize = dObjectSize;
+                layerControl->nObjectSizeInBits = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
+                layerControl->hObjectHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                int16_t dEEDSize = 0;
+                while ( (dEEDSize = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart)) != 0 )
+                {
+                    CAD_EED dwg_eed;
+                    dwg_eed.length = dEEDSize;
+                    dwg_eed.application_handle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                    for ( size_t i = 0; i < dEEDSize; ++i )
+                    {
+                        dwg_eed.data.push_back(ReadCHAR (pabySectionContent, nBitOffsetFromStart));
+                    }
+
+                    layerControl->aEED.push_back (dwg_eed);
+                }
+
+                layerControl->nNumReactors = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                layerControl->nNumEntries = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                layerControl->hNull = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                layerControl->hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                for ( size_t i = 0; i < layerControl->nNumEntries; ++i )
+                    layerControl->hLayers.push_back( ReadHANDLE (pabySectionContent, nBitOffsetFromStart) );
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                layerControl->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
+                readed_object = layerControl;
                 break;
             }
         }

@@ -498,6 +498,25 @@ public:
     Vector3D vectExtrusion;
 };
 
+class CADLayerControl : public CADObject
+{
+public:
+    CADLayerControl()
+    {
+        dObjectType = LAYER_CONTROL_OBJ;
+    }
+
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long nNumEntries; // counts layer "0"
+    CADHandle hNull;
+    CADHandle hXDictionary;
+    std::vector < CADHandle > hLayers;
+};
+
 class CADLayer : public CADObject
 {
 public:
