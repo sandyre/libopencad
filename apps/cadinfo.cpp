@@ -257,6 +257,18 @@ int main(int argc, char *argv[])
                         ++splines_count;
                         break;
                     }
+                    case CADGeometry::CADGeometryType::TEXT:
+                    {
+                        // TODO: add other optional parameters.
+                        Text * text = ( Text * ) geom;
+                        std::cout << "|---------Text---------|\n";
+                        std::cout << "Position:\t" << text->vertInsertion.X << "\t"
+                            << text->vertInsertion.Y << std::endl;
+                        std::cout << "Text value:\t" << text->strTextValue << std::endl << std::endl;
+
+                        ++text_count;
+                        break;
+                    }
                 }
             }
         }

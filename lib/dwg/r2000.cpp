@@ -1187,6 +1187,98 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
+            case DWG_OBJECT_TEXT:
+            {
+                CADText * text = new CADText();
+
+                text->dObjectSize = dObjectSize;
+                text->ced = common_entity_data;
+
+                text->DataFlags = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !( text->DataFlags & 0x01 ) )
+                    text->dfElevation = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                text->vertInsetionPoint.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->vertInsetionPoint.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !( text->DataFlags & 0x02 ) )
+                {
+                    text->vertAlignmentPoint.X = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart,
+                                                                  text->vertInsetionPoint.X);
+                    text->vertAlignmentPoint.Y = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart,
+                                                                  text->vertInsetionPoint.Y);
+                }
+
+                if ( ReadBIT (pabySectionContent, nBitOffsetFromStart) )
+                {
+                    text->vectExtrusion.X = 0.0f;
+                    text->vectExtrusion.Y = 0.0f;
+                    text->vectExtrusion.Z = 1.0f;
+                }
+                else
+                {
+                    text->vectExtrusion.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    text->vectExtrusion.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    text->vectExtrusion.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                text->dfThickness = ReadBIT (pabySectionContent, nBitOffsetFromStart) ?
+                                      0.0f : ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !( text->DataFlags & 0x04 ) )
+                    text->dfObliqueAng = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                if ( !( text->DataFlags & 0x08 ) )
+                    text->dfRotationAng = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                text->dfHeight = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !( text->DataFlags & 0x10 ) )
+                    text->dfWidthFactor = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                text->sTextValue = ReadTV (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !( text->DataFlags & 0x20 ) )
+                    text->dGeneration = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                if ( !( text->DataFlags & 0x40 ) )
+                    text->dHorizAlign = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                if ( !( text->DataFlags & 0x80 ) )
+                    text->dVertAlign = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( text->ced.bbEntMode == 0 )
+                    text->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < text->ced.nNumReactors; ++i )
+                    text->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                text->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !text->ced.bNoLinks )
+                {
+                    text->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    text->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                text->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( text->ced.bbLTypeFlags == 0x03 )
+                    text->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( text->ced.bbPlotStyleFlags == 0x03 )
+                    text->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                text->hStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
+                text->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
+                readed_object = text;
+                break;
+            }
+
             case DWG_OBJECT_VERTEX3D:
             {
                 CADVertex3D * vertex = new CADVertex3D();
@@ -2130,6 +2222,29 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
 //            delete( cadSpline );
 
             result_geometry = spline;
+            break;
+        }
+
+        case DWG_OBJECT_TEXT:
+        {
+            Text * text = new Text();
+            CADText * cadText = ( CADText * ) readed_object;
+
+            text->vertAlignment = cadText->vertAlignmentPoint;
+            text->vertInsertion = cadText->vertInsetionPoint;
+            text->strTextValue = cadText->sTextValue;
+            text->dVerticalAlignment = cadText->dVertAlign;
+            text->dHorizontalAlignment = cadText->dHorizAlign;
+            text->dGeneration = cadText->dGeneration;
+            text->dfRotationAngle = cadText->dfRotationAng;
+            text->dfObliqueAngle = cadText->dfObliqueAng;
+            text->dfThickness = cadText->dfThickness;
+            text->dfHeight = cadText->dfElevation;
+            text->dfElevation = cadText->dfElevation;
+
+//            delete( cadText );
+
+            result_geometry = text;
             break;
         }
 

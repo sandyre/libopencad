@@ -200,6 +200,7 @@ public:
     {
         dObjectType = TEXT;
     }
+    char   DataFlags;
     double dfElevation;
     Vertex2D vertInsetionPoint;
     Vertex2D vertAlignmentPoint;
