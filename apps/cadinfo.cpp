@@ -248,7 +248,9 @@ int main(int argc, char *argv[])
                         std::cout << "Fit pts count: " << spline->averFitPoints.size() << std::endl;
                         for ( size_t j = 0; j < spline->averFitPoints.size(); ++j )
                         {
-                            std::cout << "#" << j << "\t" << spline->adfKnots[j] << std::endl;
+                            std::cout << "#" << j << "\t" << spline->averFitPoints[j].X << "\t"
+                            << spline->averFitPoints[j].Y << "\t"
+                            << spline->averFitPoints[j].Z << std::endl;
                         }
 
                         std::cout << std::endl;

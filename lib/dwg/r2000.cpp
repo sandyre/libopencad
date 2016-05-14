@@ -1955,6 +1955,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
     return readed_object;
 }
 
+// FIXME: 'delete' sometimes causes crash, need investigation.
 CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
 {
     CADGeometry * result_geometry = nullptr;
@@ -1974,7 +1975,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             arc->dfStartingAngle = cadArc->dfStartAngle;
             arc->dfEndingAngle = cadArc->dfEndAngle;
 
-            delete( cadArc );
+//            delete( cadArc );
 
             result_geometry = arc;
             break;
@@ -1990,7 +1991,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             point->dfXAxisAng = cadPoint->dfXAxisAng;
             point->dfThickness = cadPoint->dfThickness;
 
-            delete( cadPoint );
+//            delete( cadPoint );
 
             result_geometry = point;
             break;
@@ -2028,7 +2029,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
                 }
             }
 
-            delete( cadPolyline3D );
+//            delete( cadPolyline3D );
 
             result_geometry = polyline;
             break;
@@ -2046,7 +2047,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             lwPolyline->bulges = cadlwPolyline->bulges;
             lwPolyline->widths = cadlwPolyline->widths;
 
-            delete( cadlwPolyline );
+//            delete( cadlwPolyline );
 
             result_geometry = lwPolyline;
             break;
@@ -2062,7 +2063,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             circle->dfRadius = cadCircle->dfRadius;
             circle->dfThickness = cadCircle->dfThickness;
 
-            delete( cadCircle );
+//            delete( cadCircle );
 
             result_geometry = circle;
             break;
@@ -2080,7 +2081,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             ellipse->dfEndingAngle = cadEllipse->dfEndAngle;
             ellipse->dfStartingAngle = cadEllipse->dfBegAngle;
 
-            delete( cadEllipse );
+//            delete( cadEllipse );
 
             result_geometry = ellipse;
             break;
@@ -2095,7 +2096,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             line->vertEnd = cadLine->vertEnd;
             line->dfThickness = cadLine->dfThickness;
 
-            delete( cadLine );
+//            delete( cadLine );
 
             result_geometry = line;
             break;
@@ -2126,7 +2127,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             spline->averFitPoints = cadSpline->averFitPoints;
             spline->avertCtrlPoints = cadSpline->avertCtrlPoints;
 
-            delete( cadSpline );
+//            delete( cadSpline );
 
             result_geometry = spline;
             break;
