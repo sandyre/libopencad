@@ -738,7 +738,6 @@ int DWGFileR2000::ReadObjectMap ()
                             DebugMsg ("Object with type: %s is attached to layer named: %s\n",
                                       DWG_OBJECT_NAMES.at (ced.dType).c_str (),
                                       astPresentedCADLayers[ind]->sLayerName.c_str ());
-                            astPresentedLayers[ind]->astAttachedObjects.push_back ( std::make_pair ( iterator->first, ent->dObjectType ) );
 
                             if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (), ced.dType)
                                  != DWG_GEOMETRIC_OBJECT_TYPES.end () )
@@ -853,6 +852,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 block->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
                 readed_object = block;
                 break;
             }
@@ -904,6 +906,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 ellipse->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = ellipse;
                 break;
@@ -963,6 +968,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 point->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
                 readed_object = point;
                 break;
             }
@@ -1006,6 +1014,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
                 polyline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = polyline;
                 break;
@@ -1051,6 +1062,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
                 ray->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
                 readed_object = ray;
                 break;
             }
@@ -1094,6 +1108,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
                 xline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = xline;
                 break;
@@ -1163,6 +1180,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
                 line->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
                 readed_object = line;
                 break;
             }
@@ -1203,6 +1223,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
                 vertex->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = vertex;
                 break;
@@ -1264,6 +1287,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
                 circle->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
                 readed_object = circle;
                 break;
             }
@@ -1299,6 +1325,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 endblk->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = endblk;
                 break;
@@ -1364,6 +1393,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
                 polyline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = polyline;
                 break;
@@ -1448,6 +1480,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 attrib->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = attrib;
                 break;
@@ -1535,6 +1570,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 attdef->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
                 readed_object = attdef;
                 break;
             }
@@ -1620,6 +1658,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
                 readed_object = polyline;
                 break;
             }
@@ -1682,7 +1723,105 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 arc->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
                 readed_object = arc;
+                break;
+            }
+
+            case DWG_OBJECT_SPLINE:
+            {
+                CADSpline * spline = new CADSpline();
+
+                spline->dObjectSize = dObjectSize;
+                spline->ced = common_entity_data;
+
+                spline->dScenario = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                spline->dDegree  = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+
+                if ( spline->dScenario == 2 )
+                {
+                    spline->dfFitTol = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->vectBegTangDir.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->vectBegTangDir.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->vectBegTangDir.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->vectEndTangDir.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->vectEndTangDir.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->vectEndTangDir.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->nNumFitPts = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                }
+                else if ( spline->dScenario == 1 )
+                {
+                    spline->bRational = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                    spline->bClosed = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                    spline->bPeriodic = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                    spline->dfKnotTol = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->dfCtrlTol = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->nNumKnots = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                    spline->nNumCtrlPts = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                    spline->bWeight = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                }
+#ifdef _DEBUG
+                else
+                {
+                    DebugMsg ("Spline scenario != {1,2} readed: error.");
+                }
+#endif
+                for ( size_t i = 0; i < spline->nNumKnots; ++i )
+                    spline->adfKnots.push_back ( ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart) );
+                for ( size_t i = 0; i < spline->nNumCtrlPts; ++i )
+                {
+                    Vertex3D vertex;
+                    vertex.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    vertex.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    vertex.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->avertCtrlPoints.push_back ( vertex );
+                    if ( spline->bWeight )
+                        spline->adfCtrlPointsWeight.push_back ( ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart) );
+                }
+                for ( size_t i = 0; i < spline->nNumFitPts; ++i )
+                {
+                    Vertex3D vertex;
+                    vertex.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    vertex.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    vertex.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->averFitPoints.push_back ( vertex );
+                }
+
+                if (spline->ced.bbEntMode == 0 )
+                    spline->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < spline->ced.nNumReactors; ++i )
+                    spline->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                spline->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !spline->ced.bNoLinks )
+                {
+                    spline->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    spline->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                spline->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( spline->ced.bbLTypeFlags == 0x03 )
+                {
+                    spline->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                if ( spline->ced.bbPlotStyleFlags == 0x03 )
+                {
+                    spline->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                spline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+
+                readed_object = spline;
                 break;
             }
         }
@@ -1740,6 +1879,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 dictionary->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = dictionary;
                 break;
@@ -1800,6 +1942,9 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
                 layer->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
 
                 readed_object = layer;
                 break;
@@ -1953,6 +2098,37 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             delete( cadLine );
 
             result_geometry = line;
+            break;
+        }
+
+        case DWG_OBJECT_SPLINE:
+        {
+            Spline * spline = new Spline();
+            CADSpline * cadSpline = ( CADSpline * ) readed_object;
+
+            spline->dScenario = cadSpline->dScenario;
+            spline->dDegree = cadSpline->dDegree;
+            if ( spline->dScenario == 2 )
+            {
+                spline->dfFitTol = cadSpline->dfFitTol;
+                spline->vectBegTangDir = cadSpline->vectBegTangDir;
+                spline->vectEndTangDir = cadSpline->vectEndTangDir;
+            }
+            else if ( spline->dScenario == 1 )
+            {
+                spline->bRational = cadSpline->bRational;
+                spline->bPeriodic = cadSpline->bPeriodic;
+                spline->bClosed = cadSpline->bClosed;
+                spline->dfKnotTol = cadSpline->dfKnotTol;
+                spline->dfCtrlTol = cadSpline->dfCtrlTol;
+                spline->bWeight = cadSpline->bWeight;
+            }
+            spline->averFitPoints = cadSpline->averFitPoints;
+            spline->avertCtrlPoints = cadSpline->avertCtrlPoints;
+
+            delete( cadSpline );
+
+            result_geometry = spline;
             break;
         }
 

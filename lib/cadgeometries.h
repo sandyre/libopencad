@@ -231,23 +231,30 @@ public:
 class Spline : public CADGeometry
 {
 public:
-    // TODO: understand what should Spline consist of.
     Spline()
     {
         stGeometryType = SPLINE;
     }
 
-    double dfDegree;
-    double dfTol;
+    long dScenario;
+    bool bRational;
+    bool bClosed;
+    bool bPeriodic;
+    bool bWeight;
+
+    long   dDegree;
+    double dfFitTol;
+    double dfKnotTol;
+    double dfCtrlTol;
     Vector3D vectBegTangDir;
     Vector3D vectEndTangDir;
 
     std::vector < double > adfKnots;
+    std::vector < double > adfCtrlPointsWeight;
     std::vector < Vertex3D > avertCtrlPoints;
     std::vector < Vertex3D > averFitPoints;
 };
 
-typedef size_t ObjMapRecordID;
 class EXTERN Layer
 {
 public:
@@ -277,7 +284,6 @@ public:
     }
 
     std::vector < std::pair < long long, short > > astAttachedGeometries;
-    std::vector < std::pair < long long, short > > astAttachedObjects;
 };
 
 

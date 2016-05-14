@@ -96,6 +96,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    int splines_count = 0;
     int circles_count = 0;
     int lines_count = 0;
     int ellipses_count = 0;
@@ -206,6 +207,54 @@ int main(int argc, char *argv[])
                         ++lines_count;
                         break;
                     }
+                    case CADGeometry::CADGeometryType::SPLINE:
+                    {
+                        Spline * spline = ( Spline * ) geom;
+                        std::cout << "|---------Spline---------|\n";
+                        std::cout << "Degree: \t" << spline->dDegree << std::endl;
+                        if ( spline->dScenario == 2 )
+                        {
+                            std::cout << "Fit tolerance: \t" << spline->dfFitTol << std::endl;
+                            std::cout << "Beg tangent vector:\t" << spline->vectBegTangDir.X << "\t"
+                                << spline->vectBegTangDir.Y << "\t" << spline->vectBegTangDir.Y << std::endl;
+                            std::cout << "End tangent vector:\t" << spline->vectEndTangDir.X << "\t"
+                                << spline->vectEndTangDir.Y << "\t" << spline->vectEndTangDir.Y << std::endl;
+
+                            std::cout << "Knots count: " << spline->adfKnots.size() << std::endl;
+                            for ( size_t j = 0; j < spline->adfKnots.size(); ++j )
+                                std::cout << "#" << j << "\t" << spline->adfKnots[j] << std::endl;
+                        }
+                        if ( spline->dScenario == 1 )
+                        {
+                            std::cout << "Is rational: \t" << spline->bRational << std::endl;
+                            std::cout << "Is closed: \t" << spline->bClosed << std::endl;
+                            std::cout << "Is periodic: \t" << spline->bPeriodic << std::endl;
+                            std::cout << "Knot tolerance: \t" << spline->bRational << std::endl;
+                            std::cout << "Control tolerance: \t" << spline->bRational << std::endl;
+                            std::cout << "Control pts weight presented: \t" << spline->bWeight << std::endl;
+                        }
+
+                        std::cout << "Control pts count: " << spline->avertCtrlPoints.size() << std::endl;
+                        for ( size_t j = 0; j < spline->avertCtrlPoints.size(); ++j )
+                        {
+                            std::cout << "#" << j << "\t" << spline->avertCtrlPoints[j].X << "\t"
+                            << spline->avertCtrlPoints[j].Y << "\t"
+                            << spline->avertCtrlPoints[j].Z << "\t";
+                            if ( spline->bWeight == true )
+                                std::cout << spline->adfCtrlPointsWeight[j] << std::endl;
+                            else std::cout << std::endl;
+                        }
+
+                        std::cout << "Fit pts count: " << spline->averFitPoints.size() << std::endl;
+                        for ( size_t j = 0; j < spline->averFitPoints.size(); ++j )
+                        {
+                            std::cout << "#" << j << "\t" << spline->adfKnots[j] << std::endl;
+                        }
+
+                        std::cout << std::endl;
+                        ++splines_count;
+                        break;
+                    }
                 }
             }
         }
@@ -216,6 +265,7 @@ int main(int argc, char *argv[])
     std::cout << "Lines count: " << lines_count << std::endl;
     std::cout << "Plines count: " << pline_count << std::endl;
     std::cout << "Plines3d count: " << pline3d_count << std::endl;
+    std::cout << "Splines count: " << splines_count << std::endl;
     std::cout << "Circles count: " << circles_count << std::endl;
     std::cout << "Arcs count: " << arc_count << std::endl;
     std::cout << "Texts count: " << text_count << std::endl;

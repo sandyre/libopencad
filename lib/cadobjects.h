@@ -630,4 +630,39 @@ public:
     std::vector< std::pair< double, double > > widths; // start, end.
 };
 
+class CADSpline : public CADEntity
+{
+public:
+    CADSpline() : nNumFitPts(0),
+                  nNumKnots(0),
+                  nNumCtrlPts(0) // should be zeroed.
+    {
+        dObjectType = SPLINE;
+    }
+
+    long dScenario;
+    long dSplineFlags; // 2013+
+    long dKnotParameter; // 2013+
+
+    long   dDegree;
+    double dfFitTol;
+    Vector3D vectBegTangDir;
+    Vector3D vectEndTangDir;
+    long   nNumFitPts;
+
+    bool bRational;
+    bool bClosed;
+    bool bPeriodic;
+    double dfKnotTol;
+    double dfCtrlTol;
+    long nNumKnots;
+    long nNumCtrlPts;
+    bool bWeight;
+
+    std::vector < double > adfKnots;
+    std::vector < double > adfCtrlPointsWeight;
+    std::vector < Vertex3D > avertCtrlPoints;
+    std::vector < Vertex3D > averFitPoints;
+};
+
 #endif //CADOBJECTS_H
