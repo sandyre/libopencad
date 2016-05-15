@@ -498,6 +498,66 @@ public:
     Vector3D vectExtrusion;
 };
 
+class CADBlockControl : public CADObject
+{
+public:
+    CADBlockControl()
+    {
+        dObjectType = BLOCK_CONTROL_OBJ;
+    }
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long nNumEntries; // doesnt count MODELSPACE and PAPERSPACE
+    CADHandle hNull;
+    CADHandle hXDictionary;
+    std::vector < CADHandle > hBlocks; // ends with modelspace and paperspace handles.
+};
+
+class CADBlockHeader : public CADObject
+{
+public:
+    CADBlockHeader()
+    {
+        dObjectType = BLOCK_HEADER;
+    }
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    std::string sEntryName;
+    bool b64Flag;
+    short dXRefIndex;
+    bool bXDep;
+    bool bAnonymous;
+    bool bHasAtts;
+    bool bBlkisXRef;
+    bool bXRefOverlaid;
+    bool bLoadedBit;
+    long nOwnedObjectsCount;
+    Vertex3D vertBasePoint;
+    std::string sXRefPName;
+    std::vector < char > adInsertCount; // TODO: ???
+    std::string sBlockDescription;
+    long nSizeOfPreviewData;
+    std::vector < char > abyBinaryPreviewData;
+    short nInsertUnits;
+    bool bExplodable;
+    char dBlockScaling;
+    CADHandle hBlockControl;
+    std::vector < CADHandle > hReactors;
+    CADHandle hXDictionary;
+    CADHandle hNull;
+    CADHandle hBlockEntity;
+    std::vector < CADHandle > hEntities;
+    CADHandle hEndBlk;
+    std::vector < CADHandle > hInsertHandles;
+    CADHandle hLayout;
+};
+
 class CADLayerControl : public CADObject
 {
 public:

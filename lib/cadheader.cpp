@@ -315,6 +315,11 @@ long CADHandle::GetAsLong () const
     return result;
 }
 
+bool CADHandle::IsNull () const
+{
+    return m_HandleOrOffset.size() == 0 ? true : false;
+}
+
 //------------------------------------------------------------------------------
 // CADVariant
 //------------------------------------------------------------------------------

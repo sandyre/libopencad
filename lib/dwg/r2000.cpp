@@ -672,27 +672,53 @@ int DWGFileR2000::ReadObjectMap ()
         amapObjectMap.insert ( astObjectMap[i] );
     }
 
+    size_t nActualLayersCount = 0;
     // Reading Layer Control obj, and layers.
     CADLayerControl * layerControl = ( CADLayerControl * ) this->GetObject (stLayersTable.GetAsLong ());
     for ( size_t i = 0; i < layerControl->hLayers.size(); ++i )
     {
-        Layer * layer = new Layer(this);
-        CADLayer * obj_layer = ( CADLayer * ) this->GetObject (layerControl->hLayers[i].GetAsLong ());
+        if ( !layerControl->hLayers[i].IsNull())
+        {
+            Layer    *layer     = new Layer (this);
+            CADLayer *obj_layer = ( CADLayer * ) this->GetObject (layerControl->hLayers[i].GetAsLong ());
 
-        layer->sLayerName = obj_layer->sLayerName;
-        layer->bFrozen = obj_layer->bFrozen;
-        layer->bOn = obj_layer->bOn;
-        layer->bFrozenByDefaultInNewVPORT = obj_layer->bFrozenInNewVPORT;
-        layer->bLocked = obj_layer->bLocked;
-        layer->dLineWeight = obj_layer->dLineWeight;
-        layer->dColor = obj_layer->dCMColor;
-        layer->dLayerID = astPresentedLayers.size();
+            layer->sLayerName                 = obj_layer->sLayerName;
+            layer->bFrozen                    = obj_layer->bFrozen;
+            layer->bOn                        = obj_layer->bOn;
+            layer->bFrozenByDefaultInNewVPORT = obj_layer->bFrozenInNewVPORT;
+            layer->bLocked                    = obj_layer->bLocked;
+            layer->dLineWeight                = obj_layer->dLineWeight;
+            layer->dColor                     = obj_layer->dCMColor;
+            layer->dLayerID                   = astPresentedLayers.size ();
 
-        astPresentedLayers.push_back (layer);
-        astPresentedCADLayers.push_back (obj_layer);
+            astPresentedLayers.push_back (layer);
+            astPresentedCADLayers.push_back (obj_layer);
+            nActualLayersCount++;
+        }
     }
+    delete( layerControl );
 
     pabySectionContent = new char[400];
+    size_t nTotalLayersCount = 0;
+    for ( auto iterator = amapObjectMap.begin (); iterator != amapObjectMap.end(); ++iterator )
+    {
+        nBitOffsetFromStart = 0;
+        m_poFileIO->Seek (iterator->second, CADFileIO::SeekOrigin::BEG);
+        m_poFileIO->Read (pabySectionContent, 400);
+
+        DWG2000_CED ced;
+        ced.dLength = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
+        ced.dType   = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+
+        if ( ced.dType == DWG_OBJECT_LAYER )
+        {
+            nTotalLayersCount++;
+        }
+    }
+
+    DebugMsg ("Readed layers using LayerControl object count: %d\n", nActualLayersCount);
+    DebugMsg ("Total layers objects in file count: %d\n", nTotalLayersCount);
+
     // Now, fill vector of layers with objects associated with those layers.
     for ( auto iterator = amapObjectMap.begin (); iterator != amapObjectMap.end(); ++iterator )
     {
@@ -844,7 +870,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 block->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = block;
                 break;
@@ -899,7 +925,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 ellipse->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = ellipse;
                 break;
@@ -960,7 +986,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 point->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = point;
                 break;
@@ -1007,7 +1033,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 polyline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = polyline;
                 break;
@@ -1054,7 +1080,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 ray->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = ray;
                 break;
@@ -1101,7 +1127,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 xline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = xline;
                 break;
@@ -1172,7 +1198,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 line->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = line;
                 break;
@@ -1264,7 +1290,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 text->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = text;
                 break;
@@ -1308,7 +1334,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 vertex->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = vertex;
                 break;
@@ -1371,7 +1397,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 circle->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = circle;
                 break;
@@ -1410,7 +1436,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 endblk->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = endblk;
                 break;
@@ -1478,7 +1504,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 polyline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = polyline;
                 break;
@@ -1565,7 +1591,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 attrib->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = attrib;
                 break;
@@ -1654,7 +1680,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 attdef->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = attdef;
                 break;
@@ -1742,7 +1768,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = polyline;
                 break;
@@ -1807,7 +1833,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 arc->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = arc;
                 break;
@@ -1902,7 +1928,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 spline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = spline;
                 break;
@@ -1964,7 +1990,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 dictionary->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = dictionary;
                 break;
@@ -2027,7 +2053,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 layer->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = layer;
                 break;
@@ -2067,9 +2093,53 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 layerControl->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\n", __LINE__, __FILE__);
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = layerControl;
+                break;
+            }
+
+            case DWG_OBJECT_BLOCK_CONTROL_OBJ:
+            {
+                CADBlockControl * blockControl = new CADBlockControl();
+
+                blockControl->dObjectSize = dObjectSize;
+                blockControl->nObjectSizeInBits = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
+                blockControl->hObjectHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                int16_t dEEDSize = 0;
+                while ( (dEEDSize = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart)) != 0 )
+                {
+                    CAD_EED dwg_eed;
+                    dwg_eed.length = dEEDSize;
+                    dwg_eed.application_handle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                    for ( size_t i = 0; i < dEEDSize; ++i )
+                    {
+                        dwg_eed.data.push_back(ReadCHAR (pabySectionContent, nBitOffsetFromStart));
+                    }
+
+                    blockControl->aEED.push_back (dwg_eed);
+                }
+
+                blockControl->nNumReactors = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                blockControl->nNumEntries = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+
+                blockControl->hNull = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                blockControl->hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < blockControl->nNumEntries + 2; ++i )
+                {
+                    blockControl->hBlocks.push_back ( ReadHANDLE (pabySectionContent, nBitOffsetFromStart) );
+                }
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                blockControl->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = blockControl;
                 break;
             }
         }
