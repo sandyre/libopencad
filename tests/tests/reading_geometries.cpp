@@ -4,8 +4,7 @@
 
 TEST(reading_circles, triplet)
 {
-    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/triple_circles.dwg"));
-
+    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/r2000/triple_circles.dwg"));
 
     ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
     // First circle. Should be 0,0,0 (x,y,z)
@@ -51,4 +50,30 @@ TEST(reading_circles, triplet)
     ASSERT_NEAR (circle->dfThickness, 0.8f, 0.0001f);
 
     delete circle;
+}
+
+// Following test demonstrates reading only actual geometries (deleted skipped).
+TEST(reading_geometries, 24127_circles_128_lines)
+{
+    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/r2000/24127_circles_128_lines.dwg"));
+    auto circles_count = 0;
+    auto lines_count = 0;
+
+    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
+    CADGeometry * geom;
+    Layer * layer = opened_dwg->GetLayer (0);
+    for ( auto i = 0; i < layer->GetGeometriesCount (); ++i )
+    {
+        geom = layer->GetGeometry (i);
+        if ( geom->stGeometryType == CADGeometry::CADGeometryType::CIRCLE )
+            ++circles_count;
+        else if ( geom->stGeometryType == CADGeometry::CADGeometryType::LINE )
+            ++lines_count;
+        delete( geom );
+    }
+
+    ASSERT_EQ (circles_count, 24127);
+    ASSERT_EQ (lines_count, 128);
+    delete( layer );
+    delete( opened_dwg );
 }

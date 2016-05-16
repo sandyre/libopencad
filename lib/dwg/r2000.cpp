@@ -616,7 +616,7 @@ int DWGFileR2000::ReadObjectMap ()
     {
         int niRecordsInSection = 0;
         nBitOffsetFromStart = 0;
-        std::vector<ObjHandleOffset> obj_map_section;
+        std::vector < ObjHandleOffset > obj_map_section;
         m_poFileIO->Read (& dSectionSize, 2);
         SwapEndianness (dSectionSize, sizeof (dSectionSize));
 
@@ -699,80 +699,137 @@ int DWGFileR2000::ReadObjectMap ()
     delete( layerControl );
 
     pabySectionContent = new char[400];
-    size_t nTotalLayersCount = 0;
-    for ( auto iterator = amapObjectMap.begin (); iterator != amapObjectMap.end(); ++iterator )
-    {
-        nBitOffsetFromStart = 0;
-        m_poFileIO->Seek (iterator->second, CADFileIO::SeekOrigin::BEG);
-        m_poFileIO->Read (pabySectionContent, 400);
-
-        DWG2000_CED ced;
-        ced.dLength = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
-        ced.dType   = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
-
-        if ( ced.dType == DWG_OBJECT_LAYER )
-        {
-            nTotalLayersCount++;
-        }
-    }
 
     DebugMsg ("Readed layers using LayerControl object count: %d\n", nActualLayersCount);
-    DebugMsg ("Total layers objects in file count: %d\n", nTotalLayersCount);
 
-    // Now, fill vector of layers with objects associated with those layers.
-    for ( auto iterator = amapObjectMap.begin (); iterator != amapObjectMap.end(); ++iterator )
+    // Implementing blocks.
+    // FIXME: Simplify the code.
+//    CADBlockControl * blockControl = ( CADBlockControl * ) this->GetObject ( stBlocksTable.GetAsLong () );
+    CADBlockHeader * pstModel_Space = ( CADBlockHeader * ) this->GetObject ( stBlockRecordModelSpace.GetAsLong () );
     {
-        nBitOffsetFromStart = 0;
-        m_poFileIO->Seek (iterator->second, CADFileIO::SeekOrigin::BEG);
-        m_poFileIO->Read (pabySectionContent, 400);
-
-        DWG2000_CED ced;
-        ced.dLength = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
-        ced.dType   = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
-
-        try
+        auto dCurrentEntHandle = pstModel_Space->hEntities[0].GetAsLong ();
+        auto dLastEntHandle    = pstModel_Space->hEntities[1].GetAsLong ();
+        while ( true )
         {
-            // TODO: only objects with fixed Type code is handled. Others which are based on custom_classes are skipped.
-            DWG_OBJECT_NAMES.at (ced.dType);
-            DebugMsg ("Object type: %s"
-                              " Handle: %d\n",
-                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
-                      iterator->first
-            );
-
-            if ( ced.dType != DWG_OBJECT_LAYER )
+            CADEntity * ent = ( CADEntity * ) this->GetObject (dCurrentEntHandle);
+            /* TODO: this check is excessive, but if something goes wrong way -
+             * some part of geometries will be parsed. */
+            if ( ent == nullptr ) break;
+            for ( size_t ind = 0; ind < astPresentedLayers.size (); ++ind )
             {
-                if ( std::find (DWG_ENTITIES_CODES.begin (), DWG_ENTITIES_CODES.end (), ced.dType) !=
-                     DWG_ENTITIES_CODES.end () )
+                if ( ent->ched.hLayer.GetAsLong (ent->ced.hObjectHandle) ==
+                     astPresentedCADLayers[ind]->hObjectHandle.GetAsLong () )
                 {
-                    CADEntity *ent = ( CADEntity * ) this->GetObject (iterator->first);
+                    DebugMsg ("Object with type: %s is attached to layer named: %s\n",
+                              DWG_OBJECT_NAMES.at (ent->dObjectType).c_str (),
+                              astPresentedCADLayers[ind]->sLayerName.c_str ());
 
-                    for ( size_t ind = 0; ind < astPresentedLayers.size (); ++ind )
+                    if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (),
+                                    ent->dObjectType)
+                         != DWG_GEOMETRIC_OBJECT_TYPES.end () )
                     {
-                        if ( ent->ched.hLayer.GetAsLong (ent->ced.hObjectHandle) ==
-                                astPresentedCADLayers[ind]->hObjectHandle.GetAsLong () )
-                        {
-                            DebugMsg ("Object with type: %s is attached to layer named: %s\n",
-                                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
-                                      astPresentedCADLayers[ind]->sLayerName.c_str ());
-
-                            if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (), ced.dType)
-                                 != DWG_GEOMETRIC_OBJECT_TYPES.end () )
-                            {
-                                astPresentedLayers[ind]->astAttachedGeometries.push_back ( std::make_pair ( iterator->first, ent->dObjectType ) );
-                            }
-                        }
+                        // FIXME: no cast should be used.
+                        astPresentedLayers[ind]->astAttachedGeometries.push_back (
+                                std::make_pair ( (long long)ent->ced.hObjectHandle.GetAsLong (), ent->dObjectType));
+                        break;
                     }
                 }
             }
-        }
-        catch ( std::exception e )
-        {
-            DebugMsg ("Object type: %s\n",
-                      custom_classes[ced.dType - 500].sCppClassName.c_str ()
-            );
+
+            if ( ent->ced.bNoLinks ) ++dCurrentEntHandle;
+            else dCurrentEntHandle = ent->ched.hNextEntity.GetAsLong (ent->ced.hObjectHandle);
+            if ( dCurrentEntHandle == dLastEntHandle )
+            {
+                ent = ( CADEntity * ) this->GetObject (dCurrentEntHandle);
+                for ( size_t ind = 0; ind < astPresentedLayers.size (); ++ind )
+                {
+                    if ( ent->ched.hLayer.GetAsLong (ent->ced.hObjectHandle) ==
+                         astPresentedCADLayers[ind]->hObjectHandle.GetAsLong () )
+                    {
+                        DebugMsg ("Object with type: %s is attached to layer named: %s\n",
+                                  DWG_OBJECT_NAMES.at (ent->dObjectType).c_str (),
+                                  astPresentedCADLayers[ind]->sLayerName.c_str ());
+
+                        if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (),
+                                        ent->dObjectType)
+                             != DWG_GEOMETRIC_OBJECT_TYPES.end () )
+                        {
+                            // FIXME: no cast should be used.
+                            astPresentedLayers[ind]->astAttachedGeometries.push_back (
+                                    std::make_pair ( (long long)ent->ced.hObjectHandle.GetAsLong (), ent->dObjectType));
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+            delete( ent );
         }
     }
+    delete( pstModel_Space );
+
+    // TODO: Objects (non-entities) can be readed only this way, iterating through objmap (?)
+//     Now, fill vector of layers with objects associated with those layers.
+//    for ( auto iterator = amapObjectMap.begin (); iterator != amapObjectMap.end(); ++iterator )
+//    {
+//        nBitOffsetFromStart = 0;
+//        m_poFileIO->Seek (iterator->second, CADFileIO::SeekOrigin::BEG);
+//        m_poFileIO->Read (pabySectionContent, 400);
+//
+//        DWG2000_CED ced;
+//        ced.dLength = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
+//        ced.dType   = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+//
+//        try
+//        {
+//            // TODO: only objects with fixed Type code is handled. Others which are based on custom_classes are skipped.
+//            DWG_OBJECT_NAMES.at (ced.dType);
+//            std::string isentity = ( std::find (DWG_ENTITIES_CODES.begin (), DWG_ENTITIES_CODES.end (), ced.dType) !=
+//                                   DWG_ENTITIES_CODES.end () ) ? "yes" : "no";
+//            DebugMsg ("Object type: %s"
+//                              " Handle: %d Entity? : %s\n",
+//                      DWG_OBJECT_NAMES.at (ced.dType).c_str (),
+//                      iterator->first, isentity.c_str()
+//            );
+//
+//            if ( ced.dType != DWG_OBJECT_LAYER )
+//            {
+//                if ( std::find (DWG_ENTITIES_CODES.begin (), DWG_ENTITIES_CODES.end (), ced.dType) !=
+//                     DWG_ENTITIES_CODES.end () )
+//                {
+//                    CADEntity *ent = ( CADEntity * ) this->GetObject (iterator->first);
+//
+//                    if ( ent != nullptr )
+//                    {
+//                        for ( size_t ind = 0; ind < astPresentedLayers.size (); ++ind )
+//                        {
+//                            if ( ent->ched.hLayer.GetAsLong (ent->ced.hObjectHandle) ==
+//                                 astPresentedCADLayers[ind]->hObjectHandle.GetAsLong () )
+//                            {
+//                                DebugMsg ("Object with type: %s is attached to layer named: %s\n",
+//                                          DWG_OBJECT_NAMES.at (ced.dType).c_str (),
+//                                          astPresentedCADLayers[ind]->sLayerName.c_str ());
+//
+//                                if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (),
+//                                                ced.dType)
+//                                     != DWG_GEOMETRIC_OBJECT_TYPES.end () )
+//                                {
+//                                    astPresentedLayers[ind]->astAttachedGeometries.push_back (
+//                                            std::make_pair (iterator->first, ent->dObjectType));
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        catch ( std::exception e )
+//        {
+//            DebugMsg ("Object type: %s\n",
+//                      custom_classes[ced.dType - 500].sCppClassName.c_str ()
+//            );
+//        }
+//    }
 
     delete[] pabySectionContent;
 
@@ -781,7 +838,7 @@ int DWGFileR2000::ReadObjectMap ()
 
 CADObject * DWGFileR2000::GetObject ( size_t index )
 {
-    CADObject * readed_object;
+    CADObject * readed_object = nullptr;
 
     char pabyObjectSize[8];
     size_t nBitOffsetFromStart = 0;
@@ -1693,7 +1750,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 polyline->dObjectSize = dObjectSize;
                 polyline->ced = common_entity_data;
 
-                int32_t    nVertixesCount  = 0, nBulges = 0;
+                int32_t    nVertixesCount  = 0, nBulges = 0, nNumWidths = 0;
                 int16_t    data_flag       = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
                 if ( data_flag & 4 )
                     polyline->dfConstWidth = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
@@ -1713,6 +1770,12 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 if ( data_flag & 16 )
                 {
                     nBulges = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                // TODO: tell ODA that R2000 contains nNumWidths flag
+                if ( data_flag & 32 )
+                {
+                    nNumWidths = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
                 }
 
                 // First of all, read first vertex.
@@ -1736,6 +1799,13 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 {
                     double dfBulgeValue = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
                     polyline->bulges.push_back (dfBulgeValue);
+                }
+
+                for ( size_t i = 0; i < nNumWidths; ++i )
+                {
+                    double dfStartWidth = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    double dfEndWidth = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    polyline->widths.push_back ( std::make_pair ( dfStartWidth, dfEndWidth ) );
                 }
 
                 if (polyline->ced.bbEntMode == 0 )
@@ -1768,8 +1838,8 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 int16_t crc = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
 
                 if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
-                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
-
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__,
+                              ( nBitOffsetFromStart / 8 - dObjectSize - 4 ));
                 readed_object = polyline;
                 break;
             }
@@ -1931,6 +2001,52 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                     DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = spline;
+                break;
+            }
+
+            default:
+            {
+                CADEntity * entity = new CADEntity();
+
+                entity->dObjectType = dObjectType;
+                entity->dObjectSize = dObjectSize;
+                entity->ced = common_entity_data;
+
+                nBitOffsetFromStart =  entity->ced.nObjectSizeInBits + 16;
+
+                if (entity->ced.bbEntMode == 0 )
+                    entity->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < entity->ced.nNumReactors; ++i )
+                    entity->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                entity->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !entity->ced.bNoLinks )
+                {
+                    entity->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    entity->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                entity->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( entity->ced.bbLTypeFlags == 0x03 )
+                {
+                    entity->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                if ( entity->ced.bbPlotStyleFlags == 0x03 )
+                {
+                    entity->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                entity->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = entity;
                 break;
             }
         }
@@ -2142,6 +2258,82 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 readed_object = blockControl;
                 break;
             }
+
+            case DWG_OBJECT_BLOCK_HEADER:
+            {
+                CADBlockHeader * blockHeader = new CADBlockHeader();
+
+                blockHeader->dObjectSize = dObjectSize;
+                blockHeader->nObjectSizeInBits = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->hObjectHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                int16_t dEEDSize = 0;
+                while ( (dEEDSize = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart)) != 0 )
+                {
+                    CAD_EED dwg_eed;
+                    dwg_eed.length = dEEDSize;
+                    dwg_eed.application_handle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                    for ( size_t i = 0; i < dEEDSize; ++i )
+                    {
+                        dwg_eed.data.push_back(ReadCHAR (pabySectionContent, nBitOffsetFromStart));
+                    }
+
+                    blockHeader->aEED.push_back (dwg_eed);
+                }
+
+                blockHeader->nNumReactors = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->sEntryName = ReadTV (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->b64Flag = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->dXRefIndex = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->bXDep = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->bAnonymous = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->bHasAtts = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->bBlkisXRef = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->bXRefOverlaid = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->bLoadedBit = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+
+                blockHeader->vertBasePoint.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->vertBasePoint.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->vertBasePoint.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->sXRefPName = ReadTV (pabySectionContent, nBitOffsetFromStart);
+                char Tmp = 0;
+                do
+                {
+                    Tmp = ReadCHAR (pabySectionContent, nBitOffsetFromStart );
+                    blockHeader->adInsertCount.push_back(Tmp);
+                } while ( Tmp != 0 );
+                blockHeader->sBlockDescription = ReadTV (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->nSizeOfPreviewData = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                for ( size_t i = 0; i < blockHeader->nSizeOfPreviewData; ++i )
+                    blockHeader->abyBinaryPreviewData.push_back ( ReadCHAR (pabySectionContent, nBitOffsetFromStart) );
+
+                blockHeader->hBlockControl = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                for ( size_t i = 0; i < blockHeader->nNumReactors; ++i )
+                    blockHeader->hReactors.push_back ( ReadHANDLE (pabySectionContent, nBitOffsetFromStart) );
+                blockHeader->hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->hNull = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                blockHeader->hBlockEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                if ( !blockHeader->bBlkisXRef && !blockHeader->bXRefOverlaid )
+                {
+                    blockHeader->hEntities.push_back ( ReadHANDLE(pabySectionContent, nBitOffsetFromStart) ); // first
+                    blockHeader->hEntities.push_back ( ReadHANDLE(pabySectionContent, nBitOffsetFromStart) ); // last
+                }
+
+                blockHeader->hEndBlk = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                for ( size_t i = 0; i < blockHeader->adInsertCount.size(); ++i )
+                    blockHeader->hInsertHandles.push_back ( ReadHANDLE (pabySectionContent, nBitOffsetFromStart) );
+                blockHeader->hLayout = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                blockHeader->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = blockHeader;
+                break;
+            }
         }
     }
 
@@ -2151,7 +2343,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 // FIXME: 'delete' sometimes causes crash, need investigation.
 CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
 {
-    CADGeometry * result_geometry = nullptr;
+    CADGeometry * result_geometry = 0;
     CADObject * readed_object = this->GetObject ( astPresentedLayers[layer_index]->astAttachedGeometries[index].first );
 
     switch ( readed_object->dObjectType )
@@ -2202,6 +2394,9 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             while ( currentVertexH != 0 )
             {
                 vertex = ( CADVertex3D * ) this->GetObject (currentVertexH);
+
+                if ( vertex == nullptr ) break;
+
                 currentVertexH = vertex->ced.hObjectHandle.GetAsLong ();
                 polyline->vertexes.push_back ( vertex->vertPosition );
                 if ( vertex->ced.bNoLinks == true )
@@ -2375,5 +2570,4 @@ DWGFileR2000::DWGFileR2000(CADFileIO* poFileIO) : CADFile(poFileIO)
 
 DWGFileR2000::~DWGFileR2000()
 {
-
 }
