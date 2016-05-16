@@ -35,54 +35,9 @@
 #include <vector>
 #include <string>
 #include <stdint.h>
-
-struct Vertex2D
-{
-    Vertex2D() : X(0.0f),
-                 Y(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-};
-
-struct Vertex3D
-{
-    Vertex3D() : X(0.0f),
-                 Y(0.0f),
-                 Z(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-    double Z;
-};
-
-struct Vector2D
-{
-    Vector2D() : X(0.0f),
-                 Y(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-};
-
-struct Vector3D
-{
-    Vector3D() : X(0.0f),
-                 Y(0.0f),
-                 Z(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-    double Z;
-};
+#include "cadobjects.h"
+#include "cadfile.h"
+#include "simpledatatypes.h"
 
 /**
  * @brief Base CAD geometry class
@@ -111,29 +66,22 @@ public: //TODO: protected
     double          dfThickness;
 };
 
+/* TODO: Point3D should be named Point, but because of possible redefenitions
+ * its named Point3D
+ * */
 /**
  * @brief Geometry class which a single Point
  */
-class Point : public CADGeometry
+class Point3D : public CADGeometry
 {
 public:
-    Point () : dfPointX (0.0f),
-               dfPointY (0.0f),
-               dfPointZ (0.0f),
-               dfExtrusionX (0.0f),
-               dfExtrusionY (0.0f),
-               dfExtrusionZ (0.0f),
-               dfXAxisAng (0.0f)
+    Point3D () : dfXAxisAng (0.0f)
     {
         stGeometryType = POINT;
     }
 
-    double dfPointX;
-    double dfPointY;
-    double dfPointZ;
-    double dfExtrusionX;
-    double dfExtrusionY;
-    double dfExtrusionZ;
+    Vertex3D vertPosition;
+    Vector3D vectExtrusion;
     double dfXAxisAng;
 };
 
@@ -143,28 +91,14 @@ public:
 class Line : public CADGeometry
 {
 public:
-    Line() : dfStartX(0.0f),
-             dfStartY(0.0f),
-             dfStartZ(0.0f),
-             dfEndX(0.0f),
-             dfEndY(0.0f),
-             dfEndZ(0.0f),
-             dfExtrusionX(0.0f),
-             dfExtrusionY(0.0f),
-             dfExtrusionZ(0.0f)
+    Line()
     {
         stGeometryType = LINE;
     }
 
-    double dfStartX;
-    double dfStartY;
-    double dfStartZ;
-    double dfEndX;
-    double dfEndY;
-    double dfEndZ;
-    double dfExtrusionX;
-    double dfExtrusionY;
-    double dfExtrusionZ;
+    Vertex3D vertStart;
+    Vertex3D vertEnd;
+    Vector3D vectExtrusion;
 };
 
 /**
@@ -174,19 +108,14 @@ class LWPolyline : public CADGeometry
 {
 public:
     LWPolyline () : dfConstWidth(0.0f),
-                    dfElevation(0.0f),
-                    dfExtrusionX(0.0f),
-                    dfExtrusionY(0.0f),
-                    dfExtrusionZ(0.0f)
+                    dfElevation(0.0f)
     {
         stGeometryType = LWPOLYLINE;
     }
 
     double dfConstWidth;
     double dfElevation;
-    double dfExtrusionX;
-    double dfExtrusionY;
-    double dfExtrusionZ;
+    Vector3D vectExtrusion;
     std::vector< Vertex2D > vertexes;
     std::vector< double > bulges;
     std::vector< int16_t > vertexes_id;
@@ -213,23 +142,13 @@ public:
 class Circle : public CADGeometry
 {
 public:
-    Circle () : dfCenterX (0.0f),
-                dfCenterY (0.0f),
-                dfCenterZ (0.0f),
-                dfExtrusionX (0.0f),
-                dfExtrusionY (0.0f),
-                dfExtrusionZ (0.0f),
-                dfRadius (0.0f)
+    Circle () : dfRadius (0.0f)
     {
         stGeometryType = CIRCLE;
     }
 
-    double dfCenterX;
-    double dfCenterY;
-    double dfCenterZ;
-    double dfExtrusionX;
-    double dfExtrusionY;
-    double dfExtrusionZ;
+    Vertex3D vertPosition;
+    Vector3D vectExtrusion;
     double dfRadius;
 };
 
@@ -239,31 +158,16 @@ public:
 class Ellipse : public CADGeometry
 {
 public:
-    Ellipse() : dfCenterX(0.0f),
-                dfCenterY(0.0f),
-                dfCenterZ(0.0f),
-                dfWCSX(0.0f),
-                dfWCSY(0.0f),
-                dfWCSZ(0.0f),
-                dfExtrusionX(0.0f),
-                dfExtrusionY(0.0f),
-                dfExtrusionZ(0.0f),
-                dfAxisRatio(0.0f),
+    Ellipse() : dfAxisRatio(0.0f),
                 dfStartingAngle(0.0f),
                 dfEndingAngle(0.0f)
     {
         stGeometryType = ELLIPSE;
     }
 
-    double dfCenterX;
-    double dfCenterY;
-    double dfCenterZ;
-    double dfWCSX;
-    double dfWCSY;
-    double dfWCSZ;
-    double dfExtrusionX;
-    double dfExtrusionY;
-    double dfExtrusionZ;
+    Vertex3D vertPosition;
+    Vector3D vectWCS;
+    Vector3D vectExtrusion;
     double dfAxisRatio;
     double dfStartingAngle;
     double dfEndingAngle;
@@ -276,13 +180,6 @@ class Text : public CADGeometry
 {
 public:
     Text() : dfElevation(0.0f),
-             dfInsertionX(0.0f),
-             dfInsertionY(0.0f),
-             dfAlignmentX(0.0f),
-             dfAlignmentY(0.0f),
-             dfExtrusionX(0.0f),
-             dfExtrusionY(0.0f),
-             dfExtrusionZ(0.0f),
              dfObliqueAngle(0.0f),
              dfRotationAngle(0.0f),
              dfHeight(0.0f),
@@ -295,13 +192,9 @@ public:
     }
 
     double dfElevation;
-    double dfInsertionX;
-    double dfInsertionY;
-    double dfAlignmentX;
-    double dfAlignmentY;
-    double dfExtrusionX;
-    double dfExtrusionY;
-    double dfExtrusionZ;
+    Vertex2D vertInsertion;
+    Vertex2D vertAlignment;
+    Vector3D vectExtrusion;
     double dfObliqueAngle;
     double dfRotationAngle;
     double dfHeight;
@@ -318,26 +211,16 @@ public:
 class Arc : public CADGeometry
 {
 public:
-    Arc() : dfCenterX(0.0f),
-            dfCenterY(0.0f),
-            dfCenterZ(0.0f),
-            dfRadius(0.0f),
-            dfExtrusionX(0.0f),
-            dfExtrusionY(0.0f),
-            dfExtrusionZ(0.0f),
+    Arc() : dfRadius(0.0f),
             dfStartingAngle(0.0f),
             dfEndingAngle(0.0f)
     {
         stGeometryType = ARC;
     }
 
-    double dfCenterX;
-    double dfCenterY;
-    double dfCenterZ;
+    Vertex3D vertPosition;
     double dfRadius;
-    double dfExtrusionX;
-    double dfExtrusionY;
-    double dfExtrusionZ;
+    Vector3D vectExtrusion;
     double dfStartingAngle;
     double dfEndingAngle;
 };
@@ -348,33 +231,60 @@ public:
 class Spline : public CADGeometry
 {
 public:
-    // TODO: understand what should Spline consist of.
     Spline()
     {
         stGeometryType = SPLINE;
     }
+
+    long dScenario;
+    bool bRational;
+    bool bClosed;
+    bool bPeriodic;
+    bool bWeight;
+
+    long   dDegree;
+    double dfFitTol;
+    double dfKnotTol;
+    double dfCtrlTol;
+    Vector3D vectBegTangDir;
+    Vector3D vectEndTangDir;
+
+    std::vector < double > adfKnots;
+    std::vector < double > adfCtrlPointsWeight;
+    std::vector < Vertex3D > avertCtrlPoints;
+    std::vector < Vertex3D > averFitPoints;
 };
 
-//class CADLayer
-//{
-//public:
-//    CADLayer()
-//    {
-//    }
-//
-//    std::string sLayerName;
-//    bool bFrozen;
-//    bool bOn;
-//    bool bFrozenByDefaultInNewVPORT;
-//    bool bLocked;
-//    bool bPlottingFlag;
-//    int16_t dLineWeight;
-//    int16_t dColor;
-//
-//    CADHandle hHandle;
-//
-//    std::vector < CADObject * > objects;
-//};
+class EXTERN Layer
+{
+public:
+    Layer(CADFile * pCADFile)
+    {
+        pstCADFile_m = pCADFile;
+    }
+
+    size_t dLayerID;
+
+    std::string sLayerName;
+    bool bFrozen;
+    bool bOn;
+    bool bFrozenByDefaultInNewVPORT;
+    bool bLocked;
+    bool bPlottingFlag;
+    int16_t dLineWeight;
+    int16_t dColor;
+
+    CADFile * pstCADFile_m;
+
+    size_t GetGeometriesCount() { return astAttachedGeometries.size(); }
+
+    CADGeometry * GetGeometry( size_t index )
+    {
+        return pstCADFile_m->GetGeometry ( dLayerID, index );
+    }
+
+    std::vector < std::pair < long long, short > > astAttachedGeometries;
+};
 
 
 #endif // CADGEOMETRIES_H

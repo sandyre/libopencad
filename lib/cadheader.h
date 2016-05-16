@@ -41,6 +41,7 @@ class EXTERN CADHandle
 public:
     CADHandle(char code = 0);
     void AddOffset(char val);
+    bool IsNull() const;
     long GetAsLong() const;
     long GetAsLong( CADHandle& ref_handle );
 protected:

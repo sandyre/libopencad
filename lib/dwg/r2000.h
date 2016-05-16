@@ -37,6 +37,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <cadgeometries.h>
 
 struct DWG2000_CLASS
 {
@@ -84,20 +85,14 @@ struct DWG2000_CEHD
 };
 
 typedef std::pair< long long, long long > ObjHandleOffset;
-
-
 class DWGFileR2000 : public CADFile
 {
 public:
     DWGFileR2000(CADFileIO* poFileIO);
     virtual ~DWGFileR2000();
 
-    virtual size_t GetGeometriesCount();
     virtual size_t GetLayersCount();
-//    size_t getBlocksCount();
-    virtual CADGeometry * GetGeometry( size_t index );
-//    CADBlock * getBlock( size_t index );
-//    virtual CADLayer * GetLayer( size_t index );
+    virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
 
 protected:
     virtual int ReadHeader();
@@ -106,16 +101,39 @@ protected:
 
     DWG2000_CLASS ReadClass( const char * input_array, size_t& bitOffset );
 
-    CADObject * GetObject( size_t section, size_t index );
+    Layer * GetLayer( size_t index );
+    CADObject * GetObject( size_t index );
 
 protected:
-    std::vector < CADLayer * > presented_layers;
-    std::vector < std::vector < CADEntity * > > layers_presented_entities;
+    CADHandle stBlocksTable;
+    CADHandle stLayersTable;
+    CADHandle stStyleTable;
+    CADHandle stLineTypesTable;
+    CADHandle stViewTable;
+    CADHandle stUCSTable;
+    CADHandle stViewportTable;
+    CADHandle stAPPIDTable;
+    CADHandle stEntityTable;
+    CADHandle stACADGroupDict;
+    CADHandle stACADMLineStyleDict;
+    CADHandle stNamedObjectsDict;
+    CADHandle stLayoutsDict;
+    CADHandle stPlotSettingsDict;
+    CADHandle stPlotStylesDict;
+    CADHandle stBlockRecordPaperSpace;
+    CADHandle stBlockRecordModelSpace;
+    CADHandle LTYPE_BYLAYER;
+    CADHandle LTYPE_BYBLOCK;
+    CADHandle LTYPE_CONTINUOUS;
 
-    std::vector < ObjHandleOffset > layer_map;
+    std::vector < Layer * > astPresentedLayers; // output usage
+    std::vector < CADLayer * > astPresentedCADLayers; // internal usage
+
+    std::map < long long, long long > amapObjectMap;
+    std::vector < ObjHandleOffset > astObjectMap;
     std::vector < ObjHandleOffset > geometries_map;
-    std::vector < std::vector < ObjHandleOffset > > object_map_sections;
     std::vector < DWG2000_CLASS > custom_classes;
+
     int dImageSeeker;
     short dCodePage;
     std::vector < SLRecord >  SLRecords;

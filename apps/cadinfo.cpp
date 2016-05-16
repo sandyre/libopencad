@@ -30,6 +30,7 @@
  *******************************************************************************/
 
 #include "opencad_api.h"
+#include "cadgeometries.h"
 
 #include <iostream>
 #include <stdio.h>
@@ -95,6 +96,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    int splines_count = 0;
     int circles_count = 0;
     int lines_count = 0;
     int ellipses_count = 0;
@@ -104,54 +106,171 @@ int main(int argc, char *argv[])
     int arc_count = 0;
     int text_count = 0;
     std::cout << "Layers count: " << poCadFile->GetLayersCount () << std::endl;
-    std::cout << "Geometries readed: " << poCadFile->GetGeometriesCount () << std::endl;
-    for(int i = 0; i < poCadFile->GetGeometriesCount (); ++i )
+
+    Layer * layer;
+    for ( size_t i = 0; i < poCadFile->GetLayersCount (); ++i )
     {
-        CADGeometry* geom = poCadFile->GetGeometry (i);
-        if ( geom->stGeometryType == CADGeometry::CIRCLE )
+        layer = poCadFile->GetLayer (i);
+        std::cout << "Layer #" << i << " contains " << layer->GetGeometriesCount () << " geometries.\n";
+        for ( size_t j = 0; j < layer->GetGeometriesCount (); ++j )
         {
-            Circle* geom1 = ( Circle * ) geom;
-//            geom1->printInfo ();
-            circles_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::POINT )
-        {
-            Point * geom1 = ( Point * ) geom;
-//            geom1->printInfo ();
-            point_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::ELLIPSE)
-        {
-            Ellipse * geom1 = ( Ellipse * ) geom;
-            ellipses_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::LINE )
-        {
-            Line * geom1 = ( Line * ) geom;
-//            geom1->printInfo ();
-            lines_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::LWPOLYLINE )
-        {
-            LWPolyline * geom1 = ( LWPolyline * ) geom;
-//            geom1->printInfo ();
-            pline_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::ARC )
-        {
-            Arc * geom1 = ( Arc * ) geom;
-//            geom1->printInfo ();
-            arc_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::TEXT )
-        {
-            Text * geom1 = ( Text * ) geom;
-            text_count++;
-        }
-        else if ( geom->stGeometryType == CADGeometry::POLYLINE3D )
-        {
-            Polyline3D * geom1 = ( Polyline3D * ) geom;
-            pline3d_count++;
+            CADGeometry * geom = layer->GetGeometry (j);
+
+            if ( geom != nullptr )
+            {
+                switch ( geom->stGeometryType )
+                {
+                    case CADGeometry::CADGeometryType::CIRCLE:
+                    {
+                        Circle * circle = ( Circle * ) geom;
+                        std::cout << "|---------Circle---------|\n";
+                        std::cout << "Position: " << "\t" << circle->vertPosition.X <<
+                                "\t" << circle->vertPosition.Y << "\t" << circle->vertPosition.Z << std::endl;
+                        std::cout << "Radius: " << circle->dfRadius << std::endl << std::endl;
+
+                        ++circles_count;
+                        break;
+                    }
+                    case CADGeometry::CADGeometryType::LWPOLYLINE:
+                    {
+                        LWPolyline * poly = ( LWPolyline * ) geom;
+                        std::cout << "|---------LWPolyline---------|\n";
+                        for ( size_t i = 0; i < poly->vertexes.size(); ++i )
+                        {
+                            std::cout << "#" << i << "\t" << poly->vertexes[i].X <<
+                                "\t" << poly->vertexes[i].Y << std::endl;
+                        }
+                        std::cout << std::endl;
+
+                        ++pline_count;
+                        break;
+                    }
+                    case CADGeometry::CADGeometryType::POLYLINE3D:
+                    {
+                        Polyline3D * poly = ( Polyline3D * ) geom;
+                        std::cout << "|---------Polyline3D---------|\n";
+                        for ( size_t i = 0; i < poly->vertexes.size(); ++i )
+                        {
+                            std::cout << "#" << i << "\t" << poly->vertexes[i].X <<
+                                    "\t" << poly->vertexes[i].Y
+                                    << "\t" << poly->vertexes[i].Z << std::endl;
+                        }
+                        std::cout << std::endl;
+
+                        ++pline3d_count;
+                        break;
+                    }
+                    case CADGeometry::CADGeometryType::ARC:
+                    {
+                        Arc * arc = ( Arc * ) geom;
+                        std::cout << "|---------Arc---------|\n";
+                        std::cout << "Position: " << "\t" << arc->vertPosition.X <<
+                                "\t" << arc->vertPosition.Y << "\t" << arc->vertPosition.Z << std::endl;
+                        std::cout << "Radius: " << "\t" << arc->dfRadius << std::endl;
+                        std::cout << "Beg & End angles: " << "\t" << arc->dfStartingAngle << "\t"
+                                << arc->dfEndingAngle << std::endl << std::endl;
+
+                        ++arc_count;
+                        break;
+                    }
+                    case CADGeometry::CADGeometryType::POINT:
+                    {
+                        Point3D * point = ( Point3D * ) geom;
+                        std::cout << "|---------Point---------|\n";
+                        std::cout << "Position: " << "\t" << point->vertPosition.X <<
+                            "\t" << point->vertPosition.Y << "\t" << point->vertPosition.Z << std::endl << std::endl;
+
+                        ++point_count;
+                        break;
+                    }
+                    case CADGeometry::CADGeometryType::ELLIPSE:
+                    {
+                        Ellipse * ellipse = ( Ellipse * ) geom;
+                        std::cout << "|---------Ellipse---------|\n";
+                        std::cout << "Position: " << "\t" << ellipse->vertPosition.X <<
+                            "\t" << ellipse->vertPosition.Y << "\t" << ellipse->vertPosition.Z << std::endl;
+                        std::cout << "Beg & End angles: " << "\t" << ellipse->dfStartingAngle << "\t"
+                            << ellipse->dfEndingAngle << std::endl << std::endl;
+
+                        ++ellipses_count;
+                        break;
+                    }
+                    case CADGeometry::CADGeometryType::LINE:
+                    {
+                        Line * line = ( Line * ) geom;
+                        std::cout << "|---------Line---------|\n";
+                        std::cout << "Start Position: " << "\t" << line->vertStart.X <<
+                            "\t" << line->vertStart.Y << "\t" << line->vertStart.Z << std::endl;
+                        std::cout << "End Position: " << "\t" << line->vertEnd.X <<
+                            "\t" << line->vertEnd.Y << "\t" << line->vertEnd.Z << std::endl << std::endl;
+
+                        ++lines_count;
+                        break;
+                    }
+                    case CADGeometry::CADGeometryType::SPLINE:
+                    {
+                        Spline * spline = ( Spline * ) geom;
+                        std::cout << "|---------Spline---------|\n";
+                        std::cout << "Degree: \t" << spline->dDegree << std::endl;
+                        if ( spline->dScenario == 2 )
+                        {
+                            std::cout << "Fit tolerance: \t" << spline->dfFitTol << std::endl;
+                            std::cout << "Beg tangent vector:\t" << spline->vectBegTangDir.X << "\t"
+                                << spline->vectBegTangDir.Y << "\t" << spline->vectBegTangDir.Y << std::endl;
+                            std::cout << "End tangent vector:\t" << spline->vectEndTangDir.X << "\t"
+                                << spline->vectEndTangDir.Y << "\t" << spline->vectEndTangDir.Y << std::endl;
+
+                            std::cout << "Knots count: " << spline->adfKnots.size() << std::endl;
+                            for ( size_t j = 0; j < spline->adfKnots.size(); ++j )
+                                std::cout << "#" << j << "\t" << spline->adfKnots[j] << std::endl;
+                        }
+                        if ( spline->dScenario == 1 )
+                        {
+                            std::cout << "Is rational: \t" << spline->bRational << std::endl;
+                            std::cout << "Is closed: \t" << spline->bClosed << std::endl;
+                            std::cout << "Is periodic: \t" << spline->bPeriodic << std::endl;
+                            std::cout << "Knot tolerance: \t" << spline->bRational << std::endl;
+                            std::cout << "Control tolerance: \t" << spline->bRational << std::endl;
+                            std::cout << "Control pts weight presented: \t" << spline->bWeight << std::endl;
+                        }
+
+                        std::cout << "Control pts count: " << spline->avertCtrlPoints.size() << std::endl;
+                        for ( size_t j = 0; j < spline->avertCtrlPoints.size(); ++j )
+                        {
+                            std::cout << "#" << j << "\t" << spline->avertCtrlPoints[j].X << "\t"
+                            << spline->avertCtrlPoints[j].Y << "\t"
+                            << spline->avertCtrlPoints[j].Z << "\t";
+                            if ( spline->bWeight == true )
+                                std::cout << spline->adfCtrlPointsWeight[j] << std::endl;
+                            else std::cout << std::endl;
+                        }
+
+                        std::cout << "Fit pts count: " << spline->averFitPoints.size() << std::endl;
+                        for ( size_t j = 0; j < spline->averFitPoints.size(); ++j )
+                        {
+                            std::cout << "#" << j << "\t" << spline->averFitPoints[j].X << "\t"
+                            << spline->averFitPoints[j].Y << "\t"
+                            << spline->averFitPoints[j].Z << std::endl;
+                        }
+
+                        std::cout << std::endl;
+                        ++splines_count;
+                        break;
+                    }
+                    case CADGeometry::CADGeometryType::TEXT:
+                    {
+                        // TODO: add other optional parameters.
+                        Text * text = ( Text * ) geom;
+                        std::cout << "|---------Text---------|\n";
+                        std::cout << "Position:\t" << text->vertInsertion.X << "\t"
+                            << text->vertInsertion.Y << std::endl;
+                        std::cout << "Text value:\t" << text->strTextValue << std::endl << std::endl;
+
+                        ++text_count;
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -160,6 +279,7 @@ int main(int argc, char *argv[])
     std::cout << "Lines count: " << lines_count << std::endl;
     std::cout << "Plines count: " << pline_count << std::endl;
     std::cout << "Plines3d count: " << pline3d_count << std::endl;
+    std::cout << "Splines count: " << splines_count << std::endl;
     std::cout << "Circles count: " << circles_count << std::endl;
     std::cout << "Arcs count: " << arc_count << std::endl;
     std::cout << "Texts count: " << text_count << std::endl;

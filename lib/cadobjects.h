@@ -33,7 +33,7 @@
 #define CADOBJECTS_H
 
 #include <stdint.h>
-#include "cadgeometries.h"
+#include "simpledatatypes.h"
 #include "dwg/data_structs.h"
 
 class CADObject
@@ -200,6 +200,7 @@ public:
     {
         dObjectType = TEXT;
     }
+    char   DataFlags;
     double dfElevation;
     Vertex2D vertInsetionPoint;
     Vertex2D vertAlignmentPoint;
@@ -375,6 +376,10 @@ public:
     {
         dObjectType = VERTEX3D;
     }
+    ~CADVertex3D ()
+    {
+    }
+
     Vertex3D vertPosition;
 };
 
@@ -493,6 +498,85 @@ public:
     Vector3D vectExtrusion;
 };
 
+class CADBlockControl : public CADObject
+{
+public:
+    CADBlockControl()
+    {
+        dObjectType = BLOCK_CONTROL_OBJ;
+    }
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long nNumEntries; // doesnt count MODELSPACE and PAPERSPACE
+    CADHandle hNull;
+    CADHandle hXDictionary;
+    std::vector < CADHandle > hBlocks; // ends with modelspace and paperspace handles.
+};
+
+class CADBlockHeader : public CADObject
+{
+public:
+    CADBlockHeader()
+    {
+        dObjectType = BLOCK_HEADER;
+    }
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    std::string sEntryName;
+    bool b64Flag;
+    short dXRefIndex;
+    bool bXDep;
+    bool bAnonymous;
+    bool bHasAtts;
+    bool bBlkisXRef;
+    bool bXRefOverlaid;
+    bool bLoadedBit;
+    long nOwnedObjectsCount;
+    Vertex3D vertBasePoint;
+    std::string sXRefPName;
+    std::vector < char > adInsertCount; // TODO: ???
+    std::string sBlockDescription;
+    long nSizeOfPreviewData;
+    std::vector < char > abyBinaryPreviewData;
+    short nInsertUnits;
+    bool bExplodable;
+    char dBlockScaling;
+    CADHandle hBlockControl;
+    std::vector < CADHandle > hReactors;
+    CADHandle hXDictionary;
+    CADHandle hNull;
+    CADHandle hBlockEntity;
+    std::vector < CADHandle > hEntities;
+    CADHandle hEndBlk;
+    std::vector < CADHandle > hInsertHandles;
+    CADHandle hLayout;
+};
+
+class CADLayerControl : public CADObject
+{
+public:
+    CADLayerControl()
+    {
+        dObjectType = LAYER_CONTROL_OBJ;
+    }
+
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long nNumEntries; // counts layer "0"
+    CADHandle hNull;
+    CADHandle hXDictionary;
+    std::vector < CADHandle > hLayers;
+};
+
 class CADLayer : public CADObject
 {
 public:
@@ -526,6 +610,139 @@ public:
     CADHandle hMaterial;
     CADHandle hLType;
     CADHandle hUnknownHandle;
+};
+
+class CADPoint : public CADEntity
+{
+public:
+    CADPoint()
+    {
+        dObjectType = POINT;
+    }
+
+    Vertex3D vertPosition;
+    double   dfThickness;
+    Vector3D vectExtrusion;
+    double   dfXAxisAng;
+};
+
+class CADEllipse : public CADEntity
+{
+public:
+    CADEllipse()
+    {
+        dObjectType = ELLIPSE;
+    }
+
+    Vertex3D vertPosition;
+    Vector3D vectSMAxis;
+    Vector3D vectExtrusion;
+    double   dfAxisRatio;
+    double   dfBegAngle;
+    double   dfEndAngle;
+};
+
+class CADRay : public CADEntity
+{
+public:
+    CADRay()
+    {
+        dObjectType = RAY;
+    }
+
+    Vertex3D vertPosition;
+    Vector3D vectVector;
+};
+
+class CADXLine : public CADEntity
+{
+public:
+    CADXLine()
+    {
+        dObjectType = XLINE;
+    }
+
+    Vertex3D vertPosition;
+    Vector3D vectVector;
+};
+
+class CADDictionary : public CADObject
+{
+public:
+    CADDictionary()
+    {
+        dObjectType = DICTIONARY;
+    }
+
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long nNumItems;
+    short dCloningFlag;
+    char  dHardOwnerFlag;
+
+    std::string sDictionaryEntryName;
+    std::vector < std::string > sItemNames;
+
+    CADHandle hParentHandle;
+    std::vector < CADHandle > hReactors;
+    CADHandle hXDictionary;
+    std::vector < CADHandle > hItemHandles;
+};
+
+class CADLWPolyline : public CADEntity
+{
+public:
+    CADLWPolyline()
+    {
+        dObjectType = LWPOLYLINE;
+    }
+
+    double dfConstWidth;
+    double dfElevation;
+    double dfThickness;
+    Vector3D vectExtrusion;
+    std::vector< Vertex2D > vertexes;
+    std::vector< double > bulges;
+    std::vector< int16_t > vertexes_id;
+    std::vector< std::pair< double, double > > widths; // start, end.
+};
+
+class CADSpline : public CADEntity
+{
+public:
+    CADSpline() : nNumFitPts(0),
+                  nNumKnots(0),
+                  nNumCtrlPts(0) // should be zeroed.
+    {
+        dObjectType = SPLINE;
+    }
+
+    long dScenario;
+    long dSplineFlags; // 2013+
+    long dKnotParameter; // 2013+
+
+    long   dDegree;
+    double dfFitTol;
+    Vector3D vectBegTangDir;
+    Vector3D vectEndTangDir;
+    long   nNumFitPts;
+
+    bool bRational;
+    bool bClosed;
+    bool bPeriodic;
+    double dfKnotTol;
+    double dfCtrlTol;
+    long nNumKnots;
+    long nNumCtrlPts;
+    bool bWeight;
+
+    std::vector < double > adfKnots;
+    std::vector < double > adfCtrlPointsWeight;
+    std::vector < Vertex3D > avertCtrlPoints;
+    std::vector < Vertex3D > averFitPoints;
 };
 
 #endif //CADOBJECTS_H

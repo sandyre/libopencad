@@ -53,13 +53,6 @@ const CADHeader *CADFile::GetHeader() const
     return m_poHeader;
 }
 
-size_t CADFile::GetGeometriesCount ()
-{
-    std::cerr << "CADFile::getGeometriesCount() called from abstract class.\n"
-              << "This method should be overrided in derived classes. Abort.\n";
-    return( 0 );
-}
-
 size_t CADFile::GetLayersCount ()
 {
     std::cerr << "CADFile::getLayersCount() called from abstract class.\n"
@@ -81,14 +74,14 @@ CADBlock * CADFile::GetBlock ( size_t index )
     return( nullptr );
 }
 
-CADLayer * CADFile::GetLayer ( size_t index )
+Layer * CADFile::GetLayer ( size_t index )
 {
-    std::cerr << "CADFile::getLayer() called from abstract class.\n"
+    std::cerr << "CADFile::GetLayer() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( nullptr );
 }
 
-CADGeometry * CADFile::GetGeometry ( size_t index )
+CADGeometry * CADFile::GetGeometry ( size_t layer_index, size_t index )
 {
     std::cerr << "CADFile::getGeometry() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
