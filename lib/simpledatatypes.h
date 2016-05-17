@@ -37,8 +37,19 @@ struct Vertex2D
     {
     }
 
+    Vertex2D( double X_, double Y_) :
+            X(X_), Y(Y_)
+    {
+
+    }
+
     double X;
     double Y;
+
+    bool operator == (const Vertex2D &other)
+    {
+        return ( ( this->X == other.X ) && ( this->Y == other.Y ) );
+    }
 };
 
 struct Vertex3D
@@ -49,9 +60,21 @@ struct Vertex3D
     {
     }
 
+    Vertex3D( double X_, double Y_, double Z_) :
+            X(X_), Y(Y_), Z(Z_)
+    {
+
+    }
+
     double X;
     double Y;
     double Z;
+
+    bool operator == (const Vertex3D& second)
+    {
+        return ( ( this->X == second.X )  && ( this->Y == this->Y ) &&
+                 ( this->Z == second.Z ) );
+    }
 };
 
 struct Vector2D
