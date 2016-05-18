@@ -612,6 +612,64 @@ public:
     CADHandle hUnknownHandle;
 };
 
+class CADLineTypeControl : public CADObject
+{
+public:
+    CADLineTypeControl()
+    {
+        dObjectType = LTYPE_CONTROL_OBJ;
+    }
+
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long nNumEntries; // doesnt count BYBLOCK / BYLAYER.
+    CADHandle hNull;
+    CADHandle hXDictionary;
+    std::vector < CADHandle > hLTypes;
+};
+
+class CADLineType : public CADObject
+{
+public:
+    CADLineType()
+    {
+        dObjectType = LTYPE1;
+    }
+
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    std::string sEntryName;
+    bool b64Flag;
+    short dXRefIndex;
+    bool bXDep;
+    std::string sDescription;
+    double dfPatternLen;
+    char dAlignment;
+    char nNumDashes;
+    struct Dash
+    {
+        double dfLength;
+        short dComplexShapecode;
+        double dfXOffset;
+        double dfYOffset;
+        double dfScale;
+        double dfRotation;
+        short dShapeflag;
+    };
+    std::vector < char > abyTextArea; // TODO: what is it?
+    CADHandle hLTControl;
+    std::vector < CADHandle > hReactors;
+    CADHandle hXDictionary;
+    CADHandle hXRefBlock;
+    std::vector < CADHandle > hShapefiles; // TODO: one for each dash?
+};
+
 class CADPoint : public CADEntity
 {
 public:

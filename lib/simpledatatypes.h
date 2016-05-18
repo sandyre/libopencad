@@ -86,6 +86,11 @@ struct Vector2D
 
     double X;
     double Y;
+
+    bool operator == (const Vector2D& second)
+    {
+        return ( ( this->X == second.X )  && ( this->Y == this->Y ) );
+    }
 };
 
 struct Vector3D
@@ -99,6 +104,12 @@ struct Vector3D
     double X;
     double Y;
     double Z;
+
+    bool operator == (const Vector3D& second)
+    {
+        return ( ( this->X == second.X )  && ( this->Y == this->Y ) &&
+                 ( this->Z == second.Z ) );
+    }
 };
 
 #endif //SIMPLEDATATYPES_H
