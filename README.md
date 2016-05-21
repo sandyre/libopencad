@@ -20,6 +20,7 @@ size_t nLayersCount = opendwg->GetLayersCount();
 Layer * layer;
 for ( auto i = 0; i < nLayersCount; ++i )
 {
+    layer = opendwg->GetLayer (i);
     for( auto j = 0; j < layer->GeometriesCount(); ++j )
     {
         CADGeometries::CADGeometry * geom = layer->GetGeometry (j);
