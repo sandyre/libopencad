@@ -685,6 +685,21 @@ public:
     double   dfXAxisAng;
 };
 
+class CADSolid : public CADEntity
+{
+public:
+    CADSolid()
+    {
+        dObjectType = SOLID;
+        avertCorners.reserve ( 4 );
+    }
+
+    double dfThickness;
+    double dfElevation;
+    std::vector < Vertex2D > avertCorners;
+    Vector3D vectExtrusion;
+};
+
 class CADEllipse : public CADEntity
 {
 public:

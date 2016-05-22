@@ -927,6 +927,72 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
+            case DWG_OBJECT_SOLID:
+            {
+                CADSolid * solid = new CADSolid();
+
+                solid->dObjectType = dObjectType;
+                solid->ced = common_entity_data;
+
+                solid->dfThickness = ReadBIT (pabySectionContent, nBitOffsetFromStart) ?
+                                     0.0f : ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                solid->dfElevation = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                Vertex2D stCorner;
+                for ( size_t i = 0; i < 4; ++i )
+                {
+                    stCorner.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    stCorner.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    solid->avertCorners.push_back ( stCorner );
+                }
+
+                if ( ReadBIT (pabySectionContent, nBitOffsetFromStart) )
+                {
+                    solid->vectExtrusion.X = 0.0f;
+                    solid->vectExtrusion.Y = 0.0f;
+                    solid->vectExtrusion.Z = 1.0f;
+                }
+                else
+                {
+                    solid->vectExtrusion.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    solid->vectExtrusion.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    solid->vectExtrusion.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                if ( solid->ced.bbEntMode == 0 )
+                    solid->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < solid->ced.nNumReactors; ++i )
+                    solid->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                solid->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !solid->ced.bNoLinks )
+                {
+                    solid->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    solid->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                solid->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( solid->ced.bbLTypeFlags == 0x03 )
+                    solid->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( solid->ced.bbPlotStyleFlags == 0x03 )
+                    solid->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                solid->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = solid;
+                break;
+            }
+
             case DWG_OBJECT_POINT:
             {
                 CADPoint * point = new CADPoint();
@@ -2435,7 +2501,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             arc->dfStartingAngle = cadArc->dfStartAngle;
             arc->dfEndingAngle = cadArc->dfEndAngle;
 
-//            delete( cadArc );
+            delete( cadArc );
 
             result_geometry = arc;
             break;
@@ -2451,7 +2517,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             point->dfXAxisAng = cadPoint->dfXAxisAng;
             point->dfThickness = cadPoint->dfThickness;
 
-//            delete( cadPoint );
+            delete( cadPoint );
 
             result_geometry = point;
             break;
@@ -2492,7 +2558,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
                 }
             }
 
-//            delete( cadPolyline3D );
+            delete( cadPolyline3D );
 
             result_geometry = polyline;
             break;
@@ -2510,7 +2576,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             lwPolyline->bulges = cadlwPolyline->bulges;
             lwPolyline->widths = cadlwPolyline->widths;
 
-//            delete( cadlwPolyline );
+            delete( cadlwPolyline );
 
             result_geometry = lwPolyline;
             break;
@@ -2526,7 +2592,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             circle->dfRadius = cadCircle->dfRadius;
             circle->dfThickness = cadCircle->dfThickness;
 
-//            delete( cadCircle );
+            delete( cadCircle );
 
             result_geometry = circle;
             break;
@@ -2544,7 +2610,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             ellipse->dfEndingAngle = cadEllipse->dfEndAngle;
             ellipse->dfStartingAngle = cadEllipse->dfBegAngle;
 
-//            delete( cadEllipse );
+            delete( cadEllipse );
 
             result_geometry = ellipse;
             break;
@@ -2559,7 +2625,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             line->vertEnd = cadLine->vertEnd;
             line->dfThickness = cadLine->dfThickness;
 
-//            delete( cadLine );
+            delete( cadLine );
 
             result_geometry = line;
             break;
@@ -2590,7 +2656,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             spline->averFitPoints = cadSpline->averFitPoints;
             spline->avertCtrlPoints = cadSpline->avertCtrlPoints;
 
-//            delete( cadSpline );
+            delete( cadSpline );
 
             result_geometry = spline;
             break;
@@ -2613,9 +2679,25 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             text->dfHeight = cadText->dfElevation;
             text->dfElevation = cadText->dfElevation;
 
-//            delete( cadText );
+            delete( cadText );
 
             result_geometry = text;
+            break;
+        }
+
+        case DWG_OBJECT_SOLID:
+        {
+            Solid * solid = new Solid();
+            CADSolid * cadSolid = ( CADSolid * ) readed_object;
+
+            solid->dfElevation = cadSolid->dfElevation;
+            solid->dfThickness = cadSolid->dfThickness;
+            solid->avertCorners = cadSolid->avertCorners;
+            solid->vectExtrusion = cadSolid->vectExtrusion;
+
+            delete( cadSolid );
+
+            result_geometry = solid;
             break;
         }
 

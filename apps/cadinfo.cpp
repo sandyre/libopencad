@@ -96,6 +96,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
+    int solids_count = 0;
     int splines_count = 0;
     int circles_count = 0;
     int lines_count = 0;
@@ -269,11 +270,25 @@ int main(int argc, char *argv[])
                         ++text_count;
                         break;
                     }
+                    case CADGeometry::CADGeometryType::SOLID:
+                    {
+                        Solid * solid = ( Solid * ) geom;
+                        std::cout << "|---------Solid---------|\n";
+                        for ( size_t i = 0; i < solid->avertCorners.size(); ++i )
+                        {
+                            std::cout << "#" << i << "\t" << solid->avertCorners[i].X << "\t"
+                                << solid->avertCorners[i].Y << solid->dfElevation << std::endl;
+                        }
+                        std::cout << std::endl;
+                        ++solids_count;
+                        break;
+                    }
                 }
             }
         }
     }
 
+    std::cout << "Solids: " << solids_count << std::endl;
     std::cout << "Points: " << point_count << std::endl;
     std::cout << "Ellipses: " << ellipses_count << std::endl;
     std::cout << "Lines count: " << lines_count << std::endl;

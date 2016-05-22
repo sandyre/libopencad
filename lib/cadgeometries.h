@@ -58,7 +58,9 @@ class CADGeometry
         POLYLINE3D,
         TEXT,
         ARC,
-        SPLINE
+        SPLINE,
+        SOLID,
+        HATCH // NOT IMPLEMENTED
     };
 
 public: //TODO: protected
@@ -254,6 +256,29 @@ public:
     std::vector < Vertex3D > avertCtrlPoints;
     std::vector < Vertex3D > averFitPoints;
 };
+
+class Solid : public CADGeometry
+{
+public:
+    Solid()
+    {
+        stGeometryType = SOLID;
+    }
+
+    double dfElevation;
+    std::vector < Vertex2D > avertCorners;
+    Vector3D vectExtrusion;
+};
+
+class Hatch : public CADGeometry
+{
+public:
+    Hatch()
+    {
+        stGeometryType = HATCH;
+    }
+};
+
 //
 //class EXTERN LineType
 //{
