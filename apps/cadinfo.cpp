@@ -32,6 +32,7 @@
 #include "opencad_api.h"
 #include "cadgeometries.h"
 
+#include <cstddef>
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
@@ -119,9 +120,9 @@ int main(int argc, char *argv[])
 
             if ( geom != nullptr )
             {
-                switch ( geom->stGeometryType )
+                switch ( geom->GetType() )
                 {
-                    case CADGeometry::CADGeometryType::CIRCLE:
+                    case CADGeometry::CIRCLE:
                     {
                         Circle * circle = ( Circle * ) geom;
                         std::cout << "|---------Circle---------|\n";
@@ -132,7 +133,7 @@ int main(int argc, char *argv[])
                         ++circles_count;
                         break;
                     }
-                    case CADGeometry::CADGeometryType::LWPOLYLINE:
+                    case CADGeometry::LWPOLYLINE:
                     {
                         LWPolyline * poly = ( LWPolyline * ) geom;
                         std::cout << "|---------LWPolyline---------|\n";
@@ -146,7 +147,7 @@ int main(int argc, char *argv[])
                         ++pline_count;
                         break;
                     }
-                    case CADGeometry::CADGeometryType::POLYLINE3D:
+                    case CADGeometry::POLYLINE3D:
                     {
                         Polyline3D * poly = ( Polyline3D * ) geom;
                         std::cout << "|---------Polyline3D---------|\n";
@@ -161,7 +162,7 @@ int main(int argc, char *argv[])
                         ++pline3d_count;
                         break;
                     }
-                    case CADGeometry::CADGeometryType::ARC:
+                    case CADGeometry::ARC:
                     {
                         Arc * arc = ( Arc * ) geom;
                         std::cout << "|---------Arc---------|\n";
@@ -174,7 +175,7 @@ int main(int argc, char *argv[])
                         ++arc_count;
                         break;
                     }
-                    case CADGeometry::CADGeometryType::POINT:
+                    case CADGeometry::POINT:
                     {
                         Point3D * point = ( Point3D * ) geom;
                         std::cout << "|---------Point---------|\n";
@@ -184,7 +185,7 @@ int main(int argc, char *argv[])
                         ++point_count;
                         break;
                     }
-                    case CADGeometry::CADGeometryType::ELLIPSE:
+                    case CADGeometry::ELLIPSE:
                     {
                         Ellipse * ellipse = ( Ellipse * ) geom;
                         std::cout << "|---------Ellipse---------|\n";
@@ -196,7 +197,7 @@ int main(int argc, char *argv[])
                         ++ellipses_count;
                         break;
                     }
-                    case CADGeometry::CADGeometryType::LINE:
+                    case CADGeometry::LINE:
                     {
                         Line * line = ( Line * ) geom;
                         std::cout << "|---------Line---------|\n";
@@ -208,7 +209,7 @@ int main(int argc, char *argv[])
                         ++lines_count;
                         break;
                     }
-                    case CADGeometry::CADGeometryType::SPLINE:
+                    case CADGeometry::SPLINE:
                     {
                         Spline * spline = ( Spline * ) geom;
                         std::cout << "|---------Spline---------|\n";
@@ -258,7 +259,7 @@ int main(int argc, char *argv[])
                         ++splines_count;
                         break;
                     }
-                    case CADGeometry::CADGeometryType::TEXT:
+                    case CADGeometry::TEXT:
                     {
                         // TODO: add other optional parameters.
                         Text * text = ( Text * ) geom;
@@ -270,7 +271,7 @@ int main(int argc, char *argv[])
                         ++text_count;
                         break;
                     }
-                    case CADGeometry::CADGeometryType::SOLID:
+                    case CADGeometry::SOLID:
                     {
                         Solid * solid = ( Solid * ) geom;
                         std::cout << "|---------Solid---------|\n";

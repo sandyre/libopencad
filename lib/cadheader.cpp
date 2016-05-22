@@ -32,6 +32,8 @@
 #include "cadheader.h"
 #include "opencad_api.h"
 
+#include <cstring>
+
 typedef struct
 {
     short       nConstant;

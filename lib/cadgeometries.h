@@ -63,8 +63,23 @@ class CADGeometry
         HATCH // NOT IMPLEMENTED
     };
 
-public: //TODO: protected
-    CADGeometryType stGeometryType;
+    //TODO: Move to cpp
+    enum CADGeometryType GetType() const
+    {
+        return eGeometryType;
+    }
+
+    double GetThickness() const
+    {
+        return dfThickness;
+    }
+
+    void SetThickness(double thicknes){
+        dfThickness = thicknes;
+    }
+
+protected:
+    enum CADGeometryType eGeometryType;
     double          dfThickness;
 };
 
@@ -79,7 +94,7 @@ class Point3D : public CADGeometry
 public:
     Point3D () : dfXAxisAng (0.0f)
     {
-        stGeometryType = POINT;
+        eGeometryType = CADGeometry::POINT;
     }
 
     Vertex3D vertPosition;
@@ -95,7 +110,7 @@ class Line : public CADGeometry
 public:
     Line()
     {
-        stGeometryType = LINE;
+        eGeometryType = CADGeometry::LINE;
     }
 
     Vertex3D vertStart;
@@ -112,7 +127,7 @@ public:
     LWPolyline () : dfConstWidth(0.0f),
                     dfElevation(0.0f)
     {
-        stGeometryType = LWPOLYLINE;
+        eGeometryType = CADGeometry::LWPOLYLINE;
     }
 
     double dfConstWidth;
@@ -132,7 +147,7 @@ class Polyline3D : public CADGeometry
 public:
     Polyline3D()
     {
-        stGeometryType = POLYLINE3D;
+        eGeometryType = CADGeometry::POLYLINE3D;
     }
 
     std::vector< Vertex3D > vertexes;
@@ -146,7 +161,7 @@ class Circle : public CADGeometry
 public:
     Circle () : dfRadius (0.0f)
     {
-        stGeometryType = CIRCLE;
+        eGeometryType = CADGeometry::CIRCLE;
     }
 
     Vertex3D vertPosition;
@@ -164,7 +179,7 @@ public:
                 dfStartingAngle(0.0f),
                 dfEndingAngle(0.0f)
     {
-        stGeometryType = ELLIPSE;
+        eGeometryType = CADGeometry::ELLIPSE;
     }
 
     Vertex3D vertPosition;
@@ -190,7 +205,7 @@ public:
              dHorizontalAlignment(0),
              dVerticalAlignment(0)
     {
-        stGeometryType = TEXT;
+        eGeometryType = CADGeometry::TEXT;
     }
 
     double dfElevation;
@@ -217,7 +232,7 @@ public:
             dfStartingAngle(0.0f),
             dfEndingAngle(0.0f)
     {
-        stGeometryType = ARC;
+        eGeometryType = CADGeometry::ARC;
     }
 
     Vertex3D vertPosition;
@@ -235,7 +250,7 @@ class Spline : public CADGeometry
 public:
     Spline()
     {
-        stGeometryType = SPLINE;
+        eGeometryType = CADGeometry::SPLINE;
     }
 
     long dScenario;
@@ -262,7 +277,7 @@ class Solid : public CADGeometry
 public:
     Solid()
     {
-        stGeometryType = SOLID;
+        eGeometryType = CADGeometry::SOLID;
     }
 
     double dfElevation;
@@ -275,7 +290,7 @@ class Hatch : public CADGeometry
 public:
     Hatch()
     {
-        stGeometryType = HATCH;
+        eGeometryType = CADGeometry::HATCH;
     }
 };
 

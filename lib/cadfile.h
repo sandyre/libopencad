@@ -60,7 +60,7 @@ public:
     virtual int ParseFile();
 
 protected:
-    virtual CADObject * GetObject( size_t index ) { return nullptr; }
+    virtual CADObject * GetObject( size_t index );
     virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
 
     virtual int ReadHeader() = 0;

@@ -111,4 +111,9 @@ int CADFile::ParseFile()
         return nResultCode;
 
     return CADErrorCodes::SUCCESS;
- }
+}
+
+CADObject *CADFile::GetObject(size_t index)
+{
+   return nullptr;
+}
