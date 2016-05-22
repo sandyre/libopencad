@@ -1,35 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    <title>OpenCAD Library by sandyre</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <title>OpenCAD Library by sandyre</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>OpenCAD Library</h1>
-        <h2>OpenSource lib under X/MIT license to work with CAD files.</h2>
-        <a href="https://github.com/sandyre/libopencad" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+    <section class="page-header">
+      <h1 class="project-name">OpenCAD Library</h1>
+      <h2 class="project-tagline">OpenSource lib under X/MIT license to work with CAD files.</h2>
+      <a href="https://github.com/sandyre/libopencad" class="btn">View on GitHub</a>
+      <a href="https://github.com/sandyre/libopencad/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/sandyre/libopencad/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
-<a id="libopencad" class="anchor" href="#libopencad" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>libOpenCAD</h1>
+    <section class="main-content">
+      <h1>
+<a id="libopencad" class="anchor" href="#libopencad" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Libopencad</h1>
 
 <p>OpenSource library under X11/MIT license for everyday use. Under development, but some of basic functionality is already available.</p>
 
@@ -38,32 +29,45 @@
 <h2>
 <a id="api" class="anchor" href="#api" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>API</h2>
 
-<p>Typical usage pipeline is shown below:
+<p>Libopencad typical usage pipeline is shown below:
 Open CAD file:</p>
 
 <div class="highlight highlight-source-c++"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
-#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">"</span>opencad_api.h<span class="pl-pds">"</span></span>
+# <span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">"</span>lib/opencad_api.h<span class="pl-pds">"</span></span>
 
 CADFile * opendwg = OpenCADFile(<span class="pl-s"><span class="pl-pds">"</span>/path/to/example.dwg/dxf<span class="pl-pds">"</span></span>);</pre></div>
 
 <p>From now on, you can access geometries like this:</p>
 
-<div class="highlight highlight-source-c++"><pre><span class="pl-k">int</span> geometries_count = opendwg-&gt;<span class="pl-en">GetGeometriesCount</span>();
-<span class="pl-k">for</span>(<span class="pl-k">auto</span> i = <span class="pl-c1">0</span>; i &lt; geometries_count; ++i)
+<div class="highlight highlight-source-c++"><pre><span class="pl-c1">size_t</span> nLayersCount = opendwg-&gt;<span class="pl-en">GetLayersCount</span>();
+Layer * layer;
+<span class="pl-k">for</span> ( <span class="pl-k">auto</span> i = <span class="pl-c1">0</span>; i &lt; nLayersCount; ++i )
 {
-    CADGeometries::CADGeometry * geom = dwgfile-&gt;<span class="pl-c1">GetGeometry</span> (i);
-    <span class="pl-c">// now, geom-&gt;sGeometryType stores a type of returned geometry. Then,</span>
-    <span class="pl-c">// you have to cast it to this class, eg.</span>
-    <span class="pl-k">if</span> ( geom-&gt;<span class="pl-smi">sGeometryType</span> == CADGeometries::CADGeometryType::CIRCLE )
+    layer = opendwg-&gt;<span class="pl-c1">GetLayer</span> (i);
+    <span class="pl-k">for</span>( <span class="pl-k">auto</span> j = <span class="pl-c1">0</span>; j &lt; layer-&gt;<span class="pl-c1">GeometriesCount</span>(); ++j )
     {
-        CADGeometries::Circle * circle = geom;
-        <span class="pl-c">// There you go. Now you can get all the data you want, eg.</span>
-        std::cout &lt;&lt; circle-&gt;dfCenterX;
-        std::cout &lt;&lt; circle-&gt;dfCenterY;
-        std::cout &lt;&lt; circle-&gt;dfCenterZ;
-        std::cout &lt;&lt; circle-&gt;dfRadius;
+        CADGeometries::CADGeometry * geom = layer-&gt;<span class="pl-c1">GetGeometry</span> (j);
+        <span class="pl-c">// now, geom-&gt;sGeometryType stores a type of returned geometry. Then,</span>
+        <span class="pl-c">// you have to cast it to this class, eg.</span>
+        <span class="pl-k">if</span> ( geom-&gt;<span class="pl-smi">sGeometryType</span> == CADGeometries::CADGeometryType::CIRCLE )
+        {
+            CADGeometries::Circle * circle = geom;
+            <span class="pl-c">// There you go. Now you can get all the data you want, eg.</span>
+            std::cout &lt;&lt; circle-&gt;dfCenterX;
+            std::cout &lt;&lt; circle-&gt;dfCenterY;
+            std::cout &lt;&lt; circle-&gt;dfCenterZ;
+            std::cout &lt;&lt; circle-&gt;dfRadius;
+        }
     }
 }</pre></div>
+
+<p>Current features list:
+1. Added reading of layers.
+2. Added reading of geometries: Text, Point, LWPolyline/Polyline2D/Polyline3D, Arc, Circle, Ellipse, Line, Spline.</p>
+
+<p>Up on the list:
+1. Reading of attributes.
+2. Reading of blocks.</p>
 
 <p>Now supported CAD files version are:</p>
 
@@ -75,25 +79,15 @@ CADFile * opendwg = OpenCADFile(<span class="pl-s"><span class="pl-pds">"</span>
 <h2>
 <a id="build-status" class="anchor" href="#build-status" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Build status</h2>
 
-<p>Linux (gcc + clang): <a href="https://travis-ci.org/sandyre/libopencad"><img src="https://travis-ci.org/sandyre/libopencad.svg?branch=master" alt="Build Status"></a></p>
-        </section>
+<p>Linux: <a href="https://travis-ci.org/sandyre/libopencad"><img src="https://travis-ci.org/sandyre/libopencad.svg?branch=master" alt="Build Status"></a></p>
 
-        <aside id="sidebar">
-          <a href="https://github.com/sandyre/libopencad/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/sandyre/libopencad/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/sandyre/libopencad">OpenCAD Library</a> is maintained by <a href="https://github.com/sandyre">sandyre</a>.</span>
 
-          <p class="repo-owner"><a href="https://github.com/sandyre/libopencad"></a> is maintained by <a href="https://github.com/sandyre">sandyre</a>.</p>
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
 
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
+    </section>
 
   
   </body>
