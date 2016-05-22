@@ -662,6 +662,7 @@ public:
         double dfRotation;
         short dShapeflag;
     };
+    std::vector < Dash > astDashes;
     std::vector < char > abyTextArea; // TODO: what is it?
     CADHandle hLTControl;
     std::vector < CADHandle > hReactors;

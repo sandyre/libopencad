@@ -254,6 +254,43 @@ public:
     std::vector < Vertex3D > avertCtrlPoints;
     std::vector < Vertex3D > averFitPoints;
 };
+//
+//class EXTERN LineType
+//{
+//public:
+//    std::string sEntryName;
+//    std::string sDescription;
+//    double dfPatternLen;
+//    char dAlignment;
+//    char nNumDashes;
+//    struct Dash
+//    {
+//        double dfLength;
+//        short dComplexShapecode;
+//        double dfXOffset;
+//        double dfYOffset;
+//        double dfScale;
+//        double dfRotation;
+//        short dShapeflag;
+//    };
+//    std::vector < char > abyTextArea; // TODO: what is it?
+//    std::vector < CADHandle > hShapefiles; // TODO: one for each dash?
+//};
+
+//class EXTERN Block
+//{
+//public:
+//    Block(CADFile * pCADFile)
+//    {
+//        pstCADFile_m = pCADFile;
+//    }
+//
+//    std::string sBlockName;
+//
+//    CADFile * pstCADFile_m;
+//
+//    std::vector < std::pair < long long, short > > astAttachedGeometries;
+//};
 
 class EXTERN Layer
 {
@@ -273,6 +310,8 @@ public:
     bool bPlottingFlag;
     int16_t dLineWeight;
     int16_t dColor;
+
+//    LineType stLayerLType;
 
     CADFile * pstCADFile_m;
 
