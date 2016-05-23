@@ -69,7 +69,7 @@ static int CheckCADFile(CADFileIO* pCADFileIO)
 
 /**
  * @brief Open CAD file
- * @param path to CAD file reader pointer
+ * @param pCADFileIO CAD file reader pointer ownd by function.
  * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
  */
 CADFile* OpenCADFile( CADFileIO* pCADFileIO )

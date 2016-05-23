@@ -28,50 +28,32 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  ******************************************************************************/
-#ifndef CADFILEIO_H
-#define CADFILEIO_H
 
-#include <cstddef>
+#include "cadfileio.h"
 
-/**
- * @brief The CADFileIO class provides in/out file operations as read, write,
- * seek, etc. This is abstract class.
- */
-class CADFileIO
+CADFileIO::CADFileIO(const char* pszFileName)
 {
-public:
-    enum class SeekOrigin
-    {
-        BEG, /**< Begin of the file */
-        CUR, /**< Current position of the pointer */
-        END  /**< End of file */
-    };
+    m_pszFilePath = pszFileName;
+    m_bIsOpened = false;
+}
 
-    enum OpenMode
-    {
-        binary 		= 1L << 2,
-        read		= 1L << 3,
-        write 		= 1L << 4
-    };
+CADFileIO::~CADFileIO()
+{
+    if(IsOpened())
+        Close();
+}
 
-public:
-    CADFileIO(const char* pszFileName);
-    virtual ~CADFileIO();
-    virtual const char* ReadLine() = 0;
-    virtual bool Eof() = 0;
-    virtual bool Open(int mode) = 0;
-    virtual bool IsOpened() const;
-    virtual bool Close();
-    virtual int Seek(long int offset, SeekOrigin origin) = 0;
-    virtual long int Tell() = 0;
-    virtual size_t Read(void* ptr, size_t size) = 0;
-    virtual size_t Write(void* ptr, size_t size) = 0;
-    virtual void Rewind() = 0;
-    const char* GetFilePath() const;
+bool CADFileIO::IsOpened() const
+{
+    return m_bIsOpened;
+}
+bool CADFileIO::Close()
+{
+    m_bIsOpened = false;
+    return true;
+}
 
-protected:
-    const char* m_pszFilePath;
-    bool m_bIsOpened;
-};
-
-#endif // CADFILEIO_H
+const char* CADFileIO::GetFilePath() const
+{
+    return m_pszFilePath;
+}

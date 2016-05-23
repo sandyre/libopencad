@@ -56,7 +56,7 @@ public:
     virtual size_t GetLayersCount();
     virtual size_t GetBlocksCount();
     virtual Layer * GetLayer( size_t index );
-    virtual CADBlock* GetBlock( size_t index );
+    virtual CADBlock * GetBlock( size_t index );
     virtual int ParseFile();
 
 protected:

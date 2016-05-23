@@ -61,6 +61,7 @@ set(HHEADER_PRIV
 set(CSOURCES
     opencad.cpp
     cadfile.cpp
+    cadfileio.cpp
     cadfilestreamio.cpp
     cadheader.cpp
     )
