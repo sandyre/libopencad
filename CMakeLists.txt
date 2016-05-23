@@ -56,7 +56,10 @@ include(FindAnyProject)
 
 set(TARGET_LINK)
 add_subdirectory(lib)
-add_subdirectory(apps)
+option(BUILD_APPS "Build console applications" ON)
+if(BUILD_APPS)
+    add_subdirectory(apps)
+endif()
 add_subdirectory(tests)
 
 # uninstall

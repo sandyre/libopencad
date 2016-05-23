@@ -50,7 +50,7 @@ static int CheckCADFile(CADFileIO* pCADFileIO)
         pCADFileIO->Open(CADFileIO::OpenMode::read | CADFileIO::OpenMode::binary);
 
     const char* pszFilePath = pCADFileIO->GetFilePath();
-    int nPathLen = strlen(pszFilePath);
+    size_t nPathLen = strlen(pszFilePath);
     if(toupper(pszFilePath[nPathLen - 3]) == 'D' &&
        toupper(pszFilePath[nPathLen - 2]) == 'X' &&
        toupper(pszFilePath[nPathLen - 1]) == 'F')
@@ -147,6 +147,15 @@ int IdentifyCADFile( CADFileIO* pCADFileIO )
     int result = CheckCADFile(pCADFileIO);
     delete pCADFileIO;
     return result;
+}
+
+/**
+ * @brief List supported CAD Formats
+ * @return String describes supported CAD formats
+ */
+const char* GetCADFormats()
+{
+    return "DWG R2000 [ACAD1015]\n";
 }
 
 void DebugMsg(const char* format, ...)

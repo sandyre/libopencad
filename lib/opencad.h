@@ -52,27 +52,27 @@
 #define DWG_VERSION_STR_SIZE  6
 
 #ifdef OCAD_STATIC
-  #define EXTERN extern
+  #define OCAD_EXTERN extern
 #else
 #   if defined (_WIN32) || defined (WINDOWS)
 #    ifdef OCAD_EXPORTS
 #      ifdef __GNUC__
-#        define EXTERN extern __attribute__((dllexport))
+#        define OCAD_EXTERN extern __attribute__((dllexport))
 #      else        
-#        define EXTERN extern __declspec(dllexport)
+#        define OCAD_EXTERN extern __declspec(dllexport)
 #      endif 
 #    else
 #      ifdef __GNUC__
-#        define EXTERN extern __attribute__((dllimport))
+#        define OCAD_EXTERN extern __attribute__((dllimport))
 #      else        
-#        define EXTERN extern __declspec(dllimport)
+#        define OCAD_EXTERN extern __declspec(dllimport)
 #      endif 
 #    endif
 #   else
 #     if __GNUC__ >= 4
-#       define EXTERN __attribute__((visibility("default")))
+#       define OCAD_EXTERN __attribute__((visibility("default")))
 #     else
-#       define EXTERN                extern
+#       define OCAD_EXTERN                extern
 #     endif 
 #   endif
 #endif

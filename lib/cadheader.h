@@ -36,7 +36,7 @@
 #include <string>
 #include <vector>
 
-class EXTERN CADHandle
+class OCAD_EXTERN CADHandle
 {
 public:
     CADHandle(char code = 0);
@@ -49,7 +49,7 @@ protected:
     std::vector<char> m_HandleOrOffset;
 };
 
-class EXTERN CADVariant final
+class OCAD_EXTERN CADVariant final
 {
 public:
     enum class DataType
@@ -100,7 +100,7 @@ protected:
 /**
  * @brief The common CAD header class
  */
-class EXTERN CADHeader
+class OCAD_EXTERN CADHeader
 {
 public:
     /**

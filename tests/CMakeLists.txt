@@ -47,16 +47,18 @@ if(BUILD_TESTS)
     set(TARGET_LINK_LIB ${TARGET_LINK_LIB} ${DL_LIB})
     find_library(M_LIB m)
     set(TARGET_LINK_LIB ${TARGET_LINK_LIB} ${M_LIB})
-    
 
-    add_executable(run_libopencad_tests
-                   io_check.cpp 
-                   reading_geometries.cpp
-                   )
-    target_link_extlibraries(run_libopencad_tests)
+    set(CSOURCES
+        io_check.cpp
+        reading_geometries.cpp
+        )
+
+    add_executable(libopencad_tests
+                   ${CSOURCES})
+    target_link_extlibraries(libopencad_tests)
 
     file(COPY data DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
     file(COPY data/r2000 DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/data)
 
-    add_test( run_libopencad_tests run_libopencad_tests)
+    add_test( libopencad_tests libopencad_tests)
 endif()

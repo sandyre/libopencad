@@ -42,7 +42,7 @@ class CADGeometry;
 /**
  * @brief The abstact CAD file class
  */
-class EXTERN CADFile
+class OCAD_EXTERN CADFile
 {
     friend class Layer;
 public:

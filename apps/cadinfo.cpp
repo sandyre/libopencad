@@ -62,6 +62,13 @@ static int Version()
     return EXIT_SUCCESS;
 }
 
+static int Formats()
+{
+    std::cerr << GetCADFormats() << std::endl;
+
+    return EXIT_SUCCESS;
+}
+
 int main(int argc, char *argv[])
 {
     if( argc < 1 )
@@ -77,7 +84,7 @@ int main(int argc, char *argv[])
         }
         else if(strcmp(argv[iArg],"-f")==0 || strcmp(argv[iArg],"--formats")==0)
         {
-            //TODO: return supported CAD formats
+            return Formats ();
         }
         else if(strcmp(argv[iArg],"-v")==0 || strcmp(argv[iArg],"--version")==0)
         {

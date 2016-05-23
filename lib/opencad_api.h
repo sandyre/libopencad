@@ -78,11 +78,12 @@ enum CADErrorCodes
     VALUE_EXISTS                    /**< the value already exist in the header */
 };
 
-EXTERN int GetVersion();
-EXTERN const char* GetVersionString();
-EXTERN CADFile* OpenCADFile( CADFileIO* pCADFileIO );
-EXTERN int GetLastErrorCode();
-EXTERN CADFileIO* GetDeafultFileIO(const char* pszFileName);
-EXTERN int IdentifyCADFile( CADFileIO* pCADFileIO );
+OCAD_EXTERN int GetVersion();
+OCAD_EXTERN const char* GetVersionString();
+OCAD_EXTERN CADFile* OpenCADFile( CADFileIO* pCADFileIO );
+OCAD_EXTERN int GetLastErrorCode();
+OCAD_EXTERN CADFileIO* GetDeafultFileIO(const char* pszFileName);
+OCAD_EXTERN int IdentifyCADFile( CADFileIO* pCADFileIO );
+OCAD_EXTERN const char* GetCADFormats();
 
 #endif // OPENCAD_API_H
