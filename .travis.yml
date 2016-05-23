@@ -11,7 +11,7 @@ before_install:
 - echo $LC_ALL
 script: cmake -DBUILD_TESTS=ON CMakeLists.txt
 after_success:
-- make j4
+- make -j4
 - make test
 branches:
   only:
