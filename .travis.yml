@@ -9,15 +9,15 @@ os:
 before_install:
 - echo $LANG
 - echo $LC_ALL
-script: cmake CMakeLists.txt
+script: cmake -DBUILD_TESTS=ON CMakeLists.txt
 after_success:
-- cd /home/travis/build/sandyre/libopencad
+- make j4
 - make test
 branches:
   only:
   - master
 notifications:
-  email: false
+  email: 191980@niuitmo.ru
   irc:
     template:
     - "%{repository}/%{branch} (%{commit} - %{author}): %{build_url}: %{message}"
