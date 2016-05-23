@@ -19,8 +19,6 @@ TEST(reading_circles, triplet)
     ASSERT_NEAR (circle->dfRadius, 16.6f, 0.0001f);
     ASSERT_NEAR (circle->GetThickness(), 1.2f, 0.0001f);
 
-    delete circle;
-
     // Second circle. Should be 10,10,10 (x,y,z)
     // Radius 10 Thickness 1.8
 
@@ -34,8 +32,6 @@ TEST(reading_circles, triplet)
     ASSERT_NEAR (circle->dfRadius, 10.0f, 0.0001f);
     ASSERT_NEAR (circle->GetThickness(), 1.8f, 0.0001f);
 
-    delete circle;
-
     // Third circle. Should be -15,0,0 (x,y,z)
     // Radius 9.5 Thickness 0.8
 
@@ -48,8 +44,6 @@ TEST(reading_circles, triplet)
     ASSERT_NEAR (circle->vertPosition.Z, 0.0f, 0.0001f);
     ASSERT_NEAR (circle->dfRadius, 9.5f, 0.0001f);
     ASSERT_NEAR (circle->GetThickness(), 0.8f, 0.0001f);
-
-    delete circle;
 }
 
 // Following test demonstrates reading only actual geometries (deleted skipped).

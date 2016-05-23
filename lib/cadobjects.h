@@ -39,7 +39,7 @@
 class CADObject
 {
 public:
-    enum CADObjectTypes
+    enum CADObjectType
     {
         UNUSED = 0x0,
         TEXT = 0x1,
@@ -127,7 +127,7 @@ public:
     };
 
     long  dObjectSize;
-    short dObjectType;
+    CADObjectType eObjectType;
 
     short dCRC;
 };
@@ -198,7 +198,7 @@ class CADText : public CADEntity
 public:
     CADText()
     {
-        dObjectType = TEXT;
+        eObjectType = TEXT;
     }
     char   DataFlags;
     double dfElevation;
@@ -223,7 +223,7 @@ class CADAttrib : public CADEntity
 public:
     CADAttrib()
     {
-        dObjectType = ATTRIB;
+        eObjectType = ATTRIB;
     }
     char   DataFlags;
     double dfElevation;
@@ -253,7 +253,7 @@ class CADAttdef : public CADEntity
 public:
     CADAttdef()
     {
-        dObjectType = ATTDEF;
+        eObjectType = ATTDEF;
     }
     char   DataFlags;
     double dfElevation;
@@ -284,7 +284,7 @@ class CADBlock : public CADEntity
 public:
     CADBlock()
     {
-        dObjectType = BLOCK;
+        eObjectType = BLOCK;
     }
     std::string sBlockName;
 };
@@ -294,7 +294,7 @@ class CADEndblk : public CADEntity
 public:
     CADEndblk()
     {
-        dObjectType = ENDBLK;
+        eObjectType = ENDBLK;
     }
     // it actually has nothing more thatn CED and CEHD.
 };
@@ -304,7 +304,7 @@ class CADSeqend : public CADEntity
 public:
     CADSeqend()
     {
-        dObjectType = SEQEND;
+        eObjectType = SEQEND;
     }
     // it actually has nothing more thatn CED and CEHD.
 };
@@ -314,7 +314,7 @@ class CADInsert : public CADEntity
 public:
     CADInsert()
     {
-        dObjectType = INSERT;
+        eObjectType = INSERT;
     }
     Vertex3D vertInsertionPoint;
     Vertex3D vertScales;
@@ -333,7 +333,7 @@ class CADMInsert : public CADEntity
 public:
     CADMInsert()
     {
-        dObjectType = MINSERT1; // TODO: it has 2 type codes?
+        eObjectType = MINSERT1; // TODO: it has 2 type codes?
     }
     Vertex3D vertInsertionPoint;
     Vertex3D vertScales;
@@ -357,7 +357,7 @@ class CADVertex2D : public CADEntity
 public:
     CADVertex2D()
     {
-        dObjectType = VERTEX2D;
+        eObjectType = VERTEX2D;
     }
     Vertex3D vertPosition; // Z must be taken from 2d polyline elevation.
     double   dfStartWidth;
@@ -374,7 +374,7 @@ class CADVertex3D : public CADEntity
 public:
     CADVertex3D()
     {
-        dObjectType = VERTEX3D;
+        eObjectType = VERTEX3D;
     }
     ~CADVertex3D ()
     {
@@ -388,7 +388,7 @@ class CADVertexMesh : public CADEntity
 public:
     CADVertexMesh()
     {
-        dObjectType = VERTEX_MESH;
+        eObjectType = VERTEX_MESH;
     }
     Vertex3D vertPosition;
 };
@@ -398,7 +398,7 @@ class CADVertexPFace : public CADEntity
 public:
     CADVertexPFace ()
     {
-        dObjectType = VERTEX_PFACE;
+        eObjectType = VERTEX_PFACE;
     }
     Vertex3D vertPosition;
 };
@@ -408,7 +408,7 @@ class CADVertexPFaceFace : public CADEntity
 public:
     CADVertexPFaceFace()
     {
-        dObjectType = VERTEX_PFACE_FACE;
+        eObjectType = VERTEX_PFACE_FACE;
     }
     // TODO: check DXF ref to get info what does it mean.
     short iVertexIndex1;
@@ -422,7 +422,7 @@ class CADPolyline2D : public CADEntity
 public:
     CADPolyline2D()
     {
-        dObjectType = POLYLINE2D;
+        eObjectType = POLYLINE2D;
     }
 
     short  dFlags;
@@ -445,7 +445,7 @@ class CADPolyline3D : public CADEntity
 public:
     CADPolyline3D()
     {
-        dObjectType = POLYLINE3D;
+        eObjectType = POLYLINE3D;
     }
     char SplinedFlags;
     char ClosedFlags;
@@ -462,7 +462,7 @@ class CADArc : public CADEntity
 public:
     CADArc()
     {
-        dObjectType = ARC;
+        eObjectType = ARC;
     }
     Vertex3D vertPosition;
     double   dfRadius;
@@ -477,7 +477,7 @@ class CADCircle : public CADEntity
 public:
     CADCircle()
     {
-        dObjectType = CIRCLE;
+        eObjectType = CIRCLE;
     }
     Vertex3D vertPosition;
     double   dfRadius;
@@ -490,7 +490,7 @@ class CADLine : public CADEntity
 public:
     CADLine()
     {
-        dObjectType = LINE;
+        eObjectType = LINE;
     }
     Vertex3D vertStart;
     Vertex3D vertEnd;
@@ -503,7 +503,7 @@ class CADBlockControl : public CADObject
 public:
     CADBlockControl()
     {
-        dObjectType = BLOCK_CONTROL_OBJ;
+        eObjectType = BLOCK_CONTROL_OBJ;
     }
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
@@ -521,7 +521,7 @@ class CADBlockHeader : public CADObject
 public:
     CADBlockHeader()
     {
-        dObjectType = BLOCK_HEADER;
+        eObjectType = BLOCK_HEADER;
     }
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
@@ -563,7 +563,7 @@ class CADLayerControl : public CADObject
 public:
     CADLayerControl()
     {
-        dObjectType = LAYER_CONTROL_OBJ;
+        eObjectType = LAYER_CONTROL_OBJ;
     }
 
     long nObjectSizeInBits;
@@ -582,7 +582,7 @@ class CADLayer : public CADObject
 public:
     CADLayer()
     {
-        dObjectType = LAYER;
+        eObjectType = LAYER;
     }
 
     long nObjectSizeInBits;
@@ -617,7 +617,7 @@ class CADLineTypeControl : public CADObject
 public:
     CADLineTypeControl()
     {
-        dObjectType = LTYPE_CONTROL_OBJ;
+        eObjectType = LTYPE_CONTROL_OBJ;
     }
 
     long nObjectSizeInBits;
@@ -636,7 +636,7 @@ class CADLineType : public CADObject
 public:
     CADLineType()
     {
-        dObjectType = LTYPE1;
+        eObjectType = LTYPE1;
     }
 
     long nObjectSizeInBits;
@@ -676,7 +676,7 @@ class CADPoint : public CADEntity
 public:
     CADPoint()
     {
-        dObjectType = POINT;
+        eObjectType = POINT;
     }
 
     Vertex3D vertPosition;
@@ -690,7 +690,7 @@ class CADSolid : public CADEntity
 public:
     CADSolid()
     {
-        dObjectType = SOLID;
+        eObjectType = SOLID;
         avertCorners.reserve ( 4 );
     }
 
@@ -705,7 +705,7 @@ class CADEllipse : public CADEntity
 public:
     CADEllipse()
     {
-        dObjectType = ELLIPSE;
+        eObjectType = ELLIPSE;
     }
 
     Vertex3D vertPosition;
@@ -721,7 +721,7 @@ class CADRay : public CADEntity
 public:
     CADRay()
     {
-        dObjectType = RAY;
+        eObjectType = RAY;
     }
 
     Vertex3D vertPosition;
@@ -733,7 +733,7 @@ class CADXLine : public CADEntity
 public:
     CADXLine()
     {
-        dObjectType = XLINE;
+        eObjectType = XLINE;
     }
 
     Vertex3D vertPosition;
@@ -745,7 +745,7 @@ class CADDictionary : public CADObject
 public:
     CADDictionary()
     {
-        dObjectType = DICTIONARY;
+        eObjectType = DICTIONARY;
     }
 
     long nObjectSizeInBits;
@@ -771,17 +771,17 @@ class CADLWPolyline : public CADEntity
 public:
     CADLWPolyline()
     {
-        dObjectType = LWPOLYLINE;
+        eObjectType = LWPOLYLINE;
     }
 
     double dfConstWidth;
     double dfElevation;
     double dfThickness;
     Vector3D vectExtrusion;
-    std::vector< Vertex2D > vertexes;
-    std::vector< double > bulges;
-    std::vector< int16_t > vertexes_id;
-    std::vector< std::pair< double, double > > widths; // start, end.
+    std::vector< Vertex2D > avertVertexes;
+    std::vector< double > adfBulges;
+    std::vector< int16_t > adVertexesID;
+    std::vector< std::pair< double, double > > astWidths; // start, end.
 };
 
 class CADSpline : public CADEntity
@@ -791,7 +791,7 @@ public:
                   nNumKnots(0),
                   nNumCtrlPts(0) // should be zeroed.
     {
-        dObjectType = SPLINE;
+        eObjectType = SPLINE;
     }
 
     long dScenario;

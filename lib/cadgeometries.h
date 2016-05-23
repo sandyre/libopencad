@@ -60,6 +60,7 @@ class CADGeometry
         ARC,
         SPLINE,
         SOLID,
+        RAY,
         HATCH // NOT IMPLEMENTED
     };
 
@@ -283,6 +284,18 @@ public:
     double dfElevation;
     std::vector < Vertex2D > avertCorners;
     Vector3D vectExtrusion;
+};
+
+class Ray : public CADGeometry
+{
+public:
+    Ray()
+    {
+        eGeometryType = CADGeometry::RAY;
+    }
+
+    Vertex3D vertPosition;
+    Vector3D vectVector;
 };
 
 class Hatch : public CADGeometry

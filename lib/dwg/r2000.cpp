@@ -724,16 +724,16 @@ int DWGFileR2000::ReadObjectMap ()
                      astPresentedCADLayers[ind]->hObjectHandle.GetAsLong () )
                 {
                     DebugMsg ("Object with type: %s is attached to layer named: %s\n",
-                              DWG_OBJECT_NAMES.at (ent->dObjectType).c_str (),
+                              DWG_OBJECT_NAMES.at (ent->eObjectType).c_str (),
                               astPresentedCADLayers[ind]->sLayerName.c_str ());
 
                     if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (),
-                                    ent->dObjectType)
+                                    ent->eObjectType)
                          != DWG_GEOMETRIC_OBJECT_TYPES.end () )
                     {
                         // FIXME: no cast should be used.
                         astPresentedLayers[ind]->astAttachedGeometries.push_back (
-                                std::make_pair ( (long long)ent->ced.hObjectHandle.GetAsLong (), ent->dObjectType));
+                                std::make_pair ( (long long)ent->ced.hObjectHandle.GetAsLong (), ent->eObjectType));
                         break;
                     }
                 }
@@ -750,16 +750,16 @@ int DWGFileR2000::ReadObjectMap ()
                          astPresentedCADLayers[ind]->hObjectHandle.GetAsLong () )
                     {
                         DebugMsg ("Object with type: %s is attached to layer named: %s\n",
-                                  DWG_OBJECT_NAMES.at (ent->dObjectType).c_str (),
+                                  DWG_OBJECT_NAMES.at (ent->eObjectType).c_str (),
                                   astPresentedCADLayers[ind]->sLayerName.c_str ());
 
                         if ( std::find (DWG_GEOMETRIC_OBJECT_TYPES.begin (), DWG_GEOMETRIC_OBJECT_TYPES.end (),
-                                        ent->dObjectType)
+                                        ent->eObjectType)
                              != DWG_GEOMETRIC_OBJECT_TYPES.end () )
                         {
                             // FIXME: no cast should be used.
                             astPresentedLayers[ind]->astAttachedGeometries.push_back (
-                                    std::make_pair ( (long long)ent->ced.hObjectHandle.GetAsLong (), ent->dObjectType));
+                                    std::make_pair ( (long long)ent->ced.hObjectHandle.GetAsLong (), ent->eObjectType));
                             break;
                         }
                     }
@@ -934,7 +934,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
             {
                 CADSolid * solid = new CADSolid();
 
-                solid->dObjectType = dObjectType;
+                solid->dObjectSize = dObjectSize;
                 solid->ced = common_entity_data;
 
                 solid->dfThickness = ReadBIT (pabySectionContent, nBitOffsetFromStart) ?
@@ -1802,30 +1802,30 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 Vertex2D vertex;
                 vertex.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
                 vertex.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                polyline->vertexes.push_back (vertex);
+                polyline->avertVertexes.push_back (vertex);
 
                 // All the others are not raw doubles; bitdoubles with default instead,
                 // where default is previous point coords.
                 for ( size_t i = 1; i < nVertixesCount; ++i )
                 {
                     vertex.X = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart,
-                                                polyline->vertexes[i - 1].X);
+                                                polyline->avertVertexes[i - 1].X);
                     vertex.Y = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart,
-                                                polyline->vertexes[i - 1].Y);
-                    polyline->vertexes.push_back (vertex);
+                                                polyline->avertVertexes[i - 1].Y);
+                    polyline->avertVertexes.push_back (vertex);
                 }
 
                 for ( size_t i = 0; i < nBulges; ++i )
                 {
                     double dfBulgeValue = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                    polyline->bulges.push_back (dfBulgeValue);
+                    polyline->adfBulges.push_back (dfBulgeValue);
                 }
 
                 for ( size_t i = 0; i < nNumWidths; ++i )
                 {
                     double dfStartWidth = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
                     double dfEndWidth = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
-                    polyline->widths.push_back ( std::make_pair ( dfStartWidth, dfEndWidth ) );
+                    polyline->astWidths.push_back ( std::make_pair ( dfStartWidth, dfEndWidth ) );
                 }
 
                 if (polyline->ced.bbEntMode == 0 )
@@ -2030,7 +2030,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
             {
                 CADEntity * entity = new CADEntity();
 
-                entity->dObjectType = dObjectType;
+                entity->eObjectType = CADObject::CADObjectType(dObjectType);
                 entity->dObjectSize = dObjectSize;
                 entity->ced = common_entity_data;
 
@@ -2348,7 +2348,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 }
 
                 blockHeader->hEndBlk = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
-                for ( size_t i = 0; i < blockHeader->adInsertCount.size(); ++i )
+                for ( size_t i = 0; i < blockHeader->adInsertCount.size() - 1; ++i )
                     blockHeader->hInsertHandles.push_back ( ReadHANDLE (pabySectionContent, nBitOffsetFromStart) );
                 blockHeader->hLayout = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
 
@@ -2490,9 +2490,9 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
     CADGeometry * result_geometry = 0;
     CADObject * readed_object = this->GetObject ( astPresentedLayers[layer_index]->astAttachedGeometries[index].first );
 
-    switch ( readed_object->dObjectType )
+    switch ( readed_object->eObjectType )
     {
-        case DWG_OBJECT_ARC:
+        case CADObject::CADObjectType::ARC:
         {
             Arc * arc = new Arc();
             CADArc * cadArc = ( CADArc * ) readed_object;
@@ -2510,7 +2510,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
-        case DWG_OBJECT_POINT:
+        case CADObject::CADObjectType::POINT:
         {
             Point3D * point = new Point3D();
             CADPoint * cadPoint = ( CADPoint * ) readed_object;
@@ -2526,7 +2526,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
-        case DWG_OBJECT_POLYLINE3D:
+        case CADObject::CADObjectType::POLYLINE3D:
         {
             Polyline3D * polyline = new Polyline3D();
             CADPolyline3D * cadPolyline3D = ( CADPolyline3D * ) readed_object;
@@ -2567,17 +2567,17 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
-        case DWG_OBJECT_LWPOLYLINE:
+        case CADObject::CADObjectType::LWPOLYLINE:
         {
             LWPolyline * lwPolyline = new LWPolyline();
             CADLWPolyline * cadlwPolyline = ( CADLWPolyline * ) readed_object;
 
             lwPolyline->dfConstWidth = cadlwPolyline->dfConstWidth;
             lwPolyline->dfElevation = cadlwPolyline->dfElevation;
-            lwPolyline->vertexes = cadlwPolyline->vertexes;
+            lwPolyline->vertexes = cadlwPolyline->avertVertexes;
             lwPolyline->vectExtrusion = cadlwPolyline->vectExtrusion;
-            lwPolyline->bulges = cadlwPolyline->bulges;
-            lwPolyline->widths = cadlwPolyline->widths;
+            lwPolyline->bulges = cadlwPolyline->adfBulges;
+            lwPolyline->widths = cadlwPolyline->astWidths;
 
             delete( cadlwPolyline );
 
@@ -2585,7 +2585,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
-        case DWG_OBJECT_CIRCLE:
+        case CADObject::CADObjectType::CIRCLE:
         {
             Circle * circle = new Circle();
             CADCircle * cadCircle = ( CADCircle * ) readed_object;
@@ -2601,7 +2601,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
-        case DWG_OBJECT_ELLIPSE:
+        case CADObject::CADObjectType::ELLIPSE:
         {
             Ellipse * ellipse = new Ellipse();
             CADEllipse * cadEllipse = ( CADEllipse * ) readed_object;
@@ -2619,7 +2619,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
-        case DWG_OBJECT_LINE:
+        case CADObject::CADObjectType::LINE:
         {
             Line * line = new Line();
             CADLine * cadLine = ( CADLine * ) readed_object;
@@ -2634,7 +2634,20 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
-        case DWG_OBJECT_SPLINE:
+        case CADObject::CADObjectType::RAY:
+        {
+            Ray * ray = new Ray();
+            CADRay * cadRay = ( CADRay * ) readed_object;
+
+            ray->vectVector = cadRay->vectVector;
+            ray->vertPosition = cadRay->vertPosition;
+
+            delete( cadRay );
+
+            break;
+        }
+
+        case CADObject::CADObjectType::SPLINE:
         {
             Spline * spline = new Spline();
             CADSpline * cadSpline = ( CADSpline * ) readed_object;
@@ -2665,7 +2678,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
-        case DWG_OBJECT_TEXT:
+        case CADObject::CADObjectType::TEXT:
         {
             Text * text = new Text();
             CADText * cadText = ( CADText * ) readed_object;
@@ -2688,7 +2701,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
-        case DWG_OBJECT_SOLID:
+        case CADObject::CADObjectType::SOLID:
         {
             Solid * solid = new Solid();
             CADSolid * cadSolid = ( CADSolid * ) readed_object;

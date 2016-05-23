@@ -59,5 +59,4 @@ if(BUILD_TESTS)
     file(COPY data/r2000 DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/data)
 
     add_test( run_libopencad_tests run_libopencad_tests)
-
 endif()
