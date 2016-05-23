@@ -35,7 +35,10 @@
 
 #include <iostream>
 #include <cstring>
+
+#ifdef __APPLE__
 #include <MacTypes.h>
+#endif
 
 #define UNKNOWN1 CADHeader::MAX_HEADER_CONSTANT + 1
 #define UNKNOWN2 CADHeader::MAX_HEADER_CONSTANT + 2
@@ -2497,7 +2500,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             arc->vertPosition = cadArc->vertPosition;
             arc->vectExtrusion = cadArc->vectExtrusion;
             arc->dfRadius = cadArc->dfRadius;
-            arc->dfThickness = cadArc->dfThickness;
+            arc->SetThickness(cadArc->dfThickness);
             arc->dfStartingAngle = cadArc->dfStartAngle;
             arc->dfEndingAngle = cadArc->dfEndAngle;
 
@@ -2515,7 +2518,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             point->vertPosition = cadPoint->vertPosition;
             point->vectExtrusion = cadPoint->vectExtrusion;
             point->dfXAxisAng = cadPoint->dfXAxisAng;
-            point->dfThickness = cadPoint->dfThickness;
+            point->SetThickness(cadPoint->dfThickness);
 
             delete( cadPoint );
 
@@ -2590,7 +2593,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             circle->vertPosition = cadCircle->vertPosition;
             circle->vectExtrusion = cadCircle->vectExtrusion;
             circle->dfRadius = cadCircle->dfRadius;
-            circle->dfThickness = cadCircle->dfThickness;
+            circle->SetThickness(cadCircle->dfThickness);
 
             delete( cadCircle );
 
@@ -2623,7 +2626,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
 
             line->vertStart = cadLine->vertStart;
             line->vertEnd = cadLine->vertEnd;
-            line->dfThickness = cadLine->dfThickness;
+            line->SetThickness(cadLine->dfThickness);
 
             delete( cadLine );
 
@@ -2675,7 +2678,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             text->dGeneration = cadText->dGeneration;
             text->dfRotationAngle = cadText->dfRotationAng;
             text->dfObliqueAngle = cadText->dfObliqueAng;
-            text->dfThickness = cadText->dfThickness;
+            text->SetThickness(cadText->dfThickness);
             text->dfHeight = cadText->dfElevation;
             text->dfElevation = cadText->dfElevation;
 
@@ -2691,7 +2694,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             CADSolid * cadSolid = ( CADSolid * ) readed_object;
 
             solid->dfElevation = cadSolid->dfElevation;
-            solid->dfThickness = cadSolid->dfThickness;
+            solid->SetThickness(cadSolid->dfThickness);
             solid->avertCorners = cadSolid->avertCorners;
             solid->vectExtrusion = cadSolid->vectExtrusion;
 

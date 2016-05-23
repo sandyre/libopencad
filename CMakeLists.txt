@@ -1,10 +1,10 @@
-#*******************************************************************************
+################################################################################
 #  Project: libopencad
 #  Purpose: OpenSource CAD formats support library
 #  Author: Alexandr Borzykh, mush3d at gmail.com
 #  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
 #  Language: C++
-#*******************************************************************************
+################################################################################
 #  The MIT License (MIT)
 #
 #  Copyright (c) 2016 Alexandr Borzykh
@@ -27,7 +27,7 @@
 #  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
-#*******************************************************************************
+################################################################################
  
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
@@ -49,11 +49,15 @@ endif()
 
 configure_file(${CMAKE_MODULE_PATH}/uninstall.cmake.in ${CMAKE_BINARY_DIR}/cmake_uninstall.cmake IMMEDIATE @ONLY)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+enable_testing()
+include(FindAnyProject)
+
 set(TARGET_LINK)
 add_subdirectory(lib)
 add_subdirectory(apps)
 add_subdirectory(tests)
-#TODO: add_subdirectory(tests)
 
 # uninstall
 add_custom_target(uninstall COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
