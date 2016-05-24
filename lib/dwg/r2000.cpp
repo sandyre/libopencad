@@ -56,7 +56,7 @@
 #define UNKNOWN14 CADHeader::MAX_HEADER_CONSTANT + 14
 #define UNKNOWN15 CADHeader::MAX_HEADER_CONSTANT + 15
 
-int DWGFileR2000::ReadHeader ()
+int DWGFileR2000::ReadHeader (CADOpenOptions eOptions)
 {
     char    *pabyBuf = new char[100];
     int     dImageSeeker, dSLRecords;
@@ -134,7 +134,7 @@ int DWGFileR2000::ReadHeader ()
     m_oHeader.AddValue(UNKNOWN9, ReadBITLONG (pabyBuf, nBitOffsetFromStart));
     m_oHeader.AddValue(UNKNOWN10, ReadBITLONG (pabyBuf, nBitOffsetFromStart));
 
-    CADHandle stCurrentViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    stCurrentViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
 
     m_oHeader.AddValue(CADHeader::DIMASO, ReadBIT (pabyBuf, nBitOffsetFromStart));
     m_oHeader.AddValue(CADHeader::DIMSHO, ReadBIT (pabyBuf, nBitOffsetFromStart));
@@ -491,6 +491,11 @@ int DWGFileR2000::ReadHeader ()
     stBlockRecordPaperSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
     stBlockRecordModelSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
     // TODO: is this part of the header?
+
+    CADHandle LTYPE_BYLAYER;
+    CADHandle LTYPE_BYBLOCK;
+    CADHandle LTYPE_CONTINUOUS;
+
     LTYPE_BYLAYER = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
     LTYPE_BYBLOCK = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
     LTYPE_CONTINUOUS = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
@@ -521,7 +526,7 @@ int DWGFileR2000::ReadHeader ()
     return CADErrorCodes::SUCCESS;
 }
 
-int DWGFileR2000::ReadClasses ()
+int DWGFileR2000::ReadClasses (CADOpenOptions eOptions)
 {
     char    *pabySectionContent;
     char    buffer[255];
@@ -580,7 +585,7 @@ int DWGFileR2000::ReadClasses ()
     return CADErrorCodes::SUCCESS;
 }
 
-int DWGFileR2000::ReadObjectMap ()
+int DWGFileR2000::CreateFileMap (CADOpenOptions eOptions)
 {
     // Seems like ODA specification is completely awful. CRC is included in section size.
     char     *pabySectionContent;

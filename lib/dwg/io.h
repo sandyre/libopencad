@@ -2,11 +2,13 @@
  *  Name: dwg_io.h
  *  Project: libOpenCAD OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
  ************************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -101,7 +103,7 @@ unsigned char Read3B ( const char * pabyInput, size_t& nBitOffsetFromStart );
 unsigned char Read4B ( const char * pabyInput, size_t& nBitOffsetFromStart );
 CADHandle ReadHANDLE ( const char * pabyInput, size_t& nBitOffsetFromStart );
 CADHandle ReadHANDLE8BLENGTH ( const char * pabyInput, size_t & nBitOffsetFromStart );
-
+void SkipHANDLE(const char * pabyInput, size_t& nBitOffsetFromStart);
 bool        ReadBIT ( const char * pabyInput, size_t& nBitOffsetFromStart );
 unsigned char ReadCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart );
 short ReadBITSHORT ( const char * pabyInput, size_t& nBitOffsetFromStart );

@@ -92,7 +92,7 @@ CADGeometry * CADFile::GetGeometry ( size_t /*layer_index*/, size_t /*index*/ )
     return( nullptr );
 }
 
-int CADFile::ParseFile()
+int CADFile::ParseFile(enum CADOpenOptions eOptions)
 {
     if(nullptr == m_poFileIO)
         return CADErrorCodes::FILE_OPEN_FAILED;
@@ -103,13 +103,13 @@ int CADFile::ParseFile()
             return CADErrorCodes::FILE_OPEN_FAILED;
     }
 
-    int nResultCode = ReadHeader ();
+    int nResultCode = ReadHeader (eOptions);
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
-    nResultCode = ReadClasses ();
+    nResultCode = ReadClasses (eOptions);
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
-    nResultCode = ReadObjectMap ();
+    nResultCode = CreateFileMap (eOptions);
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
 

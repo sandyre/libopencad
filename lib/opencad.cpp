@@ -69,10 +69,11 @@ static int CheckCADFile(CADFileIO* pCADFileIO)
 
 /**
  * @brief Open CAD file
- * @param pCADFileIO CAD file reader pointer ownd by function.
- * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
+ * @param pCADFileIO CAD file reader pointer ownd by function
+ * @param eOptions Open options
+ * @return CADFile pointer or NULL if failed. The pointer have to be freed by user
  */
-CADFile* OpenCADFile( CADFileIO* pCADFileIO )
+CADFile* OpenCADFile( CADFileIO* pCADFileIO, enum CADOpenOptions eOptions )
 {
     int nCADFileVersion = CheckCADFile(pCADFileIO);
     CADFile * poCAD = NULL;
@@ -87,7 +88,7 @@ CADFile* OpenCADFile( CADFileIO* pCADFileIO )
         return NULL;
     }
 
-    gLastError = poCAD->ParseFile();
+    gLastError = poCAD->ParseFile(eOptions);
     if(gLastError != CADErrorCodes::SUCCESS)
     {
         delete poCAD;
@@ -162,11 +163,12 @@ const char* GetCADFormats()
 /**
  * @brief Open CAD file
  * @param pszFileName Path to CAD file
+ * @param eOptions Open options
  * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
  */
-CADFile* OpenCADFile( const char* pszFileName )
+CADFile* OpenCADFile( const char* pszFileName, enum CADOpenOptions eOptions )
 {
-    return OpenCADFile (GetDeafultFileIO(pszFileName));
+    return OpenCADFile (GetDeafultFileIO(pszFileName), eOptions);
 }
 
 void DebugMsg(const char* format, ...)

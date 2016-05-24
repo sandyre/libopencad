@@ -39,17 +39,6 @@
 #include <vector>
 #include <cadgeometries.h>
 
-struct DWG2000_CLASS
-{
-    int16_t     dClassNum; // BITSHORT
-    int16_t     dVersion; // BITSHORT
-    std::string      sAppName; // TV
-    std::string      sCppClassName; // TV
-    std::string      sDXFClassName; // TV
-    bool        bWasAZombie; // BIT
-    int16_t     dItemClassID; // BITSHORT
-};
-
 struct DWG2000_CED
 {
     int64_t     dLength;
@@ -95,14 +84,16 @@ public:
     virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
 
 protected:
-    virtual int ReadHeader();
-    virtual int ReadClasses();
-    virtual int ReadObjectMap();
+    virtual int ReadHeader(enum CADOpenOptions eOptions) override;
+    virtual int ReadClasses(enum CADOpenOptions eOptions) override;
+    virtual int CreateFileMap(enum CADOpenOptions eOptions) override;
 
     Layer * GetLayer( size_t index );
     CADObject * GetObject( size_t index );
 
 protected:
+    //TODO: move to CADTables
+    CADHandle stCurrentViewportTable;
     CADHandle stBlocksTable;
     CADHandle stLayersTable;
     CADHandle stStyleTable;
@@ -120,9 +111,6 @@ protected:
     CADHandle stPlotStylesDict;
     CADHandle stBlockRecordPaperSpace;
     CADHandle stBlockRecordModelSpace;
-    CADHandle LTYPE_BYLAYER;
-    CADHandle LTYPE_BYBLOCK;
-    CADHandle LTYPE_CONTINUOUS;
 
     std::vector < Layer * > astPresentedLayers; // output usage
     std::vector < CADLayer * > astPresentedCADLayers; // internal usage

@@ -4,7 +4,8 @@
 
 TEST(reading_circles, triplet)
 {
-    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/r2000/triple_circles.dwg"));
+    auto opened_dwg = OpenCADFile ("./data/r2000/triple_circles.dwg",
+                                   CADOpenOptions::READ_ALL);
 
     ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
     // First circle. Should be 0,0,0 (x,y,z)
@@ -49,7 +50,8 @@ TEST(reading_circles, triplet)
 // Following test demonstrates reading only actual geometries (deleted skipped).
 TEST(reading_geometries, 24127_circles_128_lines)
 {
-    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/r2000/24127_circles_128_lines.dwg"));
+    auto opened_dwg = OpenCADFile ("./data/r2000/24127_circles_128_lines.dwg",
+                                   CADOpenOptions::READ_ALL);
     auto circles_count = 0;
     auto lines_count = 0;
 
@@ -75,7 +77,8 @@ TEST(reading_geometries, 24127_circles_128_lines)
 // TODO: Test isnt done fully.
 TEST(reading_geometries, six_3dpolylines)
 {
-    auto opened_dwg = OpenCADFile ( GetDeafultFileIO ("./data/r2000/six_3dpolylines.dwg") ) ;
+    auto opened_dwg = OpenCADFile ( "./data/r2000/six_3dpolylines.dwg",
+                                    CADOpenOptions::READ_ALL) ;
     ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
     Layer * layer = opened_dwg->GetLayer (0);
     ASSERT_EQ (layer->GetGeometriesCount (), 6);

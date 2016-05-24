@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    CADFile *poCadFile = OpenCADFile( GetDeafultFileIO(pszCADFilePath) );
+    CADFile *poCadFile = OpenCADFile( pszCADFilePath, CADOpenOptions::READ_ALL );
 
     if (poCadFile == nullptr)
     {
