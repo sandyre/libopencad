@@ -38,12 +38,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-static int Usage(const char* pszErrorMsg = NULL)
+static int Usage(const char* pszErrorMsg = nullptr)
 {
     std::cout << "Usage: cadinfo [--help] [--formats][--version]\n"
             "               file_name" << std::endl;
 
-    if( pszErrorMsg != NULL )
+    if( pszErrorMsg != nullptr )
     {
         std::cerr << "\nFAILURE: " << pszErrorMsg << std::endl;
         return EXIT_FAILURE;
@@ -62,12 +62,19 @@ static int Version()
     return EXIT_SUCCESS;
 }
 
+static int Formats()
+{
+    std::cerr << GetCADFormats() << std::endl;
+
+    return EXIT_SUCCESS;
+}
+
 int main(int argc, char *argv[])
 {
     if( argc < 1 )
        return -argc;
 
-    const char  *pszCADFilePath = NULL;
+    const char  *pszCADFilePath = nullptr;
 
     for( int iArg = 1; iArg < argc; ++iArg)
     {
@@ -77,7 +84,7 @@ int main(int argc, char *argv[])
         }
         else if(strcmp(argv[iArg],"-f")==0 || strcmp(argv[iArg],"--formats")==0)
         {
-            //TODO: return supported CAD formats
+            return Formats ();
         }
         else if(strcmp(argv[iArg],"-v")==0 || strcmp(argv[iArg],"--version")==0)
         {
@@ -91,11 +98,19 @@ int main(int argc, char *argv[])
 
     CADFile *poCadFile = OpenCADFile( GetDeafultFileIO(pszCADFilePath) );
 
-    if (poCadFile == NULL)
+    if (poCadFile == nullptr)
     {
         std::cerr << "Open CAD file " << pszCADFilePath << " failed." << std::endl;
         return EXIT_FAILURE;
     }
+
+    const CADHeader& header = poCadFile->GetHeader ();
+    header.Print ();
+    std::cout << std::endl;
+
+    const CADClasses& classes = poCadFile->GetClasses ();
+    classes.Print ();
+    std::cout << std::endl;
 
     int solids_count = 0;
     int splines_count = 0;

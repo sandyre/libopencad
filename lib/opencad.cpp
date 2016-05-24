@@ -50,7 +50,7 @@ static int CheckCADFile(CADFileIO* pCADFileIO)
         pCADFileIO->Open(CADFileIO::OpenMode::read | CADFileIO::OpenMode::binary);
 
     const char* pszFilePath = pCADFileIO->GetFilePath();
-    int nPathLen = strlen(pszFilePath);
+    size_t nPathLen = strlen(pszFilePath);
     if(toupper(pszFilePath[nPathLen - 3]) == 'D' &&
        toupper(pszFilePath[nPathLen - 2]) == 'X' &&
        toupper(pszFilePath[nPathLen - 1]) == 'F')
@@ -69,7 +69,7 @@ static int CheckCADFile(CADFileIO* pCADFileIO)
 
 /**
  * @brief Open CAD file
- * @param path to CAD file reader pointer
+ * @param pCADFileIO CAD file reader pointer ownd by function.
  * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
  */
 CADFile* OpenCADFile( CADFileIO* pCADFileIO )
@@ -97,6 +97,7 @@ CADFile* OpenCADFile( CADFileIO* pCADFileIO )
 
     return poCAD;
 }
+
 
 /**
  * @brief Get library version number as major * 10000 + minor * 100 + rev
@@ -147,6 +148,25 @@ int IdentifyCADFile( CADFileIO* pCADFileIO )
     int result = CheckCADFile(pCADFileIO);
     delete pCADFileIO;
     return result;
+}
+
+/**
+ * @brief List supported CAD Formats
+ * @return String describes supported CAD formats
+ */
+const char* GetCADFormats()
+{
+    return "DWG R2000 [ACAD1015]\n";
+}
+
+/**
+ * @brief Open CAD file
+ * @param pszFileName Path to CAD file
+ * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
+ */
+CADFile* OpenCADFile( const char* pszFileName )
+{
+    return OpenCADFile (GetDeafultFileIO(pszFileName));
 }
 
 void DebugMsg(const char* format, ...)

@@ -27,51 +27,39 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ******************************************************************************/
-#ifndef CADFILEIO_H
-#define CADFILEIO_H
+ *******************************************************************************/
+#ifndef CADCLASSES_H
+#define CADCLASSES_H
 
-#include <cstddef>
+#include <vector>
+#include <string>
 
-/**
- * @brief The CADFileIO class provides in/out file operations as read, write,
- * seek, etc. This is abstract class.
- */
-class CADFileIO
+using namespace std;
+
+struct CADClass
 {
-public:
-    enum class SeekOrigin
-    {
-        BEG, /**< Begin of the file */
-        CUR, /**< Current position of the pointer */
-        END  /**< End of file */
-    };
-
-    enum OpenMode
-    {
-        binary 		= 1L << 2,
-        read		= 1L << 3,
-        write 		= 1L << 4
-    };
-
-public:
-    CADFileIO(const char* pszFileName);
-    virtual ~CADFileIO();
-    virtual const char* ReadLine() = 0;
-    virtual bool Eof() = 0;
-    virtual bool Open(int mode) = 0;
-    virtual bool IsOpened() const;
-    virtual bool Close();
-    virtual int Seek(long int offset, SeekOrigin origin) = 0;
-    virtual long int Tell() = 0;
-    virtual size_t Read(void* ptr, size_t size) = 0;
-    virtual size_t Write(void* ptr, size_t size) = 0;
-    virtual void Rewind() = 0;
-    const char* GetFilePath() const;
-
-protected:
-    const char* m_pszFilePath;
-    bool m_bIsOpened;
+    string sCppClassName;       /**< TV, C++ class name */
+    string sApplicationName;    /**< TV, Application name */
+    string sDXFRecordName;      /**< TV, Class DXF record name */
+    int dProxyCapFlag;          /**< BITSHORT, Proxy capabilities flag, 90 */
+    unsigned short dInstanceCount;/**< BITSHORT, Instance count for a custom class, 91 */
+    bool bWasZombie;            /**< BIT, Was-a-proxy flag, 280*/
+    bool bIsEntity;             /**< BITSHORT, Is-an-entity flag, 281 */
+    short dClassNum;            // BITSHORT
+    short dClassVersion;        // BITSHORT
 };
 
-#endif // CADFILEIO_H
+class CADClasses
+{
+public:
+    CADClasses();
+
+public:
+    void AddClass(struct CADClass stClass);
+    void Print() const;
+
+protected:
+    vector<struct CADClass> m_staClasses;
+};
+
+#endif // CADCLASSES_H
