@@ -81,6 +81,7 @@ enum CADErrorCodes
 OCAD_EXTERN int GetVersion();
 OCAD_EXTERN const char* GetVersionString();
 OCAD_EXTERN CADFile* OpenCADFile( CADFileIO* pCADFileIO );
+OCAD_EXTERN CADFile* OpenCADFile( const char* pszFileName );
 OCAD_EXTERN int GetLastErrorCode();
 OCAD_EXTERN CADFileIO* GetDeafultFileIO(const char* pszFileName);
 OCAD_EXTERN int IdentifyCADFile( CADFileIO* pCADFileIO );

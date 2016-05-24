@@ -79,7 +79,7 @@ public:
 public:
     long GetDecimal() const;
     double GetReal() const;
-    const std::string& GetString() const;
+    const std::string &GetString() const;
     enum DataType GetType() const;
     double GetX() const;
     double GetY() const;
@@ -700,6 +700,7 @@ public:
     int GetGroupCode(short code) const;
     const CADVariant& GetValue(short code, const CADVariant& val = CADVariant()) const;
     const char* GetValueName(short code) const;
+    void Print() const;
 protected:
     std::map<short, CADVariant> m_moValues;
 };

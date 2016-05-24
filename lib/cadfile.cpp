@@ -38,19 +38,22 @@
 CADFile::CADFile(CADFileIO* poFileIO)
 {
     m_poFileIO = poFileIO;
-    m_poHeader = new CADHeader();
 }
 
 CADFile::~CADFile()
 {
-    delete m_poHeader;
     if(nullptr != m_poFileIO)
         delete m_poFileIO;
 }
 
-const CADHeader *CADFile::GetHeader() const
+const CADHeader& CADFile::GetHeader() const
 {
-    return m_poHeader;
+    return m_oHeader;
+}
+
+const CADClasses& CADFile::GetClasses() const
+{
+    return m_oClasses;
 }
 
 size_t CADFile::GetLayersCount ()
@@ -67,21 +70,21 @@ size_t CADFile::GetBlocksCount ()
     return( 0 );
 }
 
-CADBlock * CADFile::GetBlock ( size_t index )
+CADBlock * CADFile::GetBlock ( size_t /*index*/ )
 {
     std::cerr << "CADFile::getBlock() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( nullptr );
 }
 
-Layer * CADFile::GetLayer ( size_t index )
+Layer * CADFile::GetLayer ( size_t /*index*/ )
 {
     std::cerr << "CADFile::GetLayer() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
     return( nullptr );
 }
 
-CADGeometry * CADFile::GetGeometry ( size_t layer_index, size_t index )
+CADGeometry * CADFile::GetGeometry ( size_t /*layer_index*/, size_t /*index*/ )
 {
     std::cerr << "CADFile::getGeometry() called from abstract class.\n"
               << "This method should be overrided in derived classes. Abort.\n";
@@ -103,7 +106,7 @@ int CADFile::ParseFile()
     int nResultCode = ReadHeader ();
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
-    nResultCode = ReadClassesSection ();
+    nResultCode = ReadClasses ();
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
     nResultCode = ReadObjectMap ();
@@ -113,7 +116,7 @@ int CADFile::ParseFile()
     return CADErrorCodes::SUCCESS;
 }
 
-CADObject *CADFile::GetObject(size_t index)
+CADObject *CADFile::GetObject(size_t /*index*/)
 {
    return nullptr;
 }

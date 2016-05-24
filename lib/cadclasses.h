@@ -28,53 +28,38 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
+#ifndef CADCLASSES_H
+#define CADCLASSES_H
 
-#ifndef CADFILE_H
-#define CADFILE_H
+#include <vector>
+#include <string>
 
-#include "cadheader.h"
-#include "cadclasses.h"
-#include "cadfileio.h"
+using namespace std;
 
-#include "cadobjects.h"
-
-class Layer;
-class CADGeometry;
-
-/**
- * @brief The abstact CAD file class
- */
-class OCAD_EXTERN CADFile
+struct CADClass
 {
-    friend class Layer;
-public:
-    CADFile (CADFileIO* poFileIO);
-    virtual ~CADFile();
-
-public:
-    const CADHeader& GetHeader() const;
-    const CADClasses& GetClasses() const;
-
-public:
-    virtual size_t GetLayersCount();
-    virtual size_t GetBlocksCount();
-    virtual Layer * GetLayer( size_t index );
-    virtual CADBlock * GetBlock( size_t index );
-    virtual int ParseFile();
-
-protected:
-    virtual CADObject * GetObject( size_t index );
-    virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
-
-    virtual int ReadHeader() = 0;
-    virtual int ReadClasses() = 0;
-    virtual int ReadObjectMap() = 0;
-
-protected:
-    CADFileIO* m_poFileIO;
-    CADHeader m_oHeader;
-    CADClasses m_oClasses;
+    string sCppClassName;       /**< TV, C++ class name */
+    string sApplicationName;    /**< TV, Application name */
+    string sDXFRecordName;      /**< TV, Class DXF record name */
+    int dProxyCapFlag;          /**< BITSHORT, Proxy capabilities flag, 90 */
+    unsigned short dInstanceCount;/**< BITSHORT, Instance count for a custom class, 91 */
+    bool bWasZombie;            /**< BIT, Was-a-proxy flag, 280*/
+    bool bIsEntity;             /**< BITSHORT, Is-an-entity flag, 281 */
+    short dClassNum;            // BITSHORT
+    short dClassVersion;        // BITSHORT
 };
 
+class CADClasses
+{
+public:
+    CADClasses();
 
-#endif // CADFILE_H
+public:
+    void AddClass(struct CADClass stClass);
+    void Print() const;
+
+protected:
+    vector<struct CADClass> m_staClasses;
+};
+
+#endif // CADCLASSES_H

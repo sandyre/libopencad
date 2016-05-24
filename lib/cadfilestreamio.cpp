@@ -86,7 +86,6 @@ int CADFileStreamIO::Seek(long offset, CADFileIO::SeekOrigin origin)
         direction = std::ios_base::end;
         break;
     case SeekOrigin::BEG:
-    default:
         direction = std::ios_base::beg;
         break;
     }
@@ -101,10 +100,12 @@ long CADFileStreamIO::Tell()
 
 size_t CADFileStreamIO::Read(void* ptr, size_t size)
 {
-    return m_oFileStream.read((char*)ptr, size).gcount();
+    return static_cast<size_t>(m_oFileStream.read(
+                                   static_cast<char*>(ptr),
+                                   static_cast<long>(size)).gcount());
 }
 
-size_t CADFileStreamIO::Write(void* ptr, size_t size)
+size_t CADFileStreamIO::Write(void* /*ptr*/, size_t /*size*/)
 {
     // unsupported
     return 0;

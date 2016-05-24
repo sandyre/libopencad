@@ -98,6 +98,7 @@ CADFile* OpenCADFile( CADFileIO* pCADFileIO )
     return poCAD;
 }
 
+
 /**
  * @brief Get library version number as major * 10000 + minor * 100 + rev
  * @return library version number
@@ -156,6 +157,16 @@ int IdentifyCADFile( CADFileIO* pCADFileIO )
 const char* GetCADFormats()
 {
     return "DWG R2000 [ACAD1015]\n";
+}
+
+/**
+ * @brief Open CAD file
+ * @param pszFileName Path to CAD file
+ * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
+ */
+CADFile* OpenCADFile( const char* pszFileName )
+{
+    return OpenCADFile (GetDeafultFileIO(pszFileName));
 }
 
 void DebugMsg(const char* format, ...)
