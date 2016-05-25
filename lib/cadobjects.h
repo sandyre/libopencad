@@ -854,7 +854,7 @@ public:
         eObjectType = DIMENSION_ORDINATE;
     }
 
-    struct CommonDimensionData;
+    struct CommonDimensionData cdd;
     Vertex3D vert10pt;
     Vertex3D vert13pt;
     Vertex3D vert14pt;
@@ -872,7 +872,7 @@ public:
         eObjectType = DIMENSION_LINEAR;
     }
 
-    struct CommonDimensionData;
+    struct CommonDimensionData cdd;
     Vertex3D vert13pt;
     Vertex3D vert14pt;
     Vertex3D vert10pt;
@@ -891,7 +891,7 @@ public:
         eObjectType = DIMENSION_ALIGNED;
     }
 
-    struct CommonDimensionData;
+    struct CommonDimensionData cdd;
     Vertex3D vert13pt;
     Vertex3D vert14pt;
     Vertex3D vert10pt;
@@ -909,7 +909,7 @@ public:
         eObjectType = DIMENSION_ANG_3PT;
     }
 
-    struct CommonDimensionData;
+    struct CommonDimensionData cdd;
     Vertex3D vert10pt;
     Vertex3D vert13pt;
     Vertex3D vert14pt;
@@ -927,7 +927,7 @@ public:
         eObjectType = DIMENSION_ANG_2LN;
     }
 
-    struct CommonDimensionData;
+    struct CommonDimensionData cdd;
     Vertex3D vert16pt;
     Vertex3D vert13pt;
     Vertex3D vert14pt;
@@ -946,7 +946,7 @@ public:
         eObjectType = DIMENSION_RADIUS;
     }
 
-    struct CommonDimensionData;
+    struct CommonDimensionData cdd;
     Vertex3D vert10pt;
     Vertex3D vert15pt;
     double dfLeaderLen;
@@ -963,7 +963,7 @@ public:
         eObjectType = DIMENSION_DIAMETER;
     }
 
-    struct CommonDimensionData;
+    struct CommonDimensionData cdd;
     Vertex3D vert15pt;
     Vertex3D vert10pt;
     double dfLeaderLen;

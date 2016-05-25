@@ -2003,6 +2003,488 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
+            /*
+             * Dimensions handling.
+             */
+            case DWG_OBJECT_DIMENSION_RADIUS:
+            case DWG_OBJECT_DIMENSION_DIAMETER:
+            case DWG_OBJECT_DIMENSION_ALIGNED:
+            case DWG_OBJECT_DIMENSION_ANG_3PT:
+            case DWG_OBJECT_DIMENSION_ANG_2LN:
+            case DWG_OBJECT_DIMENSION_ORDINATE:
+            case DWG_OBJECT_DIMENSION_LINEAR:
+            {
+                struct CommonDimensionData stCDD;
+
+                stCDD.vectExtrusion.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.vectExtrusion.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.vectExtrusion.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                stCDD.vertTextMidPt.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.vertTextMidPt.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                stCDD.dfElevation = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.dFlags = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+
+                stCDD.sUserText = ReadTV (pabySectionContent, nBitOffsetFromStart);
+                stCDD.dfTextRotation = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.dfHorizDir = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                stCDD.dfInsXScale = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.dfInsYScale = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.dfInsZScale = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.dfInsRotation = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                stCDD.dAttachmentPoint = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                stCDD.dLineSpacingStyle = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                stCDD.dfLineSpacingFactor = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.dfActualMeasurement = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                stCDD.vert12Pt.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stCDD.vert12Pt.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                switch(dObjectType)
+                {
+                    case DWG_OBJECT_DIMENSION_ORDINATE:
+                    {
+                        CADDimensionOrdinate * dimension = new CADDimensionOrdinate();
+
+                        dimension->dObjectSize = dObjectSize;
+                        dimension->ced = common_entity_data;
+                        dimension->cdd = stCDD;
+
+                        dimension->vert10pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert13pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert14pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->Flags2 = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+
+                        if (dimension->ced.bbEntMode == 0 )
+                            dimension->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        for ( size_t i = 0; i < dimension->ced.nNumReactors; ++i )
+                            dimension->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                        dimension->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( !dimension->ced.bNoLinks )
+                        {
+                            dimension->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                            dimension->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( dimension->ced.bbLTypeFlags == 0x03 )
+                        {
+                            dimension->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        if ( dimension->ced.bbPlotStyleFlags == 0x03 )
+                        {
+                            dimension->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->hDimstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->hAnonymousBlock = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                        dimension->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                            DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                                      __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                        readed_object = dimension;
+                        break;
+                    }
+
+                    case DWG_OBJECT_DIMENSION_LINEAR:
+                    {
+                        CADDimensionLinear * dimension = new CADDimensionLinear();
+
+                        dimension->dObjectSize = dObjectSize;
+                        dimension->ced = common_entity_data;
+                        dimension->cdd = stCDD;
+
+                        dimension->vert13pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert14pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert10pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->dfExtLnRot = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->dfDimRot = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if (dimension->ced.bbEntMode == 0 )
+                            dimension->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        for ( size_t i = 0; i < dimension->ced.nNumReactors; ++i )
+                            dimension->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                        dimension->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( !dimension->ced.bNoLinks )
+                        {
+                            dimension->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                            dimension->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( dimension->ced.bbLTypeFlags == 0x03 )
+                        {
+                            dimension->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        if ( dimension->ced.bbPlotStyleFlags == 0x03 )
+                        {
+                            dimension->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->hDimstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->hAnonymousBlock = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                        dimension->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                            DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                                      __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                        readed_object = dimension;
+                        break;
+                    }
+
+                    case DWG_OBJECT_DIMENSION_ALIGNED:
+                    {
+                        CADDimensionAligned * dimension = new CADDimensionAligned();
+
+                        dimension->dObjectSize = dObjectSize;
+                        dimension->ced = common_entity_data;
+                        dimension->cdd = stCDD;
+
+                        dimension->vert13pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert14pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert10pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->dfExtLnRot = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if (dimension->ced.bbEntMode == 0 )
+                            dimension->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        for ( size_t i = 0; i < dimension->ced.nNumReactors; ++i )
+                            dimension->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                        dimension->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( !dimension->ced.bNoLinks )
+                        {
+                            dimension->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                            dimension->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( dimension->ced.bbLTypeFlags == 0x03 )
+                        {
+                            dimension->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        if ( dimension->ced.bbPlotStyleFlags == 0x03 )
+                        {
+                            dimension->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->hDimstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->hAnonymousBlock = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                        dimension->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                            DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                                      __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                        readed_object = dimension;
+                        break;
+                    }
+
+                    case DWG_OBJECT_DIMENSION_ANG_3PT:
+                    {
+                        CADDimensionAngular3Pt * dimension = new CADDimensionAngular3Pt();
+
+                        dimension->dObjectSize = dObjectSize;
+                        dimension->ced = common_entity_data;
+                        dimension->cdd = stCDD;
+
+                        dimension->vert10pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert13pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert14pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert15pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert15pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert15pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if (dimension->ced.bbEntMode == 0 )
+                            dimension->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        for ( size_t i = 0; i < dimension->ced.nNumReactors; ++i )
+                            dimension->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                        dimension->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( !dimension->ced.bNoLinks )
+                        {
+                            dimension->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                            dimension->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( dimension->ced.bbLTypeFlags == 0x03 )
+                        {
+                            dimension->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        if ( dimension->ced.bbPlotStyleFlags == 0x03 )
+                        {
+                            dimension->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->hDimstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->hAnonymousBlock = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                        dimension->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                            DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                                      __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                        readed_object = dimension;
+                        break;
+                    }
+
+                    case DWG_OBJECT_DIMENSION_ANG_2LN:
+                    {
+                        CADDimensionAngular2Ln * dimension = new CADDimensionAngular2Ln();
+
+                        dimension->dObjectSize = dObjectSize;
+                        dimension->ced = common_entity_data;
+                        dimension->cdd = stCDD;
+
+                        dimension->vert16pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert16pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert16pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert13pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert13pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert14pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert14pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert15pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert15pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert15pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert10pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if (dimension->ced.bbEntMode == 0 )
+                            dimension->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        for ( size_t i = 0; i < dimension->ced.nNumReactors; ++i )
+                            dimension->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                        dimension->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( !dimension->ced.bNoLinks )
+                        {
+                            dimension->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                            dimension->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( dimension->ced.bbLTypeFlags == 0x03 )
+                        {
+                            dimension->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        if ( dimension->ced.bbPlotStyleFlags == 0x03 )
+                        {
+                            dimension->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->hDimstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->hAnonymousBlock = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                        dimension->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                            DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                                      __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                        readed_object = dimension;
+                        break;
+                    }
+
+                    case DWG_OBJECT_DIMENSION_RADIUS:
+                    {
+                        CADDimensionRadius * dimension = new CADDimensionRadius();
+
+                        dimension->dObjectSize = dObjectSize;
+                        dimension->ced = common_entity_data;
+                        dimension->cdd = stCDD;
+
+                        dimension->vert10pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert15pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert15pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert15pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->dfLeaderLen = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if (dimension->ced.bbEntMode == 0 )
+                            dimension->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        for ( size_t i = 0; i < dimension->ced.nNumReactors; ++i )
+                            dimension->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                        dimension->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( !dimension->ced.bNoLinks )
+                        {
+                            dimension->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                            dimension->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( dimension->ced.bbLTypeFlags == 0x03 )
+                        {
+                            dimension->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        if ( dimension->ced.bbPlotStyleFlags == 0x03 )
+                        {
+                            dimension->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->hDimstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->hAnonymousBlock = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                        dimension->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                            DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                                      __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                        readed_object = dimension;
+                        break;
+                    }
+
+                    case DWG_OBJECT_DIMENSION_DIAMETER:
+                    {
+                        CADDimensionDiameter * dimension = new CADDimensionDiameter();
+
+                        dimension->dObjectSize = dObjectSize;
+                        dimension->ced = common_entity_data;
+                        dimension->cdd = stCDD;
+
+                        dimension->vert15pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert15pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert15pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->vert10pt.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->vert10pt.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        dimension->dfLeaderLen = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if (dimension->ced.bbEntMode == 0 )
+                            dimension->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        for ( size_t i = 0; i < dimension->ced.nNumReactors; ++i )
+                            dimension->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                        dimension->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( !dimension->ced.bNoLinks )
+                        {
+                            dimension->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                            dimension->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( dimension->ced.bbLTypeFlags == 0x03 )
+                        {
+                            dimension->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        if ( dimension->ced.bbPlotStyleFlags == 0x03 )
+                        {
+                            dimension->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        }
+
+                        dimension->hDimstyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                        dimension->hAnonymousBlock = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                        nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                        dimension->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                        if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                            DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                                      __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                        readed_object = dimension;
+                        break;
+                    }
+                }
+            }
+
+            // Section below is for handling all unsupported types.
+            // TODO: this code can have bugs, because probably not entities follows the format,
+            // so it probably cant identify the layer they are attached to properly.
             default:
             {
                 CADEntity * entity = new CADEntity();
