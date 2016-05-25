@@ -819,4 +819,157 @@ public:
     std::vector < Vertex3D > averFitPoints;
 };
 
+struct CommonDimensionData
+{
+    char dVersion;
+    Vector3D vectExtrusion;
+    Vertex2D vertTextMidPt;
+    double dfElevation;
+    char dFlags;
+    std::string sUserText;
+    double dfTextRotation;
+    double dfHorizDir;
+    double dfInsXScale;
+    double dfInsYScale;
+    double dfInsZScale;
+    double dfInsRotation;
+
+    short dAttachmentPoint;
+    short dLineSpacingStyle;
+    double dfLineSpacingFactor;
+    double dfActualMeasurement;
+
+    bool bUnknown;
+    bool bFlipArrow1;
+    bool bFlipArrow2;
+
+    Vertex2D vert12Pt;
+};
+
+class CADDimensionOrdinate : public CADEntity
+{
+public:
+    CADDimensionOrdinate()
+    {
+        eObjectType = DIMENSION_ORDINATE;
+    }
+
+    struct CommonDimensionData;
+    Vertex3D vert10pt;
+    Vertex3D vert13pt;
+    Vertex3D vert14pt;
+    char Flags2;
+
+    CADHandle hDimstyle;
+    CADHandle hAnonymousBlock;
+};
+
+class CADDimensionLinear : public CADEntity
+{
+public:
+    CADDimensionLinear()
+    {
+        eObjectType = DIMENSION_LINEAR;
+    }
+
+    struct CommonDimensionData;
+    Vertex3D vert13pt;
+    Vertex3D vert14pt;
+    Vertex3D vert10pt;
+    double dfExtLnRot;
+    double dfDimRot;
+
+    CADHandle hDimstyle;
+    CADHandle hAnonymousBlock;
+};
+
+class CADDimensionAligned : public CADEntity
+{
+public:
+    CADDimensionAligned()
+    {
+        eObjectType = DIMENSION_ALIGNED;
+    }
+
+    struct CommonDimensionData;
+    Vertex3D vert13pt;
+    Vertex3D vert14pt;
+    Vertex3D vert10pt;
+    double dfExtLnRot;
+
+    CADHandle hDimstyle;
+    CADHandle hAnonymousBlock;
+};
+
+class CADDimensionAngular3Pt : public CADEntity
+{
+public:
+    CADDimensionAngular3Pt()
+    {
+        eObjectType = DIMENSION_ANG_3PT;
+    }
+
+    struct CommonDimensionData;
+    Vertex3D vert10pt;
+    Vertex3D vert13pt;
+    Vertex3D vert14pt;
+    Vertex3D vert15pt;
+
+    CADHandle hDimstyle;
+    CADHandle hAnonymousBlock;
+};
+
+class CADDimensionAngular2Ln : public CADEntity
+{
+public:
+    CADDimensionAngular2Ln()
+    {
+        eObjectType = DIMENSION_ANG_2LN;
+    }
+
+    struct CommonDimensionData;
+    Vertex3D vert16pt;
+    Vertex3D vert13pt;
+    Vertex3D vert14pt;
+    Vertex3D vert15pt;
+    Vertex3D vert10pt;
+
+    CADHandle hDimstyle;
+    CADHandle hAnonymousBlock;
+};
+
+class CADDimensionRadius : public CADEntity
+{
+public:
+    CADDimensionRadius()
+    {
+        eObjectType = DIMENSION_RADIUS;
+    }
+
+    struct CommonDimensionData;
+    Vertex3D vert10pt;
+    Vertex3D vert15pt;
+    double dfLeaderLen;
+
+    CADHandle hDimstyle;
+    CADHandle hAnonymousBlock;
+};
+
+class CADDimensionDiameter : public CADEntity
+{
+public:
+    CADDimensionDiameter()
+    {
+        eObjectType = DIMENSION_DIAMETER;
+    }
+
+    struct CommonDimensionData;
+    Vertex3D vert15pt;
+    Vertex3D vert10pt;
+    double dfLeaderLen;
+
+    CADHandle hDimstyle;
+    CADHandle hAnonymousBlock;
+};
+
 #endif //CADOBJECTS_H

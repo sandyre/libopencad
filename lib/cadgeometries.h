@@ -75,7 +75,7 @@ class CADGeometry
         return dfThickness;
     }
 
-    void SetThickness(double thicknes){
+    void SetThickness(double thicknes) {
         dfThickness = thicknes;
     }
 
