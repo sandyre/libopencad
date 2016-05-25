@@ -28,53 +28,53 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
-
-#ifndef CADFILE_H
-#define CADFILE_H
-
-#include "cadheader.h"
 #include "cadclasses.h"
-#include "cadfileio.h"
+#include "opencad.h"
 
-#include "cadobjects.h"
+#include <iostream>
 
-class Layer;
-class CADGeometry;
+using namespace std;
 
-/**
- * @brief The abstact CAD file class
- */
-class OCAD_EXTERN CADFile
+CADClasses::CADClasses()
 {
-    friend class Layer;
-public:
-    CADFile (CADFileIO* poFileIO);
-    virtual ~CADFile();
 
-public:
-    const CADHeader& GetHeader() const;
-    const CADClasses& GetClasses() const;
+}
 
-public:
-    virtual size_t GetLayersCount();
-    virtual size_t GetBlocksCount();
-    virtual Layer * GetLayer( size_t index );
-    virtual CADBlock * GetBlock( size_t index );
-    virtual int ParseFile();
+void CADClasses::AddClass(CADClass stClass)
+{
+    m_staClasses.push_back (stClass);
 
-protected:
-    virtual CADObject * GetObject( size_t index );
-    virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
+    DebugMsg ("CLASS INFO\n"
+                      "  Class Number: %d\n"
+                      "  Proxy capabilities flag or Version: %d\n"
+                      "  App name: %s\n"
+                      "  C++ Class Name: %s\n"
+                      "  DXF Class name: %s\n"
+                      "  Was a zombie? %x\n"
+                      "  Is-an-entity flag: %x\n\n",
+              stClass.dClassNum,
+              stClass.dProxyCapFlag,
+              stClass.sApplicationName.c_str(),
+              stClass.sCppClassName.c_str(),
+              stClass.sDXFRecordName.c_str(),
+              stClass.bWasZombie,
+              stClass.bIsEntity);
+}
 
-    virtual int ReadHeader() = 0;
-    virtual int ReadClasses() = 0;
-    virtual int ReadObjectMap() = 0;
+void CADClasses::Print() const
+{
+    cout << "============ CLASSES Section ============" << endl;
 
-protected:
-    CADFileIO* m_poFileIO;
-    CADHeader m_oHeader;
-    CADClasses m_oClasses;
-};
-
-
-#endif // CADFILE_H
+    for(struct CADClass stClass : m_staClasses)
+    {
+        cout << "Class: " << endl;
+        cout << "  Class Number: " << stClass.dClassNum << endl;
+        cout << "  Proxy capabilities flag or Version: " <<
+                stClass.dProxyCapFlag << endl;
+        cout << "  App name: " << stClass.sApplicationName << endl;
+        cout << "  C++ Class Name: " << stClass.sCppClassName << endl;
+        cout << "  DXF Class name: " << stClass.sDXFRecordName << endl;
+        cout << "  Was a zombie: " << stClass.bWasZombie << endl;
+        cout << "  Is-an-entity flag: " << stClass.bIsEntity << endl << endl;
+    }
+}

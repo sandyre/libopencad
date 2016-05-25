@@ -33,6 +33,9 @@
 #include "opencad_api.h"
 
 #include <cstring>
+#include <iostream>
+
+using namespace std;
 
 typedef struct
 {
@@ -282,25 +285,29 @@ long CADHandle::GetAsLong( CADHandle& ref_handle )
     {
         case 0x06:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), ref_handle.m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(),
+                     ref_handle.m_HandleOrOffset.size() );
             SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
             return result + 1;
         }
         case 0x08:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), ref_handle.m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(),
+                     ref_handle.m_HandleOrOffset.size() );
             SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
             return result - 1;
         }
         case 0x0A:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), ref_handle.m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(),
+                     ref_handle.m_HandleOrOffset.size() );
             SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
             return result + this->GetAsLong ();
         }
         case 0x0C:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(), ref_handle.m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.m_HandleOrOffset.data(),
+                     ref_handle.m_HandleOrOffset.size() );
             SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
             return result - this->GetAsLong ();
         }
@@ -334,25 +341,37 @@ CADVariant::CADVariant()
 CADVariant::CADVariant(const char* val)
 {
     m_eType = DataType::STRING;
-    m_sString = std::string(val);
+    m_sString = string(val);
 }
 
 CADVariant::CADVariant(int val)
 {
     m_eType = DataType::DECIMAL;
     m_nDecimal = val;
+
+    char str_buff[256];
+    snprintf (str_buff, 255, "%d", val);
+    m_sString = str_buff;
 }
 
 CADVariant::CADVariant(short val)
 {
     m_eType = DataType::DECIMAL;
     m_nDecimal = val;
+
+    char str_buff[256];
+    snprintf (str_buff, 255, "%d", val);
+    m_sString = str_buff;
 }
 
 CADVariant::CADVariant(double val)
 {
     m_eType = DataType::REAL;
     m_dX = val;
+
+    char str_buff[256];
+    snprintf (str_buff, 255, "%f", val);
+    m_sString = str_buff;
 }
 
 CADVariant::CADVariant(double x, double y, double z)
@@ -361,9 +380,13 @@ CADVariant::CADVariant(double x, double y, double z)
     m_dX = x;
     m_dY = y;
     m_dZ = z;
+
+    char str_buff[256];
+    snprintf (str_buff, 255, "[%f,%f,%f]", x, y, z);
+    m_sString = str_buff;
 }
 
-CADVariant::CADVariant(const std::string& val)
+CADVariant::CADVariant(const string& val)
 {
     m_eType = DataType::STRING;
     m_sString = val;
@@ -373,12 +396,21 @@ CADVariant::CADVariant(time_t val)
 {
     m_eType = DataType::DATETIME;
     m_DateTime = val;
+
+    //TODO: data/time format
+    char str_buff[256];
+    snprintf (str_buff, 255, "%ld", m_DateTime);
+    m_sString = str_buff;
 }
 
 CADVariant::CADVariant(const CADHandle& val)
 {
     m_eType = DataType::HANDLE;
     m_Handle = val;
+
+    char str_buff[256];
+    snprintf (str_buff, 255, "%ld", val.GetAsLong ());
+    m_sString = str_buff;
 }
 
 CADVariant::CADVariant(const CADVariant& orig)
@@ -410,7 +442,7 @@ double CADVariant::GetReal() const
     return m_dX;
 }
 
-const std::string &CADVariant::GetString() const
+const string &CADVariant::GetString() const
 {
     return m_sString;
 }
@@ -478,7 +510,7 @@ int CADHeader::AddValue(short code, double val)
     return AddValue(code, CADVariant(val));
 }
 
-int CADHeader::AddValue(short code, const std::string& val)
+int CADHeader::AddValue(short code, const string& val)
 {
     return AddValue(code, CADVariant(val));
 }
@@ -500,7 +532,7 @@ int CADHeader::AddValue(short code, long julianday, long milliseconds)
 
     double seconds = double(milliseconds) / 1000;
     double unix = (double(julianday) - 2440587.5) * 86400.0;
-    time_t fullSeconds = unix + seconds;
+    time_t fullSeconds = static_cast<time_t>(unix + seconds);
     return AddValue(code, CADVariant(fullSeconds));
 }
 
@@ -531,7 +563,15 @@ const char *CADHeader::GetValueName(short code) const
         if(detail.nConstant == code)
             return detail.pszValueName;
     }
-    return nullptr;
+    return "Undefined";
 }
 
+void CADHeader::Print() const
+{
+    cout << "============ HEADER Section ============" << endl;
+    for(auto it : m_moValues)
+    {
+        cout << GetValueName(it.first) << ": " << it.second.GetString() << endl;
+    }
+}
 

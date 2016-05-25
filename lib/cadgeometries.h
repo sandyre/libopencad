@@ -345,7 +345,7 @@ public:
 //    std::vector < std::pair < long long, short > > astAttachedGeometries;
 //};
 
-class EXTERN Layer
+class OCAD_EXTERN Layer
 {
 public:
     Layer(CADFile * pCADFile)
