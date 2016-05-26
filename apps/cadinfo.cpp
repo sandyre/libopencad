@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
     classes.Print ();
     std::cout << std::endl;
 
+    int images_count = 0;
     int solids_count = 0;
     int splines_count = 0;
     int circles_count = 0;
@@ -299,11 +300,34 @@ int main(int argc, char *argv[])
                         ++solids_count;
                         break;
                     }
+                    case CADGeometry::IMAGE:
+                    {
+                        Image * img = ( Image * ) geom;
+                        std::cout << "|---------Image---------|\n";
+                        std::cout << "Filepath: " << img->sFilePath << std::endl;
+                        std::cout << "Insertion point: " << img->vertInsertionPoint.X << "\t"
+                                 << img->vertInsertionPoint.Y << std::endl;
+                        std::cout << "Show? : " << img->bShow << std::endl;
+                        std::cout << "Transparent? : " << img->bTransparency << std::endl;
+                        std::cout << "Brightness (0-100) : " << img->dBrightness << std::endl;
+                        std::cout << "Contrast (0-100) : " << img->dContrast << std::endl;
+                        std::cout << "Fade (0-100) : " << img->dFade << std::endl;
+                        std::cout << "Clipping polygon:" << std::endl;
+                        for ( size_t i = 0; i < img->avertClippingPolygon.size(); ++i )
+                        {
+                            std::cout << "#" << i << "\tX: " << img->avertClippingPolygon[i].X << " Y: "
+                                << img->avertClippingPolygon[i].Y << std::endl;
+                        }
+                        std::cout << std::endl;
+                        ++images_count;
+                        break;
+                    }
                 }
             }
         }
     }
 
+    std::cout << "Images: " << images_count << std::endl;
     std::cout << "Solids: " << solids_count << std::endl;
     std::cout << "Points: " << point_count << std::endl;
     std::cout << "Ellipses: " << ellipses_count << std::endl;

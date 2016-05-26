@@ -61,7 +61,8 @@ class CADGeometry
         SPLINE,
         SOLID,
         RAY,
-        HATCH // NOT IMPLEMENTED
+        HATCH, // NOT IMPLEMENTED
+        IMAGE
     };
 
     //TODO: Move to cpp
@@ -307,6 +308,39 @@ public:
     }
 };
 
+class Image : public CADGeometry
+{
+public:
+    Image()
+    {
+        eGeometryType = CADGeometry::IMAGE;
+    }
+
+    Vertex3D vertInsertionPoint;
+    Vector3D vectUDirection;
+    Vector3D vectVDirection;
+    double dfImageSizeX;
+    double dfImageSizeY;
+    bool bShow;
+    bool bShowWhenNotAlignedWithScreen;
+    bool bUseClippingBoundary;
+    bool bTransparency;
+    bool bClipping;
+    char dBrightness;
+    char dContrast;
+    char dFade;
+
+    double dfImageSizeXInPx;
+    double dfImageSizeYInPx;
+    std::string sFilePath;
+    bool bIsLoaded;
+    char dResUnits; // 0 == none, 2 == centimeters, 5 == inches;
+    double dfPixelSizeXInACADUnits;
+    double dfPixelSizeYInACADUnits;
+
+    short dClippingBoundaryType; // 1 == rect, 2 == polygon
+    std::vector < Vertex2D > avertClippingPolygon;
+};
 //
 //class EXTERN LineType
 //{

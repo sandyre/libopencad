@@ -779,12 +779,13 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
     {
         struct CADClass stClass = m_oClasses.GetClass (dObjectType - 500);
 
-        if ( stClass.bIsEntity )
+        if ( !strcmp(stClass.sDXFRecordName.c_str(), "IMAGE" ) )
         {
-            if ( !strcmp(stClass.sDXFRecordName.c_str(), "IMAGE" ) )
-            {
-                dObjectType = CADObject::CADObjectType::IMAGE;
-            }
+            dObjectType = CADObject::CADObjectType::IMAGE;
+        }
+        if ( !strcmp(stClass.sDXFRecordName.c_str(), "IMAGEDEF" ) )
+        {
+            dObjectType = CADObject::CADObjectType::IMAGEDEF;
         }
     }
 
@@ -2656,7 +2657,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 imagedef->dObjectSize = dObjectSize;
                 imagedef->nObjectSizeInBits = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
-                imagedef->hObjectHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                imagedef->hObjectHandle = ReadHANDLE8BLENGTH (pabySectionContent, nBitOffsetFromStart);
 
                 int16_t dEEDSize = 0;
                 while ( (dEEDSize = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart)) != 0 )
@@ -2711,7 +2712,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 imagedefreactor->dObjectSize = dObjectSize;
                 imagedefreactor->nObjectSizeInBits = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
-                imagedefreactor->hObjectHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                imagedefreactor->hObjectHandle = ReadHANDLE8BLENGTH (pabySectionContent, nBitOffsetFromStart);
 
                 int16_t dEEDSize = 0;
                 while ( (dEEDSize = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart)) != 0 )
@@ -3162,6 +3163,43 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
 
     switch ( readed_object->eObjectType )
     {
+        case CADObject::CADObjectType::IMAGE:
+        {
+            Image * image = new Image();
+            CADImage * cadImage = ( CADImage * ) readed_object;
+            CADImageDef * cadImageDef = ( CADImageDef * ) this->GetObject ( cadImage->hImageDef.GetAsLong () );
+
+            image->vertInsertionPoint = cadImage->vertInsertion;
+            image->vectUDirection = cadImage->vectUDirection;
+            image->vectVDirection = cadImage->vectVDirection;
+            image->dfImageSizeX = cadImage->dfSizeX;
+            image->dfImageSizeY = cadImage->dfSizeY;
+            image->bShow = cadImage->dDisplayProps & 0x01;
+            image->bShowWhenNotAlignedWithScreen = cadImage->dDisplayProps & 0x02;
+            image->bUseClippingBoundary = cadImage->dDisplayProps & 0x04;
+            image->bTransparency = cadImage->dDisplayProps & 0x08;
+            image->bClipping = cadImage->bClipping;
+            image->dBrightness = cadImage->dBrightness;
+            image->dContrast = cadImage->dContrast;
+            image->dFade = cadImage->dFade;
+            image->dClippingBoundaryType = cadImage->dClipBoundaryType;
+            image->avertClippingPolygon = cadImage->avertClippingPolygonVertexes;
+
+            image->dfImageSizeXInPx = cadImageDef->dfXImageSizeInPx;
+            image->dfImageSizeYInPx = cadImageDef->dfYImageSizeInPx;
+            image->sFilePath = cadImageDef->sFilePath;
+            image->bIsLoaded = cadImageDef->bIsLoaded;
+            image->dResUnits = cadImageDef->dResUnits;
+            image->dfPixelSizeXInACADUnits = cadImageDef->dfXPixelSize;
+            image->dfPixelSizeYInACADUnits = cadImageDef->dfYPixelSize;
+
+            delete( cadImageDef );
+            delete( cadImage );
+
+            result_geometry = image;
+            break;
+        }
+
         case CADObject::CADObjectType::ARC:
         {
             Arc * arc = new Arc();
