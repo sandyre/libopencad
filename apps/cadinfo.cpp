@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
     classes.Print ();
     std::cout << std::endl;
 
+    int mtexts_count = 0;
     int images_count = 0;
     int solids_count = 0;
     int splines_count = 0;
@@ -322,11 +323,23 @@ int main(int argc, char *argv[])
                         ++images_count;
                         break;
                     }
+                    case CADGeometry::MTEXT:
+                    {
+                        MText * text = ( MText * ) geom;
+                        std::cout << "|---------MText---------|\n";
+                        std::cout << "Position: " << text->vertInsertionPoint.X << "\t"
+                            << text->vertInsertionPoint.Y << "\t" << text->vertInsertionPoint.Z << std::endl;
+                        std::cout << "Text: " << text->sTextValue << std::endl << std::endl;
+
+                        ++mtexts_count;
+                        break;
+                    }
                 }
             }
         }
     }
 
+    std::cout << "MTexts: " << mtexts_count << std::endl;
     std::cout << "Images: " << images_count << std::endl;
     std::cout << "Solids: " << solids_count << std::endl;
     std::cout << "Points: " << point_count << std::endl;

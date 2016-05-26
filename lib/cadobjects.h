@@ -1082,4 +1082,32 @@ public:
     CADHandle hXDictionary;
 };
 
+class CADMText : public CADEntity
+{
+public:
+    CADMText()
+    {
+        eObjectType = MTEXT;
+    }
+
+    Vertex3D vertInsertionPoint;
+    Vector3D vectExtrusion;
+    Vector3D vectXAxisDir;
+    double dfRectWidth;
+    double dfTextHeight;
+    short dAttachment; // TODO: meaning unknown
+    short dDrawingDir;
+    double dfExtents; // TODO: meaning unknown
+    double dfExtentsWidth; // TODO: meaning unknown
+    std::string sTextValue;
+    short dLineSpacingStyle;
+    short dLineSpacingFactor;
+    bool bUnknownBit;
+    long dBackgroundFlags;
+    long dBackgroundScaleFactor;
+    short dBackgroundColor;
+    long dBackgroundTransparency;
+    CADHandle hStyle;
+};
+
 #endif //CADOBJECTS_H

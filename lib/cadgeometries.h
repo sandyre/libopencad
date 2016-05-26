@@ -62,7 +62,8 @@ class CADGeometry
         SOLID,
         RAY,
         HATCH, // NOT IMPLEMENTED
-        IMAGE
+        IMAGE,
+        MTEXT
     };
 
     //TODO: Move to cpp
@@ -340,6 +341,32 @@ public:
 
     short dClippingBoundaryType; // 1 == rect, 2 == polygon
     std::vector < Vertex2D > avertClippingPolygon;
+};
+
+class MText : public CADGeometry
+{
+public:
+    MText()
+    {
+        eGeometryType = CADGeometry::MTEXT;
+    }
+
+    Vertex3D vertInsertionPoint;
+    Vector3D vectExtrusion;
+    Vector3D vectXAxisDir;
+    double dfRectWidth;
+    double dfTextHeight;
+    short dDrawingDir;
+    double dfExtents;
+    double dfExtentsWidth;
+    std::string sTextValue;
+    short dLineSpacingStyle;
+    short dLineSpacingFactor;
+    bool bUnknownBit;
+    long dBackgroundFlags; // R2004+
+    long dBackgroundScaleFactor;
+    short dBackgroundColor;
+    long dBackgroundTransparency;
 };
 //
 //class EXTERN LineType

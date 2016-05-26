@@ -2115,6 +2115,73 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
+            case CADObject::CADObjectType::MTEXT:
+            {
+                CADMText * text = new CADMText();
+
+                text->dObjectSize = dObjectSize;
+                text->ced = common_entity_data;
+
+                text->vertInsertionPoint.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->vertInsertionPoint.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->vertInsertionPoint.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                text->vectExtrusion.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->vectExtrusion.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->vectExtrusion.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                text->vectXAxisDir.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->vectXAxisDir.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->vectXAxisDir.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                text->dfRectWidth = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->dfTextHeight = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->dAttachment = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                text->dDrawingDir = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                text->dfExtents = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->dfExtentsWidth = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->sTextValue = ReadTV (pabySectionContent, nBitOffsetFromStart);
+                text->dLineSpacingStyle = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                text->dLineSpacingFactor = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                text->bUnknownBit = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+
+                if (text->ced.bbEntMode == 0 )
+                    text->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < text->ced.nNumReactors; ++i )
+                    text->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                text->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !text->ced.bNoLinks )
+                {
+                    text->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    text->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                text->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( text->ced.bbLTypeFlags == 0x03 )
+                {
+                    text->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                if ( text->ced.bbPlotStyleFlags == 0x03 )
+                {
+                    text->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                text->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = text;
+                break;
+            }
+
             /*
              * Dimensions handling.
              */
@@ -3197,6 +3264,29 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             delete( cadImage );
 
             result_geometry = image;
+            break;
+        }
+
+        case CADObject::CADObjectType::MTEXT:
+        {
+            MText * mtext = new MText();
+            CADMText * cadmText = ( CADMText * ) readed_object;
+
+            mtext->vertInsertionPoint = cadmText->vertInsertionPoint;
+            mtext->vectExtrusion = cadmText->vectExtrusion;
+            mtext->vectXAxisDir = cadmText->vectXAxisDir;
+            mtext->dfExtents = cadmText->dfExtents;
+            mtext->dfExtentsWidth = cadmText->dfExtentsWidth;
+            mtext->dDrawingDir = cadmText->dDrawingDir;
+            mtext->sTextValue = cadmText->sTextValue;
+            mtext->dfRectWidth = cadmText->dfRectWidth;
+            mtext->dfTextHeight = cadmText->dfTextHeight;
+            mtext->dLineSpacingFactor = cadmText->dLineSpacingFactor;
+            mtext->dLineSpacingStyle = cadmText->dLineSpacingStyle;
+
+            delete( cadmText );
+
+            result_geometry = mtext;
             break;
         }
 
