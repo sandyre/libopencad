@@ -63,7 +63,9 @@ class CADGeometry
         RAY,
         HATCH, // NOT IMPLEMENTED
         IMAGE,
-        MTEXT
+        MTEXT,
+        MLINE,
+        XLINE
     };
 
     //TODO: Move to cpp
@@ -298,6 +300,48 @@ public:
 
     Vertex3D vertPosition;
     Vector3D vectVector;
+};
+
+class XLine : public CADGeometry
+{
+public:
+    XLine()
+    {
+        eGeometryType = CADGeometry::XLINE;
+    }
+
+    Vertex3D vertPosition;
+    Vector3D vectVector;
+};
+
+class MLine : public CADGeometry
+{
+public:
+    MLine()
+    {
+        eGeometryType = CADGeometry::MLINE;
+    }
+
+    double dfScale;
+    char dJust;
+    Vertex3D vertBasePoint;
+    Vector3D vectExtrusion;
+    bool bOpen; // 1 == open, 0 == close
+    // TODO: erase nNum* fields
+    struct MLineVertex
+    {
+        Vertex3D vertPosition;
+        Vector3D vectDirection;
+        Vector3D vectMIterDirection;
+        struct LineStyle
+        {
+            std::vector<short>  adSegparms;
+            std::vector<double> adfAreaFillParameters;
+        };
+
+        std::vector < LineStyle > astLStyles;
+    };
+    std::vector < MLineVertex > avertVertexes;
 };
 
 class Hatch : public CADGeometry

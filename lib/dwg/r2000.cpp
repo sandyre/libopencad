@@ -929,6 +929,85 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
+            case CADObject::CADObjectType::MLINE:
+            {
+                CADMLine * mline = new CADMLine();
+
+                mline->dObjectSize = dObjectSize;
+                mline->ced = common_entity_data;
+
+                mline->dfScale = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                mline->dJust = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+                mline->vertBasePoint.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                mline->vertBasePoint.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                mline->vertBasePoint.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                mline->vectExtrusion.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                mline->vectExtrusion.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                mline->vectExtrusion.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                mline->dOpenClosed = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                mline->nLinesInStyle = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+                mline->nNumVertexes = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < mline->nNumVertexes; ++i )
+                {
+                    CADMLine::MLineVertex stVertex;
+                    stVertex.vertPosition.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    stVertex.vertPosition.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    stVertex.vertPosition.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    stVertex.vectDirection.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    stVertex.vectDirection.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    stVertex.vectDirection.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    stVertex.vectMIterDirection.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    stVertex.vectMIterDirection.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    stVertex.vectMIterDirection.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    for ( size_t j = 0; j < mline->nLinesInStyle; ++j )
+                    {
+                        CADMLine::MLineVertex::LineStyle stLStyle;
+                        stLStyle.nNumSegParms = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                        for ( size_t k = 0; k < stLStyle.nNumSegParms; ++k )
+                            stLStyle.adSegparms.push_back ( ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart) );
+                        stLStyle.nAreaFillParms = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                        for ( size_t k = 0; k < stLStyle.nAreaFillParms; ++k )
+                            stLStyle.adfAreaFillParameters.push_back ( ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart) );
+
+                        stVertex.astLStyles.push_back (stLStyle);
+                    }
+                    mline->avertVertexes.push_back (stVertex);
+                }
+
+                if ( mline->ced.bbEntMode == 0 )
+                    mline->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < mline->ced.nNumReactors; ++i )
+                    mline->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                mline->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !mline->ced.bNoLinks )
+                {
+                    mline->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    mline->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                mline->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( mline->ced.bbLTypeFlags == 0x03 )
+                    mline->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( mline->ced.bbPlotStyleFlags == 0x03 )
+                    mline->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+                mline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = mline;
+                break;
+            }
+
             case CADObject::CADObjectType::SOLID:
             {
                 CADSolid * solid = new CADSolid();
@@ -3267,6 +3346,40 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
+        case CADObject::CADObjectType::MLINE:
+        {
+            MLine * mline = new MLine();
+            CADMLine * cadmLine = ( CADMLine * ) readed_object;
+
+            mline->dfScale = cadmLine->dfScale;
+            mline->bOpen = cadmLine->dOpenClosed == 1 ? true : false;
+            mline->dJust = cadmLine->dJust;
+            mline->vectExtrusion = cadmLine->vectExtrusion;
+            mline->vertBasePoint = cadmLine->vertBasePoint;
+            mline->avertVertexes.reserve ( cadmLine->avertVertexes.size() );
+            for ( size_t i = 0; i < cadmLine->avertVertexes.size(); ++ i )
+            {
+                MLine::MLineVertex stVertex;
+                stVertex.vertPosition = cadmLine->avertVertexes[i].vertPosition;
+                stVertex.vectDirection = cadmLine->avertVertexes[i].vectDirection;
+                stVertex.vectMIterDirection = cadmLine->avertVertexes[i].vectMIterDirection;
+                for ( size_t j = 0; j < cadmLine->avertVertexes[i].astLStyles.size(); ++j )
+                {
+                    MLine::MLineVertex::LineStyle stLStyle;
+                    stLStyle.adSegparms = cadmLine->avertVertexes[i].astLStyles[j].adSegparms;
+                    stLStyle.adfAreaFillParameters = cadmLine->avertVertexes[i].astLStyles[j].adfAreaFillParameters;
+                    stVertex.astLStyles.push_back(stLStyle);
+                }
+
+                mline->avertVertexes.push_back ( stVertex );
+            }
+
+            delete( cadmLine );
+
+            result_geometry = mline;
+            break;
+        }
+
         case CADObject::CADObjectType::MTEXT:
         {
             MText * mtext = new MText();
@@ -3443,6 +3556,22 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             delete( cadRay );
 
             result_geometry = ray;
+            break;
+        }
+
+        // TODO: actually, XLINE == RAY (except type code),
+        // so at optimization stage it should be concatenated
+        case CADObject::CADObjectType::XLINE:
+        {
+            XLine * xline = new XLine();
+            CADXLine * cadxLine = ( CADXLine * ) readed_object;
+
+            xline->vectVector = cadxLine->vectVector;
+            xline->vertPosition = cadxLine->vertPosition;
+
+            delete( cadxLine );
+
+            result_geometry = xline;
             break;
         }
 

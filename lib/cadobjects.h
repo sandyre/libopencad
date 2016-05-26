@@ -1110,4 +1110,39 @@ public:
     CADHandle hStyle;
 };
 
+class CADMLine : public CADEntity
+{
+public:
+    CADMLine()
+    {
+        eObjectType = MLINE;
+    }
+
+    double dfScale;
+    char dJust;
+    Vertex3D vertBasePoint;
+    Vector3D vectExtrusion;
+    short dOpenClosed; // 1 open, 3 closed
+    char nLinesInStyle;
+    short nNumVertexes;
+    struct MLineVertex
+    {
+        Vertex3D vertPosition;
+        Vector3D vectDirection;
+        Vector3D vectMIterDirection;
+        struct LineStyle
+        {
+            short               nNumSegParms;
+            std::vector<short>  adSegparms;
+            short               nAreaFillParms;
+            std::vector<double> adfAreaFillParameters;
+        };
+
+        std::vector < LineStyle > astLStyles;
+    };
+    std::vector < MLineVertex > avertVertexes;
+
+    CADHandle hMLineStyle;
+};
+
 #endif //CADOBJECTS_H

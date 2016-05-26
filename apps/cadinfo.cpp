@@ -112,6 +112,9 @@ int main(int argc, char *argv[])
     classes.Print ();
     std::cout << std::endl;
 
+    int rays_count = 0;
+    int xlines_count = 0;
+    int mlines_count = 0;
     int mtexts_count = 0;
     int images_count = 0;
     int solids_count = 0;
@@ -334,11 +337,58 @@ int main(int argc, char *argv[])
                         ++mtexts_count;
                         break;
                     }
+                    case CADGeometry::MLINE:
+                    {
+                        MLine * mline = ( MLine * ) geom;
+                        std::cout << "|---------MLine---------|\n";
+                        std::cout << "Base point: " << mline->vertBasePoint.X << "\t"
+                            << mline->vertBasePoint.Y << "\t" << mline->vertBasePoint.Z << std::endl;
+                        std::cout << "Vertexes:\n";
+                        for ( size_t i = 0; i < mline->avertVertexes.size(); ++i )
+                        {
+                            std::cout << "#" << i << "\t" << mline->avertVertexes[i].vertPosition.X <<
+                                "\t" << mline->avertVertexes[i].vertPosition.Y
+                                << "\t" << mline->avertVertexes[i].vertPosition.Z << std::endl;
+                        }
+                        std::cout << std::endl;
+
+                        ++mlines_count;
+                        break;
+                    }
+                    case CADGeometry::XLINE:
+                    {
+                        XLine * xline = ( XLine * ) geom;
+                        std::cout << "|---------XLine---------|\n";
+                        std::cout << "Position: " << xline->vertPosition.X << "\t"
+                            << xline->vertPosition.Y << "\t" << xline->vertPosition.Z << std::endl;
+                        std::cout << "Direction: " << xline->vectVector.X << "\t"
+                            << xline->vectVector.Y << "\t" << xline->vectVector.Z << std::endl;
+                        std::cout << std::endl;
+
+                        ++xlines_count;
+                        break;
+                    }
+                    case CADGeometry::RAY:
+                    {
+                        Ray * ray = ( Ray * ) geom;
+                        std::cout << "|---------Ray---------|\n";
+                        std::cout << "Position: " << ray->vertPosition.X << "\t"
+                            << ray->vertPosition.Y << "\t" << ray->vertPosition.Z << std::endl;
+                        std::cout << "Direction: " << ray->vectVector.X << "\t"
+                            << ray->vectVector.Y << "\t" << ray->vectVector.Z << std::endl;
+                        std::cout << std::endl;
+
+                        ++rays_count;
+                        break;
+                    }
                 }
             }
         }
     }
 
+    std::cout << "Rays: " << rays_count << std::endl;
+    std::cout << "XLines: " << xlines_count << std::endl;
+    std::cout << "MLines: " << mlines_count << std::endl;
     std::cout << "MTexts: " << mtexts_count << std::endl;
     std::cout << "Images: " << images_count << std::endl;
     std::cout << "Solids: " << solids_count << std::endl;
