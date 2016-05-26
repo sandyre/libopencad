@@ -773,6 +773,21 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
     dObjectSize = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
     int16_t dObjectType = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
 
+    // TODO: Handling objects with unfixed type codes. It just replace theirs type codes with associated internal libopencad code.
+    // need test on files with a bunch of rasters, etc (unfixed type code objects).
+    if ( dObjectType >= 500 )
+    {
+        struct CADClass stClass = m_oClasses.GetClass (dObjectType - 500);
+
+        if ( stClass.bIsEntity )
+        {
+            if ( !strcmp(stClass.sDXFRecordName.c_str(), "IMAGE" ) )
+            {
+                dObjectType = CADObject::CADObjectType::IMAGE;
+            }
+        }
+    }
+
     // Entities handling
     if ( std::find ( DWG_ENTITIES_CODES.begin(), DWG_ENTITIES_CODES.end(), dObjectType ) != DWG_ENTITIES_CODES.end() )
     {
@@ -797,6 +812,12 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
         }
 
         common_entity_data.bGraphicsPresented = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+        if ( common_entity_data.bGraphicsPresented )
+        {
+            long nProxyEntDataSize = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
+            nBitOffsetFromStart += nProxyEntDataSize * 8;
+        }
+
         common_entity_data.bbEntMode = Read2B (pabySectionContent, nBitOffsetFromStart);
         common_entity_data.nNumReactors = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
         common_entity_data.bNoLinks = ReadBIT (pabySectionContent, nBitOffsetFromStart);
@@ -809,7 +830,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
         switch ( dObjectType )
         {
-            case DWG_OBJECT_BLOCK:
+            case CADObject::CADObjectType::BLOCK:
             {
                 CADBlock * block = new CADBlock();
 
@@ -851,7 +872,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_ELLIPSE:
+            case CADObject::CADObjectType::ELLIPSE:
             {
                 CADEllipse * ellipse = new CADEllipse();
 
@@ -907,7 +928,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_SOLID:
+            case CADObject::CADObjectType::SOLID:
             {
                 CADSolid * solid = new CADSolid();
 
@@ -973,7 +994,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_POINT:
+            case CADObject::CADObjectType::POINT:
             {
                 CADPoint * point = new CADPoint();
 
@@ -1035,7 +1056,97 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_POLYLINE3D:
+            case CADObject::CADObjectType::IMAGE:
+            {
+                CADImage * image = new CADImage();
+
+                image->dObjectSize = dObjectSize;
+                image->ced = common_entity_data;
+
+                image->dClassVersion = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+
+                image->vertInsertion.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                image->vertInsertion.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                image->vertInsertion.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                image->vectUDirection.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                image->vectUDirection.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                image->vectUDirection.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                image->vectVDirection.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                image->vectVDirection.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                image->vectVDirection.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                image->dfSizeX = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                image->dfSizeY = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                image->dDisplayProps = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                image->bClipping = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                image->dBrightness = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+                image->dContrast = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+                image->dFade = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+                image->dClipBoundaryType = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( image->dClipBoundaryType == 1 )
+                {
+                    Vertex2D vertPoint;
+                    vertPoint.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    vertPoint.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    image->avertClippingPolygonVertexes.push_back(vertPoint);
+                    vertPoint.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    vertPoint.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                    image->avertClippingPolygonVertexes.push_back(vertPoint);
+                }
+                else
+                {
+                    image->nNumberVertexesInClipPolygon = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+
+                    for ( size_t i = 0; i < image->nNumberVertexesInClipPolygon; ++i )
+                    {
+                        Vertex2D vertPoint;
+                        vertPoint.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        vertPoint.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                        image->avertClippingPolygonVertexes.push_back(vertPoint);
+                    }
+                }
+
+                if ( image->ced.bbEntMode == 0 )
+                    image->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < image->ced.nNumReactors; ++i )
+                    image->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                image->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !image->ced.bNoLinks )
+                {
+                    image->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    image->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                image->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( image->ced.bbLTypeFlags == 0x03 )
+                    image->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( image->ced.bbPlotStyleFlags == 0x03 )
+                    image->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                image->hImageDef = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                image->hImageDefReactor = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
+                image->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = image;
+                break;
+            }
+
+            case CADObject::CADObjectType::POLYLINE3D:
             {
                 CADPolyline3D * polyline = new CADPolyline3D();
 
@@ -1083,7 +1194,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_RAY:
+            case CADObject::CADObjectType::RAY:
             {
                 CADRay * ray = new CADRay();
 
@@ -1131,7 +1242,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_XLINE:
+            case CADObject::CADObjectType::XLINE:
             {
                 CADXLine * xline = new CADXLine();
 
@@ -1179,7 +1290,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_LINE:
+            case CADObject::CADObjectType::LINE:
             {
                 CADLine * line = new CADLine();
 
@@ -1251,7 +1362,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_TEXT:
+            case CADObject::CADObjectType::TEXT:
             {
                 CADText * text = new CADText();
 
@@ -1344,7 +1455,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_VERTEX3D:
+            case CADObject::CADObjectType::VERTEX3D:
             {
                 CADVertex3D * vertex = new CADVertex3D();
 
@@ -1389,7 +1500,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_CIRCLE:
+            case CADObject::CADObjectType::CIRCLE:
             {
                 CADCircle * circle = new CADCircle();
 
@@ -1453,7 +1564,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_ENDBLK:
+            case CADObject::CADObjectType::ENDBLK:
             {
                 CADEndblk * endblk = new CADEndblk();
 
@@ -1493,7 +1604,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_POLYLINE2D:
+            case CADObject::CADObjectType::POLYLINE2D:
             {
                 CADPolyline2D * polyline = new CADPolyline2D();
 
@@ -1562,7 +1673,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_ATTRIB:
+            case CADObject::CADObjectType::ATTRIB:
             {
                 CADAttrib * attrib = new CADAttrib();
 
@@ -1650,7 +1761,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_ATTDEF:
+            case CADObject::CADObjectType::ATTDEF:
             {
                 CADAttdef * attdef = new CADAttdef();
 
@@ -1740,7 +1851,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_LWPOLYLINE:
+            case CADObject::CADObjectType::LWPOLYLINE:
             {
                 CADLWPolyline * polyline   = new CADLWPolyline ();
 
@@ -1841,7 +1952,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_ARC:
+            case CADObject::CADObjectType::ARC:
             {
                 CADArc * arc = new CADArc();
 
@@ -1907,7 +2018,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_SPLINE:
+            case CADObject::CADObjectType::SPLINE:
             {
                 CADSpline * spline = new CADSpline();
 
@@ -2006,13 +2117,13 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
             /*
              * Dimensions handling.
              */
-            case DWG_OBJECT_DIMENSION_RADIUS:
-            case DWG_OBJECT_DIMENSION_DIAMETER:
-            case DWG_OBJECT_DIMENSION_ALIGNED:
-            case DWG_OBJECT_DIMENSION_ANG_3PT:
-            case DWG_OBJECT_DIMENSION_ANG_2LN:
-            case DWG_OBJECT_DIMENSION_ORDINATE:
-            case DWG_OBJECT_DIMENSION_LINEAR:
+            case CADObject::CADObjectType::DIMENSION_RADIUS:
+            case CADObject::CADObjectType::DIMENSION_DIAMETER:
+            case CADObject::CADObjectType::DIMENSION_ALIGNED:
+            case CADObject::CADObjectType::DIMENSION_ANG_3PT:
+            case CADObject::CADObjectType::DIMENSION_ANG_2LN:
+            case CADObject::CADObjectType::DIMENSION_ORDINATE:
+            case CADObject::CADObjectType::DIMENSION_LINEAR:
             {
                 struct CommonDimensionData stCDD;
 
@@ -2045,7 +2156,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
                 switch(dObjectType)
                 {
-                    case DWG_OBJECT_DIMENSION_ORDINATE:
+                    case CADObject::CADObjectType::DIMENSION_ORDINATE:
                     {
                         CADDimensionOrdinate * dimension = new CADDimensionOrdinate();
 
@@ -2107,7 +2218,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                         break;
                     }
 
-                    case DWG_OBJECT_DIMENSION_LINEAR:
+                    case CADObject::CADObjectType::DIMENSION_LINEAR:
                     {
                         CADDimensionLinear * dimension = new CADDimensionLinear();
 
@@ -2170,7 +2281,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                         break;
                     }
 
-                    case DWG_OBJECT_DIMENSION_ALIGNED:
+                    case CADObject::CADObjectType::DIMENSION_ALIGNED:
                     {
                         CADDimensionAligned * dimension = new CADDimensionAligned();
 
@@ -2232,7 +2343,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                         break;
                     }
 
-                    case DWG_OBJECT_DIMENSION_ANG_3PT:
+                    case CADObject::CADObjectType::DIMENSION_ANG_3PT:
                     {
                         CADDimensionAngular3Pt * dimension = new CADDimensionAngular3Pt();
 
@@ -2296,7 +2407,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                         break;
                     }
 
-                    case DWG_OBJECT_DIMENSION_ANG_2LN:
+                    case CADObject::CADObjectType::DIMENSION_ANG_2LN:
                     {
                         CADDimensionAngular2Ln * dimension = new CADDimensionAngular2Ln();
 
@@ -2364,7 +2475,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                         break;
                     }
 
-                    case DWG_OBJECT_DIMENSION_RADIUS:
+                    case CADObject::CADObjectType::DIMENSION_RADIUS:
                     {
                         CADDimensionRadius * dimension = new CADDimensionRadius();
 
@@ -2422,7 +2533,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                         break;
                     }
 
-                    case DWG_OBJECT_DIMENSION_DIAMETER:
+                    case CADObject::CADObjectType::DIMENSION_DIAMETER:
                     {
                         CADDimensionDiameter * dimension = new CADDimensionDiameter();
 
@@ -2480,6 +2591,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                         break;
                     }
                 }
+                break;
             }
 
             // Section below is for handling all unsupported types.
@@ -2538,13 +2650,112 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
     {
         switch ( dObjectType )
         {
-            case DWG_OBJECT_DICTIONARY:
+            case CADObject::CADObjectType::IMAGEDEF:
+            {
+                CADImageDef * imagedef = new CADImageDef();
+
+                imagedef->dObjectSize = dObjectSize;
+                imagedef->nObjectSizeInBits = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
+                imagedef->hObjectHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                int16_t dEEDSize = 0;
+                while ( (dEEDSize = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart)) != 0 )
+                {
+                    CAD_EED dwg_eed;
+                    dwg_eed.length = dEEDSize;
+                    dwg_eed.application_handle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                    for ( size_t i = 0; i < dEEDSize; ++i )
+                    {
+                        dwg_eed.data.push_back(ReadCHAR (pabySectionContent, nBitOffsetFromStart));
+                    }
+
+                    imagedef->aEED.push_back (dwg_eed);
+                }
+
+                imagedef->nNumReactors = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                imagedef->dClassVersion = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+
+                imagedef->dfXImageSizeInPx = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                imagedef->dfYImageSizeInPx = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                imagedef->sFilePath = ReadTV (pabySectionContent, nBitOffsetFromStart);
+                imagedef->bIsLoaded = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+
+                imagedef->dResUnits = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+
+                imagedef->dfXPixelSize = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                imagedef->dfYPixelSize = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                imagedef->hParentHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < imagedef->nNumReactors; ++i )
+                    imagedef->hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart) );
+
+                imagedef->hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
+                imagedef->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = imagedef;
+                break;
+            }
+
+            case CADObject::CADObjectType::IMAGEDEFREACTOR:
+            {
+                CADImageDefReactor * imagedefreactor = new CADImageDefReactor();
+
+                imagedefreactor->dObjectSize = dObjectSize;
+                imagedefreactor->nObjectSizeInBits = ReadRAWLONG (pabySectionContent, nBitOffsetFromStart);
+                imagedefreactor->hObjectHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                int16_t dEEDSize = 0;
+                while ( (dEEDSize = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart)) != 0 )
+                {
+                    CAD_EED dwg_eed;
+                    dwg_eed.length = dEEDSize;
+                    dwg_eed.application_handle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                    for ( size_t i = 0; i < dEEDSize; ++i )
+                    {
+                        dwg_eed.data.push_back(ReadCHAR (pabySectionContent, nBitOffsetFromStart));
+                    }
+
+                    imagedefreactor->aEED.push_back (dwg_eed);
+                }
+
+                imagedefreactor->nNumReactors = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+                imagedefreactor->dClassVersion = ReadBITLONG (pabySectionContent, nBitOffsetFromStart);
+
+                imagedefreactor->hParentHandle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < imagedefreactor->nNumReactors; ++i )
+                    imagedefreactor->hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart) );
+
+                imagedefreactor->hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
+                imagedefreactor->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = imagedefreactor;
+                break;
+            }
+
+            case CADObject::CADObjectType::DICTIONARY:
             {
                 /*
                  * FIXME: ODA has a lot of mistypes in spec. for this objects,
                  * it doesnt work for now (error begins in handles stream).
                  * Nonetheless, dictionary->sItemNames is 100% array,
-                 * not a single obj as pointer by their docs.
+                 * not a single obj as pointed by their docs.
                  */
                 CADDictionary * dictionary = new CADDictionary();
 
@@ -2595,7 +2806,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_LAYER:
+            case CADObject::CADObjectType::LAYER:
             {
                 CADLayer * layer = new CADLayer();
 
@@ -2659,7 +2870,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_LAYER_CONTROL_OBJ:
+            case CADObject::CADObjectType::LAYER_CONTROL_OBJ:
             {
                 CADLayerControl * layerControl = new CADLayerControl();
 
@@ -2700,7 +2911,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_BLOCK_CONTROL_OBJ:
+            case CADObject::CADObjectType::BLOCK_CONTROL_OBJ:
             {
                 CADBlockControl * blockControl = new CADBlockControl();
 
@@ -2745,7 +2956,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_BLOCK_HEADER:
+            case CADObject::CADObjectType::BLOCK_HEADER:
             {
                 CADBlockHeader * blockHeader = new CADBlockHeader();
 
@@ -2822,7 +3033,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_LTYPE_CONTROL_OBJ:
+            case CADObject::CADObjectType::LTYPE_CONTROL_OBJ:
             {
                 CADLineTypeControl * ltype_control = new CADLineTypeControl();
 
@@ -2866,7 +3077,7 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
-            case DWG_OBJECT_LTYPE1:
+            case CADObject::CADObjectType::LTYPE1:
             {
                 CADLineType * ltype = new CADLineType();
 
@@ -3103,6 +3314,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
 
             delete( cadRay );
 
+            result_geometry = ray;
             break;
         }
 

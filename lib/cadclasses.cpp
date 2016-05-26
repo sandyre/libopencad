@@ -40,6 +40,11 @@ CADClasses::CADClasses()
 
 }
 
+CADClass CADClasses::GetClass ( size_t index )
+{
+    return m_staClasses.at(index);
+}
+
 void CADClasses::AddClass(CADClass stClass)
 {
     m_staClasses.push_back (stClass);

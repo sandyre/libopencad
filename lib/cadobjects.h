@@ -123,7 +123,39 @@ public:
         XRECORD = 0x4F,
         ACDBPLACEHOLDER = 0x50,
         VBA_PROJECT = 0x51,
-        LAYOUT = 0x52
+        LAYOUT = 0x52,
+        // Codes below arent fixed, libopencad uses it for reading, in writing it will be different!
+        CELLSTYLEMAP = 0x53,
+        DBCOLOR = 0x54,
+        DICTIONARYVAR = 0x55,
+        DICTIONARYWDFLT = 0x56,
+        FIELD = 0x57,
+        GROUP_UNFIXED = 0x58,
+        HATCH_UNFIXED = 0x59,
+        IDBUFFER = 0x5A,
+        IMAGE = 0x5B,
+        IMAGEDEF = 0x5C,
+        IMAGEDEFREACTOR = 0x5D,
+        LAYER_INDEX = 0x5E,
+        LAYOUT_UNFIXED = 0x5F,
+        LWPOLYLINE_UNFIXED = 0x60,
+        MATERIAL = 0x61,
+        MLEADER = 0x62,
+        MLEADERSTYLE = 0x63,
+        OLE2FRAME_UNFIXED = 0x64,
+        PLACEHOLDER = 0x65,
+        PLOTSETTINGS = 0x66,
+        RASTERVARIABLES = 0x67,
+        SCALE = 0x68,
+        SORTENTSTABLE = 0x69,
+        SPATIAL_FILTER = 0x6A,
+        SPATIAL_INDEX = 0x6B,
+        TABLEGEOMETRY = 0x6C,
+        TABLESTYLES = 0x6D,
+        VBA_PROJECT_UNFIXED = 0x6E,
+        VISUALSTYLE = 0x6F,
+        WIPEOUTVARIABLE = 0x70,
+        XRECORD_UNFIXED = 0x71
     };
 
     long  dObjectSize;
@@ -970,6 +1002,84 @@ public:
 
     CADHandle hDimstyle;
     CADHandle hAnonymousBlock;
+};
+
+class CADImage : public CADEntity
+{
+public:
+    CADImage()
+    {
+        eObjectType = IMAGE;
+    }
+
+    long dClassVersion;
+    Vertex3D vertInsertion;
+    Vector3D vectUDirection;
+    Vector3D vectVDirection;
+    double dfSizeX;
+    double dfSizeY;
+    /*  display properties (bit coded), 1==show image,
+        2==show image when not aligned with screen, 4==use
+        clipping boundary, 8==transparency on */
+    short dDisplayProps;
+
+    bool bClipping;
+    char dBrightness;
+    char dContrast;
+    char dFade;
+    bool bClipMode; // R2010+
+
+    short dClipBoundaryType;
+
+    long nNumberVertexesInClipPolygon;
+    std::vector < Vertex2D > avertClippingPolygonVertexes;
+
+    CADHandle hImageDef;
+    CADHandle hImageDefReactor;
+};
+
+class CADImageDef : public CADObject
+{
+public:
+    CADImageDef()
+    {
+        eObjectType = IMAGEDEF;
+    }
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long dClassVersion;
+    double dfXImageSizeInPx;
+    double dfYImageSizeInPx;
+    std::string sFilePath;
+    bool bIsLoaded;
+    char dResUnits; // 0 == none, 2 == centimeters, 5 == inches
+    double dfXPixelSize; // size of 1 pixel in autocad units
+    double dfYPixelSize;
+
+    CADHandle hParentHandle;
+    std::vector < CADHandle > hReactors;
+    CADHandle hXDictionary;
+};
+
+class CADImageDefReactor : public CADObject
+{
+public:
+    CADImageDefReactor()
+    {
+        eObjectType = IMAGEDEFREACTOR;
+    }
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    std::vector < CAD_EED > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long dClassVersion;
+    CADHandle hParentHandle;
+    std::vector < CADHandle > hReactors;
+    CADHandle hXDictionary;
 };
 
 #endif //CADOBJECTS_H

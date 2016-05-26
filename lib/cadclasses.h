@@ -55,6 +55,7 @@ public:
     CADClasses();
 
 public:
+    CADClass GetClass( size_t index );
     void AddClass(struct CADClass stClass);
     void Print() const;
 
