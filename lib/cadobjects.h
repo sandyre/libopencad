@@ -1145,4 +1145,33 @@ public:
     CADHandle hMLineStyle;
 };
 
+class CAD3DFace : public CADEntity
+{
+public:
+    CAD3DFace()
+    {
+        eObjectType = FACE3D;
+    }
+
+    bool bHasNoFlagInd; // 2000+
+    bool bZZero;
+    std::vector < Vertex3D > avertCorners;
+    short dInvisFlags;
+};
+
+class CADPolylinePFace : public CADEntity
+{
+public:
+    CADPolylinePFace()
+    {
+        eObjectType = POLYLINE_PFACE;
+    }
+
+    short nNumVertexes;
+    short nNumFaces;
+    long   nObjectsOwned;
+    std::vector < CADHandle > hVertexes; // content really depends on DWG version.
+    CADHandle hSeqend;
+};
+
 #endif //CADOBJECTS_H

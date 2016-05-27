@@ -112,6 +112,8 @@ int main(int argc, char *argv[])
     classes.Print ();
     std::cout << std::endl;
 
+    int polylines_pface = 0;
+    int face3ds_count = 0;
     int rays_count = 0;
     int xlines_count = 0;
     int mlines_count = 0;
@@ -180,6 +182,21 @@ int main(int argc, char *argv[])
                         std::cout << std::endl;
 
                         ++pline3d_count;
+                        break;
+                    }
+                    case CADGeometry::POLYLINE_PFACE:
+                    {
+                        PolylinePFace * poly = ( PolylinePFace * ) geom;
+                        std::cout << "|---------PolylinePface---------|\n";
+                        for ( size_t i = 0; i < poly->hVertexes.size(); ++i )
+                        {
+                            std::cout << "#" << i << "\t" << poly->hVertexes[i].X <<
+                                "\t" << poly->hVertexes[i].Y
+                                << "\t" << poly->hVertexes[i].Z << std::endl;
+                        }
+                        std::cout << std::endl;
+
+                        ++polylines_pface;
                         break;
                     }
                     case CADGeometry::ARC:
@@ -381,11 +398,29 @@ int main(int argc, char *argv[])
                         ++rays_count;
                         break;
                     }
+                    case CADGeometry::FACE3D:
+                    {
+                        Face3D * face = ( Face3D * ) geom;
+                        std::cout << "|---------3DFace---------|\n";
+                        std::cout << "Corners: " << std::endl;
+                        for ( size_t i = 0; i < face->avertCorners.size(); ++i )
+                        {
+                            std::cout << "#" << i << " X: " << face->avertCorners[i].X << "\t"
+                                << "Y: " << face->avertCorners[i].Y << "\t" << "Z: " << face->avertCorners[i].Z
+                                << std::endl;
+                        }
+                        std::cout << endl;
+
+                        ++face3ds_count;
+                        break;
+                    }
                 }
             }
         }
     }
 
+    std::cout << "Polylines Pface: " << polylines_pface << std::endl;
+    std::cout << "3DFaces: " << face3ds_count << std::endl;
     std::cout << "Rays: " << rays_count << std::endl;
     std::cout << "XLines: " << xlines_count << std::endl;
     std::cout << "MLines: " << mlines_count << std::endl;

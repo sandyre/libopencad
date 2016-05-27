@@ -1074,6 +1074,54 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                 break;
             }
 
+            case CADObject::CADObjectType::POLYLINE_PFACE:
+            {
+                CADPolylinePFace * polyline = new CADPolylinePFace();
+
+                polyline->dObjectSize = dObjectSize;
+                polyline->ced = common_entity_data;
+
+                polyline->nNumVertexes = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+                polyline->nNumFaces = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( polyline->ced.bbEntMode == 0 )
+                    polyline->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < polyline->ced.nNumReactors; ++i )
+                    polyline->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                polyline->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !polyline->ced.bNoLinks )
+                {
+                    polyline->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    polyline->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                polyline->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( polyline->ced.bbLTypeFlags == 0x03 )
+                    polyline->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( polyline->ced.bbPlotStyleFlags == 0x03 )
+                    polyline->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                polyline->hVertexes.push_back ( ReadHANDLE (pabySectionContent, nBitOffsetFromStart) ); // 1st vertex
+                polyline->hVertexes.push_back ( ReadHANDLE (pabySectionContent, nBitOffsetFromStart) ); // last vertex
+
+                polyline->hSeqend = ReadHANDLE (pabyObjectSize, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
+                polyline->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = polyline;
+                break;
+            }
+
             case CADObject::CADObjectType::POINT:
             {
                 CADPoint * point = new CADPoint();
@@ -1532,6 +1580,159 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
                               __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 
                 readed_object = text;
+                break;
+            }
+
+            case CADObject::CADObjectType::FACE3D:
+            {
+                CAD3DFace * face = new CAD3DFace();
+
+                face->dObjectSize = dObjectSize;
+                face->ced = common_entity_data;
+
+                face->bHasNoFlagInd = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+                face->bZZero = ReadBIT (pabySectionContent, nBitOffsetFromStart);
+
+                Vertex3D stVertex;
+                stVertex.X = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                stVertex.Y = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                if ( !face->bZZero )
+                    stVertex.Z = ReadRAWDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                face->avertCorners.push_back (stVertex);
+                for ( size_t i = 1; i < 4; ++i )
+                {
+                    stVertex.X = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart, face->avertCorners[i-1].X);
+                    stVertex.Y = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart, face->avertCorners[i-1].Y);
+                    stVertex.Z = ReadBITDOUBLEWD (pabySectionContent, nBitOffsetFromStart, face->avertCorners[i-1].Z);
+                    face->avertCorners.push_back (stVertex);
+                }
+
+                if ( !face->bHasNoFlagInd )
+                    face->dInvisFlags = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( face->ced.bbEntMode == 0 )
+                    face->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < face->ced.nNumReactors; ++i )
+                    face->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                face->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !face->ced.bNoLinks )
+                {
+                    face->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    face->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                face->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( face->ced.bbLTypeFlags == 0x03 )
+                    face->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( face->ced.bbPlotStyleFlags == 0x03 )
+                    face->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
+                face->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = face;
+                break;
+            }
+
+            // Same as Vertex3d, seems to be dumb copy & pasting,
+            // but if ODA has mistypes it will really help.
+            case CADObject::CADObjectType::VERTEX_MESH:
+            {
+                CADVertexMesh * vertex = new CADVertexMesh();
+
+                vertex->dObjectSize = dObjectSize;
+                vertex->ced = common_entity_data;
+
+                char Flags = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+                vertex->vertPosition.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                vertex->vertPosition.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                vertex->vertPosition.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( vertex->ced.bbEntMode == 0 )
+                    vertex->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < vertex->ced.nNumReactors; ++i )
+                    vertex->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                vertex->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !vertex->ced.bNoLinks )
+                {
+                    vertex->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    vertex->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                vertex->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( vertex->ced.bbLTypeFlags == 0x03 )
+                    vertex->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( vertex->ced.bbPlotStyleFlags == 0x03 )
+                    vertex->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
+                vertex->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = vertex;
+                break;
+            }
+
+            case CADObject::CADObjectType::VERTEX_PFACE:
+            {
+                CADVertexPFace * vertex = new CADVertexPFace();
+
+                vertex->dObjectSize = dObjectSize;
+                vertex->ced = common_entity_data;
+
+                char Flags = ReadCHAR (pabySectionContent, nBitOffsetFromStart);
+                vertex->vertPosition.X = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                vertex->vertPosition.Y = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+                vertex->vertPosition.Z = ReadBITDOUBLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( vertex->ced.bbEntMode == 0 )
+                    vertex->ched.hOwner = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                for ( size_t i = 0; i < vertex->ced.nNumReactors; ++i )
+                    vertex->ched.hReactors.push_back (ReadHANDLE (pabySectionContent, nBitOffsetFromStart));
+
+                vertex->ched.hXDictionary = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( !vertex->ced.bNoLinks )
+                {
+                    vertex->ched.hPrevEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                    vertex->ched.hNextEntity = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+                }
+
+                vertex->ched.hLayer = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( vertex->ced.bbLTypeFlags == 0x03 )
+                    vertex->ched.hLType = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                if ( vertex->ced.bbPlotStyleFlags == 0x03 )
+                    vertex->ched.hPlotStyle = ReadHANDLE (pabySectionContent, nBitOffsetFromStart);
+
+                nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 ); // padding bits to next byte boundary
+                vertex->dCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
+
+                if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+                    DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                              __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+
+                readed_object = vertex;
                 break;
             }
 
@@ -3346,6 +3547,20 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             break;
         }
 
+        case CADObject::CADObjectType::FACE3D:
+        {
+            Face3D * face = new Face3D();
+            CAD3DFace * cad3DFace = ( CAD3DFace * ) readed_object;
+
+            face->avertCorners = cad3DFace->avertCorners;
+            face->dInvisFlags = cad3DFace->dInvisFlags;
+
+            delete( cad3DFace );
+
+            result_geometry = face;
+            break;
+        }
+
         case CADObject::CADObjectType::MLINE:
         {
             MLine * mline = new MLine();
@@ -3442,6 +3657,7 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             Polyline3D * polyline = new Polyline3D();
             CADPolyline3D * cadPolyline3D = ( CADPolyline3D * ) readed_object;
 
+            // TODO: memory leak.
             // TODO: code can be much simplified if CADHandle will be used.
             // to do so, == and ++ operators should be implemented.
             CADVertex3D * vertex;
@@ -3473,6 +3689,52 @@ CADGeometry * DWGFileR2000::GetGeometry ( size_t layer_index, size_t index )
             }
 
             delete( cadPolyline3D );
+
+            result_geometry = polyline;
+            break;
+        }
+
+        case CADObject::CADObjectType::POLYLINE_PFACE:
+        {
+            PolylinePFace * polyline = new PolylinePFace();
+            CADPolylinePFace * cadpolyPface = ( CADPolylinePFace * ) readed_object;
+
+            // TODO: memory leak.
+            // TODO: code can be much simplified if CADHandle will be used.
+            // to do so, == and ++ operators should be implemented.
+            CADVertexPFace * vertex;
+            auto dCurrentEntHandle = cadpolyPface->hVertexes[0].GetAsLong ();
+            auto dLastEntHandle    = cadpolyPface->hVertexes[1].GetAsLong ();
+            while ( true )
+            {
+                vertex = ( CADVertexPFace * ) this->GetObject (dCurrentEntHandle);
+                /* TODO: this check is excessive, but if something goes wrong way -
+                 * some part of geometries will be parsed. */
+                if ( vertex == nullptr ) break;
+
+                polyline->hVertexes.push_back (vertex->vertPosition);
+
+                /* FIXME: somehow one more vertex which isnot presented is read.
+                 * so, checking the number of added vertexes */
+                if ( polyline->hVertexes.size() == cadpolyPface->nNumVertexes )
+                {
+                    delete( vertex );
+                    break;
+                }
+
+                if ( vertex->ced.bNoLinks ) ++dCurrentEntHandle;
+                else dCurrentEntHandle = vertex->ched.hNextEntity.GetAsLong (vertex->ced.hObjectHandle);
+
+                if ( dCurrentEntHandle == dLastEntHandle )
+                {
+                    delete( vertex );
+                    vertex = ( CADVertexPFace * ) this->GetObject (dCurrentEntHandle);
+                    polyline->hVertexes.push_back (vertex->vertPosition);
+                    break;
+                }
+                delete( vertex );
+            }
+            delete( cadpolyPface );
 
             result_geometry = polyline;
             break;

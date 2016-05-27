@@ -65,7 +65,9 @@ class CADGeometry
         IMAGE,
         MTEXT,
         MLINE,
-        XLINE
+        XLINE,
+        FACE3D,
+        POLYLINE_PFACE
     };
 
     //TODO: Move to cpp
@@ -411,6 +413,30 @@ public:
     long dBackgroundScaleFactor;
     short dBackgroundColor;
     long dBackgroundTransparency;
+};
+
+class Face3D : public CADGeometry
+{
+public:
+    Face3D()
+    {
+        eGeometryType = FACE3D;
+    }
+
+    std::vector < Vertex3D > avertCorners;
+    short dInvisFlags;
+};
+
+class PolylinePFace : public CADGeometry
+{
+public:
+    PolylinePFace()
+    {
+        eGeometryType = POLYLINE_PFACE;
+    }
+
+    short nNumFaces; // ?
+    std::vector < Vertex3D > hVertexes;
 };
 //
 //class EXTERN LineType
