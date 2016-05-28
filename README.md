@@ -1,5 +1,6 @@
 # Libopencad
 OpenSource library under X11/MIT license for everyday use. Under development, but some of basic functionality is already available.
+This project is being developed by Alexandr Borzykh ([sandyre](https://github.com/sandyre)) under mentorship of Dmitry Baryshnikov ([NextGIS](http://nextgis.ru/en/)).
 
 All help will be very good for project. A lot of TODO's in code, so you can fix something you want.
 
