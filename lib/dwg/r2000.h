@@ -30,7 +30,6 @@
 #ifndef DWG_R2000_H_H
 #define DWG_R2000_H_H
 
-#include "data_structs.h"
 #include "constants.h"
 #include "cadfile.h"
 
@@ -38,6 +37,13 @@
 #include <map>
 #include <vector>
 #include <cadgeometries.h>
+
+struct SLRecord
+{
+    char byRecordNumber = 0;
+    int  dSeeker        = 0;
+    int  dSize          = 0;
+};
 
 struct DWG2000_CED
 {
@@ -73,7 +79,6 @@ struct DWG2000_CEHD
     CADHandle hplotstyle;
 };
 
-typedef std::pair< long long, long long > ObjHandleOffset;
 class DWGFileR2000 : public CADFile
 {
 public:
@@ -84,9 +89,10 @@ public:
     virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
 
 protected:
-    virtual int ReadHeader(enum CADOpenOptions eOptions) override;
-    virtual int ReadClasses(enum CADOpenOptions eOptions) override;
-    virtual int CreateFileMap(enum CADOpenOptions eOptions) override;
+    virtual int ReadHeader() override;
+    virtual int ReadClasses() override;
+    virtual int CreateFileMap() override;
+    virtual int ReadTables(CADOpenOptions eOptions) override;
 
     Layer * GetLayer( size_t index );
     CADObject * GetObject( size_t index );
@@ -115,13 +121,11 @@ protected:
     std::vector < Layer * > astPresentedLayers; // output usage
     std::vector < CADLayer * > astPresentedCADLayers; // internal usage
 
-    std::map < long long, long long > amapObjectMap;
-    std::vector < ObjHandleOffset > astObjectMap;
-    std::vector < ObjHandleOffset > geometries_map;
+    //std::vector < ObjHandleOffset > geometries_map;
 
-    int dImageSeeker;
-    short dCodePage;
-    std::vector < SLRecord >  SLRecords;
+    int m_nImageSeeker;
+    short m_nCodePage;
+    std::vector<SLRecord> m_astSLRecords;
 };
 
 #endif // DWG_R2000_H_H

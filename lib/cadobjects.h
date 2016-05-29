@@ -34,7 +34,14 @@
 
 #include <stdint.h>
 #include "simpledatatypes.h"
-#include "dwg/data_structs.h"
+#include "cadheader.h"
+
+struct CAD_EED
+{
+    short length = 0;
+    CADHandle application_handle;
+    std::vector < char > data;
+};
 
 class CADObject
 {

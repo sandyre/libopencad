@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <cassert>
 
 #ifdef __APPLE__
 #include <MacTypes.h>
@@ -56,7 +57,7 @@
 #define UNKNOWN14 CADHeader::MAX_HEADER_CONSTANT + 14
 #define UNKNOWN15 CADHeader::MAX_HEADER_CONSTANT + 15
 
-int DWGFileR2000::ReadHeader (CADOpenOptions eOptions)
+int DWGFileR2000::ReadHeader ()
 {
     char    *pabyBuf = new char[100];
     int     dImageSeeker, dSLRecords;
@@ -91,17 +92,17 @@ int DWGFileR2000::ReadHeader (CADOpenOptions eOptions)
         m_poFileIO->Read (&readed_record.dSeeker, 4);
         m_poFileIO->Read (&readed_record.dSize, 4);
 
-        SLRecords.push_back (readed_record);
+        m_astSLRecords.push_back (readed_record);
         DebugMsg("SL Record #%d : %d %d\n",
-                 SLRecords[i].byRecordNumber,
-                 SLRecords[i].dSeeker,
-                 SLRecords[i].dSize);
+                 m_astSLRecords[i].byRecordNumber,
+                 m_astSLRecords[i].dSeeker,
+                 m_astSLRecords[i].dSize);
     }
 
 /*      READ HEADER VARIABLES        */
     size_t dHeaderVarsSectionLength = 0;
 
-    m_poFileIO->Seek (SLRecords[0].dSeeker, CADFileIO::SeekOrigin::BEG);
+    m_poFileIO->Seek (m_astSLRecords[0].dSeeker, CADFileIO::SeekOrigin::BEG);
     m_poFileIO->Read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_START,
                  DWG_SENTINELS::SENTINEL_LENGTH) )
@@ -526,14 +527,14 @@ int DWGFileR2000::ReadHeader (CADOpenOptions eOptions)
     return CADErrorCodes::SUCCESS;
 }
 
-int DWGFileR2000::ReadClasses (CADOpenOptions eOptions)
+int DWGFileR2000::ReadClasses ()
 {
-    char    *pabySectionContent;
+    char   *pabySectionContent;
     char    buffer[255];
     size_t dSectionSize = 0;
     size_t nBitOffsetFromStart = 0;
 
-    m_poFileIO->Seek (SLRecords[1].dSeeker, CADFileIO::SeekOrigin::BEG);
+    m_poFileIO->Seek (m_astSLRecords[1].dSeeker, CADFileIO::SeekOrigin::BEG);
 
     m_poFileIO->Read (buffer, DWG_SENTINELS::SENTINEL_LENGTH);
     if ( memcmp (buffer, DWG_SENTINELS::DS_CLASSES_START,
@@ -585,81 +586,78 @@ int DWGFileR2000::ReadClasses (CADOpenOptions eOptions)
     return CADErrorCodes::SUCCESS;
 }
 
-int DWGFileR2000::CreateFileMap (CADOpenOptions eOptions)
+int DWGFileR2000::CreateFileMap ()
 {
-    // Seems like ODA specification is completely awful. CRC is included in section size.
-    char     *pabySectionContent;
-    uint16_t dSectionCRC         = 0;
-    uint16_t dSectionSize        = 0;
-    uint32_t iCurrentSection     = 0;
-    size_t   nBitOffsetFromStart = 0;
+    // seek to the begining of the objects map
+    m_poFileIO->Seek (m_astSLRecords[2].dSeeker, CADFileIO::SeekOrigin::BEG);
 
-    m_poFileIO->Seek (SLRecords[2].dSeeker, CADFileIO::SeekOrigin::BEG);
+    // Seems like ODA specification is completely awful. CRC is included in
+    // section size
+    char *pabySectionContent = nullptr;
+    unsigned short dSectionSize  = 0;
+    size_t nBitOffsetFromStart = 0;
+    size_t nRecordsInSection = 0;
+    size_t nRecord = 0;
 
-    std::vector < int > aObjectMapSectionsSize;
+    typedef std::pair<long long, long long> ObjHandleOffset;
+
     while ( true )
     {
-        int niRecordsInSection = 0;
+        nRecordsInSection = 0;
         nBitOffsetFromStart = 0;
-        std::vector < ObjHandleOffset > obj_map_section;
-        m_poFileIO->Read (& dSectionSize, 2);
+
+        // read section size
+        m_poFileIO->Read (&dSectionSize, 2);
         SwapEndianness (dSectionSize, sizeof (dSectionSize));
 
-        DebugMsg ("Object map section #%d size: %d\n", iCurrentSection, dSectionSize);
+        DebugMsg ("Object map section #%d size: %d\n", ++nRecord,
+                  dSectionSize);
 
-        if ( dSectionSize == 2 ) break; // last section is empty.
+        if ( dSectionSize == 2 )
+            break; // last section is empty.
 
         pabySectionContent = new char[dSectionSize];
+
+        // read section data
         m_poFileIO->Read (pabySectionContent, dSectionSize);
 
+        ObjHandleOffset previousObjHandleOffset;
         while ( ( nBitOffsetFromStart / 8 ) < ( dSectionSize - 2 ) )
         {
             ObjHandleOffset tmp;
             tmp.first  = ReadUMCHAR (pabySectionContent, nBitOffsetFromStart);
             tmp.second = ReadMCHAR (pabySectionContent, nBitOffsetFromStart);
-            astObjectMap.push_back ( tmp );
-            ++niRecordsInSection;
+
+
+            if(0 == nRecordsInSection) {
+                previousObjHandleOffset = tmp;
+            }
+            else {
+                previousObjHandleOffset.first += tmp.first;
+                previousObjHandleOffset.second += tmp.second;
+            }
+            m_mdObjectsMap.insert (previousObjHandleOffset);
+            ++nRecordsInSection;
         }
 
-        aObjectMapSectionsSize.push_back (niRecordsInSection);
-
+        /* Unused
         dSectionCRC = ReadRAWSHORT (pabySectionContent, nBitOffsetFromStart);
         SwapEndianness (dSectionCRC, sizeof (dSectionCRC));
+        */
 
-        ++iCurrentSection;
         delete[] pabySectionContent;
     }
 
-    int niCurrentSectionIndex = 0;
-    int niCurrentObjectMapRecordIndex = 1;
-    for ( size_t index = 1; index < astObjectMap.size (); ++index )
-    {
-        if ( niCurrentObjectMapRecordIndex == aObjectMapSectionsSize[niCurrentSectionIndex] )
-        {
-            astObjectMap[index].first = astObjectMap[index].first;
-            astObjectMap[index].second = astObjectMap[index].second;
+    return CADErrorCodes::SUCCESS;
+}
 
-            niCurrentObjectMapRecordIndex = 1;
-            ++niCurrentSectionIndex;
-        }
-        else
-        {
-            astObjectMap[index].first += astObjectMap[index - 1].first;
-            astObjectMap[index].second += astObjectMap[index - 1].second;
-
-            ++niCurrentObjectMapRecordIndex;
-        }
-    }
-
-    // Filling the amapObjectMap with astObjectMap.
-    for ( size_t i = 0; i < astObjectMap.size(); ++i )
-    {
-        amapObjectMap.insert ( astObjectMap[i] );
-    }
-
+int DWGFileR2000::ReadTables(CADOpenOptions eOptions)
+{
     size_t nActualLayersCount = 0;
+    char *pabySectionContent = nullptr;
+
     // Reading Layer Control obj, and layers.
-    CADLayerControl * layerControl = ( CADLayerControl * ) this->GetObject (stLayersTable.GetAsLong ());
+    CADLayerControl * layerControl = ( CADLayerControl * ) GetObject (stLayersTable.GetAsLong ());
     for ( size_t i = 0; i < layerControl->hLayers.size(); ++i )
     {
         if ( !layerControl->hLayers[i].IsNull())
@@ -764,14 +762,14 @@ CADObject * DWGFileR2000::GetObject ( size_t index )
 
     char pabyObjectSize[8];
     size_t nBitOffsetFromStart = 0;
-    m_poFileIO->Seek (amapObjectMap[index], CADFileIO::SeekOrigin::BEG);
+    m_poFileIO->Seek (m_mdObjectsMap[index], CADFileIO::SeekOrigin::BEG);
     m_poFileIO->Read (pabyObjectSize, 8);
     uint32_t dObjectSize = ReadMSHORT (pabyObjectSize, nBitOffsetFromStart);
 
     // And read whole data chunk into memory for future parsing.
     // + nBitOffsetFromStart/8 + 2 is because dObjectSize doesnot cover CRC and itself.
     char * pabySectionContent = new char[dObjectSize + nBitOffsetFromStart/8 + 2];
-    m_poFileIO->Seek (amapObjectMap[index], CADFileIO::SeekOrigin::BEG);
+    m_poFileIO->Seek (m_mdObjectsMap[index], CADFileIO::SeekOrigin::BEG);
     m_poFileIO->Read (pabySectionContent, dObjectSize + nBitOffsetFromStart/8 + 2);
 
     nBitOffsetFromStart = 0;

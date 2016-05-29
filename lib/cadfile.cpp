@@ -103,13 +103,16 @@ int CADFile::ParseFile(enum CADOpenOptions eOptions)
             return CADErrorCodes::FILE_OPEN_FAILED;
     }
 
-    int nResultCode = ReadHeader (eOptions);
+    int nResultCode = ReadHeader ();
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
-    nResultCode = ReadClasses (eOptions);
+    nResultCode = ReadClasses ();
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
-    nResultCode = CreateFileMap (eOptions);
+    nResultCode = CreateFileMap ();
+    if(nResultCode != CADErrorCodes::SUCCESS)
+        return nResultCode;
+    nResultCode = ReadTables (eOptions);
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
 

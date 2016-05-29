@@ -195,8 +195,19 @@ function(find_extproject name)
          string(TIMESTAMP CURRENT_TIME \"%y%j%H%M\" UTC)
          math(EXPR DIFF_TIME \"\${CURRENT_TIME} - \${LAST_PULL}\")
          if(DIFF_TIME GREATER ${PULL_UPDATE_PERIOD})
-            message(STATUS \"Remove ${name}_EP-build\")
-            file(REMOVE ${EXT_STAMP_DIR}/${name}_EP-build)
+            message(STATUS \"Git pull ${repo_name} ...\")
+            execute_process(COMMAND ${GIT_EXECUTABLE} pull
+               WORKING_DIRECTORY  ${EP_PREFIX}/src/${name}_EP
+               TIMEOUT ${PULL_TIMEOUT} OUTPUT_VARIABLE OUT_STR)
+            
+            if(OUT_STR)
+                string(FIND \${OUT_STR} \"Already up-to-date\" STR_POS)
+                if(STR_POS LESS 0)
+                    message(STATUS \"Remove ${name}_EP-build\")
+                    file(REMOVE ${EXT_STAMP_DIR}/${name}_EP-build)
+                endif()
+                file(WRITE ${EXT_STAMP_DIR}/${name}_EP-gitpull.txt "")
+            endif()
          endif()")
                   
     ExternalProject_Add(${name}_EP

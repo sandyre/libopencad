@@ -78,24 +78,28 @@ protected:
 
     /**
      * @brief Read header from CAD file
-     * @param eOptions Open options
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int ReadHeader(enum CADOpenOptions eOptions) = 0;
+    virtual int ReadHeader() = 0;
 
     /**
      * @brief Read classes from CAD file
-     * @param eOptions Open options
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int ReadClasses(enum CADOpenOptions eOptions) = 0;
+    virtual int ReadClasses() = 0;
 
     /**
      * @brief Create the file map for fast access to CAD objects
-     * @param eOptions Open options
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int CreateFileMap(enum CADOpenOptions eOptions) = 0;
+    virtual int CreateFileMap() = 0;
+
+    /**
+     * @brief Read tables from CAD file
+     * @param eOptions Read options
+     * @return CADErrorCodes::SUCCESS if OK, or error code
+     */
+    virtual int ReadTables(enum CADOpenOptions eOptions) = 0;
 
 protected:
     CADFileIO* m_poFileIO;
@@ -103,6 +107,7 @@ protected:
     CADClasses m_oClasses;
     //TODO:
     //CADTables m_oTables;
+    std::map<long long, long long> m_mdObjectsMap; // object index <-> file offset
 };
 
 
