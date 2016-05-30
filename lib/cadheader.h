@@ -36,7 +36,7 @@
 #include <string>
 #include <vector>
 
-class OCAD_EXTERN CADHandle
+class OCAD_EXTERN CADHandle final
 {
 public:
     CADHandle(char code = 0);

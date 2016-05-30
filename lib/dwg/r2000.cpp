@@ -1,12 +1,14 @@
-/************************************************************************************
- *  Name: dwg_r2000.cpp
- *  Project: libOpenCAD OpenSource CAD formats support library
+/*******************************************************************************
+ *  Project: libopencad
+ *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
- ************************************************************************************
+ *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +27,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ************************************************************************************/
+ *******************************************************************************/
 
 #include "r2000.h"
 #include "io.h"
@@ -103,9 +105,8 @@ int DWGFileR2000::ReadHeader ()
     size_t dHeaderVarsSectionLength = 0;
 
     m_poFileIO->Seek (m_astSLRecords[0].dSeeker, CADFileIO::SeekOrigin::BEG);
-    m_poFileIO->Read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
-    if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_START,
-                 DWG_SENTINELS::SENTINEL_LENGTH) )
+    m_poFileIO->Read (pabyBuf, DWGSentinelLength);
+    if ( memcmp (pabyBuf, DWGHeaderVariablesStart, DWGSentinelLength) )
     {
         DebugMsg("File is corrupted (wrong pointer to HEADER_VARS section,"
                         "or HEADERVARS starting sentinel corrupted.)");
@@ -135,7 +136,9 @@ int DWGFileR2000::ReadHeader ()
     m_oHeader.AddValue(UNKNOWN9, ReadBITLONG (pabyBuf, nBitOffsetFromStart));
     m_oHeader.AddValue(UNKNOWN10, ReadBITLONG (pabyBuf, nBitOffsetFromStart));
 
-    stCurrentViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    CADHandle stCurrentViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::CurrentViewportTable,
+                        stCurrentViewportTable);
 
     m_oHeader.AddValue(CADHeader::DIMASO, ReadBIT (pabyBuf, nBitOffsetFromStart));
     m_oHeader.AddValue(CADHeader::DIMSHO, ReadBIT (pabyBuf, nBitOffsetFromStart));
@@ -445,29 +448,62 @@ int DWGFileR2000::ReadHeader ()
     m_oHeader.AddValue(CADHeader::DIMLWD, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
     m_oHeader.AddValue(CADHeader::DIMLWE, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
 
-    stBlocksTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stLayersTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stStyleTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stLineTypesTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stViewTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stUCSTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stAPPIDTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    m_oHeader.AddValue(CADHeader::DIMSTYLE, ReadHANDLE (pabyBuf, nBitOffsetFromStart));
-    stEntityTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stACADGroupDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stACADMLineStyleDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stNamedObjectsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    CADHandle stBlocksTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::BlocksTable, stBlocksTable);
 
-    m_oHeader.AddValue(CADHeader::TSTACKALIGN, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
-    m_oHeader.AddValue(CADHeader::TSTACKSIZE, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
+    CADHandle stLayersTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::LayersTable, stLayersTable);
 
-    m_oHeader.AddValue(CADHeader::HYPERLINKBASE, ReadTV (pabyBuf, nBitOffsetFromStart));
-    m_oHeader.AddValue(CADHeader::STYLESHEET, ReadTV (pabyBuf, nBitOffsetFromStart));
+    CADHandle stStyleTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::StyleTable, stStyleTable);
 
-    stLayoutsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stPlotSettingsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stPlotStylesDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    CADHandle stLineTypesTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::LineTypesTable, stLineTypesTable);
+
+    CADHandle stViewTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::ViewTable, stViewTable);
+
+    CADHandle stUCSTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::UCSTable, stUCSTable);
+
+    CADHandle stViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::ViewportTable, stViewportTable);
+
+    CADHandle stAPPIDTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::APPIDTable, stAPPIDTable);
+
+    m_oHeader.AddValue(CADHeader::DIMSTYLE, ReadHANDLE (pabyBuf,
+                                                        nBitOffsetFromStart));
+
+    CADHandle stEntityTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::EntityTable, stEntityTable);
+
+    CADHandle stACADGroupDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::ACADGroupDict, stACADGroupDict);
+
+    CADHandle stACADMLineStyleDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::ACADMLineStyleDict, stACADMLineStyleDict);
+
+    CADHandle stNamedObjectsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::NamedObjectsDict, stNamedObjectsDict);
+
+    m_oHeader.AddValue(CADHeader::TSTACKALIGN, ReadBITSHORT (pabyBuf,
+                                                        nBitOffsetFromStart));
+    m_oHeader.AddValue(CADHeader::TSTACKSIZE, ReadBITSHORT (pabyBuf,
+                                                        nBitOffsetFromStart));
+    m_oHeader.AddValue(CADHeader::HYPERLINKBASE, ReadTV (pabyBuf,
+                                                         nBitOffsetFromStart));
+    m_oHeader.AddValue(CADHeader::STYLESHEET, ReadTV (pabyBuf,
+                                                      nBitOffsetFromStart));
+
+    CADHandle stLayoutsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::LayoutsDict, stLayoutsDict);
+
+    CADHandle stPlotSettingsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::PlotSettingsDict, stPlotSettingsDict);
+
+    CADHandle stPlotStylesDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::PlotStylesDict, stPlotStylesDict);
 
     int Flags = ReadBITLONG (pabyBuf, nBitOffsetFromStart);
     m_oHeader.AddValue(CADHeader::CELWEIGHT, Flags & 0x001F);
@@ -489,17 +525,18 @@ int DWGFileR2000::ReadHeader ()
     m_oHeader.AddValue(CADHeader::FINGERPRINTGUID, ReadTV (pabyBuf, nBitOffsetFromStart));
     m_oHeader.AddValue(CADHeader::VERSIONGUID, ReadTV (pabyBuf, nBitOffsetFromStart));
 
-    stBlockRecordPaperSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    stBlockRecordModelSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    // TODO: is this part of the header?
+    CADHandle stBlockRecordPaperSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::BlockRecordPaperSpace,
+                        stBlockRecordPaperSpace);
 
-    CADHandle LTYPE_BYLAYER;
-    CADHandle LTYPE_BYBLOCK;
-    CADHandle LTYPE_CONTINUOUS;
+    CADHandle stBlockRecordModelSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    m_oTables.AddTable (CADTables::BlockRecordModelSpace, stBlockRecordModelSpace);
 
-    LTYPE_BYLAYER = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    LTYPE_BYBLOCK = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    LTYPE_CONTINUOUS = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    // Is this part of the header?
+
+    /*CADHandle LTYPE_BYLAYER = */ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    /*CADHandle LTYPE_BYBLOCK = */ReadHANDLE (pabyBuf, nBitOffsetFromStart);
+    /*CADHandle LTYPE_CONTINUOUS = */ReadHANDLE (pabyBuf, nBitOffsetFromStart);
 
     m_oHeader.AddValue(UNKNOWN11, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
     m_oHeader.AddValue(UNKNOWN12, ReadBITSHORT (pabyBuf, nBitOffsetFromStart));
@@ -509,11 +546,11 @@ int DWGFileR2000::ReadHeader ()
     /*short nCRC =*/ ReadRAWSHORT (pabyBuf, nBitOffsetFromStart);
     unsigned short initial = 0xC0C1;
     /*short calculated_crc = */ CalculateCRC8 (initial, pabyBuf,
-                                    static_cast<int>(dHeaderVarsSectionLength)); // TODO: CRC is calculated wrong every time.
+                                    static_cast<int>(dHeaderVarsSectionLength));
+    // TODO: CRC is calculated wrong every time.
 
-    m_poFileIO->Read (pabyBuf, DWG_SENTINELS::SENTINEL_LENGTH);
-    if ( memcmp (pabyBuf, DWG_SENTINELS::HEADER_VARIABLES_END,
-                 DWG_SENTINELS::SENTINEL_LENGTH) )
+    m_poFileIO->Read (pabyBuf, DWGSentinelLength);
+    if ( memcmp (pabyBuf, DWGHeaderVariablesEnd, DWGSentinelLength) )
     {
         DebugMsg("File is corrupted (HEADERVARS section ending sentinel doesnt match.)");
 
@@ -536,9 +573,8 @@ int DWGFileR2000::ReadClasses ()
 
     m_poFileIO->Seek (m_astSLRecords[1].dSeeker, CADFileIO::SeekOrigin::BEG);
 
-    m_poFileIO->Read (buffer, DWG_SENTINELS::SENTINEL_LENGTH);
-    if ( memcmp (buffer, DWG_SENTINELS::DS_CLASSES_START,
-                 DWG_SENTINELS::SENTINEL_LENGTH) )
+    m_poFileIO->Read (buffer, DWGSentinelLength);
+    if ( memcmp (buffer, DWGDSClassesStart, DWGSentinelLength) )
     {
         std::cerr << "File is corrupted (wrong pointer to CLASSES section,"
                 "or CLASSES starting sentinel corrupted.)\n";
@@ -576,9 +612,8 @@ int DWGFileR2000::ReadClasses ()
 
     m_poFileIO->Read (buffer, 2); // CLASSES CRC!. TODO: add CRC computing & checking feature.
 
-    m_poFileIO->Read (buffer, DWG_SENTINELS::SENTINEL_LENGTH);
-    if ( memcmp (buffer, DWG_SENTINELS::DS_CLASSES_END,
-                 DWG_SENTINELS::SENTINEL_LENGTH) )
+    m_poFileIO->Read (buffer, DWGSentinelLength);
+    if ( memcmp (buffer, DWGDSClassesEnd, DWGSentinelLength) )
     {
         std::cerr << "File is corrupted (CLASSES section ending sentinel doesnt match.)\n";
         return CADErrorCodes::CLASSES_SECTION_READ_FAILED;
@@ -599,7 +634,7 @@ int DWGFileR2000::CreateFileMap ()
     size_t nRecordsInSection = 0;
     size_t nRecord = 0;
 
-    typedef std::pair<long long, long long> ObjHandleOffset;
+    typedef std::pair<long, long> ObjHandleOffset;
 
     while ( true )
     {
@@ -633,6 +668,7 @@ int DWGFileR2000::CreateFileMap ()
                 previousObjHandleOffset = tmp;
             }
             else {
+                // fix index and offset relatively first record
                 previousObjHandleOffset.first += tmp.first;
                 previousObjHandleOffset.second += tmp.second;
             }
@@ -651,8 +687,18 @@ int DWGFileR2000::CreateFileMap ()
     return CADErrorCodes::SUCCESS;
 }
 
-int DWGFileR2000::ReadTables(CADOpenOptions eOptions)
+int DWGFileR2000::ReadTables(enum OpenOptions /*eOptions*/)
 {
+    // TODO: read other tables in ALL option mode
+
+    int nResult = m_oTables.ReadTable(CADTables::LayersTable);
+    if(nResult != CADErrorCodes::SUCCESS)
+        return nResult;
+
+    return m_oTables.ReadTable(CADTables::BlockRecordModelSpace);
+
+    // TODO: move follow code to the CADTables
+
     size_t nActualLayersCount = 0;
     char *pabySectionContent = nullptr;
 
@@ -663,7 +709,7 @@ int DWGFileR2000::ReadTables(CADOpenOptions eOptions)
         if ( !layerControl->hLayers[i].IsNull())
         {
             Layer    *layer     = new Layer (this);
-            CADLayer *obj_layer = ( CADLayer * ) this->GetObject (layerControl->hLayers[i].GetAsLong ());
+            CADLayer *obj_layer = ( CADLayer * ) GetObject (layerControl->hLayers[i].GetAsLong ());
 
             layer->sLayerName                 = obj_layer->sLayerName;
             layer->bFrozen                    = obj_layer->bFrozen;
@@ -688,13 +734,13 @@ int DWGFileR2000::ReadTables(CADOpenOptions eOptions)
     // Implementing blocks.
     // FIXME: Simplify the code.
 //    CADBlockControl * blockControl = ( CADBlockControl * ) this->GetObject ( stBlocksTable.GetAsLong () );
-    CADBlockHeader * pstModel_Space = ( CADBlockHeader * ) this->GetObject ( stBlockRecordModelSpace.GetAsLong () );
+    CADBlockHeader * pstModel_Space = ( CADBlockHeader * ) GetObject ( stBlockRecordModelSpace.GetAsLong () );
     {
         auto dCurrentEntHandle = pstModel_Space->hEntities[0].GetAsLong ();
         auto dLastEntHandle    = pstModel_Space->hEntities[1].GetAsLong ();
         while ( true )
         {
-            CADEntity * ent = ( CADEntity * ) this->GetObject (dCurrentEntHandle);
+            CADEntity * ent = ( CADEntity * ) GetObject (dCurrentEntHandle);
             /* TODO: this check is excessive, but if something goes wrong way -
              * some part of geometries will be parsed. */
             if ( ent == nullptr ) break;
@@ -723,7 +769,7 @@ int DWGFileR2000::ReadTables(CADOpenOptions eOptions)
             else dCurrentEntHandle = ent->ched.hNextEntity.GetAsLong (ent->ced.hObjectHandle);
             if ( dCurrentEntHandle == dLastEntHandle )
             {
-                ent = ( CADEntity * ) this->GetObject (dCurrentEntHandle);
+                ent = ( CADEntity * ) GetObject (dCurrentEntHandle);
                 for ( size_t ind = 0; ind < astPresentedLayers.size (); ++ind )
                 {
                     if ( ent->ched.hLayer.GetAsLong (ent->ced.hObjectHandle) ==
@@ -756,7 +802,7 @@ int DWGFileR2000::ReadTables(CADOpenOptions eOptions)
     return CADErrorCodes::SUCCESS;
 }
 
-CADObject * DWGFileR2000::GetObject ( size_t index )
+CADObject * DWGFileR2000::GetObject ( long index )
 {
     CADObject * readed_object = nullptr;
 

@@ -32,21 +32,55 @@
 #ifndef CADOBJECTS_H
 #define CADOBJECTS_H
 
-#include <stdint.h>
-#include "simpledatatypes.h"
+#include <math.h>
+#include <algorithm>
+
 #include "cadheader.h"
 
-struct CAD_EED
+#define EPSILON std::numeric_limits<double>::epsilon() * 16
+
+static bool fcmp(double x, double y) {
+    return fabs(x - y) < EPSILON ? true : false;
+}
+
+struct Vector
 {
-    short length = 0;
-    CADHandle application_handle;
-    std::vector < char > data;
+    double X;
+    double Y;
+    double Z;
+    bool bHasZ;
+
+    Vector() : X(0.0f), Y(0.0f), Z(0.0f), bHasZ(true)
+    {
+    }
+
+    Vector( double dx, double dy, double dz) : X(dx), Y(dy), Z(dz), bHasZ(true)
+    {
+
+    }
+
+    bool operator == (const Vector& second)
+    {
+        return ( fcmp( this->X, second.X ) &&
+                 fcmp( this->Y, second.Y ) &&
+                 fcmp( this->Z, second.Z ) );
+    }
 };
 
+struct CADEed
+{
+    short dLength = 0;
+    CADHandle hApplication;
+    std::vector<char> acData;
+};
+
+/**
+ * @brief The base CAD object class
+ */
 class CADObject
 {
 public:
-    enum CADObjectType
+    enum ObjectType
     {
         UNUSED = 0x0,
         TEXT = 0x1,
@@ -134,19 +168,21 @@ public:
     };
 
     long  dObjectSize;
-    CADObjectType eObjectType;
-
+    ObjectType eObjectType;
     short dCRC;
 };
 
+/**
+ * @brief The CADCommonED struct
+ */
 struct CADCommonED
 {
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
-    std::vector < CAD_EED > aEED;
+    std::vector<CADEed> aEED;
 
     bool bGraphicsPresented;
-    std::vector < char > abyGraphicsData;
+    std::vector<char> abyGraphicsData;
 
     char bbEntMode;
     long nNumReactors;
@@ -169,6 +205,9 @@ struct CADCommonED
     char  nLineWeight;
 };
 
+/**
+ * @brief The CADCommonEHD struct
+ */
 struct CADCommonEHD
 {
     CADHandle hOwner; // depends on entmode.
@@ -196,22 +235,19 @@ struct CADCommonEHD
 class CADEntity : public CADObject
 {
 public:
-    struct CADCommonED ced;
-    struct CADCommonEHD ched;
+    struct CADCommonED stCed;
+    struct CADCommonEHD stChed;
 };
 
 class CADText : public CADEntity
 {
 public:
-    CADText()
-    {
-        eObjectType = TEXT;
-    }
+    CADText();
     char   DataFlags;
     double dfElevation;
-    Vertex2D vertInsetionPoint;
-    Vertex2D vertAlignmentPoint;
-    Vector3D vectExtrusion;
+    Vector vertInsetionPoint;
+    Vector vertAlignmentPoint;
+    Vector vectExtrusion;
     double dfThickness;
     double dfObliqueAng;
     double dfRotationAng;
@@ -234,9 +270,9 @@ public:
     }
     char   DataFlags;
     double dfElevation;
-    Vertex2D vertInsetionPoint;
-    Vertex2D vertAlignmentPoint;
-    Vector3D vectExtrusion;
+    Vector vertInsetionPoint;
+    Vector vertAlignmentPoint;
+    Vector vectExtrusion;
     double dfThickness;
     double dfObliqueAng;
     double dfRotationAng;
@@ -258,15 +294,12 @@ public:
 class CADAttdef : public CADEntity
 {
 public:
-    CADAttdef()
-    {
-        eObjectType = ATTDEF;
-    }
+    CADAttdef();
     char   DataFlags;
     double dfElevation;
-    Vertex2D vertInsetionPoint;
-    Vertex2D vertAlignmentPoint;
-    Vector3D vectExtrusion;
+    Vector vertInsetionPoint;
+    Vector vertAlignmentPoint;
+    Vector vectExtrusion;
     double dfThickness;
     double dfObliqueAng;
     double dfRotationAng;
@@ -323,10 +356,10 @@ public:
     {
         eObjectType = INSERT;
     }
-    Vertex3D vertInsertionPoint;
-    Vertex3D vertScales;
+    Vector vertInsertionPoint;
+    Vector vertScales;
     double dfRotation;
-    Vector3D vectExtrusion;
+    Vector vectExtrusion;
     bool    bHasAttribs;
     long    nObjectsOwned;
 
@@ -342,10 +375,10 @@ public:
     {
         eObjectType = MINSERT1; // TODO: it has 2 type codes?
     }
-    Vertex3D vertInsertionPoint;
-    Vertex3D vertScales;
+    Vector vertInsertionPoint;
+    Vector vertScales;
     double dfRotation;
-    Vector3D vectExtrusion;
+    Vector vectExtrusion;
     bool    bHasAttribs;
     long    nObjectsOwned;
 
@@ -366,7 +399,7 @@ public:
     {
         eObjectType = VERTEX2D;
     }
-    Vertex3D vertPosition; // Z must be taken from 2d polyline elevation.
+    Vector vertPosition; // Z must be taken from 2d polyline elevation.
     double   dfStartWidth;
     double   dfEndWidth;
     double   dfBulge;
@@ -387,7 +420,7 @@ public:
     {
     }
 
-    Vertex3D vertPosition;
+    Vector vertPosition;
 };
 
 class CADVertexMesh : public CADEntity
@@ -397,7 +430,7 @@ public:
     {
         eObjectType = VERTEX_MESH;
     }
-    Vertex3D vertPosition;
+    Vector vertPosition;
 };
 
 class CADVertexPFace : public CADEntity
@@ -407,7 +440,7 @@ public:
     {
         eObjectType = VERTEX_PFACE;
     }
-    Vertex3D vertPosition;
+    Vector vertPosition;
 };
 
 class CADVertexPFaceFace : public CADEntity
@@ -438,7 +471,7 @@ public:
     double dfEndWidth;
     double dfThickness;
     double dfElevation;
-    Vector3D vectExtrusion;
+    Vector vectExtrusion;
 
     long   nObjectsOwned;
 
@@ -471,10 +504,10 @@ public:
     {
         eObjectType = ARC;
     }
-    Vertex3D vertPosition;
+    Vector vertPosition;
     double   dfRadius;
     double   dfThickness;
-    Vector3D vectExtrusion;
+    Vector vectExtrusion;
     double   dfStartAngle;
     double   dfEndAngle;
 };
@@ -486,10 +519,10 @@ public:
     {
         eObjectType = CIRCLE;
     }
-    Vertex3D vertPosition;
+    Vector vertPosition;
     double   dfRadius;
     double   dfThickness;
-    Vector3D vectExtrusion;
+    Vector vectExtrusion;
 };
 
 class CADLine : public CADEntity
@@ -499,10 +532,10 @@ public:
     {
         eObjectType = LINE;
     }
-    Vertex3D vertStart;
-    Vertex3D vertEnd;
+    Vector vertStart;
+    Vector vertEnd;
     double   dfThickness;
-    Vector3D vectExtrusion;
+    Vector vectExtrusion;
 };
 
 class CADBlockControl : public CADObject
@@ -514,7 +547,7 @@ public:
     }
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
-    std::vector < CAD_EED > aEED;
+    std::vector < CADEed > aEED;
     long nNumReactors;
     bool bNoXDictionaryPresent;
     long nNumEntries; // doesnt count MODELSPACE and PAPERSPACE
@@ -532,7 +565,7 @@ public:
     }
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
-    std::vector < CAD_EED > aEED;
+    std::vector < CADEed > aEED;
     long nNumReactors;
     bool bNoXDictionaryPresent;
     std::string sEntryName;
@@ -545,7 +578,7 @@ public:
     bool bXRefOverlaid;
     bool bLoadedBit;
     long nOwnedObjectsCount;
-    Vertex3D vertBasePoint;
+    Vector vertBasePoint;
     std::string sXRefPName;
     std::vector < char > adInsertCount; // TODO: ???
     std::string sBlockDescription;
@@ -575,7 +608,7 @@ public:
 
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
-    std::vector < CAD_EED > aEED;
+    std::vector < CADEed > aEED;
     long nNumReactors;
     bool bNoXDictionaryPresent;
     long nNumEntries; // counts layer "0"
@@ -594,7 +627,7 @@ public:
 
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
-    std::vector < CAD_EED > aEED;
+    std::vector < CADEed > aEED;
     long nNumReactors;
     bool bNoXDictionaryPresent;
     std::string sLayerName;
@@ -629,7 +662,7 @@ public:
 
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
-    std::vector < CAD_EED > aEED;
+    std::vector < CADEed > aEED;
     long nNumReactors;
     bool bNoXDictionaryPresent;
     long nNumEntries; // doesnt count BYBLOCK / BYLAYER.
@@ -648,7 +681,7 @@ public:
 
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
-    std::vector < CAD_EED > aEED;
+    std::vector < CADEed > aEED;
     long nNumReactors;
     bool bNoXDictionaryPresent;
     std::string sEntryName;
@@ -686,9 +719,9 @@ public:
         eObjectType = POINT;
     }
 
-    Vertex3D vertPosition;
+    Vector vertPosition;
     double   dfThickness;
-    Vector3D vectExtrusion;
+    Vector vectExtrusion;
     double   dfXAxisAng;
 };
 
@@ -703,8 +736,8 @@ public:
 
     double dfThickness;
     double dfElevation;
-    std::vector < Vertex2D > avertCorners;
-    Vector3D vectExtrusion;
+    std::vector < Vector > avertCorners;
+    Vector vectExtrusion;
 };
 
 class CADEllipse : public CADEntity
@@ -715,9 +748,9 @@ public:
         eObjectType = ELLIPSE;
     }
 
-    Vertex3D vertPosition;
-    Vector3D vectSMAxis;
-    Vector3D vectExtrusion;
+    Vector vertPosition;
+    Vector vectSMAxis;
+    Vector vectExtrusion;
     double   dfAxisRatio;
     double   dfBegAngle;
     double   dfEndAngle;
@@ -731,8 +764,8 @@ public:
         eObjectType = RAY;
     }
 
-    Vertex3D vertPosition;
-    Vector3D vectVector;
+    Vector vertPosition;
+    Vector vectVector;
 };
 
 class CADXLine : public CADEntity
@@ -743,8 +776,8 @@ public:
         eObjectType = XLINE;
     }
 
-    Vertex3D vertPosition;
-    Vector3D vectVector;
+    Vector vertPosition;
+    Vector vectVector;
 };
 
 class CADDictionary : public CADObject
@@ -757,7 +790,7 @@ public:
 
     long nObjectSizeInBits;
     CADHandle hObjectHandle;
-    std::vector < CAD_EED > aEED;
+    std::vector < CADEed > aEED;
     long nNumReactors;
     bool bNoXDictionaryPresent;
     long nNumItems;
@@ -784,8 +817,8 @@ public:
     double dfConstWidth;
     double dfElevation;
     double dfThickness;
-    Vector3D vectExtrusion;
-    std::vector< Vertex2D > avertVertexes;
+    Vector vectExtrusion;
+    std::vector< Vector > avertVertexes;
     std::vector< double > adfBulges;
     std::vector< int16_t > adVertexesID;
     std::vector< std::pair< double, double > > astWidths; // start, end.
@@ -807,8 +840,8 @@ public:
 
     long   dDegree;
     double dfFitTol;
-    Vector3D vectBegTangDir;
-    Vector3D vectEndTangDir;
+    Vector vectBegTangDir;
+    Vector vectEndTangDir;
     long   nNumFitPts;
 
     bool bRational;
@@ -822,8 +855,8 @@ public:
 
     std::vector < double > adfKnots;
     std::vector < double > adfCtrlPointsWeight;
-    std::vector < Vertex3D > avertCtrlPoints;
-    std::vector < Vertex3D > averFitPoints;
+    std::vector < Vector > avertCtrlPoints;
+    std::vector < Vector > averFitPoints;
 };
 
 #endif //CADOBJECTS_H

@@ -32,21 +32,12 @@
 #ifndef CADFILE_H
 #define CADFILE_H
 
-#include "cadheader.h"
+#include "cadtables.h"
 #include "cadclasses.h"
 #include "cadfileio.h"
 
 #include "cadobjects.h"
 
-/**
- * @brief The CAD file open options enum
- */
-enum CADOpenOptions
-{
-    READ_ALL,       /**< read all available information */
-    FAST_READ,      /**< read some methadata */
-    FASTEST_READ    /**< read only geometry and layers */
-};
 
 class Layer;
 class CADGeometry;
@@ -58,15 +49,27 @@ class OCAD_EXTERN CADFile
 {
     friend class Layer;
 public:
+    /**
+     * @brief The CAD file open options enum
+     */
+    enum OpenOptions
+    {
+        READ_ALL,       /**< read all available information */
+        FAST_READ,      /**< read some methadata */
+        FASTEST_READ    /**< read only geometry and layers */
+    };
+
+public:
     CADFile (CADFileIO* poFileIO);
     virtual ~CADFile();
 
 public:
     const CADHeader& GetHeader() const;
     const CADClasses& GetClasses() const;
+    const CADTables& GetTables() const;
 
 public:
-    virtual int ParseFile(enum CADOpenOptions eOptions);
+    virtual int ParseFile(enum OpenOptions eOptions);
     virtual size_t GetLayersCount();
     virtual size_t GetBlocksCount();
     virtual Layer * GetLayer( size_t index );
@@ -99,15 +102,16 @@ protected:
      * @param eOptions Read options
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int ReadTables(enum CADOpenOptions eOptions) = 0;
+    virtual int ReadTables(enum OpenOptions eOptions) = 0;
 
 protected:
     CADFileIO* m_poFileIO;
     CADHeader m_oHeader;
     CADClasses m_oClasses;
-    //TODO:
-    //CADTables m_oTables;
-    std::map<long long, long long> m_mdObjectsMap; // object index <-> file offset
+    CADTables m_oTables;
+
+protected:
+    std::map<long, long> m_mdObjectsMap; // object index <-> file offset
 };
 
 

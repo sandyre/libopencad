@@ -1,12 +1,14 @@
-/************************************************************************************
- *  Name: dwg_r2000.h
- *  Project: libOpenCAD OpenSource CAD formats support library
+/*******************************************************************************
+ *  Project: libopencad
+ *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
- ************************************************************************************
+ *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +27,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ************************************************************************************/
+ *******************************************************************************/
 
 #ifndef DWG_R2000_H_H
 #define DWG_R2000_H_H
@@ -92,31 +94,12 @@ protected:
     virtual int ReadHeader() override;
     virtual int ReadClasses() override;
     virtual int CreateFileMap() override;
-    virtual int ReadTables(CADOpenOptions eOptions) override;
+    virtual int ReadTables(enum OpenOptions eOptions) override;
 
     Layer * GetLayer( size_t index );
-    CADObject * GetObject( size_t index );
+    CADObject * GetObject(long index );
 
 protected:
-    //TODO: move to CADTables
-    CADHandle stCurrentViewportTable;
-    CADHandle stBlocksTable;
-    CADHandle stLayersTable;
-    CADHandle stStyleTable;
-    CADHandle stLineTypesTable;
-    CADHandle stViewTable;
-    CADHandle stUCSTable;
-    CADHandle stViewportTable;
-    CADHandle stAPPIDTable;
-    CADHandle stEntityTable;
-    CADHandle stACADGroupDict;
-    CADHandle stACADMLineStyleDict;
-    CADHandle stNamedObjectsDict;
-    CADHandle stLayoutsDict;
-    CADHandle stPlotSettingsDict;
-    CADHandle stPlotStylesDict;
-    CADHandle stBlockRecordPaperSpace;
-    CADHandle stBlockRecordModelSpace;
 
     std::vector < Layer * > astPresentedLayers; // output usage
     std::vector < CADLayer * > astPresentedCADLayers; // internal usage

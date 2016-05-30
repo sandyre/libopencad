@@ -2,11 +2,13 @@
  *  Project: libopencad
  *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
  *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -27,89 +29,25 @@
  *  SOFTWARE.
  *******************************************************************************/
 
-#ifndef SIMPLEDATATYPES_H
-#define SIMPLEDATATYPES_H
+#include "cadtables.h"
+#include "opencad_api.h"
 
-struct Vertex2D
+CADTables::CADTables()
 {
-    Vertex2D() : X(0.0f),
-                 Y(0.0f)
-    {
-    }
 
-    Vertex2D( double X_, double Y_) :
-            X(X_), Y(Y_)
-    {
+}
 
-    }
-
-    double X;
-    double Y;
-
-    bool operator == (const Vertex2D &other)
-    {
-        return ( ( this->X == other.X ) && ( this->Y == other.Y ) );
-    }
-};
-
-struct Vertex3D
+void CADTables::AddTable(CADTableType eType, CADHandle hHandle)
 {
-    Vertex3D() : X(0.0f),
-                 Y(0.0f),
-                 Z(0.0f)
-    {
-    }
+    m_moTables[eType] = hHandle;
+}
 
-    Vertex3D( double X_, double Y_, double Z_) :
-            X(X_), Y(Y_), Z(Z_)
-    {
-
-    }
-
-    double X;
-    double Y;
-    double Z;
-
-    bool operator == (const Vertex3D& second)
-    {
-        return ( ( this->X == second.X )  && ( this->Y == this->Y ) &&
-                 ( this->Z == second.Z ) );
-    }
-};
-
-struct Vector2D
+int CADTables::ReadTable(CADTables::CADTableType eType)
 {
-    Vector2D() : X(0.0f),
-                 Y(0.0f)
-    {
-    }
+    if(m_moTables.find (eType) == m_moTables.end ())
+        return CADErrorCodes::TABLE_READ_FAILED;
 
-    double X;
-    double Y;
+    // TODO: read different tables
 
-    bool operator == (const Vector2D& second)
-    {
-        return ( ( this->X == second.X )  && ( this->Y == this->Y ) );
-    }
-};
-
-struct Vector3D
-{
-    Vector3D() : X(0.0f),
-                 Y(0.0f),
-                 Z(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-    double Z;
-
-    bool operator == (const Vector3D& second)
-    {
-        return ( ( this->X == second.X )  && ( this->Y == this->Y ) &&
-                 ( this->Z == second.Z ) );
-    }
-};
-
-#endif //SIMPLEDATATYPES_H
+    return CADErrorCodes::SUCCESS;
+}

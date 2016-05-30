@@ -56,6 +56,11 @@ const CADClasses& CADFile::GetClasses() const
     return m_oClasses;
 }
 
+const CADTables &CADFile::GetTables() const
+{
+    return m_oTables;
+}
+
 size_t CADFile::GetLayersCount ()
 {
     std::cerr << "CADFile::getLayersCount() called from abstract class.\n"
@@ -92,7 +97,7 @@ CADGeometry * CADFile::GetGeometry ( size_t /*layer_index*/, size_t /*index*/ )
     return( nullptr );
 }
 
-int CADFile::ParseFile(enum CADOpenOptions eOptions)
+int CADFile::ParseFile(enum OpenOptions eOptions)
 {
     if(nullptr == m_poFileIO)
         return CADErrorCodes::FILE_OPEN_FAILED;
