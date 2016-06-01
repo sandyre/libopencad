@@ -438,6 +438,7 @@ public:
     short nNumFaces; // ?
     std::vector < Vertex3D > hVertexes;
 };
+
 //
 //class EXTERN LineType
 //{

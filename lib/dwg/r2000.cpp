@@ -678,6 +678,19 @@ int DWGFileR2000::ReadObjectMap ()
     }
     delete( layerControl );
 
+    // Reading Linetype Control obj, and linetypes.
+    CADLineTypeControl * ltypeControl = ( CADLineTypeControl * ) this->GetObject (stLineTypesTable.GetAsLong ());
+    for ( size_t i = 0; i < ltypeControl->hLTypes.size(); ++i )
+    {
+        if ( !ltypeControl->hLTypes[i].IsNull())
+        {
+            CADLineType *obj_ltype = ( CADLineType * ) this->GetObject (ltypeControl->hLTypes[i].GetAsLong ());
+
+            astPresentedCADLTypes.push_back (obj_ltype);
+        }
+    }
+    delete( ltypeControl );
+
     pabySectionContent = new char[400];
 
     DebugMsg ("Readed layers using LayerControl object count: %d\n", nActualLayersCount);

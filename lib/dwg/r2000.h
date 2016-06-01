@@ -126,6 +126,7 @@ protected:
 
     std::vector < Layer * > astPresentedLayers; // output usage
     std::vector < CADLayer * > astPresentedCADLayers; // internal usage
+    std::vector < CADLineType * > astPresentedCADLTypes; // internal usage
 
     std::map < long long, long long > amapObjectMap;
     std::vector < ObjHandleOffset > astObjectMap;
