@@ -32,12 +32,9 @@
 #ifndef CADGEOMETRIES_H
 #define CADGEOMETRIES_H
 
-#include <vector>
-#include <string>
-#include <stdint.h>
 #include "cadobjects.h"
-#include "cadfile.h"
-#include "simpledatatypes.h"
+
+using namespace std;
 
 /**
  * @brief Base CAD geometry class
@@ -45,12 +42,15 @@
 class CADGeometry
 {
  public:
+    CADGeometry();
+    virtual ~CADGeometry();
     /**
      * @brief The CAD geometry types enum
      */
-    enum CADGeometryType
+    enum GeometryType
     {
-        POINT = 1,
+        UNDEFINED = 0,
+        POINT,
         CIRCLE,
         LWPOLYLINE,
         ELLIPSE,
@@ -64,85 +64,87 @@ class CADGeometry
         HATCH // NOT IMPLEMENTED
     };
 
-    //TODO: Move to cpp
-    enum CADGeometryType GetType() const
-    {
-        return eGeometryType;
-    }
+    enum GeometryType getType() const;
+    double getThickness() const;
+    void setThickness(double thicknes);
 
-    double GetThickness() const
-    {
-        return dfThickness;
-    }
-
-    void SetThickness(double thicknes){
-        dfThickness = thicknes;
-    }
-
+    virtual void print () const = 0;
 protected:
-    enum CADGeometryType eGeometryType;
-    double          dfThickness;
+    enum GeometryType geometryType;
+    double          thickness;
 };
 
 /* TODO: Point3D should be named Point, but because of possible redefenitions
  * its named Point3D
- * */
+ *
+ */
+
 /**
  * @brief Geometry class which a single Point
  */
-class Point3D : public CADGeometry
+class CADPoint3D : public CADGeometry
 {
 public:
-    Point3D () : dfXAxisAng (0.0f)
-    {
-        eGeometryType = CADGeometry::POINT;
-    }
+    CADPoint3D ();
+    CADPoint3D (const CADVector &positionIn, double thickness);
+    CADVector getPosition() const;
+    void setPosition(const CADVector &value);
 
-    Vertex3D vertPosition;
-    Vector3D vectExtrusion;
-    double dfXAxisAng;
+    CADVector getExtrusion() const;
+    void setExtrusion(const CADVector &value);
+
+    double getXAxisAng() const;
+    void setXAxisAng(double value);
+
+    virtual void print () const override;
+protected:
+    CADVector position;
+    CADVector extrusion;
+    double xAxisAng;
 };
 
 /**
  * @brief Geometry class which represents a simple Line
  */
-class Line : public CADGeometry
+class CADLine : public CADGeometry
 {
 public:
-    Line()
-    {
-        eGeometryType = CADGeometry::LINE;
-    }
+    CADLine();
+    CADLine(const CADPoint3D& startIn, const CADPoint3D& endIn);
+    CADPoint3D getStart() const;
+    void setStart(const CADPoint3D &value);
 
-    Vertex3D vertStart;
-    Vertex3D vertEnd;
-    Vector3D vectExtrusion;
+    CADPoint3D getEnd() const;
+    void setEnd(const CADPoint3D &value);
+
+    virtual void print () const override;
+
+protected:
+    CADPoint3D start;
+    CADPoint3D end;
 };
 
 /**
  * @brief Geometry class which represents Lwpolyline
  */
-class LWPolyline : public CADGeometry
+/*
+class CADLWPolyline : public CADGeometry
 {
 public:
-    LWPolyline () : dfConstWidth(0.0f),
-                    dfElevation(0.0f)
-    {
-        eGeometryType = CADGeometry::LWPOLYLINE;
-    }
-
+    CADLWPolyline ();
+protected:
     double dfConstWidth;
     double dfElevation;
     Vector3D vectExtrusion;
-    std::vector< Vertex2D > vertexes;
-    std::vector< double > bulges;
-    std::vector< int16_t > vertexes_id;
-    std::vector< std::pair< double, double > > widths; // start, end.
+    vector< Vertex2D > vertexes;
+    vector< double > bulges;
+    vector< int16_t > vertexes_id;
+    vector< pair< double, double > > widths; // start, end.
 };
 
 /**
  * @brief Geometry class which represents Polyline 3D
- */
+ *//*
 class Polyline3D : public CADGeometry
 {
 public:
@@ -157,22 +159,22 @@ public:
 /**
  * @brief Geometry class which represents Circle
  */
-class Circle : public CADGeometry
+class CADCircle : public CADPoint3D
 {
 public:
-    Circle () : dfRadius (0.0f)
-    {
-        eGeometryType = CADGeometry::CIRCLE;
-    }
+    CADCircle ();
 
-    Vertex3D vertPosition;
-    Vector3D vectExtrusion;
-    double dfRadius;
+    double getRadius() const;
+    void setRadius(double value);
+    virtual void print () const override;
+
+protected:
+    double radius;
 };
 
 /**
  * @brief Geometry class which represents Ellipse
- */
+ *//*
 class Ellipse : public CADGeometry
 {
 public:
@@ -193,7 +195,7 @@ public:
 
 /**
  * @brief Geometry class which represents Text
- */
+ *//*
 class Text : public CADGeometry
 {
 public:
@@ -226,26 +228,26 @@ public:
 /**
  * @brief Geometry class which represents Arc
  */
-class Arc : public CADGeometry
+class CADArc : public CADCircle
 {
 public:
-    Arc() : dfRadius(0.0f),
-            dfStartingAngle(0.0f),
-            dfEndingAngle(0.0f)
-    {
-        eGeometryType = CADGeometry::ARC;
-    }
+    CADArc();
 
-    Vertex3D vertPosition;
-    double dfRadius;
-    Vector3D vectExtrusion;
-    double dfStartingAngle;
-    double dfEndingAngle;
+    double getStartingAngle() const;
+    void setStartingAngle(double value);
+
+    double getEndingAngle() const;
+    void setEndingAngle(double value);
+    virtual void print () const override;
+
+protected:
+    double startingAngle;
+    double endingAngle;
 };
 
 /**
  * @brief Geometry class which represents Spline
- */
+ *//*
 class Spline : public CADGeometry
 {
 public:
@@ -306,6 +308,7 @@ public:
         eGeometryType = CADGeometry::HATCH;
     }
 };
+*/
 
 //
 //class EXTERN LineType
@@ -344,39 +347,6 @@ public:
 //
 //    std::vector < std::pair < long long, short > > astAttachedGeometries;
 //};
-
-class OCAD_EXTERN Layer
-{
-public:
-    Layer(CADFile * pCADFile)
-    {
-        pstCADFile_m = pCADFile;
-    }
-
-    size_t dLayerID;
-
-    std::string sLayerName;
-    bool bFrozen;
-    bool bOn;
-    bool bFrozenByDefaultInNewVPORT;
-    bool bLocked;
-    bool bPlottingFlag;
-    int16_t dLineWeight;
-    int16_t dColor;
-
-//    LineType stLayerLType;
-
-    CADFile * pstCADFile_m;
-
-    size_t GetGeometriesCount() { return astAttachedGeometries.size(); }
-
-    CADGeometry * GetGeometry( size_t index )
-    {
-        return pstCADFile_m->GetGeometry ( dLayerID, index );
-    }
-
-    std::vector < std::pair < long long, short > > astAttachedGeometries;
-};
 
 
 #endif // CADGEOMETRIES_H

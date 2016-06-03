@@ -32,22 +32,18 @@
 #ifndef CADFILE_H
 #define CADFILE_H
 
-#include "cadtables.h"
-#include "cadclasses.h"
 #include "cadfileio.h"
+#include "cadclasses.h"
+#include "cadtables.h"
 
-#include "cadobjects.h"
-
-
-class Layer;
-class CADGeometry;
 
 /**
  * @brief The abstact CAD file class
  */
 class OCAD_EXTERN CADFile
 {
-    friend class Layer;
+    friend class CADTables;
+    friend class CADLayer;
 public:
     /**
      * @brief The CAD file open options enum
@@ -64,54 +60,65 @@ public:
     virtual ~CADFile();
 
 public:
-    const CADHeader& GetHeader() const;
-    const CADClasses& GetClasses() const;
-    const CADTables& GetTables() const;
+    const CADHeader& getHeader() const;
+    const CADClasses& getClasses() const;
+    const CADTables& getTables() const;
 
 public:
-    virtual int ParseFile(enum OpenOptions eOptions);
-    virtual size_t GetLayersCount();
-    virtual size_t GetBlocksCount();
-    virtual Layer * GetLayer( size_t index );
-    virtual CADBlock * GetBlock( size_t index );
+    virtual int parseFile(enum OpenOptions eOptions);
+    virtual size_t getLayersCount() const;
+    virtual CADLayer &getLayer(size_t index);
+//    virtual size_t GetBlocksCount();
+//    virtual CADBlockObject * GetBlock( size_t index );
 
 protected:
-    virtual CADObject * GetObject( size_t index );
-    virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
+    /**
+     * @brief Get CAD Object from file
+     * @param index Object index
+     * @return pointer to CADObject or nullptr. User have to free returned pointer.
+     */
+    virtual CADObject * getObject( long handle ) = 0;
+
+    /**
+     * @brief read geometry from CAD file
+     * @param handle Handle of CAD object
+     * @return NULL if failed or pointer which mast be feed by user
+     */
+    virtual CADGeometry * getGeometry( long handle ) = 0;
 
     /**
      * @brief Read header from CAD file
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int ReadHeader() = 0;
+    virtual int readHeader() = 0;
 
     /**
      * @brief Read classes from CAD file
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int ReadClasses() = 0;
+    virtual int readClasses() = 0;
 
     /**
      * @brief Create the file map for fast access to CAD objects
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int CreateFileMap() = 0;
+    virtual int createFileMap() = 0;
 
     /**
      * @brief Read tables from CAD file
      * @param eOptions Read options
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int ReadTables(enum OpenOptions eOptions) = 0;
+    virtual int readTables(enum OpenOptions eOptions);
 
 protected:
-    CADFileIO* m_poFileIO;
-    CADHeader m_oHeader;
-    CADClasses m_oClasses;
-    CADTables m_oTables;
+    CADFileIO* fileIO;
+    CADHeader header;
+    CADClasses classes;
+    CADTables tables;
 
 protected:
-    std::map<long, long> m_mdObjectsMap; // object index <-> file offset
+    std::map<long, long> objectsMap; // object index <-> file offset
 };
 
 

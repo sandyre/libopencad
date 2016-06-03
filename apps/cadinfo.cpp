@@ -30,22 +30,25 @@
  *******************************************************************************/
 
 #include "opencad_api.h"
-#include "cadgeometries.h"
+#include "cadgeometry.h"
 
 #include <cstddef>
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <memory>
+
+using namespace std;
 
 static int Usage(const char* pszErrorMsg = nullptr)
 {
-    std::cout << "Usage: cadinfo [--help] [--formats][--version]\n"
-            "               file_name" << std::endl;
+    cout << "Usage: cadinfo [--help] [--formats][--version]\n"
+            "               file_name" << endl;
 
     if( pszErrorMsg != nullptr )
     {
-        std::cerr << "\nFAILURE: " << pszErrorMsg << std::endl;
+        cerr << endl << "FAILURE: " << pszErrorMsg << endl;
         return EXIT_FAILURE;
     }
 
@@ -54,17 +57,17 @@ static int Usage(const char* pszErrorMsg = nullptr)
 
 static int Version()
 {
-    std::cout << "cadinfo was compiled against libopencad "
-              << OCAD_VERSION << std::endl
-              << "and is running against libopencad "
-              << GetVersionString() << std::endl;
+    cout << "cadinfo was compiled against libopencad "
+         << OCAD_VERSION << endl
+         << "and is running against libopencad "
+         << GetVersionString() << endl;
 
     return EXIT_SUCCESS;
 }
 
 static int Formats()
 {
-    std::cerr << GetCADFormats() << std::endl;
+    cerr << GetCADFormats() << endl;
 
     return EXIT_SUCCESS;
 }
@@ -96,21 +99,22 @@ int main(int argc, char *argv[])
         }
     }
 
-    CADFile *poCadFile = OpenCADFile( pszCADFilePath, CADOpenOptions::READ_ALL );
+    CADFile *pCADFile = OpenCADFile( pszCADFilePath,
+                                      CADFile::OpenOptions::READ_ALL );
 
-    if (poCadFile == nullptr)
+    if (pCADFile == nullptr)
     {
-        std::cerr << "Open CAD file " << pszCADFilePath << " failed." << std::endl;
+        cerr << "Open CAD file " << pszCADFilePath << " failed." << endl;
         return EXIT_FAILURE;
     }
 
-    const CADHeader& header = poCadFile->GetHeader ();
-    header.Print ();
-    std::cout << std::endl;
+    const CADHeader& header = pCADFile->getHeader ();
+    header.print ();
+    cout << endl;
 
-    const CADClasses& classes = poCadFile->GetClasses ();
-    classes.Print ();
-    std::cout << std::endl;
+    const CADClasses& classes = pCADFile->getClasses ();
+    classes.print ();
+    cout << endl;
 
     int solids_count = 0;
     int splines_count = 0;
@@ -122,35 +126,32 @@ int main(int argc, char *argv[])
     int point_count = 0;
     int arc_count = 0;
     int text_count = 0;
-    std::cout << "Layers count: " << poCadFile->GetLayersCount () << std::endl;
+    cout << "Layers count: " << pCADFile->getLayersCount () << endl;
 
-    Layer * layer;
-    for ( size_t i = 0; i < poCadFile->GetLayersCount (); ++i )
+    size_t i,j;
+    for ( i = 0; i < pCADFile->getLayersCount (); ++i )
     {
-        layer = poCadFile->GetLayer (i);
-        std::cout << "Layer #" << i << " contains " << layer->GetGeometriesCount () << " geometries.\n";
-        for ( size_t j = 0; j < layer->GetGeometriesCount (); ++j )
+        CADLayer &layer = pCADFile->getLayer (i);
+        cout << "Layer #" << i << " contains "
+             << layer.getGeometryCount () << " geometries" << endl;
+
+        for ( j = 0; j < layer.getGeometryCount (); ++j )
         {
-            CADGeometry * geom = layer->GetGeometry (j);
+            unique_ptr<CADGeometry> geom(layer.getGeometry (j));
 
             if ( geom != nullptr )
             {
-                switch ( geom->GetType() )
+                geom->print ();
+
+                switch ( geom->getType() )
                 {
                     case CADGeometry::CIRCLE:
-                    {
-                        Circle * circle = ( Circle * ) geom;
-                        std::cout << "|---------Circle---------|\n";
-                        std::cout << "Position: " << "\t" << circle->vertPosition.X <<
-                                "\t" << circle->vertPosition.Y << "\t" << circle->vertPosition.Z << std::endl;
-                        std::cout << "Radius: " << circle->dfRadius << std::endl << std::endl;
-
                         ++circles_count;
                         break;
-                    }
+
                     case CADGeometry::LWPOLYLINE:
                     {
-                        LWPolyline * poly = ( LWPolyline * ) geom;
+                        /*LWPolyline * poly = ( LWPolyline * ) geom;
                         std::cout << "|---------LWPolyline---------|\n";
                         for ( size_t i = 0; i < poly->vertexes.size(); ++i )
                         {
@@ -159,12 +160,12 @@ int main(int argc, char *argv[])
                         }
                         std::cout << std::endl;
 
-                        ++pline_count;
+                        ++pline_count;*/
                         break;
                     }
                     case CADGeometry::POLYLINE3D:
                     {
-                        Polyline3D * poly = ( Polyline3D * ) geom;
+                        /*Polyline3D * poly = ( Polyline3D * ) geom;
                         std::cout << "|---------Polyline3D---------|\n";
                         for ( size_t i = 0; i < poly->vertexes.size(); ++i )
                         {
@@ -174,59 +175,33 @@ int main(int argc, char *argv[])
                         }
                         std::cout << std::endl;
 
-                        ++pline3d_count;
+                        ++pline3d_count;*/
                         break;
                     }
                     case CADGeometry::ARC:
-                    {
-                        Arc * arc = ( Arc * ) geom;
-                        std::cout << "|---------Arc---------|\n";
-                        std::cout << "Position: " << "\t" << arc->vertPosition.X <<
-                                "\t" << arc->vertPosition.Y << "\t" << arc->vertPosition.Z << std::endl;
-                        std::cout << "Radius: " << "\t" << arc->dfRadius << std::endl;
-                        std::cout << "Beg & End angles: " << "\t" << arc->dfStartingAngle << "\t"
-                                << arc->dfEndingAngle << std::endl << std::endl;
-
                         ++arc_count;
                         break;
-                    }
                     case CADGeometry::POINT:
-                    {
-                        Point3D * point = ( Point3D * ) geom;
-                        std::cout << "|---------Point---------|\n";
-                        std::cout << "Position: " << "\t" << point->vertPosition.X <<
-                            "\t" << point->vertPosition.Y << "\t" << point->vertPosition.Z << std::endl << std::endl;
-
                         ++point_count;
                         break;
-                    }
                     case CADGeometry::ELLIPSE:
                     {
-                        Ellipse * ellipse = ( Ellipse * ) geom;
+                        /*Ellipse * ellipse = ( Ellipse * ) geom;
                         std::cout << "|---------Ellipse---------|\n";
                         std::cout << "Position: " << "\t" << ellipse->vertPosition.X <<
                             "\t" << ellipse->vertPosition.Y << "\t" << ellipse->vertPosition.Z << std::endl;
                         std::cout << "Beg & End angles: " << "\t" << ellipse->dfStartingAngle << "\t"
                             << ellipse->dfEndingAngle << std::endl << std::endl;
-
+*/
                         ++ellipses_count;
                         break;
                     }
                     case CADGeometry::LINE:
-                    {
-                        Line * line = ( Line * ) geom;
-                        std::cout << "|---------Line---------|\n";
-                        std::cout << "Start Position: " << "\t" << line->vertStart.X <<
-                            "\t" << line->vertStart.Y << "\t" << line->vertStart.Z << std::endl;
-                        std::cout << "End Position: " << "\t" << line->vertEnd.X <<
-                            "\t" << line->vertEnd.Y << "\t" << line->vertEnd.Z << std::endl << std::endl;
-
                         ++lines_count;
                         break;
-                    }
                     case CADGeometry::SPLINE:
                     {
-                        Spline * spline = ( Spline * ) geom;
+                        /*Spline * spline = ( Spline * ) geom;
                         std::cout << "|---------Spline---------|\n";
                         std::cout << "Degree: \t" << spline->dDegree << std::endl;
                         if ( spline->dScenario == 2 )
@@ -270,25 +245,25 @@ int main(int argc, char *argv[])
                             << spline->averFitPoints[j].Z << std::endl;
                         }
 
-                        std::cout << std::endl;
+                        std::cout << std::endl;*/
                         ++splines_count;
                         break;
                     }
                     case CADGeometry::TEXT:
                     {
                         // TODO: add other optional parameters.
-                        Text * text = ( Text * ) geom;
+                        /*Text * text = ( Text * ) geom;
                         std::cout << "|---------Text---------|\n";
                         std::cout << "Position:\t" << text->vertInsertion.X << "\t"
                             << text->vertInsertion.Y << std::endl;
                         std::cout << "Text value:\t" << text->strTextValue << std::endl << std::endl;
-
+*/
                         ++text_count;
                         break;
                     }
                     case CADGeometry::SOLID:
                     {
-                        Solid * solid = ( Solid * ) geom;
+                        /*Solid * solid = ( Solid * ) geom;
                         std::cout << "|---------Solid---------|\n";
                         for ( size_t i = 0; i < solid->avertCorners.size(); ++i )
                         {
@@ -296,7 +271,8 @@ int main(int argc, char *argv[])
                                 << solid->avertCorners[i].Y << solid->dfElevation << std::endl;
                         }
                         std::cout << std::endl;
-                        ++solids_count;
+*/
+++solids_count;
                         break;
                     }
                 }

@@ -88,7 +88,15 @@ static constexpr const char * DWGSecondFileHeaderEnd
 template<typename T, typename S>
 inline void SwapEndianness ( T &&object, S &&size )
 {
-    std::reverse (& object, & object + size);
+/*    if(size == 2){
+        ((*(char*)(object)) | (*(((char*)(object))+1) << 8));
+    }
+    else if (size == 4){
+        ((*(char*)(object)) | (*(((char*)(object))+1) << 8) | (*(((char*)(object))+2) << 16) | (*(((char*)(object))+3) << 24));
+    }
+    else{*/
+        std::reverse (& object, & object + size);
+    //}
 }
 
 static const int DWGCRC8Table[256] =

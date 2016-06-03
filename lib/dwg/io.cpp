@@ -30,7 +30,6 @@
  ************************************************************************************/
 
 #include "io.h"
-#include "constants.h"
 
 #include <iostream>
 #include <cstring>
@@ -42,7 +41,7 @@ short CalculateCRC8 ( unsigned short initial_val, const char * ptr, int num )
     {
         al = ( unsigned char )( ( *ptr ) ^ ( ( char ) ( initial_val & 0xFF ) ) );
         initial_val = ( initial_val >> 8 ) & 0xFF;
-        initial_val = initial_val ^ CRC8_TABLE[al & 0xFF];
+        initial_val = initial_val ^ DWGCRC8Table[al & 0xFF];
         ptr++;
     }
 
@@ -435,7 +434,7 @@ long ReadUMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart )
 long ReadMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     // TODO: bit offset is calculated, but function has nothing to do with it.
-    long long result = 0;
+    long result = 0;
     bool   negative = false;
     size_t nByteOffset      = nBitOffsetFromStart / 8;
     size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
@@ -697,7 +696,7 @@ CADHandle ReadHANDLE ( const char * pabyInput, size_t& nBitOffsetFromStart )
     unsigned char counter = (unsigned char) Read4B ( pabyInput, nBitOffsetFromStart );
     for ( unsigned char i = 0; i < counter; ++i )
     {
-        result.AddOffset(ReadCHAR (pabyInput, nBitOffsetFromStart));
+        result.addOffset(ReadCHAR (pabyInput, nBitOffsetFromStart));
     }
 
     return result;
@@ -720,7 +719,7 @@ CADHandle ReadHANDLE8BLENGTH ( const char * pabyInput,
 
     for ( unsigned char i = 0; i < counter; ++i )
     {
-        result.AddOffset(ReadCHAR (pabyInput, nBitOffsetFromStart));
+        result.addOffset(ReadCHAR (pabyInput, nBitOffsetFromStart));
     }
 
     return result;

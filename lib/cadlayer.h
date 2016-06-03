@@ -28,82 +28,71 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
+#ifndef CADLAYER_H
+#define CADLAYER_H
 
+#include "cadgeometry.h"
 
-#include "cadfile.h"
-#include "opencad_api.h"
+class CADFile;
 
-#include <iostream>
+using namespace std;
 
-CADFile::CADFile(CADFileIO* poFileIO)
+class OCAD_EXTERN CADLayer
 {
-    fileIO = poFileIO;
-}
+public:
+    CADLayer(CADFile * const file);
+    string getName() const;
+    void setName(const string &value);
 
-CADFile::~CADFile()
-{
-    if(nullptr != fileIO)
-        delete fileIO;
-}
+    bool getFrozen() const;
+    void setFrozen(bool value);
 
-const CADHeader& CADFile::getHeader() const
-{
-    return header;
-}
+    bool getOn() const;
+    void setOn(bool value);
 
-const CADClasses& CADFile::getClasses() const
-{
-    return classes;
-}
+    bool getFrozenByDefault() const;
+    void setFrozenByDefault(bool value);
 
-const CADTables &CADFile::getTables() const
-{
-    return tables;
-}
+    bool getLocked() const;
+    void setLocked(bool value);
 
-int CADFile::parseFile(enum OpenOptions eOptions)
-{
-    if(nullptr == fileIO)
-        return CADErrorCodes::FILE_OPEN_FAILED;
+    bool getPlotting() const;
+    void setPlotting(bool value);
 
-    if(!fileIO->IsOpened())
-    {
-        if(!fileIO->Open(CADFileIO::read | CADFileIO::binary))
-            return CADErrorCodes::FILE_OPEN_FAILED;
-    }
+    short getLineWeight() const;
+    void setLineWeight(short value);
 
-    int nResultCode = readHeader ();
-    if(nResultCode != CADErrorCodes::SUCCESS)
-        return nResultCode;
-    nResultCode = readClasses ();
-    if(nResultCode != CADErrorCodes::SUCCESS)
-        return nResultCode;
-    nResultCode = createFileMap ();
-    if(nResultCode != CADErrorCodes::SUCCESS)
-        return nResultCode;
-    nResultCode = readTables (eOptions);
-    if(nResultCode != CADErrorCodes::SUCCESS)
-        return nResultCode;
+    short getColor() const;
+    void setColor(short value);
 
-    return CADErrorCodes::SUCCESS;
-}
+    size_t getId() const;
+    void setId(const size_t &value);
 
-int CADFile::readTables(CADFile::OpenOptions /*eOptions*/)
-{
-    // TODO: read other tables in ALL option mode
+    long getHandle() const;
+    void setHandle(long value);
 
-    int nResult = tables.readTable(this, CADTables::LayersTable);
-//    if(nResult != CADErrorCodes::SUCCESS)
-        return nResult;
+    void addHandle(long handle, enum CADObject::ObjectType type);
 
-}
+    size_t getGeometryCount () const;
+    CADGeometry* getGeometry(size_t index);
 
-size_t CADFile::getLayersCount() const
-{
-    return tables.getLayerCount ();
-}
+protected:
+    string layerName;
+    bool frozen;
+    bool on;
+    bool frozenByDefault;
+    bool locked;
+    bool plotting;
+    short lineWeight;
+    short color;
+    size_t layerId;
+    long handle;
+    short geometryType; // if all geometry is same type set this type or -1
 
-CADLayer &CADFile::getLayer(size_t index)
-{
-    return tables.getLayer (index);
-}
+    vector<long> geometryHandles;
+    vector<long> attributeHandles;
+
+    CADFile * const pCADFile;
+};
+
+#endif // CADLAYER_H

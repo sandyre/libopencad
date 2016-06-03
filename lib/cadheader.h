@@ -40,13 +40,13 @@ class OCAD_EXTERN CADHandle final
 {
 public:
     CADHandle(char code = 0);
-    void AddOffset(char val);
-    bool IsNull() const;
-    long GetAsLong() const;
-    long GetAsLong( CADHandle& ref_handle );
+    void addOffset(char val);
+    bool isNull() const;
+    long getAsLong() const;
+    long getAsLong(const CADHandle &ref_handle ) const;
 protected:
-    char m_nCode;
-    std::vector<char> m_HandleOrOffset;
+    char code;
+    std::vector<char> handleOrOffset;
 };
 
 class OCAD_EXTERN CADVariant final
@@ -77,23 +77,23 @@ public:
     CADVariant(const CADVariant& orig);
     CADVariant& operator = (const CADVariant& orig);
 public:
-    long GetDecimal() const;
-    double GetReal() const;
-    const std::string &GetString() const;
-    enum DataType GetType() const;
-    double GetX() const;
-    double GetY() const;
-    double GetZ() const;
-    const CADHandle &GetHandle() const;
+    long getDecimal() const;
+    double getReal() const;
+    const std::string &getString() const;
+    enum DataType getType() const;
+    double getX() const;
+    double getY() const;
+    double getZ() const;
+    const CADHandle &getHandle() const;
 protected:
-    enum DataType m_eType;
-    long m_nDecimal;
-    double m_dX;
-    double m_dY;
-    double m_dZ;
-    std::string m_sString;
-    CADHandle m_Handle;
-    time_t m_DateTime;
+    enum DataType type;
+    long decimalVal;
+    double xVal;
+    double yVal;
+    double zVal;
+    std::string stringVal;
+    CADHandle handleVal;
+    time_t dateTimeVal;
 };
 
 
@@ -688,21 +688,22 @@ public:
      * @param val Value to add
      * @return SUCCESS or some value from CADErrorCodes
      */
-    int AddValue(short code, const CADVariant& val);
-    int AddValue(short code, const char* val);
-    int AddValue(short code, int val);
-    int AddValue(short code, short val);
-    int AddValue(short code, double val);
-    int AddValue(short code, const std::string& val);
-    int AddValue(short code, bool val);
-    int AddValue(short code, double x, double y, double z = 0);
-    int AddValue(short code, long julianday, long milliseconds);
-    int GetGroupCode(short code) const;
-    const CADVariant& GetValue(short code, const CADVariant& val = CADVariant()) const;
-    const char* GetValueName(short code) const;
-    void Print() const;
+    int addValue(short code, const CADVariant& val);
+    int addValue(short code, const char* val);
+    int addValue(short code, int val);
+    int addValue(short code, short val);
+    int addValue(short code, double val);
+    int addValue(short code, const std::string& val);
+    int addValue(short code, bool val);
+    int addValue(short code, double x, double y, double z = 0);
+    int addValue(short code, long julianday, long milliseconds);
+    int getGroupCode(short code) const;
+    const CADVariant& getValue(short code,
+                               const CADVariant& val = CADVariant()) const;
+    const char* getValueName(short code) const;
+    void print() const;
 protected:
-    std::map<short, CADVariant> m_moValues;
+    std::map<short, CADVariant> valuesMap;
 };
 
 #endif // CADHEADER_H

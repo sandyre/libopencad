@@ -40,9 +40,9 @@ CADClasses::CADClasses()
 
 }
 
-void CADClasses::AddClass(CADClass stClass)
+void CADClasses::addClass(CADClass stClass)
 {
-    m_staClasses.push_back (stClass);
+    classes.push_back (stClass);
 
     DebugMsg ("CLASS INFO\n"
                       "  Class Number: %d\n"
@@ -61,11 +61,11 @@ void CADClasses::AddClass(CADClass stClass)
               stClass.bIsEntity);
 }
 
-void CADClasses::Print() const
+void CADClasses::print() const
 {
     cout << "============ CLASSES Section ============" << endl;
 
-    for(struct CADClass stClass : m_staClasses)
+    for(struct CADClass stClass : classes)
     {
         cout << "Class: " << endl;
         cout << "  Class Number: " << stClass.dClassNum << endl;

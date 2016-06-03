@@ -32,15 +32,16 @@
 #define CADTABLES_H
 
 #include "cadheader.h"
+#include "cadlayer.h"
 
-#include <map>
+class CADFile;
 
-
+using namespace std;
 
 /**
  * @brief The CAD tables class. Store tables
  */
-class CADTables
+class OCAD_EXTERN CADTables
 {
 public:
     /**
@@ -68,10 +69,17 @@ public:
     };
 public:
     CADTables();
-    void AddTable(enum CADTableType eType, CADHandle hHandle);
-    int ReadTable(enum CADTableType eType);
+    void addTable(enum CADTableType eType, CADHandle hHandle);
+    int readTable(CADFile * const file, enum CADTableType eType);
+    size_t getLayerCount() const;
+    CADLayer& getLayer(size_t index);
+
 protected:
-    std::map<enum CADTableType, CADHandle> m_moTables;
+    int readLayersTable(CADFile * const file, long index);
+    void fillLayer(const CADEntityObject* ent);
+protected:
+    map<enum CADTableType, CADHandle> tableMap;
+    vector<CADLayer> layers;
 };
 
 #endif // CADTABLES_H

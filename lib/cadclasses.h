@@ -31,6 +31,8 @@
 #ifndef CADCLASSES_H
 #define CADCLASSES_H
 
+#include "opencad.h"
+
 #include <vector>
 #include <string>
 
@@ -49,17 +51,17 @@ struct CADClass
     short dClassVersion;        // BITSHORT
 };
 
-class CADClasses
+class OCAD_EXTERN CADClasses
 {
 public:
     CADClasses();
 
 public:
-    void AddClass(struct CADClass stClass);
-    void Print() const;
+    void addClass(struct CADClass stClass);
+    void print() const;
 
 protected:
-    vector<struct CADClass> m_staClasses;
+    vector<struct CADClass> classes;
 };
 
 #endif // CADCLASSES_H
