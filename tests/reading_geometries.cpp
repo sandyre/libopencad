@@ -33,55 +33,60 @@ TEST(reading_geometries, 24127_circles_128_lines)
 
 TEST(reading_geometries, 256_polylines_7vertexes)
 {
-    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/r2000/256_lwpolylines_7vertexes.dwg"));
+    auto opened_dwg = OpenCADFile ("./data/r2000/256_lwpolylines_7vertexes.dwg",
+                                   CADFile::OpenOptions::READ_FAST);
+    ASSERT_NE (opened_dwg, nullptr);
     auto lwplines_count = 0;
 
-    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
+    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
 
     CADGeometry * geom;
-    Layer * layer = opened_dwg->GetLayer (0);
-    for ( auto i = 0; i < layer->GetGeometriesCount (); ++i )
+    CADLayer &layer = opened_dwg->getLayer (0);
+    for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
     {
-        geom = layer->GetGeometry (i);
-        if ( geom->GetType() == CADGeometry::CADGeometryType::LWPOLYLINE )
+        geom = layer.getGeometry (i);
+        if ( geom->getType() == CADGeometry::LWPOLYLINE ){
             ++lwplines_count;
 
-        LWPolyline * poly = ( LWPolyline * ) geom;
-        ASSERT_EQ( poly->vertexes.size(), 7);
-        delete( geom );
+            CADLWPolyline * poly = static_cast<CADLWPolyline*>(geom);
+            ASSERT_EQ( poly->getVertexCount(), 7);
+        }
+        delete geom;
     }
 
     ASSERT_EQ (256, lwplines_count);
-    delete( layer );
-    delete( opened_dwg );
+
+    delete opened_dwg;
 }
 
 TEST(reading_geometries, 18432_3dpolylines_6vertexes)
 {
-    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/r2000/18432_3dpolylines_6vertexes.dwg"));
+    auto opened_dwg = OpenCADFile ("./data/r2000/18432_3dpolylines_6vertexes.dwg",
+                                   CADFile::OpenOptions::READ_FAST);
+    ASSERT_NE (opened_dwg, nullptr);
     auto plines3d_count = 0;
 
-    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
+    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
 
+    CADLayer &layer = opened_dwg->getLayer (0);
     CADGeometry * geom;
-    Layer * layer = opened_dwg->GetLayer (0);
-    for ( auto i = 0; i < layer->GetGeometriesCount (); ++i )
+    for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
     {
-        geom = layer->GetGeometry (i);
-        if ( geom->GetType() == CADGeometry::CADGeometryType::POLYLINE3D )
+        geom = layer.getGeometry (i);
+        if ( geom->getType() == CADGeometry::POLYLINE3D ) {
             ++plines3d_count;
 
-        Polyline3D * poly = ( Polyline3D * ) geom;
-        ASSERT_EQ( poly->vertexes.size(), 6);
-        delete( geom );
+            CADPolyline3D * poly = static_cast<CADPolyline3D*>(geom);
+            ASSERT_EQ( poly->getVertexCount (), 6);
+        }
+        delete geom;
     }
 
     ASSERT_EQ (18432, plines3d_count);
-    delete( layer );
-    delete( opened_dwg );
+    delete opened_dwg;
 }
 
-// TODO: Test isnt done fully.
+// TODO: Test isn't done fully.
 TEST(reading_geometries, six_3dpolylines)
 {
     auto openedDwg = OpenCADFile ( "./data/r2000/six_3dpolylines.dwg",
