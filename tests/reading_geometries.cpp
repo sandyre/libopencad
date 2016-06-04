@@ -31,6 +31,56 @@ TEST(reading_geometries, 24127_circles_128_lines)
     delete openedDwg;
 }
 
+TEST(reading_geometries, 256_polylines_7vertexes)
+{
+    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/r2000/256_lwpolylines_7vertexes.dwg"));
+    auto lwplines_count = 0;
+
+    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
+
+    CADGeometry * geom;
+    Layer * layer = opened_dwg->GetLayer (0);
+    for ( auto i = 0; i < layer->GetGeometriesCount (); ++i )
+    {
+        geom = layer->GetGeometry (i);
+        if ( geom->GetType() == CADGeometry::CADGeometryType::LWPOLYLINE )
+            ++lwplines_count;
+
+        LWPolyline * poly = ( LWPolyline * ) geom;
+        ASSERT_EQ( poly->vertexes.size(), 7);
+        delete( geom );
+    }
+
+    ASSERT_EQ (256, lwplines_count);
+    delete( layer );
+    delete( opened_dwg );
+}
+
+TEST(reading_geometries, 18432_3dpolylines_6vertexes)
+{
+    auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/r2000/18432_3dpolylines_6vertexes.dwg"));
+    auto plines3d_count = 0;
+
+    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
+
+    CADGeometry * geom;
+    Layer * layer = opened_dwg->GetLayer (0);
+    for ( auto i = 0; i < layer->GetGeometriesCount (); ++i )
+    {
+        geom = layer->GetGeometry (i);
+        if ( geom->GetType() == CADGeometry::CADGeometryType::POLYLINE3D )
+            ++plines3d_count;
+
+        Polyline3D * poly = ( Polyline3D * ) geom;
+        ASSERT_EQ( poly->vertexes.size(), 6);
+        delete( geom );
+    }
+
+    ASSERT_EQ (18432, plines3d_count);
+    delete( layer );
+    delete( opened_dwg );
+}
+
 // TODO: Test isnt done fully.
 TEST(reading_geometries, six_3dpolylines)
 {
