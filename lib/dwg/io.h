@@ -1,10 +1,10 @@
-/************************************************************************************
- *  Name: dwg_io.h
- *  Project: libOpenCAD OpenSource CAD formats support library
+/*******************************************************************************
+ *  Project: libopencad
+ *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
  *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
- ************************************************************************************
+ *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
@@ -27,7 +27,8 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ************************************************************************************/
+ *******************************************************************************/
+
 
 #ifndef DWG_IO_H
 #define DWG_IO_H

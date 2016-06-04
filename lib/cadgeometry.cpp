@@ -621,3 +621,291 @@ void CADSolid::addAverCorner(const CADVector &corner)
 {
     avertCorners.push_back (corner);
 }
+
+//------------------------------------------------------------------------------
+// CADImage
+//------------------------------------------------------------------------------
+
+CADImage::CADImage()
+{
+    geometryType = CADGeometry::IMAGE;
+}
+
+CADVector CADImage::getVertInsertionPoint() const
+{
+    return vertInsertionPoint;
+}
+
+void CADImage::setVertInsertionPoint(const CADVector &value)
+{
+    vertInsertionPoint = value;
+}
+
+CADVector CADImage::getImageSize() const
+{
+    return imageSize;
+}
+
+void CADImage::setImageSize(const CADVector &value)
+{
+    imageSize = value;
+}
+
+CADVector CADImage::getImageSizeInPx() const
+{
+    return imageSizeInPx;
+}
+
+void CADImage::setImageSizeInPx(const CADVector &value)
+{
+    imageSizeInPx = value;
+}
+
+CADVector CADImage::getPixelSizeInACADUnits() const
+{
+    return pixelSizeInACADUnits;
+}
+
+void CADImage::setPixelSizeInACADUnits(const CADVector &value)
+{
+    pixelSizeInACADUnits = value;
+}
+
+short CADImage::getClippingBoundaryType() const
+{
+    return clippingBoundaryType;
+}
+
+void CADImage::setClippingBoundaryType(short value)
+{
+    clippingBoundaryType = value;
+}
+
+char CADImage::getResolutionUnits() const
+{
+    return resolutionUnits;
+}
+
+void CADImage::setResolutionUnits(char value)
+{
+    resolutionUnits = value;
+}
+
+string CADImage::getFilePath() const
+{
+    return filePath;
+}
+
+void CADImage::setFilePath(const string &value)
+{
+    filePath = value;
+}
+
+void CADImage::setOptions(bool transparency, bool clip, char brightness, char contrast)
+{
+    bTransparency = transparency;
+    bClipping = clip;
+    dBrightness = brightness;
+    dContrast = contrast;
+}
+
+void CADImage::print() const
+{
+    cout << "|---------Image---------|\n"
+         << "Filepath: " << filePath << "\n"
+         << "Insertion point: "
+         << vertInsertionPoint.getX() << "\t"
+         << vertInsertionPoint.getY() << "\n"
+         << "Transparent? : " << bTransparency << "\n"
+         << "Brightness (0-100) : " << dBrightness <<  "\n"
+         << "Contrast (0-100) : " << dContrast <<  "\n"
+         << "Clipping polygon:"
+         << endl;
+    for ( size_t i = 0; i < avertClippingPolygon.size(); ++i )
+    {
+        cout << "  #" << i << "\tX: "
+             << avertClippingPolygon[i].getX() << " Y: "
+             << avertClippingPolygon[i].getY() << std::endl;
+    }
+    cout << endl;
+}
+
+//------------------------------------------------------------------------------
+// CADMText
+//------------------------------------------------------------------------------
+
+CADMText::CADMText()
+{
+    geometryType = CADGeometry::MTEXT;
+}
+
+double CADMText::getRectWidth() const
+{
+    return rectWidth;
+}
+
+void CADMText::setRectWidth(double value)
+{
+    rectWidth = value;
+}
+
+double CADMText::getExtents() const
+{
+    return extents;
+}
+
+void CADMText::setExtents(double value)
+{
+    extents = value;
+}
+
+double CADMText::getExtentsWidth() const
+{
+    return extentsWidth;
+}
+
+void CADMText::setExtentsWidth(double value)
+{
+    extentsWidth = value;
+}
+
+void CADMText::print() const
+{
+    cout << "|---------MText---------|\n"
+         << "Position: "
+         << position.getX() << "\t"
+         << position.getY() << "\t"
+         << position.getZ() << "\n"
+         << "Text: " << textValue << "\n"
+         << std::endl;
+}
+
+//------------------------------------------------------------------------------
+// CADFace3D
+//------------------------------------------------------------------------------
+
+CADFace3D::CADFace3D()
+{
+    geometryType = FACE3D;
+}
+
+void CADFace3D::addCorner(const CADVector &corner)
+{
+    avertCorners.push_back (corner);
+}
+
+void CADFace3D::print() const
+{
+    cout << "|---------3DFace---------|\n"
+         << "Corners: " << "\n";
+    for ( size_t i = 0; i < avertCorners.size(); ++i )
+    {
+        cout << "  #" << i
+             << " X: " << avertCorners[i].getX() << "\t"
+             << "Y: " << avertCorners[i].getY() << "\t"
+             << "Z: " << avertCorners[i].getZ() << "\n";
+    }
+    cout << endl;
+}
+
+//------------------------------------------------------------------------------
+// CADPolylinePFace
+//------------------------------------------------------------------------------
+
+CADPolylinePFace::CADPolylinePFace()
+{
+    geometryType = POLYLINE_PFACE;
+}
+
+void CADPolylinePFace::print() const
+{
+    cout << "|---------PolylinePface---------|\n";
+    for ( size_t i = 0; i < vertexes.size(); ++i )
+    {
+        cout << "  #" << i << "\t"
+             << vertexes[i].getX() << "\t"
+             << vertexes[i].getY() << "\t"
+             << vertexes[i].getZ() << "\n";
+        }
+        cout << endl;
+}
+
+void CADPolylinePFace::addVertex(const CADVector &vertex)
+{
+    vertexes.push_back (vertex);
+}
+
+//------------------------------------------------------------------------------
+// CADXLine
+//------------------------------------------------------------------------------
+
+CADXLine::CADXLine()
+{
+    geometryType = CADGeometry::XLINE;
+}
+
+void CADXLine::print() const
+{
+    cout << "|---------XLine---------|\n"
+         << "Position: "
+         << position.getX() << "\t"
+         << position.getY() << "\t"
+         << position.getZ() << "\n"
+         << "Direction: "
+         << extrusion.getX() << "\t"
+         << extrusion.getY() << "\t"
+         << extrusion.getZ() << "\n"
+         << endl;
+}
+
+//------------------------------------------------------------------------------
+// CADMLine
+//------------------------------------------------------------------------------
+
+CADMLine::CADMLine()
+{
+    geometryType = CADGeometry::MLINE;
+}
+
+void CADMLine::print() const
+{
+    cout << "|---------MLine---------|\n"
+         << "Base point: "
+         << position.getX() << "\t"
+         << position.getY() << "\t"
+         << position.getZ() << "\n"
+         << "Vertexes:\n";
+    for ( size_t i = 0; i < avertVertexes.size(); ++i )
+    {
+        cout << "  #" << i << "\t"
+             << avertVertexes[i].getX() << "\t"
+             << avertVertexes[i].getY() << "\t"
+             << avertVertexes[i].getZ() << "\n";
+    }
+    cout << endl;
+}
+
+double CADMLine::getScale() const
+{
+    return scale;
+}
+
+void CADMLine::setScale(double value)
+{
+    scale = value;
+}
+
+bool CADMLine::getOpened() const
+{
+    return opened;
+}
+
+void CADMLine::setOpened(bool value)
+{
+    opened = value;
+}
+
+void CADMLine::addVertex(const CADVector &vertex)
+{
+    avertVertexes.push_back (vertex);
+}

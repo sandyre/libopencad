@@ -528,6 +528,9 @@ string getNameByType(CADObject::ObjectType eType)
 
     return it->second;
 }
+//------------------------------------------------------------------------------
+// CADObject
+//------------------------------------------------------------------------------
 
 CADObject::ObjectType CADObject::getType() const
 {
@@ -557,4 +560,130 @@ short CADObject::getCRC() const
 void CADObject::setCRC(short value)
 {
     CRC = value;
+}
+
+//------------------------------------------------------------------------------
+// CADDimensionOrdinateObject
+//------------------------------------------------------------------------------
+
+CADDimensionOrdinateObject::CADDimensionOrdinateObject()
+{
+    type = DIMENSION_ORDINATE;
+}
+
+//------------------------------------------------------------------------------
+// CADDimensionLinearObject
+//------------------------------------------------------------------------------
+
+CADDimensionLinearObject::CADDimensionLinearObject()
+{
+    type = DIMENSION_LINEAR;
+}
+
+//------------------------------------------------------------------------------
+// CADDimensionAlignedObject
+//------------------------------------------------------------------------------
+
+CADDimensionAlignedObject::CADDimensionAlignedObject()
+{
+    type = DIMENSION_ALIGNED;
+}
+
+//------------------------------------------------------------------------------
+// CADDimensionAngular3PtObject
+//------------------------------------------------------------------------------
+
+CADDimensionAngular3PtObject::CADDimensionAngular3PtObject()
+{
+    type = DIMENSION_ANG_3PT;
+}
+
+//------------------------------------------------------------------------------
+// CADDimensionAngular2LnObject
+//------------------------------------------------------------------------------
+
+CADDimensionAngular2LnObject::CADDimensionAngular2LnObject()
+{
+    type = DIMENSION_ANG_2LN;
+}
+
+//------------------------------------------------------------------------------
+// CADDimensionRadiusObject
+//------------------------------------------------------------------------------
+
+CADDimensionRadiusObject::CADDimensionRadiusObject()
+{
+    type = DIMENSION_RADIUS;
+}
+
+//------------------------------------------------------------------------------
+// CADDimensionDiameterObject
+//------------------------------------------------------------------------------
+
+CADDimensionDiameterObject::CADDimensionDiameterObject()
+{
+    type = DIMENSION_DIAMETER;
+}
+
+//------------------------------------------------------------------------------
+// CADImageObject
+//------------------------------------------------------------------------------
+
+CADImageObject::CADImageObject()
+{
+    type = IMAGE;
+}
+
+//------------------------------------------------------------------------------
+// CADImageDefObject
+//------------------------------------------------------------------------------
+
+CADImageDefObject::CADImageDefObject()
+{
+    type = IMAGEDEF;
+}
+
+//------------------------------------------------------------------------------
+// CADImageDefReactorObject
+//------------------------------------------------------------------------------
+
+CADImageDefReactorObject::CADImageDefReactorObject()
+{
+    type = IMAGEDEFREACTOR;
+}
+
+//------------------------------------------------------------------------------
+// CADMTextObject
+//------------------------------------------------------------------------------
+
+CADMTextObject::CADMTextObject()
+{
+    type = MTEXT;
+}
+
+//------------------------------------------------------------------------------
+// CADMLineObject
+//------------------------------------------------------------------------------
+
+CADMLineObject::CADMLineObject()
+{
+    type = MLINE;
+}
+
+//------------------------------------------------------------------------------
+// CAD3DFaceObject
+//------------------------------------------------------------------------------
+
+CAD3DFaceObject::CAD3DFaceObject()
+{
+    type = FACE3D;
+}
+
+//------------------------------------------------------------------------------
+// CADPolylinePFaceObject
+//------------------------------------------------------------------------------
+
+CADPolylinePFaceObject::CADPolylinePFaceObject()
+{
+    type = POLYLINE_PFACE;
 }

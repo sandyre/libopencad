@@ -61,7 +61,13 @@ class CADGeometry
         SPLINE,
         SOLID,
         RAY,
-        HATCH // NOT IMPLEMENTED
+        HATCH, // NOT IMPLEMENTED
+        IMAGE,
+        MTEXT,
+        MLINE,
+        XLINE,
+        FACE3D,
+        POLYLINE_PFACE
     };
 
     enum GeometryType getType() const;
@@ -312,6 +318,136 @@ public:
     CADHatch();
 };
 
+class CADImage : public CADGeometry
+{
+public:
+    CADImage();
+    CADVector getVertInsertionPoint() const;
+    void setVertInsertionPoint(const CADVector &value);
+
+    CADVector getImageSize() const;
+    void setImageSize(const CADVector &value);
+
+
+    CADVector getImageSizeInPx() const;
+    void setImageSizeInPx(const CADVector &value);
+
+    CADVector getPixelSizeInACADUnits() const;
+    void setPixelSizeInACADUnits(const CADVector &value);
+
+    short getClippingBoundaryType() const;
+    void setClippingBoundaryType(short value);
+
+    char getResolutionUnits() const;
+    void setResolutionUnits(char value);
+
+    string getFilePath() const;
+    void setFilePath(const string &value);
+
+    void setOptions(bool transparency, bool clip, char brightness, char contrast);
+    virtual void print () const override;
+
+protected:
+    CADVector vertInsertionPoint;
+    //CADVector vectUDirection;
+    //CADVector vectVDirection;
+    CADVector imageSize;
+    //bool bShow;
+    //bool bShowWhenNotAlignedWithScreen;
+    //bool bUseClippingBoundary;
+    bool bTransparency;
+    bool bClipping;
+    char dBrightness;
+    char dContrast;
+    //char dFade;
+
+    CADVector imageSizeInPx;
+    string filePath;
+    //bool bIsLoaded;
+    char resolutionUnits; // 0 == none, 2 == centimeters, 5 == inches;
+    CADVector pixelSizeInACADUnits;
+
+    short clippingBoundaryType; // 1 == rect, 2 == polygon
+    vector < CADVector > avertClippingPolygon;
+};
+
+class CADMText : public CADText
+{
+public:
+    CADMText();
+
+    double getRectWidth() const;
+    void setRectWidth(double value);
+
+    double getExtents() const;
+    void setExtents(double value);
+
+    double getExtentsWidth() const;
+    void setExtentsWidth(double value);
+
+    virtual void print () const override;
+
+protected:
+    double rectWidth;
+    double extents;
+    double extentsWidth;
+    // TODO: do we need this here?
+    //short dDrawingDir;
+    //short dLineSpacingStyle;
+    //short dLineSpacingFactor;
+    //long dBackgroundFlags; // R2004+
+    //long dBackgroundScaleFactor;
+    //short dBackgroundColor;
+    //long dBackgroundTransparency;
+};
+
+class CADFace3D : public CADGeometry
+{
+public:
+    CADFace3D();
+    void addCorner(const CADVector &corner);
+    virtual void print () const override;
+protected:
+    vector < CADVector > avertCorners;
+    short dInvisFlags;
+};
+
+class CADPolylinePFace : public CADGeometry
+{
+public:
+    CADPolylinePFace();
+    virtual void print () const override;
+    void addVertex(const CADVector& vertex);
+protected:
+    vector < CADVector > vertexes;
+};
+
+class CADXLine : public CADRay
+{
+public:
+    CADXLine();
+    virtual void print () const override;
+};
+
+class CADMLine : public CADPoint3D
+{
+public:
+    CADMLine();
+    virtual void print () const override;
+    double getScale() const;
+    void setScale(double value);
+
+    bool getOpened() const;
+    void setOpened(bool value);
+
+    void addVertex(const CADVector& vertex);
+protected:
+    double scale;
+    //char dJust;
+    bool opened; // 1 == open, 0 == close
+    // TODO: do we need more properties here?
+    vector < CADVector > avertVertexes;
+};
 
 //
 //class EXTERN LineType

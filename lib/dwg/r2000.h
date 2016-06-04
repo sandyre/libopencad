@@ -46,16 +46,16 @@ struct DWG2000Ced
     long      dLength;
     short     dType;
     int       dObjSizeInBits;
-    CADHandle hHandle;
+    CADHandle   hHandle;
     CADEedArray eEED;
-    bool      bGraphicPresentFlag;
+    bool        bGraphicPresentFlag;
 
     char      dEntMode;
     int       dNumReactors;
 
-    bool      bNoLinks;
+    bool        bNoLinks;
     short     dCMColorIndex;
-    double    dfLtypeScale;
+    double      dfLtypeScale;
 
     char      ltype_flags;
     char      plotstyle_flags;

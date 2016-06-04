@@ -59,7 +59,7 @@ static int Version()
 {
     cout << "cadinfo was compiled against libopencad "
          << OCAD_VERSION << endl
-         << "and is running against libopencad "
+              << "and is running against libopencad "
          << GetVersionString() << endl;
 
     return EXIT_SUCCESS;
@@ -116,6 +116,13 @@ int main(int argc, char *argv[])
     classes.print ();
     cout << endl;
 
+    int polylines_pface = 0;
+    int face3ds_count = 0;
+    int rays_count = 0;
+    int xlines_count = 0;
+    int mlines_count = 0;
+    int mtexts_count = 0;
+    int images_count = 0;
     int solids_count = 0;
     int splines_count = 0;
     int circles_count = 0;
@@ -145,55 +152,94 @@ int main(int argc, char *argv[])
 
                 switch ( geom->getType() )
                 {
-                    case CADGeometry::CIRCLE:
-                        ++circles_count;
-                        break;
+                case CADGeometry::CIRCLE:
+                    ++circles_count;
+                    break;
 
-                    case CADGeometry::LWPOLYLINE:
-                        ++pline_count;
-                        break;
+                case CADGeometry::LWPOLYLINE:
+                    ++pline_count;
+                    break;
 
-                    case CADGeometry::POLYLINE3D:                    
-                        ++pline3d_count;
-                        break;
+                case CADGeometry::POLYLINE3D:
+                    ++pline3d_count;
+                    break;
 
-                    case CADGeometry::ARC:
-                        ++arc_count;
-                        break;
-                    case CADGeometry::POINT:
-                        ++point_count;
-                        break;
-                    case CADGeometry::ELLIPSE:
-                        ++ellipses_count;
-                        break;
+                case CADGeometry::POLYLINE_PFACE:
+                    ++polylines_pface;
+                    break;
 
-                    case CADGeometry::LINE:
-                        ++lines_count;
-                        break;
-                    case CADGeometry::SPLINE:
-                        ++splines_count;
-                        break;
+                case CADGeometry::ARC:
+                    ++arc_count;
+                    break;
+                case CADGeometry::POINT:
+                    ++point_count;
+                    break;
+                case CADGeometry::ELLIPSE:
+                    ++ellipses_count;
+                    break;
 
-                    case CADGeometry::TEXT:
-                        ++text_count;
-                        break;
+                case CADGeometry::LINE:
+                    ++lines_count;
+                    break;
+                case CADGeometry::SPLINE:
+                    ++splines_count;
+                    break;
 
-                    case CADGeometry::SOLID:
-                        ++solids_count;
-                        break;
+                case CADGeometry::TEXT:
+                    ++text_count;
+                    break;
+
+                case CADGeometry::SOLID:
+                    ++solids_count;
+                    break;
+
+                case CADGeometry::IMAGE:
+                    ++images_count;
+                    break;
+
+                case CADGeometry::MTEXT:
+                    ++mtexts_count;
+                    break;
+
+                case CADGeometry::MLINE:
+                    ++mlines_count;
+                    break;
+
+                case CADGeometry::XLINE:
+                    ++xlines_count;
+                    break;
+
+                case CADGeometry::RAY:
+                    ++rays_count;
+                    break;
+
+                case CADGeometry::FACE3D:
+                    ++face3ds_count;
+                    break;
+
+                case CADGeometry::UNDEFINED:
+                case CADGeometry::HATCH:
+                    break;
                 }
             }
         }
     }
 
-    cout << "Solids: " << solids_count << endl;
-    cout << "Points: " << point_count << endl;
-    cout << "Ellipses: " << ellipses_count << endl;
-    cout << "Lines count: " << lines_count << endl;
-    cout << "Plines count: " << pline_count << endl;
-    cout << "Plines3d count: " << pline3d_count << endl;
-    cout << "Splines count: " << splines_count << endl;
-    cout << "Circles count: " << circles_count << endl;
-    cout << "Arcs count: " << arc_count << endl;
-    cout << "Texts count: " << text_count << endl;
+    cout << "Polylines Pface: " << polylines_pface << std::endl;
+    cout << "3DFaces: " << face3ds_count << std::endl;
+    cout << "Rays: " << rays_count << std::endl;
+    cout << "XLines: " << xlines_count << std::endl;
+    cout << "MLines: " << mlines_count << std::endl;
+    cout << "MTexts: " << mtexts_count << std::endl;
+    cout << "Images: " << images_count << std::endl;
+    cout << "Solids: " << solids_count << std::endl;
+    cout << "Points: " << point_count << std::endl;
+    cout << "Ellipses: " << ellipses_count << std::endl;
+    cout << "Lines count: " << lines_count << std::endl;
+    cout << "Plines count: " << pline_count << std::endl;
+    cout << "Plines3d count: " << pline3d_count << std::endl;
+    cout << "Splines count: " << splines_count << std::endl;
+    cout << "Circles count: " << circles_count << std::endl;
+    cout << "Arcs count: " << arc_count << std::endl;
+    cout << "Texts count: " << text_count << std::endl;
 }

@@ -12,7 +12,7 @@ before_install:
 script: cmake -DBUILD_TESTS=ON CMakeLists.txt
 after_success:
 - make -j4
-- make test
+- cd tests
 branches:
   only:
   - master

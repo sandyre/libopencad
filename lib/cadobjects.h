@@ -167,7 +167,38 @@ public:
         ACDBPLACEHOLDER = 0x50,
         VBA_PROJECT = 0x51,
         LAYOUT = 0x52,
-        IMAGE = 0x5B
+        // Codes below arent fixed, libopencad uses it for reading, in writing it will be different!
+        CELLSTYLEMAP = 0x53,
+        DBCOLOR = 0x54,
+        DICTIONARYVAR = 0x55,
+        DICTIONARYWDFLT = 0x56,
+        FIELD = 0x57,
+        GROUP_UNFIXED = 0x58,
+        HATCH_UNFIXED = 0x59,
+        IDBUFFER = 0x5A,
+        IMAGE = 0x5B,
+        IMAGEDEF = 0x5C,
+        IMAGEDEFREACTOR = 0x5D,
+        LAYER_INDEX = 0x5E,
+        LAYOUT_UNFIXED = 0x5F,
+        LWPOLYLINE_UNFIXED = 0x60,
+        MATERIAL = 0x61,
+        MLEADER = 0x62,
+        MLEADERSTYLE = 0x63,
+        OLE2FRAME_UNFIXED = 0x64,
+        PLACEHOLDER = 0x65,
+        PLOTSETTINGS = 0x66,
+        RASTERVARIABLES = 0x67,
+        SCALE = 0x68,
+        SORTENTSTABLE = 0x69,
+        SPATIAL_FILTER = 0x6A,
+        SPATIAL_INDEX = 0x6B,
+        TABLEGEOMETRY = 0x6C,
+        TABLESTYLES = 0x6D,
+        VBA_PROJECT_UNFIXED = 0x6E,
+        VISUALSTYLE = 0x6F,
+        WIPEOUTVARIABLE = 0x70,
+        XRECORD_UNFIXED = 0x71
     };
 
 
@@ -861,6 +892,244 @@ public:
     vector<double> adfCtrlPointsWeight;
     vector<CADVector> avertCtrlPoints;
     vector<CADVector> averFitPoints;
+};
+
+typedef struct _dimdata
+{
+    char dVersion;
+    CADVector vectExtrusion;
+    CADVector vertTextMidPt;
+    double dfElevation;
+    char dFlags;
+    string sUserText;
+    double dfTextRotation;
+    double dfHorizDir;
+    double dfInsXScale;
+    double dfInsYScale;
+    double dfInsZScale;
+    double dfInsRotation;
+
+    short dAttachmentPoint;
+    short dLineSpacingStyle;
+    double dfLineSpacingFactor;
+    double dfActualMeasurement;
+
+    bool bUnknown;
+    bool bFlipArrow1;
+    bool bFlipArrow2;
+
+    CADVector vert12Pt;
+} CADCommonDimensionData;
+
+class CADDimensionObject : public CADEntityObject
+{
+public:
+    CADCommonDimensionData cdd;
+    CADVector vert10pt;
+    CADHandle hDimstyle;
+    CADHandle hAnonymousBlock;
+};
+
+class CADDimensionOrdinateObject : public CADDimensionObject
+{
+public:
+    CADDimensionOrdinateObject();
+    CADVector vert13pt, vert14pt;
+    char Flags2;
+};
+
+class CADDimensionLinearObject : public CADDimensionObject
+{
+public:
+    CADDimensionLinearObject();
+    CADVector vert13pt, vert14pt;
+
+    double dfExtLnRot;
+    double dfDimRot;
+};
+
+class CADDimensionAlignedObject : public CADDimensionObject
+{
+public:
+    CADDimensionAlignedObject();
+    CADVector vert13pt, vert14pt;
+
+    double dfExtLnRot;
+};
+
+class CADDimensionAngular3PtObject : public CADDimensionObject
+{
+public:
+    CADDimensionAngular3PtObject();
+    CADVector vert13pt, vert14pt;
+    CADVector vert15pt;
+};
+
+class CADDimensionAngular2LnObject : public CADDimensionAngular3PtObject
+{
+public:
+    CADDimensionAngular2LnObject();
+
+    CADVector vert16pt;
+
+};
+
+class CADDimensionRadiusObject : public CADDimensionObject
+{
+public:
+    CADDimensionRadiusObject();
+
+    CADVector vert15pt;
+    double dfLeaderLen;
+};
+
+class CADDimensionDiameterObject : public CADDimensionRadiusObject
+{
+public:
+    CADDimensionDiameterObject();
+};
+
+class CADImageObject : public CADEntityObject
+{
+public:
+    CADImageObject();
+
+    long dClassVersion;
+    CADVector vertInsertion;
+    CADVector vectUDirection;
+    CADVector vectVDirection;
+    double dfSizeX;
+    double dfSizeY;
+    /*  display properties (bit coded), 1==show image,
+        2==show image when not aligned with screen, 4==use
+        clipping boundary, 8==transparency on */
+    short dDisplayProps;
+
+    bool bClipping;
+    char dBrightness;
+    char dContrast;
+    char dFade;
+    bool bClipMode; // R2010+
+
+    short dClipBoundaryType;
+
+    long nNumberVertexesInClipPolygon;
+    vector < CADVector > avertClippingPolygonVertexes;
+
+    CADHandle hImageDef;
+    CADHandle hImageDefReactor;
+};
+
+class CADImageDefReactorObject : public CADObject
+{
+public:
+    CADImageDefReactorObject();
+
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    vector < CADEed > aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long dClassVersion;
+    CADHandle hParentHandle;
+    vector < CADHandle > hReactors;
+    CADHandle hXDictionary;
+};
+
+class CADImageDefObject : public CADImageDefReactorObject
+{
+public:
+    CADImageDefObject();
+
+    double dfXImageSizeInPx;
+    double dfYImageSizeInPx;
+    string sFilePath;
+    bool bIsLoaded;
+    char dResUnits; // 0 == none, 2 == centimeters, 5 == inches
+    double dfXPixelSize; // size of 1 pixel in autocad units
+    double dfYPixelSize;
+};
+
+class CADMTextObject : public CADEntityObject
+{
+public:
+    CADMTextObject();
+
+    CADVector vertInsertionPoint;
+    CADVector vectExtrusion;
+    CADVector vectXAxisDir;
+    double dfRectWidth;
+    double dfTextHeight;
+    short dAttachment; // TODO: meaning unknown
+    short dDrawingDir;
+    double dfExtents; // TODO: meaning unknown
+    double dfExtentsWidth; // TODO: meaning unknown
+    string sTextValue;
+    short dLineSpacingStyle;
+    short dLineSpacingFactor;
+    bool bUnknownBit;
+    long dBackgroundFlags;
+    long dBackgroundScaleFactor;
+    short dBackgroundColor;
+    long dBackgroundTransparency;
+    CADHandle hStyle;
+};
+
+typedef struct _linestyle
+{
+    short          nNumSegParms;
+    vector<short>  adSegparms;
+    short          nAreaFillParms;
+    vector<double> adfAreaFillParameters;
+} CADLineStyle;
+
+typedef struct _mlinevertex
+{
+    CADVector vertPosition;
+    CADVector vectDirection;
+    CADVector vectMIterDirection;
+    vector < CADLineStyle > astLStyles;
+} CADMLineVertex;
+
+class CADMLineObject : public CADEntityObject
+{
+public:
+    CADMLineObject();
+
+    double dfScale;
+    char dJust;
+    CADVector vertBasePoint;
+    CADVector vectExtrusion;
+    short dOpenClosed; // 1 open, 3 closed
+    char nLinesInStyle;
+    short nNumVertexes;
+
+    vector < CADMLineVertex > avertVertexes;
+
+    CADHandle hMLineStyle;
+};
+
+class CAD3DFaceObject : public CADEntityObject
+{
+public:
+    CAD3DFaceObject();
+
+    bool bHasNoFlagInd; // 2000+
+    bool bZZero;
+    vector < CADVector > avertCorners;
+    short dInvisFlags;
+};
+
+class CADPolylinePFaceObject : public CADEntityObject
+{
+public:
+    CADPolylinePFaceObject();
+
+    short nNumVertexes;
+    short nNumFaces;
+    long   nObjectsOwned;
+    vector < CADHandle > hVertexes; // content really depends on DWG version.
+    CADHandle hSeqend;
 };
 
 #endif //CADOBJECTS_H
