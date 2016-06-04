@@ -47,7 +47,7 @@ public:
     /**
      * @brief The CAD table types enum
      */
-    enum CADTableType{
+    enum TableType{
         CurrentViewportTable,
         BlocksTable,
         LayersTable,
@@ -69,8 +69,8 @@ public:
     };
 public:
     CADTables();
-    void addTable(enum CADTableType eType, CADHandle hHandle);
-    int readTable(CADFile * const file, enum CADTableType eType);
+    void addTable(enum TableType eType, CADHandle hHandle);
+    int readTable(CADFile * const file, enum TableType eType);
     size_t getLayerCount() const;
     CADLayer& getLayer(size_t index);
 
@@ -78,7 +78,7 @@ protected:
     int readLayersTable(CADFile * const file, long index);
     void fillLayer(const CADEntityObject* ent);
 protected:
-    map<enum CADTableType, CADHandle> tableMap;
+    map<enum TableType, CADHandle> tableMap;
     vector<CADLayer> layers;
 };
 

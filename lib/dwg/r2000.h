@@ -34,7 +34,7 @@
 
 #include "cadfile.h"
 
-struct SLRecord
+struct SectionLocatorRecord
 {
     char byRecordNumber = 0;
     int  dSeeker        = 0;
@@ -82,12 +82,13 @@ public:
     virtual ~DWGFileR2000();
 
 protected:
-    virtual int readHeader() override;
-    virtual int readClasses() override;
+    virtual int readSectionLocator() override;
+    virtual int readHeader(enum OpenOptions eOptions) override;
+    virtual int readClasses(enum OpenOptions eOptions) override;
     virtual int createFileMap() override;
 
-    CADObject * getObject(long handle) override;
-    CADGeometry * getGeometry(long handle) override;
+    CADObject * getObject(long index) override;
+    CADGeometry * getGeometry(long index) override;
 protected:
     CADBlockObject *getBlock(long dObjectSize, CADCommonED stCommonEntityData,
                              const char *pabyInput, size_t &nBitOffsetFromStart);
@@ -144,8 +145,7 @@ protected:
 
 protected:
     int imageSeeker;
-    short codePage;
-    std::vector<SLRecord> SLRecords;
+    std::vector<SectionLocatorRecord> sectionLocatorRecords;
 };
 
 #endif // DWG_R2000_H_H

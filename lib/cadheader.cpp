@@ -268,12 +268,26 @@ static const CADHeaderConstantDetail CADHeaderConstantDetails[] {
 // CADHandle
 //------------------------------------------------------------------------------
 
-CADHandle::CADHandle(char code)
+CADHandle::CADHandle(unsigned char codeIn) : code(codeIn)
 {
-    code = code;
 }
 
-void CADHandle::addOffset(char val)
+CADHandle::CADHandle(const CADHandle &other)
+{
+    code = other.code;
+    handleOrOffset = other.handleOrOffset;
+}
+
+CADHandle &CADHandle::operator =(const CADHandle &other)
+{
+    if (this == &other)
+        return *this;
+    code = other.code;
+    handleOrOffset = other.handleOrOffset;
+    return *this;
+}
+
+void CADHandle::addOffset(unsigned char val)
 {
     handleOrOffset.push_back(val);
 }
@@ -336,42 +350,55 @@ bool CADHandle::isNull () const
 CADVariant::CADVariant()
 {
     type = DataType::INVALID;
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(const char* val)
 {
     type = DataType::STRING;
     stringVal = string(val);
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(int val)
 {
     type = DataType::DECIMAL;
     decimalVal = val;
-
-    char str_buff[256];
-    snprintf (str_buff, 255, "%d", val);
-    stringVal = str_buff;
+    stringVal = to_string(decimalVal);
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(short val)
 {
     type = DataType::DECIMAL;
     decimalVal = val;
-
-    char str_buff[256];
-    snprintf (str_buff, 255, "%d", val);
-    stringVal = str_buff;
+    stringVal = to_string(decimalVal);
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(double val)
 {
     type = DataType::REAL;
     xVal = val;
-
-    char str_buff[256];
-    snprintf (str_buff, 255, "%f", val);
-    stringVal = str_buff;
+    stringVal = to_string(xVal);
+    decimalVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(double x, double y, double z)
@@ -384,12 +411,21 @@ CADVariant::CADVariant(double x, double y, double z)
     char str_buff[256];
     snprintf (str_buff, 255, "[%f,%f,%f]", x, y, z);
     stringVal = str_buff;
+
+    decimalVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(const string& val)
 {
     type = DataType::STRING;
     stringVal = val;
+
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(time_t val)
@@ -401,16 +437,24 @@ CADVariant::CADVariant(time_t val)
     char str_buff[256];
     snprintf (str_buff, 255, "%ld", dateTimeVal);
     stringVal = str_buff;
+
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
 }
 
 CADVariant::CADVariant(const CADHandle& val)
 {
     type = DataType::HANDLE;
     handleVal = val;
+    stringVal = to_string(val.getAsLong ());
 
-    char str_buff[256];
-    snprintf (str_buff, 255, "%ld", val.getAsLong ());
-    stringVal = str_buff;
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(const CADVariant& orig)
@@ -419,6 +463,10 @@ CADVariant::CADVariant(const CADVariant& orig)
     stringVal = orig.stringVal;
     decimalVal = orig.decimalVal;
     xVal = orig.xVal;
+    yVal = orig.yVal;
+    zVal = orig.zVal;
+    handleVal = orig.handleVal;
+    dateTimeVal = orig.dateTimeVal;
 }
 
 CADVariant& CADVariant::operator = (const CADVariant& orig)
@@ -429,6 +477,10 @@ CADVariant& CADVariant::operator = (const CADVariant& orig)
     stringVal = orig.stringVal;
     decimalVal = orig.decimalVal;
     xVal = orig.xVal;
+    yVal = orig.yVal;
+    zVal = orig.zVal;
+    handleVal = orig.handleVal;
+    dateTimeVal = orig.dateTimeVal;
     return *this;
 }
 
@@ -478,7 +530,6 @@ const CADHandle &CADVariant::getHandle() const
 
 CADHeader::CADHeader()
 {
-
 }
 
 int CADHeader::addValue(short code, const CADVariant &val)
@@ -491,6 +542,11 @@ int CADHeader::addValue(short code, const CADVariant &val)
 }
 
 int CADHeader::addValue(short code, const char* val)
+{
+    return addValue(code, CADVariant(val));
+}
+
+int CADHeader::addValue(short code, long val)
 {
     return addValue(code, CADVariant(val));
 }

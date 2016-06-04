@@ -88,15 +88,7 @@ static constexpr const char * DWGSecondFileHeaderEnd
 template<typename T, typename S>
 inline void SwapEndianness ( T &&object, S &&size )
 {
-/*    if(size == 2){
-        ((*(char*)(object)) | (*(((char*)(object))+1) << 8));
-    }
-    else if (size == 4){
-        ((*(char*)(object)) | (*(((char*)(object))+1) << 8) | (*(((char*)(object))+2) << 16) | (*(((char*)(object))+3) << 24));
-    }
-    else{*/
-        std::reverse (& object, & object + size);
-    //}
+    std::reverse (( char * ) & object, ( char * ) & object + size);
 }
 
 static const int DWGCRC8Table[256] =
@@ -146,7 +138,7 @@ static const int DWGCRC8Table[256] =
     0x4100, 0x81C1, 0x8081, 0x4040
 };
 
-short CalculateCRC8 ( unsigned short initial_val, const char * ptr, int num );
+unsigned short CalculateCRC8( unsigned short initialVal, const char * ptr, int num );
 
 long ReadRAWLONGLONG ( const char * pabyInput, size_t& nBitOffsetFromStart );
 int ReadRAWLONG ( const char * pabyInput, size_t& nBitOffsetFromStart );
@@ -158,18 +150,22 @@ unsigned char Read4B ( const char * pabyInput, size_t& nBitOffsetFromStart );
 CADHandle ReadHANDLE ( const char * pabyInput, size_t& nBitOffsetFromStart );
 CADHandle ReadHANDLE8BLENGTH ( const char * pabyInput,
                                size_t & nBitOffsetFromStart );
-void SkipHANDLE(const char * pabyInput, size_t& nBitOffsetFromStart);
+void skipHANDLE(const char * pabyInput, size_t& nBitOffsetFromStart);
 bool        ReadBIT ( const char * pabyInput, size_t& nBitOffsetFromStart );
+void skipBIT(const char * pabyInput, size_t& nBitOffsetFromStart);
 unsigned char ReadCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart );
 short ReadBITSHORT ( const char * pabyInput, size_t& nBitOffsetFromStart );
 int ReadBITLONG ( const char * pabyInput, size_t& nBitOffsetFromStart );
 double ReadBITDOUBLE ( const char * pabyInput, size_t& nBitOffsetFromStart );
+void skipBITDOUBLE( const char * pabyInput, size_t& nBitOffsetFromStart );
 double ReadBITDOUBLEWD ( const char * pabyInput, size_t& nBitOffsetFromStart,
                          double defaultvalue );
 long ReadMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart );
 long ReadUMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart );
 unsigned int ReadMSHORT ( const char * pabyInput, size_t& nBitOffsetFromStart );
 std::string ReadTV ( const char * pabyInput, size_t& nBitOffsetFromStart );
-
+void skipTV(const char * pabyInput, size_t& nBitOffsetFromStart);
+void skipBITLONG(const char * pabyInput, size_t& nBitOffsetFromStart);
+void skipBITSHORT(const char * pabyInput, size_t& nBitOffsetFromStart);
 
 #endif // DWG_IO_H

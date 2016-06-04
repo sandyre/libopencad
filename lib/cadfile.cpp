@@ -72,10 +72,15 @@ int CADFile::parseFile(enum OpenOptions eOptions)
             return CADErrorCodes::FILE_OPEN_FAILED;
     }
 
-    int nResultCode = readHeader ();
+    int nResultCode;
+
+    nResultCode = readSectionLocator ();
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
-    nResultCode = readClasses ();
+    nResultCode = readHeader (eOptions);
+    if(nResultCode != CADErrorCodes::SUCCESS)
+        return nResultCode;
+    nResultCode = readClasses (eOptions);
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
     nResultCode = createFileMap ();

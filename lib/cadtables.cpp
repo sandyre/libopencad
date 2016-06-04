@@ -41,12 +41,12 @@ CADTables::CADTables()
 
 }
 
-void CADTables::addTable(CADTableType eType, CADHandle hHandle)
+void CADTables::addTable(TableType eType, CADHandle hHandle)
 {
     tableMap[eType] = hHandle;
 }
 
-int CADTables::readTable( CADFile * const file, CADTables::CADTableType eType)
+int CADTables::readTable( CADFile * const file, CADTables::TableType eType)
 {
     auto it = tableMap.find (eType);
     if(it == tableMap.end ())
@@ -160,11 +160,11 @@ void CADTables::fillLayer(const CADEntityObject *ent)
              layer.getHandle () )
         {
             DebugMsg ("Object with type: %s is attached to layer named: %s\n",
-                      getNameByType(ent->eObjectType).c_str (),
+                      getNameByType(ent->getType()).c_str (),
                       layer.getName ().c_str ());
 
             layer.addHandle (ent->stCed.hObjectHandle.getAsLong (),
-                             ent->eObjectType);
+                             ent->getType());
             break; // TODO: check if only can be add to one layer
         }
     }

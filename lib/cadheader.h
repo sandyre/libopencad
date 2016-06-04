@@ -39,14 +39,16 @@
 class OCAD_EXTERN CADHandle final
 {
 public:
-    CADHandle(char code = 0);
-    void addOffset(char val);
+    CADHandle(unsigned char codeIn = 0);
+    CADHandle(const CADHandle& other);
+    CADHandle& operator = (const CADHandle& other);
+    void addOffset(unsigned char val);
     bool isNull() const;
     long getAsLong() const;
     long getAsLong(const CADHandle &ref_handle ) const;
 protected:
-    char code;
-    std::vector<char> handleOrOffset;
+    unsigned char code;
+    std::vector<unsigned char> handleOrOffset;
 };
 
 class OCAD_EXTERN CADVariant final
@@ -690,6 +692,7 @@ public:
      */
     int addValue(short code, const CADVariant& val);
     int addValue(short code, const char* val);
+    int addValue(short code, long val);
     int addValue(short code, int val);
     int addValue(short code, short val);
     int addValue(short code, double val);

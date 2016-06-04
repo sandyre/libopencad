@@ -34,18 +34,18 @@
 #include <iostream>
 #include <cstring>
 
-short CalculateCRC8 ( unsigned short initial_val, const char * ptr, int num )
+unsigned short CalculateCRC8 (unsigned short initialVal, const char * ptr, int num )
 {
     unsigned char al;
     while ( num-- > 0 )
     {
-        al = ( unsigned char )( ( *ptr ) ^ ( ( char ) ( initial_val & 0xFF ) ) );
-        initial_val = ( initial_val >> 8 ) & 0xFF;
-        initial_val = initial_val ^ DWGCRC8Table[al & 0xFF];
+        al = static_cast<unsigned char>( ( *ptr ) ^ ( ( char ) ( initialVal & 0xFF ) ) );
+        initialVal = ( initialVal >> 8 ) & 0xFF;
+        initialVal = initialVal ^ DWGCRC8Table[al & 0xFF];
         ptr++;
     }
 
-    return initial_val;
+    return initialVal;
 }
 
 unsigned char Read2B ( const char * pabyInput, size_t& nBitOffsetFromStart )
@@ -269,7 +269,7 @@ bool ReadBIT ( const char * pabyInput, size_t& nBitOffsetFromStart )
 
 short ReadBITSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
+    unsigned char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
 
     size_t nByteOffset      = nBitOffsetFromStart / 8;
     size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
@@ -302,19 +302,19 @@ short ReadBITSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
 
             nBitOffsetFromStart += 8;
 
-            return ( unsigned char ) aShortBytes[0];
+            return static_cast<unsigned char>(aShortBytes[0]);
         }
 
         case BITSHORT_ZERO_VALUE:
         {
             nBitOffsetFromStart += 0;
-            return ( short ) 0;
+            return 0;
         }
 
         case BITSHORT_256:
         {
             nBitOffsetFromStart += 0;
-            return ( short ) 256;
+            return 256;
         }
     }
 
@@ -343,13 +343,13 @@ std::string ReadTV ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     // TODO: due to CLion issues with copying text from output window, all
     //       string readed are now not zero-terminated. Will fix soon.
-    short string_length = ReadBITSHORT ( pabyInput, nBitOffsetFromStart );
+    short stringLength = ReadBITSHORT ( pabyInput, nBitOffsetFromStart );
 
     std::string result;
 
-    for ( size_t i = 0; i < string_length; ++i )
+    for ( short i = 0; i < stringLength; ++i )
     {
-        result += ReadCHAR ( pabyInput, nBitOffsetFromStart );
+        result += static_cast<char>(ReadCHAR ( pabyInput, nBitOffsetFromStart ));
     }
 
     return result;
@@ -359,9 +359,9 @@ long ReadUMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     // TODO: bit offset is calculated, but function has nothing to do with it.
     long long result = 0;
-    bool   negative = false;
+    /*bool   negative = false;*/
     size_t nByteOffset      = nBitOffsetFromStart / 8;
-    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
+    /*size_t nBitOffsetInByte = nBitOffsetFromStart % 8;*/
 
     const char * pMCharFirstByte = pabyInput + nByteOffset;
     unsigned char aMCharBytes[8]; // 8 bytes is maximum.
@@ -433,11 +433,12 @@ long ReadUMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart )
 
 long ReadMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    // TODO: bit offset is calculated, but function has nothing to do with it.
     long result = 0;
     bool   negative = false;
     size_t nByteOffset      = nBitOffsetFromStart / 8;
-    size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
+
+    // TODO: bit offset is calculated, but function has nothing to do with it.
+    /*size_t nBitOffsetInByte = nBitOffsetFromStart % 8;*/
 
     const char * pMCharFirstByte = pabyInput + nByteOffset;
     unsigned char aMCharBytes[8]; // 8 bytes is maximum.
@@ -518,10 +519,10 @@ long ReadMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart )
 unsigned int ReadMSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     unsigned int result = 0;
-    size_t nByteOffset      = nBitOffsetFromStart / 8;
+    /*size_t nByteOffset      = nBitOffsetFromStart / 8;
     size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
 
-    const char * pMShortFirstByte = pabyInput + nByteOffset;
+    const char * pMShortFirstByte = pabyInput + nByteOffset;*/
     unsigned char aMShortBytes[8]; // 8 bytes is maximum.
 
     // TODO: this function doesnot support MSHORTS longer than 4 bytes. ODA says
@@ -563,7 +564,7 @@ unsigned int ReadMSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
 
 double ReadBITDOUBLE ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
+    unsigned char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
 
     size_t nByteOffset      = nBitOffsetFromStart / 8;
     size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
@@ -632,7 +633,7 @@ double ReadBITDOUBLEWD ( const char * pabyInput, size_t& nBitOffsetFromStart,
     unsigned char aDefaultValueBytes[8];
     memcpy ( aDefaultValueBytes, &defaultvalue, 8 );
 
-    char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
+    unsigned char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
 
     switch ( BITCODE )
     {
@@ -693,7 +694,7 @@ double ReadBITDOUBLEWD ( const char * pabyInput, size_t& nBitOffsetFromStart,
 CADHandle ReadHANDLE ( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     CADHandle result(Read4B ( pabyInput, nBitOffsetFromStart ) );
-    unsigned char counter = (unsigned char) Read4B ( pabyInput, nBitOffsetFromStart );
+    unsigned char counter = Read4B ( pabyInput, nBitOffsetFromStart );
     for ( unsigned char i = 0; i < counter; ++i )
     {
         result.addOffset(ReadCHAR (pabyInput, nBitOffsetFromStart));
@@ -702,7 +703,7 @@ CADHandle ReadHANDLE ( const char * pabyInput, size_t& nBitOffsetFromStart )
     return result;
 }
 
-void SkipHandle(const char * pabyInput, size_t& nBitOffsetFromStart)
+void skipHANDLE(const char * pabyInput, size_t& nBitOffsetFromStart)
 {
     Read4B ( pabyInput, nBitOffsetFromStart );
     unsigned char counter = static_cast<unsigned char>(Read4B ( pabyInput,
@@ -715,7 +716,7 @@ CADHandle ReadHANDLE8BLENGTH ( const char * pabyInput,
 {
     CADHandle result;
 
-    unsigned char counter = (unsigned char) ReadCHAR ( pabyInput, nBitOffsetFromStart );
+    unsigned char counter = ReadCHAR ( pabyInput, nBitOffsetFromStart );
 
     for ( unsigned char i = 0; i < counter; ++i )
     {
@@ -727,7 +728,7 @@ CADHandle ReadHANDLE8BLENGTH ( const char * pabyInput,
 
 int ReadBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
-    char   BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
+    unsigned char   BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
 
     size_t nByteOffset      = nBitOffsetFromStart / 8;
     size_t nBitOffsetInByte = nBitOffsetFromStart % 8;
@@ -752,7 +753,7 @@ int ReadBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart )
             nBitOffsetFromStart += 32;
 
             void * ptr = aLongBytes;
-            long * result = static_cast < long * > ( ptr );
+            int * result = static_cast < int * > ( ptr );
 
             return * result;
         }
@@ -770,16 +771,83 @@ int ReadBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart )
         case BITLONG_ZERO_VALUE:
         {
             nBitOffsetFromStart += 0;
-            return ( short ) 0;
+            return 0;
         }
 
         case BITLONG_NOT_USED:
         {
             std::cerr << "THAT SHOULD NEVER HAPPENED! BUG. (in file, or reader, or both.) ReadBITLONG(), case BITLONG_NOT_USED" << std::endl;
             nBitOffsetFromStart += 0;
-            return ( short ) 0;
+            return 0;
         }
     }
 
     return -1;
+}
+
+void skipBITDOUBLE(const char *pabyInput, size_t &nBitOffsetFromStart)
+{
+    unsigned char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
+
+    switch ( BITCODE )
+    {
+        case BITDOUBLE_NORMAL:
+            nBitOffsetFromStart += 64;
+        break;
+        case BITDOUBLE_ONE_VALUE:
+            nBitOffsetFromStart += 0;
+        break;
+        case BITDOUBLE_ZERO_VALUE:
+        case BITDOUBLE_NOT_USED:
+        break;
+    }
+}
+
+void skipTV(const char *pabyInput, size_t &nBitOffsetFromStart)
+{
+    short stringLength = ReadBITSHORT ( pabyInput, nBitOffsetFromStart );
+    nBitOffsetFromStart += size_t(stringLength * 8);
+}
+
+void skipBITLONG(const char *pabyInput, size_t &nBitOffsetFromStart)
+{
+    unsigned char   BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
+    switch( BITCODE )
+    {
+        case BITLONG_NORMAL:
+            nBitOffsetFromStart += 32;
+        break;
+
+        case BITLONG_UNSIGNED_CHAR:
+            nBitOffsetFromStart += 8;
+        break;
+
+        case BITLONG_ZERO_VALUE:
+        case BITLONG_NOT_USED:
+        break;
+    }
+}
+
+void skipBITSHORT(const char *pabyInput, size_t &nBitOffsetFromStart)
+{
+    unsigned char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
+    switch( BITCODE )
+    {
+        case BITSHORT_NORMAL:
+            nBitOffsetFromStart += 16;
+        break;
+
+        case BITSHORT_UNSIGNED_CHAR:
+            nBitOffsetFromStart += 8;
+        break;
+
+        case BITSHORT_ZERO_VALUE:
+        case BITSHORT_256:
+        break;
+    }
+}
+
+void skipBIT(const char *pabyInput, size_t &nBitOffsetFromStart)
+{
+    ++nBitOffsetFromStart;
 }

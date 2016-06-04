@@ -129,7 +129,7 @@ CADVector::CADVector() : X(.0), Y(.0), Z(.0), bHasZ(true)
 
 CADTextObject::CADTextObject()
 {
-    eObjectType = TEXT;
+    type = TEXT;
 }
 
 //------------------------------------------------------------------------------
@@ -138,7 +138,7 @@ CADTextObject::CADTextObject()
 
 CADAttdefObject::CADAttdefObject()
 {
-    eObjectType = ATTDEF;
+    type = ATTDEF;
 }
 
 //------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ CADAttdefObject::CADAttdefObject()
 
 CADAttribObject::CADAttribObject()
 {
-    eObjectType = ATTRIB;
+    type = ATTRIB;
 }
 
 //------------------------------------------------------------------------------
@@ -156,7 +156,7 @@ CADAttribObject::CADAttribObject()
 
 CADBlockObject::CADBlockObject()
 {
-    eObjectType = BLOCK;
+    type = BLOCK;
 }
 
 //------------------------------------------------------------------------------
@@ -165,7 +165,7 @@ CADBlockObject::CADBlockObject()
 
 CADEndblkObject::CADEndblkObject()
 {
-    eObjectType = ENDBLK;
+    type = ENDBLK;
 }
 
 //------------------------------------------------------------------------------
@@ -174,7 +174,7 @@ CADEndblkObject::CADEndblkObject()
 
 CADSeqendObject::CADSeqendObject()
 {
-    eObjectType = SEQEND;
+    type = SEQEND;
 }
 
 //------------------------------------------------------------------------------
@@ -183,7 +183,7 @@ CADSeqendObject::CADSeqendObject()
 
 CADInsertObject::CADInsertObject()
 {
-    eObjectType = INSERT;
+    type = INSERT;
 }
 
 //------------------------------------------------------------------------------
@@ -192,7 +192,7 @@ CADInsertObject::CADInsertObject()
 
 CADMInsertObject::CADMInsertObject()
 {
-    eObjectType = MINSERT1; // TODO: it has 2 type codes?
+    type = MINSERT1; // TODO: it has 2 type codes?
 }
 
 //------------------------------------------------------------------------------
@@ -201,7 +201,7 @@ CADMInsertObject::CADMInsertObject()
 
 CADVertex2DObject::CADVertex2DObject()
 {
-    eObjectType = VERTEX2D;
+    type = VERTEX2D;
 }
 
 //------------------------------------------------------------------------------
@@ -210,7 +210,7 @@ CADVertex2DObject::CADVertex2DObject()
 
 CADVertex3DObject::CADVertex3DObject()
 {
-    eObjectType = VERTEX3D;
+    type = VERTEX3D;
 }
 
 //------------------------------------------------------------------------------
@@ -219,7 +219,7 @@ CADVertex3DObject::CADVertex3DObject()
 
 CADVertexMeshObject::CADVertexMeshObject()
 {
-    eObjectType = VERTEX_MESH;
+    type = VERTEX_MESH;
 }
 
 //------------------------------------------------------------------------------
@@ -228,7 +228,7 @@ CADVertexMeshObject::CADVertexMeshObject()
 
 CADVertexPFaceObject::CADVertexPFaceObject()
 {
-    eObjectType = VERTEX_PFACE;
+    type = VERTEX_PFACE;
 }
 
 //------------------------------------------------------------------------------
@@ -237,7 +237,7 @@ CADVertexPFaceObject::CADVertexPFaceObject()
 
 CADVertexPFaceFaceObject::CADVertexPFaceFaceObject()
 {
-    eObjectType = VERTEX_PFACE_FACE;
+    type = VERTEX_PFACE_FACE;
 }
 
 //------------------------------------------------------------------------------
@@ -246,7 +246,7 @@ CADVertexPFaceFaceObject::CADVertexPFaceFaceObject()
 
 CADPolyline2DObject::CADPolyline2DObject()
 {
-    eObjectType = POLYLINE2D;
+    type = POLYLINE2D;
 }
 
 //------------------------------------------------------------------------------
@@ -255,7 +255,7 @@ CADPolyline2DObject::CADPolyline2DObject()
 
 CADPolyline3DObject::CADPolyline3DObject()
 {
-    eObjectType = POLYLINE3D;
+    type = POLYLINE3D;
 }
 
 //------------------------------------------------------------------------------
@@ -264,7 +264,7 @@ CADPolyline3DObject::CADPolyline3DObject()
 
 CADArcObject::CADArcObject()
 {
-    eObjectType = ARC;
+    type = ARC;
 }
 
 //------------------------------------------------------------------------------
@@ -273,7 +273,7 @@ CADArcObject::CADArcObject()
 
 CADCircleObject::CADCircleObject()
 {
-    eObjectType = CIRCLE;
+    type = CIRCLE;
 }
 
 //------------------------------------------------------------------------------
@@ -282,7 +282,7 @@ CADCircleObject::CADCircleObject()
 
 CADLineObject::CADLineObject()
 {
-    eObjectType = LINE;
+    type = LINE;
 }
 
 //------------------------------------------------------------------------------
@@ -291,7 +291,7 @@ CADLineObject::CADLineObject()
 
 CADBlockControlObject::CADBlockControlObject()
 {
-    eObjectType = BLOCK_CONTROL_OBJ;
+    type = BLOCK_CONTROL_OBJ;
 }
 
 //------------------------------------------------------------------------------
@@ -300,7 +300,7 @@ CADBlockControlObject::CADBlockControlObject()
 
 CADBlockHeaderObject::CADBlockHeaderObject()
 {
-    eObjectType = BLOCK_HEADER;
+    type = BLOCK_HEADER;
 }
 
 //------------------------------------------------------------------------------
@@ -309,7 +309,7 @@ CADBlockHeaderObject::CADBlockHeaderObject()
 
 CADLayerControlObject::CADLayerControlObject()
 {
-    eObjectType = LAYER_CONTROL_OBJ;
+    type = LAYER_CONTROL_OBJ;
 }
 
 //------------------------------------------------------------------------------
@@ -318,7 +318,7 @@ CADLayerControlObject::CADLayerControlObject()
 
 CADLayerObject::CADLayerObject()
 {
-    eObjectType = LAYER;
+    type = LAYER;
 }
 
 //------------------------------------------------------------------------------
@@ -327,7 +327,7 @@ CADLayerObject::CADLayerObject()
 
 CADLineTypeControlObject::CADLineTypeControlObject()
 {
-    eObjectType = LTYPE_CONTROL_OBJ;
+    type = LTYPE_CONTROL_OBJ;
 }
 
 //------------------------------------------------------------------------------
@@ -336,7 +336,7 @@ CADLineTypeControlObject::CADLineTypeControlObject()
 
 CADLineTypeObject::CADLineTypeObject()
 {
-    eObjectType = LTYPE1;
+    type = LTYPE1;
 }
 
 //------------------------------------------------------------------------------
@@ -345,7 +345,7 @@ CADLineTypeObject::CADLineTypeObject()
 
 CADPointObject::CADPointObject()
 {
-    eObjectType = POINT;
+    type = POINT;
 }
 
 //------------------------------------------------------------------------------
@@ -354,7 +354,7 @@ CADPointObject::CADPointObject()
 
 CADSolidObject::CADSolidObject()
 {
-    eObjectType = SOLID;
+    type = SOLID;
     avertCorners.reserve ( 4 );
 }
 
@@ -364,7 +364,7 @@ CADSolidObject::CADSolidObject()
 
 CADEllipseObject::CADEllipseObject()
 {
-    eObjectType = ELLIPSE;
+    type = ELLIPSE;
 }
 
 //------------------------------------------------------------------------------
@@ -373,7 +373,7 @@ CADEllipseObject::CADEllipseObject()
 
 CADRayObject::CADRayObject()
 {
-    eObjectType = RAY;
+    type = RAY;
 }
 
 //------------------------------------------------------------------------------
@@ -382,7 +382,7 @@ CADRayObject::CADRayObject()
 
 CADXLineObject::CADXLineObject()
 {
-    eObjectType = XLINE;
+    type = XLINE;
 }
 
 //------------------------------------------------------------------------------
@@ -391,7 +391,7 @@ CADXLineObject::CADXLineObject()
 
 CADDictionaryObject::CADDictionaryObject()
 {
-    eObjectType = DICTIONARY;
+    type = DICTIONARY;
 }
 
 //------------------------------------------------------------------------------
@@ -400,7 +400,7 @@ CADDictionaryObject::CADDictionaryObject()
 
 CADLWPolylineObject::CADLWPolylineObject()
 {
-    eObjectType = LWPOLYLINE;
+    type = LWPOLYLINE;
 }
 
 //------------------------------------------------------------------------------
@@ -411,7 +411,7 @@ CADSplineObject::CADSplineObject() : nNumFitPts(0),
     nNumKnots(0),
     nNumCtrlPts(0) // should be zeroed.
 {
-    eObjectType = SPLINE;
+    type = SPLINE;
 }
 
 //------------------------------------------------------------------------------
@@ -527,4 +527,34 @@ string getNameByType(CADObject::ObjectType eType)
         return "";
 
     return it->second;
+}
+
+CADObject::ObjectType CADObject::getType() const
+{
+    return type;
+}
+
+long CADObject::getSize() const
+{
+    return size;
+}
+
+void CADObject::setSize(long value)
+{
+    size = value;
+}
+
+void CADObject::setType(const ObjectType &value)
+{
+    type = value;
+}
+
+short CADObject::getCRC() const
+{
+    return CRC;
+}
+
+void CADObject::setCRC(short value)
+{
+    CRC = value;
 }

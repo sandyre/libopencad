@@ -51,8 +51,8 @@ public:
     enum OpenOptions
     {
         READ_ALL,       /**< read all available information */
-        FAST_READ,      /**< read some methadata */
-        FASTEST_READ    /**< read only geometry and layers */
+        READ_FAST,      /**< read some methadata */
+        READ_FASTEST    /**< read only geometry and layers */
     };
 
 public:
@@ -77,26 +77,34 @@ protected:
      * @param index Object index
      * @return pointer to CADObject or nullptr. User have to free returned pointer.
      */
-    virtual CADObject * getObject( long handle ) = 0;
+    virtual CADObject * getObject( long index ) = 0;
 
     /**
      * @brief read geometry from CAD file
      * @param handle Handle of CAD object
      * @return NULL if failed or pointer which mast be feed by user
      */
-    virtual CADGeometry * getGeometry( long handle ) = 0;
+    virtual CADGeometry * getGeometry( long index ) = 0;
+
+    /**
+     * @brief initially read some basic values and section locator
+     * @return CADErrorCodes::SUCCESS if OK, or error code
+     */
+    virtual int readSectionLocator() = 0;
 
     /**
      * @brief Read header from CAD file
+     * @param eOptions Read options
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int readHeader() = 0;
+    virtual int readHeader(enum OpenOptions eOptions) = 0;
 
     /**
      * @brief Read classes from CAD file
+     * @param eOptions Read options
      * @return CADErrorCodes::SUCCESS if OK, or error code
      */
-    virtual int readClasses() = 0;
+    virtual int readClasses(enum OpenOptions eOptions) = 0;
 
     /**
      * @brief Create the file map for fast access to CAD objects

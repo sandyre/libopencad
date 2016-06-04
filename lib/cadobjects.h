@@ -170,9 +170,21 @@ public:
         IMAGE = 0x5B
     };
 
-    long  dObjectSize;
-    ObjectType eObjectType;
-    short dCRC;
+
+    ObjectType getType() const;
+    long getSize() const;
+
+    void setSize(long value);
+
+    void setType(const ObjectType &value);
+
+    short getCRC() const;
+    void setCRC(short value);
+
+protected:
+    long  size;
+    ObjectType type;
+    short CRC;
 };
 
 
@@ -279,7 +291,7 @@ class CADAttribObject : public CADEntityObject
 {
 public:
     CADAttribObject();
-    char   DataFlags;
+    unsigned char   DataFlags;
     double dfElevation;
     CADVector vertInsetionPoint;
     CADVector vertAlignmentPoint;
@@ -296,7 +308,7 @@ public:
     char   dVersion; // R2010+
     string sTag;
     short  nFieldLength;
-    char   nFlags;
+    unsigned char   nFlags;
     bool   bLockPosition;
 
     CADHandle hStyle;
@@ -698,8 +710,8 @@ public:
     bool bXDep;
     string sDescription;
     double dfPatternLen;
-    char dAlignment;
-    char nNumDashes;
+    unsigned char dAlignment;
+    unsigned char nNumDashes;
     vector<CADDash> astDashes;
     vector<unsigned char> abyTextArea; // TODO: what is it?
     CADHandle hLTControl;

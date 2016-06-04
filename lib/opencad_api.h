@@ -59,6 +59,7 @@ enum CADErrorCodes
     FILE_OPEN_FAILED,               /**< failed to open CAD file */
     UNSUPPORTED_VERSION,            /**< unsupported CAD file version */
     FILE_PARSE_FAILED,              /**< failed to parse file */
+    SECTION_LOCATOR_READ_FAILED,    /**< failed to read section locator */
     HEADER_SECTION_READ_FAILED,     /**< failed to read header section */
     CLASSES_SECTION_READ_FAILED,    /**< failed to read classes section */
     TABLES_SECTION_READ_FAILED,     /**< failed to read tables section */

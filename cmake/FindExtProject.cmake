@@ -206,7 +206,7 @@ function(find_extproject name)
                     message(STATUS \"Remove ${name}_EP-build\")
                     file(REMOVE ${EXT_STAMP_DIR}/${name}_EP-build)
                 endif()
-                file(WRITE ${EXT_STAMP_DIR}/${name}_EP-gitpull.txt "")
+                file(WRITE ${EXT_STAMP_DIR}/${name}_EP-gitpull.txt \"\")
             endif()
          endif()")
                   
@@ -216,10 +216,12 @@ function(find_extproject name)
         UPDATE_DISCONNECTED 1
     )
     
+    if(NOT SKIP_GIT_PULL)
     add_custom_command(TARGET ${name}_EP PRE_BUILD
                COMMAND ${CMAKE_COMMAND} -P ${EP_PREFIX}/tmp/${name}_EP-checkupdate.cmake
                COMMENT "Check if update needed ..."               
                VERBATIM)
+    endif()           
     
     set(RECONFIGURE OFF)
     set(INCLUDE_EXPORT_PATH "${EXT_BUILD_DIR}/${repo_project}-exports.cmake") 

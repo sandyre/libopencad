@@ -86,7 +86,7 @@ class CADPoint3D : public CADGeometry
 {
 public:
     CADPoint3D ();
-    CADPoint3D (const CADVector &positionIn, double thickness);
+    CADPoint3D (const CADVector &positionIn, double thicknessIn);
     CADVector getPosition() const;
     void setPosition(const CADVector &value);
 
@@ -124,36 +124,48 @@ protected:
     CADPoint3D end;
 };
 
-/**
- * @brief Geometry class which represents Lwpolyline
- */
-/*
-class CADLWPolyline : public CADGeometry
-{
-public:
-    CADLWPolyline ();
-protected:
-    double dfConstWidth;
-    double dfElevation;
-    Vector3D vectExtrusion;
-    vector< Vertex2D > vertexes;
-    vector< double > bulges;
-    vector< int16_t > vertexes_id;
-    vector< pair< double, double > > widths; // start, end.
-};
 
 /**
  * @brief Geometry class which represents Polyline 3D
- *//*
-class Polyline3D : public CADGeometry
+ */
+class CADPolyline3D : public CADGeometry
 {
 public:
-    Polyline3D()
-    {
-        eGeometryType = CADGeometry::POLYLINE3D;
-    }
+    CADPolyline3D();
+    void addVertex(const CADVector& vertex);
+    size_t getVertexCount() const;
+    CADVector& getVertex(size_t index);
+    virtual void print () const override;
+protected:
+    vector<CADVector> vertexes;
+};
 
-    std::vector< Vertex3D > vertexes;
+/**
+ * @brief Geometry class which represents Lwpolyline
+ */
+
+class CADLWPolyline : public CADPolyline3D
+{
+public:
+    CADLWPolyline ();
+    virtual void print () const override;
+    double getConstWidth() const;
+    void setConstWidth(double value);
+
+    double getElevation() const;
+    void setElevation(double value);
+
+    CADVector getVectExtrusion() const;
+    void setVectExtrusion(const CADVector &value);
+
+    vector<pair<double, double> > getWidths() const;
+    void setWidths(const vector<pair<double, double> > &value);
+
+protected:
+    double constWidth;
+    double elevation;
+    CADVector vectExtrusion;
+    vector< pair< double, double > > widths; // start, end.
 };
 
 /**
@@ -173,56 +185,30 @@ protected:
 };
 
 /**
- * @brief Geometry class which represents Ellipse
- *//*
-class Ellipse : public CADGeometry
-{
-public:
-    Ellipse() : dfAxisRatio(0.0f),
-                dfStartingAngle(0.0f),
-                dfEndingAngle(0.0f)
-    {
-        eGeometryType = CADGeometry::ELLIPSE;
-    }
-
-    Vertex3D vertPosition;
-    Vector3D vectWCS;
-    Vector3D vectExtrusion;
-    double dfAxisRatio;
-    double dfStartingAngle;
-    double dfEndingAngle;
-};
-
-/**
  * @brief Geometry class which represents Text
- *//*
-class Text : public CADGeometry
+ */
+class CADText : public CADPoint3D
 {
 public:
-    Text() : dfElevation(0.0f),
-             dfObliqueAngle(0.0f),
-             dfRotationAngle(0.0f),
-             dfHeight(0.0f),
-             dfWidthFactor(0.0f),
-             dGeneration(0),
-             dHorizontalAlignment(0),
-             dVerticalAlignment(0)
-    {
-        eGeometryType = CADGeometry::TEXT;
-    }
+    CADText();
+    string getTextValue() const;
+    void setTextValue(const string &value);
 
-    double dfElevation;
-    Vertex2D vertInsertion;
-    Vertex2D vertAlignment;
-    Vector3D vectExtrusion;
-    double dfObliqueAngle;
-    double dfRotationAngle;
-    double dfHeight;
-    double dfWidthFactor;
-    std::string strTextValue;
-    int16_t dGeneration;
-    int16_t dHorizontalAlignment;
-    int16_t dVerticalAlignment;
+    double getHeight() const;
+    void setHeight(double value);
+
+    double getRotationAngle() const;
+    void setRotationAngle(double value);
+
+    double getObliqueAngle() const;
+    void setObliqueAngle(double value);
+    virtual void print () const override;
+
+protected:
+    double obliqueAngle;
+    double rotationAngle;
+    double height;
+    string textValue;
 };
 
 /**
@@ -246,69 +232,86 @@ protected:
 };
 
 /**
+ * @brief Geometry class which represents Ellipse
+ */
+class CADEllipse : public CADArc
+{
+public:
+    CADEllipse();
+    double getAxisRatio() const;
+    void setAxisRatio(double value);
+    virtual void print () const override;
+
+protected:
+    double axisRatio;
+};
+
+/**
  * @brief Geometry class which represents Spline
- *//*
-class Spline : public CADGeometry
+ */
+class CADSpline : public CADGeometry
 {
 public:
-    Spline()
-    {
-        eGeometryType = CADGeometry::SPLINE;
-    }
+    CADSpline();
+    virtual void print () const override;
+    long getScenario() const;
+    void setScenario(long value);
 
-    long dScenario;
-    bool bRational;
-    bool bClosed;
-    bool bPeriodic;
-    bool bWeight;
+    bool getRational() const;
+    void setRational(bool value);
 
-    long   dDegree;
-    double dfFitTol;
-    double dfKnotTol;
-    double dfCtrlTol;
-    Vector3D vectBegTangDir;
-    Vector3D vectEndTangDir;
+    bool getClosed() const;
+    void setClosed(bool value);
 
-    std::vector < double > adfKnots;
-    std::vector < double > adfCtrlPointsWeight;
-    std::vector < Vertex3D > avertCtrlPoints;
-    std::vector < Vertex3D > averFitPoints;
+    void addControlPointsWeight(double weight);
+    void addControlPoint(const CADVector& point);
+    void addFitPoint(const CADVector& point);
+    bool getWeight() const;
+    void setWeight(bool value);
+
+    double getFitTollerance() const;
+    void setFitTollerance(double value);
+
+protected:
+    long scenario;
+    bool rational;
+    bool closed;
+    bool weight;
+    double fitTollerance;
+
+    std::vector < double > ctrlPointsWeight;
+    std::vector < CADVector > avertCtrlPoints;
+    std::vector < CADVector > averFitPoints;
 };
 
-class Solid : public CADGeometry
+class CADSolid : public CADPoint3D
 {
 public:
-    Solid()
-    {
-        eGeometryType = CADGeometry::SOLID;
-    }
-
-    double dfElevation;
-    std::vector < Vertex2D > avertCorners;
-    Vector3D vectExtrusion;
+    CADSolid();
+    virtual void print () const override;
+    double getElevation() const;
+    void setElevation(double value);
+    void addAverCorner(const CADVector& corner);
+protected:
+    double elevation;
+    vector < CADVector > avertCorners;
 };
 
-class Ray : public CADGeometry
+class CADRay : public CADPoint3D
 {
 public:
-    Ray()
-    {
-        eGeometryType = CADGeometry::RAY;
-    }
-
-    Vertex3D vertPosition;
-    Vector3D vectVector;
+    CADRay();
+    CADVector getVectVector() const;
+    void setVectVector(const CADVector &value);
+    virtual void print () const override;
 };
 
-class Hatch : public CADGeometry
+class CADHatch : public CADGeometry
 {
 public:
-    Hatch()
-    {
-        eGeometryType = CADGeometry::HATCH;
-    }
+    CADHatch();
 };
-*/
+
 
 //
 //class EXTERN LineType

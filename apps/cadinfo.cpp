@@ -150,34 +150,13 @@ int main(int argc, char *argv[])
                         break;
 
                     case CADGeometry::LWPOLYLINE:
-                    {
-                        /*LWPolyline * poly = ( LWPolyline * ) geom;
-                        std::cout << "|---------LWPolyline---------|\n";
-                        for ( size_t i = 0; i < poly->vertexes.size(); ++i )
-                        {
-                            std::cout << "#" << i << "\t" << poly->vertexes[i].X <<
-                                "\t" << poly->vertexes[i].Y << std::endl;
-                        }
-                        std::cout << std::endl;
-
-                        ++pline_count;*/
+                        ++pline_count;
                         break;
-                    }
-                    case CADGeometry::POLYLINE3D:
-                    {
-                        /*Polyline3D * poly = ( Polyline3D * ) geom;
-                        std::cout << "|---------Polyline3D---------|\n";
-                        for ( size_t i = 0; i < poly->vertexes.size(); ++i )
-                        {
-                            std::cout << "#" << i << "\t" << poly->vertexes[i].X <<
-                                    "\t" << poly->vertexes[i].Y
-                                    << "\t" << poly->vertexes[i].Z << std::endl;
-                        }
-                        std::cout << std::endl;
 
-                        ++pline3d_count;*/
+                    case CADGeometry::POLYLINE3D:                    
+                        ++pline3d_count;
                         break;
-                    }
+
                     case CADGeometry::ARC:
                         ++arc_count;
                         break;
@@ -185,109 +164,36 @@ int main(int argc, char *argv[])
                         ++point_count;
                         break;
                     case CADGeometry::ELLIPSE:
-                    {
-                        /*Ellipse * ellipse = ( Ellipse * ) geom;
-                        std::cout << "|---------Ellipse---------|\n";
-                        std::cout << "Position: " << "\t" << ellipse->vertPosition.X <<
-                            "\t" << ellipse->vertPosition.Y << "\t" << ellipse->vertPosition.Z << std::endl;
-                        std::cout << "Beg & End angles: " << "\t" << ellipse->dfStartingAngle << "\t"
-                            << ellipse->dfEndingAngle << std::endl << std::endl;
-*/
                         ++ellipses_count;
                         break;
-                    }
+
                     case CADGeometry::LINE:
                         ++lines_count;
                         break;
                     case CADGeometry::SPLINE:
-                    {
-                        /*Spline * spline = ( Spline * ) geom;
-                        std::cout << "|---------Spline---------|\n";
-                        std::cout << "Degree: \t" << spline->dDegree << std::endl;
-                        if ( spline->dScenario == 2 )
-                        {
-                            std::cout << "Fit tolerance: \t" << spline->dfFitTol << std::endl;
-                            std::cout << "Beg tangent vector:\t" << spline->vectBegTangDir.X << "\t"
-                                << spline->vectBegTangDir.Y << "\t" << spline->vectBegTangDir.Y << std::endl;
-                            std::cout << "End tangent vector:\t" << spline->vectEndTangDir.X << "\t"
-                                << spline->vectEndTangDir.Y << "\t" << spline->vectEndTangDir.Y << std::endl;
-
-                            std::cout << "Knots count: " << spline->adfKnots.size() << std::endl;
-                            for ( size_t j = 0; j < spline->adfKnots.size(); ++j )
-                                std::cout << "#" << j << "\t" << spline->adfKnots[j] << std::endl;
-                        }
-                        if ( spline->dScenario == 1 )
-                        {
-                            std::cout << "Is rational: \t" << spline->bRational << std::endl;
-                            std::cout << "Is closed: \t" << spline->bClosed << std::endl;
-                            std::cout << "Is periodic: \t" << spline->bPeriodic << std::endl;
-                            std::cout << "Knot tolerance: \t" << spline->bRational << std::endl;
-                            std::cout << "Control tolerance: \t" << spline->bRational << std::endl;
-                            std::cout << "Control pts weight presented: \t" << spline->bWeight << std::endl;
-                        }
-
-                        std::cout << "Control pts count: " << spline->avertCtrlPoints.size() << std::endl;
-                        for ( size_t j = 0; j < spline->avertCtrlPoints.size(); ++j )
-                        {
-                            std::cout << "#" << j << "\t" << spline->avertCtrlPoints[j].X << "\t"
-                            << spline->avertCtrlPoints[j].Y << "\t"
-                            << spline->avertCtrlPoints[j].Z << "\t";
-                            if ( spline->bWeight == true )
-                                std::cout << spline->adfCtrlPointsWeight[j] << std::endl;
-                            else std::cout << std::endl;
-                        }
-
-                        std::cout << "Fit pts count: " << spline->averFitPoints.size() << std::endl;
-                        for ( size_t j = 0; j < spline->averFitPoints.size(); ++j )
-                        {
-                            std::cout << "#" << j << "\t" << spline->averFitPoints[j].X << "\t"
-                            << spline->averFitPoints[j].Y << "\t"
-                            << spline->averFitPoints[j].Z << std::endl;
-                        }
-
-                        std::cout << std::endl;*/
                         ++splines_count;
                         break;
-                    }
+
                     case CADGeometry::TEXT:
-                    {
-                        // TODO: add other optional parameters.
-                        /*Text * text = ( Text * ) geom;
-                        std::cout << "|---------Text---------|\n";
-                        std::cout << "Position:\t" << text->vertInsertion.X << "\t"
-                            << text->vertInsertion.Y << std::endl;
-                        std::cout << "Text value:\t" << text->strTextValue << std::endl << std::endl;
-*/
                         ++text_count;
                         break;
-                    }
+
                     case CADGeometry::SOLID:
-                    {
-                        /*Solid * solid = ( Solid * ) geom;
-                        std::cout << "|---------Solid---------|\n";
-                        for ( size_t i = 0; i < solid->avertCorners.size(); ++i )
-                        {
-                            std::cout << "#" << i << "\t" << solid->avertCorners[i].X << "\t"
-                                << solid->avertCorners[i].Y << solid->dfElevation << std::endl;
-                        }
-                        std::cout << std::endl;
-*/
-++solids_count;
+                        ++solids_count;
                         break;
-                    }
                 }
             }
         }
     }
 
-    std::cout << "Solids: " << solids_count << std::endl;
-    std::cout << "Points: " << point_count << std::endl;
-    std::cout << "Ellipses: " << ellipses_count << std::endl;
-    std::cout << "Lines count: " << lines_count << std::endl;
-    std::cout << "Plines count: " << pline_count << std::endl;
-    std::cout << "Plines3d count: " << pline3d_count << std::endl;
-    std::cout << "Splines count: " << splines_count << std::endl;
-    std::cout << "Circles count: " << circles_count << std::endl;
-    std::cout << "Arcs count: " << arc_count << std::endl;
-    std::cout << "Texts count: " << text_count << std::endl;
+    cout << "Solids: " << solids_count << endl;
+    cout << "Points: " << point_count << endl;
+    cout << "Ellipses: " << ellipses_count << endl;
+    cout << "Lines count: " << lines_count << endl;
+    cout << "Plines count: " << pline_count << endl;
+    cout << "Plines3d count: " << pline3d_count << endl;
+    cout << "Splines count: " << splines_count << endl;
+    cout << "Circles count: " << circles_count << endl;
+    cout << "Arcs count: " << arc_count << endl;
+    cout << "Texts count: " << text_count << endl;
 }
