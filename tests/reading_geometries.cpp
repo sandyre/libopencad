@@ -100,7 +100,7 @@ TEST(reading_geometries, 256_polylines_7vertexes)
 TEST(reading_geometries, 18432_3dpolylines_6vertexes)
 {
     auto opened_dwg = OpenCADFile (GetDeafultFileIO("./data/r2000/18432_3dpolylines_6vertexes.dwg"));
-    auto 3dplines_count = 0;
+    auto plines3d_count = 0;
 
     ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
 
@@ -111,13 +111,13 @@ TEST(reading_geometries, 18432_3dpolylines_6vertexes)
         Polyline3D * poly = ( Polyline3D * ) geom;
         geom = layer->GetGeometry (i);
         if ( geom->GetType() == CADGeometry::CADGeometryType::POLYLINE3D )
-            ++3dplines_count;
+            ++plines3d_count;
 
         ASSERT_EQ( poly->vertexes.size(), 6);
         delete( geom );
     }
 
-    ASSERT_EQ (18432, 3dplines_count);
+    ASSERT_EQ (18432, plines3d_count);
     delete( layer );
     delete( opened_dwg );
 }
