@@ -83,11 +83,11 @@ TEST(reading_geometries, 256_polylines_7vertexes)
     Layer * layer = opened_dwg->GetLayer (0);
     for ( auto i = 0; i < layer->GetGeometriesCount (); ++i )
     {
-        LWPolyline * poly = ( LWPolyline * ) geom;
         geom = layer->GetGeometry (i);
         if ( geom->GetType() == CADGeometry::CADGeometryType::LWPOLYLINE )
             ++lwplines_count;
 
+        LWPolyline * poly = ( LWPolyline * ) geom;
         ASSERT_EQ( poly->vertexes.size(), 7);
         delete( geom );
     }
@@ -108,11 +108,11 @@ TEST(reading_geometries, 18432_3dpolylines_6vertexes)
     Layer * layer = opened_dwg->GetLayer (0);
     for ( auto i = 0; i < layer->GetGeometriesCount (); ++i )
     {
-        Polyline3D * poly = ( Polyline3D * ) geom;
         geom = layer->GetGeometry (i);
         if ( geom->GetType() == CADGeometry::CADGeometryType::POLYLINE3D )
             ++plines3d_count;
 
+        Polyline3D * poly = ( Polyline3D * ) geom;
         ASSERT_EQ( poly->vertexes.size(), 6);
         delete( geom );
     }
