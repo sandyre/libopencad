@@ -110,7 +110,7 @@ TEST(reading_geometries, 18432_3dpolylines_6vertexes)
     {
         Polyline3D * poly = ( Polyline3D * ) geom;
         geom = layer->GetGeometry (i);
-        if ( geom->GetType() == CADGeometry::CADGeometryType::LWPOLYLINE )
+        if ( geom->GetType() == CADGeometry::CADGeometryType::POLYLINE3D )
             ++3dplines_count;
 
         ASSERT_EQ( poly->vertexes.size(), 6);
