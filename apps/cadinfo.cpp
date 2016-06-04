@@ -116,23 +116,23 @@ int main(int argc, char *argv[])
     classes.print ();
     cout << endl;
 
-    int polylines_pface = 0;
-    int face3ds_count = 0;
-    int rays_count = 0;
-    int xlines_count = 0;
-    int mlines_count = 0;
-    int mtexts_count = 0;
-    int images_count = 0;
-    int solids_count = 0;
-    int splines_count = 0;
-    int circles_count = 0;
-    int lines_count = 0;
-    int ellipses_count = 0;
-    int pline_count = 0;
-    int pline3d_count = 0;
-    int point_count = 0;
-    int arc_count = 0;
-    int text_count = 0;
+    int polylinesPface = 0;
+    int face3dsCount = 0;
+    int raysCount = 0;
+    int xlinesCount = 0;
+    int mlinesCount = 0;
+    int mtextsCount = 0;
+    int imagesCount = 0;
+    int solidsCount = 0;
+    int splinesCount = 0;
+    int circlesCount = 0;
+    int linesCount = 0;
+    int ellipsesCount = 0;
+    int plineCount = 0;
+    int pline3dCount = 0;
+    int pointCount = 0;
+    int arcCount = 0;
+    int textCount = 0;
     cout << "Layers count: " << pCADFile->getLayersCount () << endl;
 
     size_t i,j;
@@ -146,100 +146,100 @@ int main(int argc, char *argv[])
         {
             unique_ptr<CADGeometry> geom(layer.getGeometry (j));
 
-            if ( geom != nullptr )
+            if ( geom == nullptr )
+                continue;
+
+            geom->print ();
+
+            switch ( geom->getType() )
             {
-                geom->print ();
+            case CADGeometry::CIRCLE:
+                ++circlesCount;
+                break;
 
-                switch ( geom->getType() )
-                {
-                case CADGeometry::CIRCLE:
-                    ++circles_count;
-                    break;
+            case CADGeometry::LWPOLYLINE:
+                ++plineCount;
+                break;
 
-                case CADGeometry::LWPOLYLINE:
-                    ++pline_count;
-                    break;
+            case CADGeometry::POLYLINE3D:
+                ++pline3dCount;
+                break;
 
-                case CADGeometry::POLYLINE3D:
-                    ++pline3d_count;
-                    break;
+            case CADGeometry::POLYLINE_PFACE:
+                ++polylinesPface;
+                break;
 
-                case CADGeometry::POLYLINE_PFACE:
-                    ++polylines_pface;
-                    break;
+            case CADGeometry::ARC:
+                ++arcCount;
+                break;
+            case CADGeometry::POINT:
+                ++pointCount;
+                break;
+            case CADGeometry::ELLIPSE:
+                ++ellipsesCount;
+                break;
 
-                case CADGeometry::ARC:
-                    ++arc_count;
-                    break;
-                case CADGeometry::POINT:
-                    ++point_count;
-                    break;
-                case CADGeometry::ELLIPSE:
-                    ++ellipses_count;
-                    break;
+            case CADGeometry::LINE:
+                ++linesCount;
+                break;
+            case CADGeometry::SPLINE:
+                ++splinesCount;
+                break;
 
-                case CADGeometry::LINE:
-                    ++lines_count;
-                    break;
-                case CADGeometry::SPLINE:
-                    ++splines_count;
-                    break;
+            case CADGeometry::TEXT:
+                ++textCount;
+                break;
 
-                case CADGeometry::TEXT:
-                    ++text_count;
-                    break;
+            case CADGeometry::SOLID:
+                ++solidsCount;
+                break;
 
-                case CADGeometry::SOLID:
-                    ++solids_count;
-                    break;
+            case CADGeometry::IMAGE:
+                ++imagesCount;
+                break;
 
-                case CADGeometry::IMAGE:
-                    ++images_count;
-                    break;
+            case CADGeometry::MTEXT:
+                ++mtextsCount;
+                break;
 
-                case CADGeometry::MTEXT:
-                    ++mtexts_count;
-                    break;
+            case CADGeometry::MLINE:
+                ++mlinesCount;
+                break;
 
-                case CADGeometry::MLINE:
-                    ++mlines_count;
-                    break;
+            case CADGeometry::XLINE:
+                ++xlinesCount;
+                break;
 
-                case CADGeometry::XLINE:
-                    ++xlines_count;
-                    break;
+            case CADGeometry::RAY:
+                ++raysCount;
+                break;
 
-                case CADGeometry::RAY:
-                    ++rays_count;
-                    break;
+            case CADGeometry::FACE3D:
+                ++face3dsCount;
+                break;
 
-                case CADGeometry::FACE3D:
-                    ++face3ds_count;
-                    break;
-
-                case CADGeometry::UNDEFINED:
-                case CADGeometry::HATCH:
-                    break;
-                }
+            case CADGeometry::UNDEFINED:
+            case CADGeometry::HATCH:
+                break;
             }
         }
     }
 
-    cout << "Polylines Pface: " << polylines_pface << std::endl;
-    cout << "3DFaces: " << face3ds_count << std::endl;
-    cout << "Rays: " << rays_count << std::endl;
-    cout << "XLines: " << xlines_count << std::endl;
-    cout << "MLines: " << mlines_count << std::endl;
-    cout << "MTexts: " << mtexts_count << std::endl;
-    cout << "Images: " << images_count << std::endl;
-    cout << "Solids: " << solids_count << std::endl;
-    cout << "Points: " << point_count << std::endl;
-    cout << "Ellipses: " << ellipses_count << std::endl;
-    cout << "Lines count: " << lines_count << std::endl;
-    cout << "Plines count: " << pline_count << std::endl;
-    cout << "Plines3d count: " << pline3d_count << std::endl;
-    cout << "Splines count: " << splines_count << std::endl;
-    cout << "Circles count: " << circles_count << std::endl;
-    cout << "Arcs count: " << arc_count << std::endl;
-    cout << "Texts count: " << text_count << std::endl;
+    cout << "Polylines Pface: " << polylinesPface << std::endl;
+    cout << "3DFaces: " << face3dsCount << std::endl;
+    cout << "Rays: " << raysCount << std::endl;
+    cout << "XLines: " << xlinesCount << std::endl;
+    cout << "MLines: " << mlinesCount << std::endl;
+    cout << "MTexts: " << mtextsCount << std::endl;
+    cout << "Images: " << imagesCount << std::endl;
+    cout << "Solids: " << solidsCount << std::endl;
+    cout << "Points: " << pointCount << std::endl;
+    cout << "Ellipses: " << ellipsesCount << std::endl;
+    cout << "Lines count: " << linesCount << std::endl;
+    cout << "Plines count: " << plineCount << std::endl;
+    cout << "Plines3d count: " << pline3dCount << std::endl;
+    cout << "Splines count: " << splinesCount << std::endl;
+    cout << "Circles count: " << circlesCount << std::endl;
+    cout << "Arcs count: " << arcCount << std::endl;
+    cout << "Texts count: " << textCount << std::endl;
 }

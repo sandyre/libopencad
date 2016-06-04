@@ -95,6 +95,8 @@ double CADVector::getZ() const
 
 void CADVector::setZ(double value)
 {
+    if(!bHasZ)
+       bHasZ = true;
     Z = value;
 }
 

@@ -681,12 +681,12 @@ void CADImage::setClippingBoundaryType(short value)
     clippingBoundaryType = value;
 }
 
-char CADImage::getResolutionUnits() const
+unsigned char CADImage::getResolutionUnits() const
 {
     return resolutionUnits;
 }
 
-void CADImage::setResolutionUnits(char value)
+void CADImage::setResolutionUnits(unsigned char value)
 {
     resolutionUnits = value;
 }
@@ -701,7 +701,8 @@ void CADImage::setFilePath(const string &value)
     filePath = value;
 }
 
-void CADImage::setOptions(bool transparency, bool clip, char brightness, char contrast)
+void CADImage::setOptions(bool transparency, bool clip,
+                          unsigned char brightness, unsigned char contrast)
 {
     bTransparency = transparency;
     bClipping = clip;
@@ -728,6 +729,11 @@ void CADImage::print() const
              << avertClippingPolygon[i].getY() << std::endl;
     }
     cout << endl;
+}
+
+void CADImage::addClippingPoint(const CADVector &pt)
+{
+    avertClippingPolygon.push_back (pt);
 }
 
 //------------------------------------------------------------------------------
@@ -806,6 +812,16 @@ void CADFace3D::print() const
              << "Z: " << avertCorners[i].getZ() << "\n";
     }
     cout << endl;
+}
+
+short CADFace3D::getInvisFlags() const
+{
+    return invisFlags;
+}
+
+void CADFace3D::setInvisFlags(short value)
+{
+    invisFlags = value;
 }
 
 //------------------------------------------------------------------------------

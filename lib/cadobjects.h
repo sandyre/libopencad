@@ -900,7 +900,7 @@ typedef struct _dimdata
     CADVector vectExtrusion;
     CADVector vertTextMidPt;
     double dfElevation;
-    char dFlags;
+    unsigned char dFlags;
     string sUserText;
     double dfTextRotation;
     double dfHorizDir;
@@ -935,7 +935,7 @@ class CADDimensionOrdinateObject : public CADDimensionObject
 public:
     CADDimensionOrdinateObject();
     CADVector vert13pt, vert14pt;
-    char Flags2;
+    unsigned char Flags2;
 };
 
 class CADDimensionLinearObject : public CADDimensionObject
@@ -1006,9 +1006,9 @@ public:
     short dDisplayProps;
 
     bool bClipping;
-    char dBrightness;
-    char dContrast;
-    char dFade;
+    unsigned char dBrightness;
+    unsigned char dContrast;
+    unsigned char dFade;
     bool bClipMode; // R2010+
 
     short dClipBoundaryType;
@@ -1045,7 +1045,7 @@ public:
     double dfYImageSizeInPx;
     string sFilePath;
     bool bIsLoaded;
-    char dResUnits; // 0 == none, 2 == centimeters, 5 == inches
+    unsigned char dResUnits; // 0 == none, 2 == centimeters, 5 == inches
     double dfXPixelSize; // size of 1 pixel in autocad units
     double dfYPixelSize;
 };
@@ -1066,7 +1066,7 @@ public:
     double dfExtentsWidth; // TODO: meaning unknown
     string sTextValue;
     short dLineSpacingStyle;
-    short dLineSpacingFactor;
+    double dLineSpacingFactor;
     bool bUnknownBit;
     long dBackgroundFlags;
     long dBackgroundScaleFactor;
@@ -1078,7 +1078,7 @@ public:
 typedef struct _linestyle
 {
     short          nNumSegParms;
-    vector<short>  adSegparms;
+    vector<double> adfSegparms;
     short          nAreaFillParms;
     vector<double> adfAreaFillParameters;
 } CADLineStyle;
@@ -1097,11 +1097,11 @@ public:
     CADMLineObject();
 
     double dfScale;
-    char dJust;
+    unsigned char dJust;
     CADVector vertBasePoint;
     CADVector vectExtrusion;
     short dOpenClosed; // 1 open, 3 closed
-    char nLinesInStyle;
+    unsigned char nLinesInStyle;
     short nNumVertexes;
 
     vector < CADMLineVertex > avertVertexes;

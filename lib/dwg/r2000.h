@@ -98,7 +98,8 @@ protected:
                              const char *pabyInput, size_t &nBitOffsetFromStart);
     CADPointObject *getPoint(long dObjectSize, CADCommonED stCommonEntityData,
                              const char *pabyInput, size_t &nBitOffsetFromStart);
-    CADPolyline3DObject *getPolyLine3D(long dObjectSize, CADCommonED stCommonEntityData,
+    CADPolyline3DObject *getPolyLine3D(long dObjectSize,
+                                       CADCommonED stCommonEntityData,
                              const char *pabyInput, size_t &nBitOffsetFromStart);
     CADRayObject *getRay(long dObjectSize, CADCommonED stCommonEntityData,
                              const char *pabyInput, size_t &nBitOffsetFromStart);
@@ -126,7 +127,8 @@ protected:
                                const char *pabyInput, size_t &nBitOffsetFromStart);
     CADSplineObject *getSpline(long dObjectSize, CADCommonED stCommonEntityData,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
-    CADEntityObject *getEntity(int dObjectType, long dObjectSize, CADCommonED stCommonEntityData,
+    CADEntityObject *getEntity(int dObjectType, long dObjectSize,
+                               CADCommonED stCommonEntityData,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
     CADDictionaryObject *getDictionary(long dObjectSize,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
@@ -142,7 +144,31 @@ protected:
                                const char *pabyInput, size_t &nBitOffsetFromStart);
     CADLineTypeObject *getLineType1(long dObjectSize,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
-
+    CADMLineObject *getMLine(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADPolylinePFaceObject *getPolylinePFace(long dObjectSize,
+                                             CADCommonED stCommonEntityData,
+                                             const char *pabyInput,
+                                             size_t &nBitOffsetFromStart);
+    CADImageObject *getImage(long dObjectSize, CADCommonED stCommonEntityData,
+                            const char *pabyInput, size_t &nBitOffsetFromStart);
+    CAD3DFaceObject *get3DFace(long dObjectSize,  CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADVertexMeshObject *getVertexMesh(long dObjectSize,  CADCommonED stCommonEntityData,
+                                       const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADVertexPFaceObject *getVertexPFace(long dObjectSize, CADCommonED stCommonEntityData,
+                                         const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADDimensionObject *getDimension(short dObjectType, long dObjectSize,
+                                           CADCommonED stCommonEntityData,
+                                           const char *pabyInput,
+                                           size_t &nBitOffsetFromStart);
+    CADMTextObject *getMText(long dObjectSize, CADCommonED stCommonEntityData,
+                            const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADImageDefObject *getImageDef(long dObjectSize,
+                            const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADImageDefReactorObject *getImageDefReactor(long dObjectSize,
+                                                 const char *pabyInput,
+                                                 size_t &nBitOffsetFromStart);
 protected:
     int imageSeeker;
     std::vector<SectionLocatorRecord> sectionLocatorRecords;

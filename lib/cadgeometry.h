@@ -338,15 +338,16 @@ public:
     short getClippingBoundaryType() const;
     void setClippingBoundaryType(short value);
 
-    char getResolutionUnits() const;
-    void setResolutionUnits(char value);
+    unsigned char getResolutionUnits() const;
+    void setResolutionUnits(unsigned char value);
 
     string getFilePath() const;
     void setFilePath(const string &value);
 
-    void setOptions(bool transparency, bool clip, char brightness, char contrast);
+    void setOptions(bool transparency, bool clip,
+                    unsigned char brightness, unsigned char contrast);
     virtual void print () const override;
-
+    void addClippingPoint(const CADVector &pt);
 protected:
     CADVector vertInsertionPoint;
     //CADVector vectUDirection;
@@ -357,14 +358,14 @@ protected:
     //bool bUseClippingBoundary;
     bool bTransparency;
     bool bClipping;
-    char dBrightness;
-    char dContrast;
+    unsigned char dBrightness;
+    unsigned char dContrast;
     //char dFade;
 
     CADVector imageSizeInPx;
     string filePath;
     //bool bIsLoaded;
-    char resolutionUnits; // 0 == none, 2 == centimeters, 5 == inches;
+    unsigned char resolutionUnits; // 0 == none, 2 == centimeters, 5 == inches;
     CADVector pixelSizeInACADUnits;
 
     short clippingBoundaryType; // 1 == rect, 2 == polygon
@@ -407,9 +408,13 @@ public:
     CADFace3D();
     void addCorner(const CADVector &corner);
     virtual void print () const override;
+
+    short getInvisFlags() const;
+    void setInvisFlags(short value);
+
 protected:
     vector < CADVector > avertCorners;
-    short dInvisFlags;
+    short invisFlags;
 };
 
 class CADPolylinePFace : public CADGeometry

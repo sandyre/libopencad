@@ -108,12 +108,6 @@ int CADTables::readLayersTable( CADFile  * const file, long index)
         }
     }
 
-
-    // Implementing blocks.
-    // FIXME: Simplify the code.
-    //    CADBlockControl * blockControl = ( CADBlockControl * )
-    //       this->GetObject ( stBlocksTable.GetAsLong () );
-
     unique_ptr<CADBlockHeaderObject> pstModelSpace (
             static_cast<CADBlockHeaderObject *>(file->getObject (
                                                     it->second.getAsLong ())));
