@@ -37,86 +37,78 @@
 
 CADFile::CADFile(CADFileIO* poFileIO)
 {
-    m_poFileIO = poFileIO;
+    fileIO = poFileIO;
 }
 
 CADFile::~CADFile()
 {
-    if(nullptr != m_poFileIO)
-        delete m_poFileIO;
+    if(nullptr != fileIO)
+        delete fileIO;
 }
 
-const CADHeader& CADFile::GetHeader() const
+const CADHeader& CADFile::getHeader() const
 {
-    return m_oHeader;
+    return header;
 }
 
-const CADClasses& CADFile::GetClasses() const
+const CADClasses& CADFile::getClasses() const
 {
-    return m_oClasses;
+    return classes;
 }
 
-size_t CADFile::GetLayersCount ()
+const CADTables &CADFile::getTables() const
 {
-    std::cerr << "CADFile::getLayersCount() called from abstract class.\n"
-              << "This method should be overrided in derived classes. Abort.\n";
-    return( 0 );
+    return tables;
 }
 
-size_t CADFile::GetBlocksCount ()
+int CADFile::parseFile(enum OpenOptions eOptions)
 {
-    std::cerr << "CADFile::getBlocksCount() called from abstract class.\n"
-              << "This method should be overrided in derived classes. Abort.\n";
-    return( 0 );
-}
-
-CADBlock * CADFile::GetBlock ( size_t /*index*/ )
-{
-    std::cerr << "CADFile::getBlock() called from abstract class.\n"
-              << "This method should be overrided in derived classes. Abort.\n";
-    return( nullptr );
-}
-
-Layer * CADFile::GetLayer ( size_t /*index*/ )
-{
-    std::cerr << "CADFile::GetLayer() called from abstract class.\n"
-              << "This method should be overrided in derived classes. Abort.\n";
-    return( nullptr );
-}
-
-CADGeometry * CADFile::GetGeometry ( size_t /*layer_index*/, size_t /*index*/ )
-{
-    std::cerr << "CADFile::getGeometry() called from abstract class.\n"
-              << "This method should be overrided in derived classes. Abort.\n";
-
-    return( nullptr );
-}
-
-int CADFile::ParseFile()
-{
-    if(nullptr == m_poFileIO)
+    if(nullptr == fileIO)
         return CADErrorCodes::FILE_OPEN_FAILED;
 
-    if(!m_poFileIO->IsOpened())
+    if(!fileIO->IsOpened())
     {
-        if(!m_poFileIO->Open(CADFileIO::read | CADFileIO::binary))
+        if(!fileIO->Open(CADFileIO::read | CADFileIO::binary))
             return CADErrorCodes::FILE_OPEN_FAILED;
     }
 
-    int nResultCode = ReadHeader ();
+    int nResultCode;
+
+    nResultCode = readSectionLocator ();
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
-    nResultCode = ReadClasses ();
+    nResultCode = readHeader (eOptions);
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
-    nResultCode = ReadObjectMap ();
+    nResultCode = readClasses (eOptions);
+    if(nResultCode != CADErrorCodes::SUCCESS)
+        return nResultCode;
+    nResultCode = createFileMap ();
+    if(nResultCode != CADErrorCodes::SUCCESS)
+        return nResultCode;
+    nResultCode = readTables (eOptions);
     if(nResultCode != CADErrorCodes::SUCCESS)
         return nResultCode;
 
     return CADErrorCodes::SUCCESS;
 }
 
-CADObject *CADFile::GetObject(size_t /*index*/)
+int CADFile::readTables(CADFile::OpenOptions /*eOptions*/)
 {
-   return nullptr;
+    // TODO: read other tables in ALL option mode
+
+    int nResult = tables.readTable(this, CADTables::LayersTable);
+//    if(nResult != CADErrorCodes::SUCCESS)
+        return nResult;
+
+}
+
+size_t CADFile::getLayersCount() const
+{
+    return tables.getLayerCount ();
+}
+
+CADLayer &CADFile::getLayer(size_t index)
+{
+    return tables.getLayer (index);
 }

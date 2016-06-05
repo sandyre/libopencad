@@ -33,11 +33,8 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 project(dwg)
 
 set(HHEADERS
-    constants.h
-    data_structs.h
     io.h
-    r2000.h
-        ../simpledatatypes.h)
+    r2000.h)
 
 set(CSOURCES
     io.cpp

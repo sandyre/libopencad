@@ -102,11 +102,11 @@ function(find_extproject name)
     endif()  
     
     if(NOT DEFINED PULL_UPDATE_PERIOD)
-        set(PULL_UPDATE_PERIOD 10)
+        set(PULL_UPDATE_PERIOD 25) # 25 min
     endif()
     
     if(NOT DEFINED PULL_TIMEOUT)
-        set(PULL_TIMEOUT 100)
+        set(PULL_TIMEOUT 100) # 100 ms
     endif()
 
     if(NOT DEFINED SUPRESS_VERBOSE_OUTPUT)
@@ -185,12 +185,43 @@ function(find_extproject name)
     endif()
        
     include(ExternalProject)
+   
+    # create delete build file script and custom command to periodically execute it
+    file(WRITE ${EP_PREFIX}/tmp/${name}_EP-checkupdate.cmake
+        "file(TIMESTAMP ${EXT_STAMP_DIR}/${name}_EP-gitpull.txt LAST_PULL \"%y%j%H%M\" UTC)
+         if(NOT LAST_PULL)
+            set(LAST_PULL 0)
+         endif()
+         string(TIMESTAMP CURRENT_TIME \"%y%j%H%M\" UTC)
+         math(EXPR DIFF_TIME \"\${CURRENT_TIME} - \${LAST_PULL}\")
+         if(DIFF_TIME GREATER ${PULL_UPDATE_PERIOD})
+            message(STATUS \"Git pull ${repo_name} ...\")
+            execute_process(COMMAND ${GIT_EXECUTABLE} pull
+               WORKING_DIRECTORY  ${EP_PREFIX}/src/${name}_EP
+               TIMEOUT ${PULL_TIMEOUT} OUTPUT_VARIABLE OUT_STR)
+            
+            if(OUT_STR)
+                string(FIND \${OUT_STR} \"Already up-to-date\" STR_POS)
+                if(STR_POS LESS 0)
+                    message(STATUS \"Remove ${name}_EP-build\")
+                    file(REMOVE ${EXT_STAMP_DIR}/${name}_EP-build)
+                endif()
+                file(WRITE ${EXT_STAMP_DIR}/${name}_EP-gitpull.txt \"\")
+            endif()
+         endif()")
                   
     ExternalProject_Add(${name}_EP
         GIT_REPOSITORY ${EP_URL}/${repo_name}
         CMAKE_ARGS ${find_extproject_CMAKE_ARGS}
         UPDATE_DISCONNECTED 1
     )
+    
+    if(NOT SKIP_GIT_PULL)
+    add_custom_command(TARGET ${name}_EP PRE_BUILD
+               COMMAND ${CMAKE_COMMAND} -P ${EP_PREFIX}/tmp/${name}_EP-checkupdate.cmake
+               COMMENT "Check if update needed ..."               
+               VERBATIM)
+    endif()           
     
     set(RECONFIGURE OFF)
     set(INCLUDE_EXPORT_PATH "${EXT_BUILD_DIR}/${repo_project}-exports.cmake") 
@@ -235,7 +266,8 @@ function(find_extproject name)
            if(OUT_STR)
                 string(FIND ${OUT_STR} "Already up-to-date" STR_POS)
                 if(STR_POS LESS 0)
-                    set(RECONFIGURE ON)
+                    file(REMOVE ${EXT_STAMP_DIR}/${name}_EP-build)
+                    set(RECONFIGURE ON)  
                 endif()
                 file(WRITE ${EXT_STAMP_DIR}/${name}_EP-gitpull.txt "")
             endif()

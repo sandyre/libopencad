@@ -2,11 +2,13 @@
  *  Project: libopencad
  *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
  *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -26,90 +28,58 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
+#ifndef CADTABLES_H
+#define CADTABLES_H
 
-#ifndef SIMPLEDATATYPES_H
-#define SIMPLEDATATYPES_H
+#include "cadheader.h"
+#include "cadlayer.h"
 
-struct Vertex2D
+class CADFile;
+
+using namespace std;
+
+/**
+ * @brief The CAD tables class. Store tables
+ */
+class OCAD_EXTERN CADTables
 {
-    Vertex2D() : X(0.0f),
-                 Y(0.0f)
-    {
-    }
+public:
+    /**
+     * @brief The CAD table types enum
+     */
+    enum TableType{
+        CurrentViewportTable,
+        BlocksTable,
+        LayersTable,
+        StyleTable,
+        LineTypesTable,
+        ViewTable,
+        UCSTable,
+        ViewportTable,
+        APPIDTable,
+        EntityTable,
+        ACADGroupDict,
+        ACADMLineStyleDict,
+        NamedObjectsDict,
+        LayoutsDict,
+        PlotSettingsDict,
+        PlotStylesDict,
+        BlockRecordPaperSpace,
+        BlockRecordModelSpace
+    };
+public:
+    CADTables();
+    void addTable(enum TableType eType, CADHandle hHandle);
+    int readTable(CADFile * const file, enum TableType eType);
+    size_t getLayerCount() const;
+    CADLayer& getLayer(size_t index);
 
-    Vertex2D( double X_, double Y_) :
-            X(X_), Y(Y_)
-    {
-
-    }
-
-    double X;
-    double Y;
-
-    bool operator == (const Vertex2D &other)
-    {
-        return ( ( this->X == other.X ) && ( this->Y == other.Y ) );
-    }
+protected:
+    int readLayersTable(CADFile * const file, long index);
+    void fillLayer(const CADEntityObject* ent);
+protected:
+    map<enum TableType, CADHandle> tableMap;
+    vector<CADLayer> layers;
 };
 
-struct Vertex3D
-{
-    Vertex3D() : X(0.0f),
-                 Y(0.0f),
-                 Z(0.0f)
-    {
-    }
-
-    Vertex3D( double X_, double Y_, double Z_) :
-            X(X_), Y(Y_), Z(Z_)
-    {
-
-    }
-
-    double X;
-    double Y;
-    double Z;
-
-    bool operator == (const Vertex3D& second)
-    {
-        return ( ( this->X == second.X )  && ( this->Y == this->Y ) &&
-                 ( this->Z == second.Z ) );
-    }
-};
-
-struct Vector2D
-{
-    Vector2D() : X(0.0f),
-                 Y(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-
-    bool operator == (const Vector2D& second)
-    {
-        return ( ( this->X == second.X )  && ( this->Y == this->Y ) );
-    }
-};
-
-struct Vector3D
-{
-    Vector3D() : X(0.0f),
-                 Y(0.0f),
-                 Z(0.0f)
-    {
-    }
-
-    double X;
-    double Y;
-    double Z;
-
-    bool operator == (const Vector3D& second)
-    {
-        return ( ( this->X == second.X )  && ( this->Y == this->Y ) &&
-                 ( this->Z == second.Z ) );
-    }
-};
-
-#endif //SIMPLEDATATYPES_H
+#endif // CADTABLES_H

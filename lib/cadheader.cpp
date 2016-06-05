@@ -268,65 +268,79 @@ static const CADHeaderConstantDetail CADHeaderConstantDetails[] {
 // CADHandle
 //------------------------------------------------------------------------------
 
-CADHandle::CADHandle(char code)
+CADHandle::CADHandle(unsigned char codeIn) : code(codeIn)
 {
-    m_nCode = code;
 }
 
-void CADHandle::AddOffset(char val)
+CADHandle::CADHandle(const CADHandle &other)
 {
-    m_HandleOrOffset.push_back(val);
+    code = other.code;
+    handleOrOffset = other.handleOrOffset;
 }
 
-long CADHandle::GetAsLong( CADHandle& ref_handle )
+CADHandle &CADHandle::operator =(const CADHandle &other)
+{
+    if (this == &other)
+        return *this;
+    code = other.code;
+    handleOrOffset = other.handleOrOffset;
+    return *this;
+}
+
+void CADHandle::addOffset(unsigned char val)
+{
+    handleOrOffset.push_back(val);
+}
+
+long CADHandle::getAsLong( const CADHandle& ref_handle ) const
 {
     long result = 0;
-    switch ( m_nCode )
+    switch ( code )
     {
         case 0x06:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(),
-                     ref_handle.m_HandleOrOffset.size() );
-            SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.handleOrOffset.data(),
+                     ref_handle.handleOrOffset.size() );
+            SwapEndianness ( result, ref_handle.handleOrOffset.size() );
             return result + 1;
         }
         case 0x08:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(),
-                     ref_handle.m_HandleOrOffset.size() );
-            SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
+            memcpy ( &result, ref_handle.handleOrOffset.data(),
+                     ref_handle.handleOrOffset.size() );
+            SwapEndianness ( result, ref_handle.handleOrOffset.size() );
             return result - 1;
         }
         case 0x0A:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(),
-                     ref_handle.m_HandleOrOffset.size() );
-            SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
-            return result + this->GetAsLong ();
+            memcpy ( &result, ref_handle.handleOrOffset.data(),
+                     ref_handle.handleOrOffset.size() );
+            SwapEndianness ( result, ref_handle.handleOrOffset.size() );
+            return result + this->getAsLong ();
         }
         case 0x0C:
         {
-            memcpy ( &result, ref_handle.m_HandleOrOffset.data(),
-                     ref_handle.m_HandleOrOffset.size() );
-            SwapEndianness ( result, ref_handle.m_HandleOrOffset.size() );
-            return result - this->GetAsLong ();
+            memcpy ( &result, ref_handle.handleOrOffset.data(),
+                     ref_handle.handleOrOffset.size() );
+            SwapEndianness ( result, ref_handle.handleOrOffset.size() );
+            return result - this->getAsLong ();
         }
     }
 
-    return this->GetAsLong ();
+    return this->getAsLong ();
 }
 
-long CADHandle::GetAsLong () const
+long CADHandle::getAsLong () const
 {
     long result = 0;
-    memcpy ( &result, m_HandleOrOffset.data(), m_HandleOrOffset.size() );
-    SwapEndianness ( result, m_HandleOrOffset.size() );
+    memcpy ( &result, handleOrOffset.data(), handleOrOffset.size() );
+    SwapEndianness ( result, handleOrOffset.size() );
     return result;
 }
 
-bool CADHandle::IsNull () const
+bool CADHandle::isNull () const
 {
-    return m_HandleOrOffset.size() == 0 ? true : false;
+    return handleOrOffset.size() == 0 ? true : false;
 }
 
 //------------------------------------------------------------------------------
@@ -335,141 +349,179 @@ bool CADHandle::IsNull () const
 
 CADVariant::CADVariant()
 {
-    m_eType = DataType::INVALID;
+    type = DataType::INVALID;
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(const char* val)
 {
-    m_eType = DataType::STRING;
-    m_sString = string(val);
+    type = DataType::STRING;
+    stringVal = string(val);
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(int val)
 {
-    m_eType = DataType::DECIMAL;
-    m_nDecimal = val;
-
-    char str_buff[256];
-    snprintf (str_buff, 255, "%d", val);
-    m_sString = str_buff;
+    type = DataType::DECIMAL;
+    decimalVal = val;
+    stringVal = to_string(decimalVal);
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(short val)
 {
-    m_eType = DataType::DECIMAL;
-    m_nDecimal = val;
-
-    char str_buff[256];
-    snprintf (str_buff, 255, "%d", val);
-    m_sString = str_buff;
+    type = DataType::DECIMAL;
+    decimalVal = val;
+    stringVal = to_string(decimalVal);
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(double val)
 {
-    m_eType = DataType::REAL;
-    m_dX = val;
-
-    char str_buff[256];
-    snprintf (str_buff, 255, "%f", val);
-    m_sString = str_buff;
+    type = DataType::REAL;
+    xVal = val;
+    stringVal = to_string(xVal);
+    decimalVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(double x, double y, double z)
 {
-    m_eType = DataType::COORDINATES;
-    m_dX = x;
-    m_dY = y;
-    m_dZ = z;
+    type = DataType::COORDINATES;
+    xVal = x;
+    yVal = y;
+    zVal = z;
 
     char str_buff[256];
     snprintf (str_buff, 255, "[%f,%f,%f]", x, y, z);
-    m_sString = str_buff;
+    stringVal = str_buff;
+
+    decimalVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(const string& val)
 {
-    m_eType = DataType::STRING;
-    m_sString = val;
+    type = DataType::STRING;
+    stringVal = val;
+
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(time_t val)
 {
-    m_eType = DataType::DATETIME;
-    m_DateTime = val;
+    type = DataType::DATETIME;
+    dateTimeVal = val;
 
     //TODO: data/time format
     char str_buff[256];
-    snprintf (str_buff, 255, "%ld", m_DateTime);
-    m_sString = str_buff;
+    snprintf (str_buff, 255, "%ld", dateTimeVal);
+    stringVal = str_buff;
+
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
 }
 
 CADVariant::CADVariant(const CADHandle& val)
 {
-    m_eType = DataType::HANDLE;
-    m_Handle = val;
+    type = DataType::HANDLE;
+    handleVal = val;
+    stringVal = to_string(val.getAsLong ());
 
-    char str_buff[256];
-    snprintf (str_buff, 255, "%ld", val.GetAsLong ());
-    m_sString = str_buff;
+    decimalVal = 0;
+    xVal = 0;
+    yVal = 0;
+    zVal = 0;
+    dateTimeVal = 0;
 }
 
 CADVariant::CADVariant(const CADVariant& orig)
 {
-    m_eType = orig.m_eType;
-    m_sString = orig.m_sString;
-    m_nDecimal = orig.m_nDecimal;
-    m_dX = orig.m_dX;
+    type = orig.type;
+    stringVal = orig.stringVal;
+    decimalVal = orig.decimalVal;
+    xVal = orig.xVal;
+    yVal = orig.yVal;
+    zVal = orig.zVal;
+    handleVal = orig.handleVal;
+    dateTimeVal = orig.dateTimeVal;
 }
 
 CADVariant& CADVariant::operator = (const CADVariant& orig)
 {
     if (this == &orig)
         return *this;
-    m_eType = orig.m_eType;
-    m_sString = orig.m_sString;
-    m_nDecimal = orig.m_nDecimal;
-    m_dX = orig.m_dX;
+    type = orig.type;
+    stringVal = orig.stringVal;
+    decimalVal = orig.decimalVal;
+    xVal = orig.xVal;
+    yVal = orig.yVal;
+    zVal = orig.zVal;
+    handleVal = orig.handleVal;
+    dateTimeVal = orig.dateTimeVal;
     return *this;
 }
 
-long CADVariant::GetDecimal() const
+long CADVariant::getDecimal() const
 {
-    return m_nDecimal;
+    return decimalVal;
 }
 
-double CADVariant::GetReal() const
+double CADVariant::getReal() const
 {
-    return m_dX;
+    return xVal;
 }
 
-const string &CADVariant::GetString() const
+const string &CADVariant::getString() const
 {
-    return m_sString;
+    return stringVal;
 }
 
-CADVariant::DataType CADVariant::GetType() const
+CADVariant::DataType CADVariant::getType() const
 {
-    return m_eType;
+    return type;
 }
 
-double CADVariant::GetX() const
+double CADVariant::getX() const
 {
-    return m_dX;
+    return xVal;
 }
 
-double CADVariant::GetY() const
+double CADVariant::getY() const
 {
-    return m_dY;
+    return yVal;
 }
 
-double CADVariant::GetZ() const
+double CADVariant::getZ() const
 {
-    return m_dZ;
+    return zVal;
 }
 
-const CADHandle &CADVariant::GetHandle() const
+const CADHandle &CADVariant::getHandle() const
 {
-    return m_Handle;
+    return handleVal;
 }
 
 //------------------------------------------------------------------------------
@@ -478,54 +530,58 @@ const CADHandle &CADVariant::GetHandle() const
 
 CADHeader::CADHeader()
 {
-
 }
 
-int CADHeader::AddValue(short code, const CADVariant &val)
+int CADHeader::addValue(short code, const CADVariant &val)
 {
-    if(m_moValues.find(code) != m_moValues.end())
+    if(valuesMap.find(code) != valuesMap.end())
         return CADErrorCodes::VALUE_EXISTS;
 
-    m_moValues[code] = val;
+    valuesMap[code] = val;
     return CADErrorCodes::SUCCESS;
 }
 
-int CADHeader::AddValue(short code, const char* val)
+int CADHeader::addValue(short code, const char* val)
 {
-    return AddValue(code, CADVariant(val));
+    return addValue(code, CADVariant(val));
 }
 
-int CADHeader::AddValue(short code, int val)
+int CADHeader::addValue(short code, long val)
 {
-    return AddValue(code, CADVariant(val));
+    return addValue(code, CADVariant(val));
 }
 
-int CADHeader::AddValue(short code, short val)
+int CADHeader::addValue(short code, int val)
 {
-    return AddValue(code, CADVariant(val));
+    return addValue(code, CADVariant(val));
 }
 
-int CADHeader::AddValue(short code, double val)
+int CADHeader::addValue(short code, short val)
 {
-    return AddValue(code, CADVariant(val));
+    return addValue(code, CADVariant(val));
 }
 
-int CADHeader::AddValue(short code, const string& val)
+int CADHeader::addValue(short code, double val)
 {
-    return AddValue(code, CADVariant(val));
+    return addValue(code, CADVariant(val));
 }
 
-int CADHeader::AddValue(short code, bool val)
+int CADHeader::addValue(short code, const string& val)
 {
-    return AddValue(code, CADVariant(val ? 1 : 0));
+    return addValue(code, CADVariant(val));
 }
 
-int CADHeader::AddValue(short code, double x, double y, double z)
+int CADHeader::addValue(short code, bool val)
 {
-    return AddValue(code, CADVariant(x, y, z));
+    return addValue(code, CADVariant(val ? 1 : 0));
 }
 
-int CADHeader::AddValue(short code, long julianday, long milliseconds)
+int CADHeader::addValue(short code, double x, double y, double z)
+{
+    return addValue(code, CADVariant(x, y, z));
+}
+
+int CADHeader::addValue(short code, long julianday, long milliseconds)
 {
     // unix -> julian        return ( unixSecs / 86400.0 ) + 2440587.5;
     // julian -> unix        return (julian - 2440587.5) * 86400.0
@@ -533,10 +589,10 @@ int CADHeader::AddValue(short code, long julianday, long milliseconds)
     double seconds = double(milliseconds) / 1000;
     double unix = (double(julianday) - 2440587.5) * 86400.0;
     time_t fullSeconds = static_cast<time_t>(unix + seconds);
-    return AddValue(code, CADVariant(fullSeconds));
+    return addValue(code, CADVariant(fullSeconds));
 }
 
-int CADHeader::GetGroupCode(short code) const
+int CADHeader::getGroupCode(short code) const
 {
     for(CADHeaderConstantDetail detail : CADHeaderConstantDetails)
     {
@@ -547,16 +603,16 @@ int CADHeader::GetGroupCode(short code) const
     return -1;
 }
 
-const CADVariant &CADHeader::GetValue(short code, const CADVariant& val) const
+const CADVariant &CADHeader::getValue(short code, const CADVariant& val) const
 {
-    auto it = m_moValues.find(code);
-    if(it != m_moValues.end())
+    auto it = valuesMap.find(code);
+    if(it != valuesMap.end())
         return it->second;
     else
         return val;
 }
 
-const char *CADHeader::GetValueName(short code) const
+const char *CADHeader::getValueName(short code) const
 {
     for(CADHeaderConstantDetail detail : CADHeaderConstantDetails)
     {
@@ -566,12 +622,12 @@ const char *CADHeader::GetValueName(short code) const
     return "Undefined";
 }
 
-void CADHeader::Print() const
+void CADHeader::print() const
 {
     cout << "============ HEADER Section ============" << endl;
-    for(auto it : m_moValues)
+    for(auto it : valuesMap)
     {
-        cout << GetValueName(it.first) << ": " << it.second.GetString() << endl;
+        cout << getValueName(it.first) << ": " << it.second.getString() << endl;
     }
 }
 

@@ -53,9 +53,13 @@ set(HHEADERS
     cadfileio.h
     cadheader.h
     cadclasses.h
-    cadgeometries.h cadobjects.h)
+    cadtables.h
+    cadgeometry.h
+    cadlayer.h
+    )
 
-set(HHEADER_PRIV    
+set(HHEADER_PRIV
+    cadobjects.h
     cadfilestreamio.h
     )
 
@@ -66,6 +70,10 @@ set(CSOURCES
     cadfilestreamio.cpp
     cadheader.cpp
     cadclasses.cpp
+    cadtables.cpp
+    cadgeometry.cpp
+    cadobjects.cpp
+    cadlayer.cpp
     )
 
 set(LIB_NAME)

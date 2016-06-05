@@ -31,7 +31,6 @@
 
 #include "opencad_api.h"
 #include "cadfilestreamio.h"
-#include "dwg/constants.h"
 #include "dwg/r2000.h"
 
 #include <cctype>
@@ -69,13 +68,14 @@ static int CheckCADFile(CADFileIO* pCADFileIO)
 
 /**
  * @brief Open CAD file
- * @param pCADFileIO CAD file reader pointer ownd by function.
- * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
+ * @param pCADFileIO CAD file reader pointer ownd by function
+ * @param eOptions Open options
+ * @return CADFile pointer or NULL if failed. The pointer have to be freed by user
  */
-CADFile* OpenCADFile( CADFileIO* pCADFileIO )
+CADFile* OpenCADFile( CADFileIO* pCADFileIO, enum CADFile::OpenOptions eOptions )
 {
     int nCADFileVersion = CheckCADFile(pCADFileIO);
-    CADFile * poCAD = NULL;
+    CADFile * poCAD = nullptr;
 
     switch (nCADFileVersion) {
     case CADVersions::DWG_R2000:
@@ -84,15 +84,14 @@ CADFile* OpenCADFile( CADFileIO* pCADFileIO )
     default:
         gLastError = CADErrorCodes::UNSUPPORTED_VERSION;
         delete pCADFileIO;
-        return NULL;
+        return nullptr;
     }
 
-    gLastError = poCAD->ParseFile();
+    gLastError = poCAD->parseFile(eOptions);
     if(gLastError != CADErrorCodes::SUCCESS)
     {
         delete poCAD;
-        delete pCADFileIO;
-        return NULL;
+        return nullptr;
     }
 
     return poCAD;
@@ -162,11 +161,12 @@ const char* GetCADFormats()
 /**
  * @brief Open CAD file
  * @param pszFileName Path to CAD file
+ * @param eOptions Open options
  * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
  */
-CADFile* OpenCADFile( const char* pszFileName )
+CADFile* OpenCADFile( const char* pszFileName, enum CADFile::OpenOptions eOptions )
 {
-    return OpenCADFile (GetDeafultFileIO(pszFileName));
+    return OpenCADFile (GetDeafultFileIO(pszFileName), eOptions);
 }
 
 void DebugMsg(const char* format, ...)

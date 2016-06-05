@@ -30,22 +30,25 @@
  *******************************************************************************/
 
 #include "opencad_api.h"
-#include "cadgeometries.h"
+#include "cadgeometry.h"
 
 #include <cstddef>
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <memory>
+
+using namespace std;
 
 static int Usage(const char* pszErrorMsg = nullptr)
 {
-    std::cout << "Usage: cadinfo [--help] [--formats][--version]\n"
-            "               file_name" << std::endl;
+    cout << "Usage: cadinfo [--help] [--formats][--version]\n"
+            "               file_name" << endl;
 
     if( pszErrorMsg != nullptr )
     {
-        std::cerr << "\nFAILURE: " << pszErrorMsg << std::endl;
+        cerr << endl << "FAILURE: " << pszErrorMsg << endl;
         return EXIT_FAILURE;
     }
 
@@ -54,17 +57,17 @@ static int Usage(const char* pszErrorMsg = nullptr)
 
 static int Version()
 {
-    std::cout << "cadinfo was compiled against libopencad "
-              << OCAD_VERSION << std::endl
+    cout << "cadinfo was compiled against libopencad "
+         << OCAD_VERSION << endl
               << "and is running against libopencad "
-              << GetVersionString() << std::endl;
+         << GetVersionString() << endl;
 
     return EXIT_SUCCESS;
 }
 
 static int Formats()
 {
-    std::cerr << GetCADFormats() << std::endl;
+    cerr << GetCADFormats() << endl;
 
     return EXIT_SUCCESS;
 }
@@ -96,344 +99,147 @@ int main(int argc, char *argv[])
         }
     }
 
-    CADFile *poCadFile = OpenCADFile( GetDeafultFileIO(pszCADFilePath) );
+    CADFile *pCADFile = OpenCADFile( pszCADFilePath,
+                                      CADFile::OpenOptions::READ_ALL );
 
-    if (poCadFile == nullptr)
+    if (pCADFile == nullptr)
     {
-        std::cerr << "Open CAD file " << pszCADFilePath << " failed." << std::endl;
+        cerr << "Open CAD file " << pszCADFilePath << " failed." << endl;
         return EXIT_FAILURE;
     }
 
-    const CADHeader& header = poCadFile->GetHeader ();
-    header.Print ();
-    std::cout << std::endl;
+    const CADHeader& header = pCADFile->getHeader ();
+    header.print ();
+    cout << endl;
 
-    const CADClasses& classes = poCadFile->GetClasses ();
-    classes.Print ();
-    std::cout << std::endl;
+    const CADClasses& classes = pCADFile->getClasses ();
+    classes.print ();
+    cout << endl;
 
-    int polylines_pface = 0;
-    int face3ds_count = 0;
-    int rays_count = 0;
-    int xlines_count = 0;
-    int mlines_count = 0;
-    int mtexts_count = 0;
-    int images_count = 0;
-    int solids_count = 0;
-    int splines_count = 0;
-    int circles_count = 0;
-    int lines_count = 0;
-    int ellipses_count = 0;
-    int pline_count = 0;
-    int pline3d_count = 0;
-    int point_count = 0;
-    int arc_count = 0;
-    int text_count = 0;
-    std::cout << "Layers count: " << poCadFile->GetLayersCount () << std::endl;
+    int polylinesPface = 0;
+    int face3dsCount = 0;
+    int raysCount = 0;
+    int xlinesCount = 0;
+    int mlinesCount = 0;
+    int mtextsCount = 0;
+    int imagesCount = 0;
+    int solidsCount = 0;
+    int splinesCount = 0;
+    int circlesCount = 0;
+    int linesCount = 0;
+    int ellipsesCount = 0;
+    int plineCount = 0;
+    int pline3dCount = 0;
+    int pointCount = 0;
+    int arcCount = 0;
+    int textCount = 0;
+    cout << "Layers count: " << pCADFile->getLayersCount () << endl;
 
-    Layer * layer;
-    for ( size_t i = 0; i < poCadFile->GetLayersCount (); ++i )
+    size_t i,j;
+    for ( i = 0; i < pCADFile->getLayersCount (); ++i )
     {
-        layer = poCadFile->GetLayer (i);
-        std::cout << "Layer #" << i << " contains " << layer->GetGeometriesCount () << " geometries.\n";
-        for ( size_t j = 0; j < layer->GetGeometriesCount (); ++j )
+        CADLayer &layer = pCADFile->getLayer (i);
+        cout << "Layer #" << i << " contains "
+             << layer.getGeometryCount () << " geometries" << endl;
+
+        for ( j = 0; j < layer.getGeometryCount (); ++j )
         {
-            CADGeometry * geom = layer->GetGeometry (j);
+            unique_ptr<CADGeometry> geom(layer.getGeometry (j));
 
-            if ( geom != nullptr )
+            if ( geom == nullptr )
+                continue;
+
+            geom->print ();
+
+            switch ( geom->getType() )
             {
-                switch ( geom->GetType() )
-                {
-                    case CADGeometry::CIRCLE:
-                    {
-                        Circle * circle = ( Circle * ) geom;
-                        std::cout << "|---------Circle---------|\n";
-                        std::cout << "Position: " << "\t" << circle->vertPosition.X <<
-                                "\t" << circle->vertPosition.Y << "\t" << circle->vertPosition.Z << std::endl;
-                        std::cout << "Radius: " << circle->dfRadius << std::endl << std::endl;
+            case CADGeometry::CIRCLE:
+                ++circlesCount;
+                break;
 
-                        ++circles_count;
-                        break;
-                    }
-                    case CADGeometry::LWPOLYLINE:
-                    {
-                        LWPolyline * poly = ( LWPolyline * ) geom;
-                        std::cout << "|---------LWPolyline---------|\n";
-                        for ( size_t i = 0; i < poly->vertexes.size(); ++i )
-                        {
-                            std::cout << "#" << i << "\t" << poly->vertexes[i].X <<
-                                "\t" << poly->vertexes[i].Y << std::endl;
-                        }
-                        std::cout << std::endl;
+            case CADGeometry::LWPOLYLINE:
+                ++plineCount;
+                break;
 
-                        ++pline_count;
-                        break;
-                    }
-                    case CADGeometry::POLYLINE3D:
-                    {
-                        Polyline3D * poly = ( Polyline3D * ) geom;
-                        std::cout << "|---------Polyline3D---------|\n";
-                        for ( size_t i = 0; i < poly->vertexes.size(); ++i )
-                        {
-                            std::cout << "#" << i << "\t" << poly->vertexes[i].X <<
-                                    "\t" << poly->vertexes[i].Y
-                                    << "\t" << poly->vertexes[i].Z << std::endl;
-                        }
-                        std::cout << std::endl;
+            case CADGeometry::POLYLINE3D:
+                ++pline3dCount;
+                break;
 
-                        ++pline3d_count;
-                        break;
-                    }
-                    case CADGeometry::POLYLINE_PFACE:
-                    {
-                        PolylinePFace * poly = ( PolylinePFace * ) geom;
-                        std::cout << "|---------PolylinePface---------|\n";
-                        for ( size_t i = 0; i < poly->hVertexes.size(); ++i )
-                        {
-                            std::cout << "#" << i << "\t" << poly->hVertexes[i].X <<
-                                "\t" << poly->hVertexes[i].Y
-                                << "\t" << poly->hVertexes[i].Z << std::endl;
-                        }
-                        std::cout << std::endl;
+            case CADGeometry::POLYLINE_PFACE:
+                ++polylinesPface;
+                break;
 
-                        ++polylines_pface;
-                        break;
-                    }
-                    case CADGeometry::ARC:
-                    {
-                        Arc * arc = ( Arc * ) geom;
-                        std::cout << "|---------Arc---------|\n";
-                        std::cout << "Position: " << "\t" << arc->vertPosition.X <<
-                                "\t" << arc->vertPosition.Y << "\t" << arc->vertPosition.Z << std::endl;
-                        std::cout << "Radius: " << "\t" << arc->dfRadius << std::endl;
-                        std::cout << "Beg & End angles: " << "\t" << arc->dfStartingAngle << "\t"
-                                << arc->dfEndingAngle << std::endl << std::endl;
+            case CADGeometry::ARC:
+                ++arcCount;
+                break;
+            case CADGeometry::POINT:
+                ++pointCount;
+                break;
+            case CADGeometry::ELLIPSE:
+                ++ellipsesCount;
+                break;
 
-                        ++arc_count;
-                        break;
-                    }
-                    case CADGeometry::POINT:
-                    {
-                        Point3D * point = ( Point3D * ) geom;
-                        std::cout << "|---------Point---------|\n";
-                        std::cout << "Position: " << "\t" << point->vertPosition.X <<
-                            "\t" << point->vertPosition.Y << "\t" << point->vertPosition.Z << std::endl << std::endl;
+            case CADGeometry::LINE:
+                ++linesCount;
+                break;
+            case CADGeometry::SPLINE:
+                ++splinesCount;
+                break;
 
-                        ++point_count;
-                        break;
-                    }
-                    case CADGeometry::ELLIPSE:
-                    {
-                        Ellipse * ellipse = ( Ellipse * ) geom;
-                        std::cout << "|---------Ellipse---------|\n";
-                        std::cout << "Position: " << "\t" << ellipse->vertPosition.X <<
-                            "\t" << ellipse->vertPosition.Y << "\t" << ellipse->vertPosition.Z << std::endl;
-                        std::cout << "Beg & End angles: " << "\t" << ellipse->dfStartingAngle << "\t"
-                            << ellipse->dfEndingAngle << std::endl << std::endl;
+            case CADGeometry::TEXT:
+                ++textCount;
+                break;
 
-                        ++ellipses_count;
-                        break;
-                    }
-                    case CADGeometry::LINE:
-                    {
-                        Line * line = ( Line * ) geom;
-                        std::cout << "|---------Line---------|\n";
-                        std::cout << "Start Position: " << "\t" << line->vertStart.X <<
-                            "\t" << line->vertStart.Y << "\t" << line->vertStart.Z << std::endl;
-                        std::cout << "End Position: " << "\t" << line->vertEnd.X <<
-                            "\t" << line->vertEnd.Y << "\t" << line->vertEnd.Z << std::endl << std::endl;
+            case CADGeometry::SOLID:
+                ++solidsCount;
+                break;
 
-                        ++lines_count;
-                        break;
-                    }
-                    case CADGeometry::SPLINE:
-                    {
-                        Spline * spline = ( Spline * ) geom;
-                        std::cout << "|---------Spline---------|\n";
-                        std::cout << "Degree: \t" << spline->dDegree << std::endl;
-                        if ( spline->dScenario == 2 )
-                        {
-                            std::cout << "Fit tolerance: \t" << spline->dfFitTol << std::endl;
-                            std::cout << "Beg tangent vector:\t" << spline->vectBegTangDir.X << "\t"
-                                << spline->vectBegTangDir.Y << "\t" << spline->vectBegTangDir.Y << std::endl;
-                            std::cout << "End tangent vector:\t" << spline->vectEndTangDir.X << "\t"
-                                << spline->vectEndTangDir.Y << "\t" << spline->vectEndTangDir.Y << std::endl;
+            case CADGeometry::IMAGE:
+                ++imagesCount;
+                break;
 
-                            std::cout << "Knots count: " << spline->adfKnots.size() << std::endl;
-                            for ( size_t j = 0; j < spline->adfKnots.size(); ++j )
-                                std::cout << "#" << j << "\t" << spline->adfKnots[j] << std::endl;
-                        }
-                        if ( spline->dScenario == 1 )
-                        {
-                            std::cout << "Is rational: \t" << spline->bRational << std::endl;
-                            std::cout << "Is closed: \t" << spline->bClosed << std::endl;
-                            std::cout << "Is periodic: \t" << spline->bPeriodic << std::endl;
-                            std::cout << "Knot tolerance: \t" << spline->bRational << std::endl;
-                            std::cout << "Control tolerance: \t" << spline->bRational << std::endl;
-                            std::cout << "Control pts weight presented: \t" << spline->bWeight << std::endl;
-                        }
+            case CADGeometry::MTEXT:
+                ++mtextsCount;
+                break;
 
-                        std::cout << "Control pts count: " << spline->avertCtrlPoints.size() << std::endl;
-                        for ( size_t j = 0; j < spline->avertCtrlPoints.size(); ++j )
-                        {
-                            std::cout << "#" << j << "\t" << spline->avertCtrlPoints[j].X << "\t"
-                            << spline->avertCtrlPoints[j].Y << "\t"
-                            << spline->avertCtrlPoints[j].Z << "\t";
-                            if ( spline->bWeight == true )
-                                std::cout << spline->adfCtrlPointsWeight[j] << std::endl;
-                            else std::cout << std::endl;
-                        }
+            case CADGeometry::MLINE:
+                ++mlinesCount;
+                break;
 
-                        std::cout << "Fit pts count: " << spline->averFitPoints.size() << std::endl;
-                        for ( size_t j = 0; j < spline->averFitPoints.size(); ++j )
-                        {
-                            std::cout << "#" << j << "\t" << spline->averFitPoints[j].X << "\t"
-                            << spline->averFitPoints[j].Y << "\t"
-                            << spline->averFitPoints[j].Z << std::endl;
-                        }
+            case CADGeometry::XLINE:
+                ++xlinesCount;
+                break;
 
-                        std::cout << std::endl;
-                        ++splines_count;
-                        break;
-                    }
-                    case CADGeometry::TEXT:
-                    {
-                        // TODO: add other optional parameters.
-                        Text * text = ( Text * ) geom;
-                        std::cout << "|---------Text---------|\n";
-                        std::cout << "Position:\t" << text->vertInsertion.X << "\t"
-                            << text->vertInsertion.Y << std::endl;
-                        std::cout << "Text value:\t" << text->strTextValue << std::endl << std::endl;
+            case CADGeometry::RAY:
+                ++raysCount;
+                break;
 
-                        ++text_count;
-                        break;
-                    }
-                    case CADGeometry::SOLID:
-                    {
-                        Solid * solid = ( Solid * ) geom;
-                        std::cout << "|---------Solid---------|\n";
-                        for ( size_t i = 0; i < solid->avertCorners.size(); ++i )
-                        {
-                            std::cout << "#" << i << "\t" << solid->avertCorners[i].X << "\t"
-                                << solid->avertCorners[i].Y << solid->dfElevation << std::endl;
-                        }
-                        std::cout << std::endl;
-                        ++solids_count;
-                        break;
-                    }
-                    case CADGeometry::IMAGE:
-                    {
-                        Image * img = ( Image * ) geom;
-                        std::cout << "|---------Image---------|\n";
-                        std::cout << "Filepath: " << img->sFilePath << std::endl;
-                        std::cout << "Insertion point: " << img->vertInsertionPoint.X << "\t"
-                                 << img->vertInsertionPoint.Y << std::endl;
-                        std::cout << "Show? : " << img->bShow << std::endl;
-                        std::cout << "Transparent? : " << img->bTransparency << std::endl;
-                        std::cout << "Brightness (0-100) : " << img->dBrightness << std::endl;
-                        std::cout << "Contrast (0-100) : " << img->dContrast << std::endl;
-                        std::cout << "Fade (0-100) : " << img->dFade << std::endl;
-                        std::cout << "Clipping polygon:" << std::endl;
-                        for ( size_t i = 0; i < img->avertClippingPolygon.size(); ++i )
-                        {
-                            std::cout << "#" << i << "\tX: " << img->avertClippingPolygon[i].X << " Y: "
-                                << img->avertClippingPolygon[i].Y << std::endl;
-                        }
-                        std::cout << std::endl;
-                        ++images_count;
-                        break;
-                    }
-                    case CADGeometry::MTEXT:
-                    {
-                        MText * text = ( MText * ) geom;
-                        std::cout << "|---------MText---------|\n";
-                        std::cout << "Position: " << text->vertInsertionPoint.X << "\t"
-                            << text->vertInsertionPoint.Y << "\t" << text->vertInsertionPoint.Z << std::endl;
-                        std::cout << "Text: " << text->sTextValue << std::endl << std::endl;
+            case CADGeometry::FACE3D:
+                ++face3dsCount;
+                break;
 
-                        ++mtexts_count;
-                        break;
-                    }
-                    case CADGeometry::MLINE:
-                    {
-                        MLine * mline = ( MLine * ) geom;
-                        std::cout << "|---------MLine---------|\n";
-                        std::cout << "Base point: " << mline->vertBasePoint.X << "\t"
-                            << mline->vertBasePoint.Y << "\t" << mline->vertBasePoint.Z << std::endl;
-                        std::cout << "Vertexes:\n";
-                        for ( size_t i = 0; i < mline->avertVertexes.size(); ++i )
-                        {
-                            std::cout << "#" << i << "\t" << mline->avertVertexes[i].vertPosition.X <<
-                                "\t" << mline->avertVertexes[i].vertPosition.Y
-                                << "\t" << mline->avertVertexes[i].vertPosition.Z << std::endl;
-                        }
-                        std::cout << std::endl;
-
-                        ++mlines_count;
-                        break;
-                    }
-                    case CADGeometry::XLINE:
-                    {
-                        XLine * xline = ( XLine * ) geom;
-                        std::cout << "|---------XLine---------|\n";
-                        std::cout << "Position: " << xline->vertPosition.X << "\t"
-                            << xline->vertPosition.Y << "\t" << xline->vertPosition.Z << std::endl;
-                        std::cout << "Direction: " << xline->vectVector.X << "\t"
-                            << xline->vectVector.Y << "\t" << xline->vectVector.Z << std::endl;
-                        std::cout << std::endl;
-
-                        ++xlines_count;
-                        break;
-                    }
-                    case CADGeometry::RAY:
-                    {
-                        Ray * ray = ( Ray * ) geom;
-                        std::cout << "|---------Ray---------|\n";
-                        std::cout << "Position: " << ray->vertPosition.X << "\t"
-                            << ray->vertPosition.Y << "\t" << ray->vertPosition.Z << std::endl;
-                        std::cout << "Direction: " << ray->vectVector.X << "\t"
-                            << ray->vectVector.Y << "\t" << ray->vectVector.Z << std::endl;
-                        std::cout << std::endl;
-
-                        ++rays_count;
-                        break;
-                    }
-                    case CADGeometry::FACE3D:
-                    {
-                        Face3D * face = ( Face3D * ) geom;
-                        std::cout << "|---------3DFace---------|\n";
-                        std::cout << "Corners: " << std::endl;
-                        for ( size_t i = 0; i < face->avertCorners.size(); ++i )
-                        {
-                            std::cout << "#" << i << " X: " << face->avertCorners[i].X << "\t"
-                                << "Y: " << face->avertCorners[i].Y << "\t" << "Z: " << face->avertCorners[i].Z
-                                << std::endl;
-                        }
-                        std::cout << endl;
-
-                        ++face3ds_count;
-                        break;
-                    }
-                }
+            case CADGeometry::UNDEFINED:
+            case CADGeometry::HATCH:
+                break;
             }
         }
     }
 
-    std::cout << "Polylines Pface: " << polylines_pface << std::endl;
-    std::cout << "3DFaces: " << face3ds_count << std::endl;
-    std::cout << "Rays: " << rays_count << std::endl;
-    std::cout << "XLines: " << xlines_count << std::endl;
-    std::cout << "MLines: " << mlines_count << std::endl;
-    std::cout << "MTexts: " << mtexts_count << std::endl;
-    std::cout << "Images: " << images_count << std::endl;
-    std::cout << "Solids: " << solids_count << std::endl;
-    std::cout << "Points: " << point_count << std::endl;
-    std::cout << "Ellipses: " << ellipses_count << std::endl;
-    std::cout << "Lines count: " << lines_count << std::endl;
-    std::cout << "Plines count: " << pline_count << std::endl;
-    std::cout << "Plines3d count: " << pline3d_count << std::endl;
-    std::cout << "Splines count: " << splines_count << std::endl;
-    std::cout << "Circles count: " << circles_count << std::endl;
-    std::cout << "Arcs count: " << arc_count << std::endl;
-    std::cout << "Texts count: " << text_count << std::endl;
+    cout << "Polylines Pface: " << polylinesPface << std::endl;
+    cout << "3DFaces: " << face3dsCount << std::endl;
+    cout << "Rays: " << raysCount << std::endl;
+    cout << "XLines: " << xlinesCount << std::endl;
+    cout << "MLines: " << mlinesCount << std::endl;
+    cout << "MTexts: " << mtextsCount << std::endl;
+    cout << "Images: " << imagesCount << std::endl;
+    cout << "Solids: " << solidsCount << std::endl;
+    cout << "Points: " << pointCount << std::endl;
+    cout << "Ellipses: " << ellipsesCount << std::endl;
+    cout << "Lines count: " << linesCount << std::endl;
+    cout << "Plines count: " << plineCount << std::endl;
+    cout << "Plines3d count: " << pline3dCount << std::endl;
+    cout << "Splines count: " << splinesCount << std::endl;
+    cout << "Circles count: " << circlesCount << std::endl;
+    cout << "Arcs count: " << arcCount << std::endl;
+    cout << "Texts count: " << textCount << std::endl;
 }

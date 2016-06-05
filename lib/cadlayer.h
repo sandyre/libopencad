@@ -28,40 +28,71 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
-#ifndef CADCLASSES_H
-#define CADCLASSES_H
+#ifndef CADLAYER_H
+#define CADLAYER_H
 
-#include "opencad.h"
+#include "cadgeometry.h"
 
-#include <vector>
-#include <string>
+class CADFile;
 
 using namespace std;
 
-struct CADClass
-{
-    string sCppClassName;       /**< TV, C++ class name */
-    string sApplicationName;    /**< TV, Application name */
-    string sDXFRecordName;      /**< TV, Class DXF record name */
-    int dProxyCapFlag;          /**< BITSHORT, Proxy capabilities flag, 90 */
-    unsigned short dInstanceCount;/**< BITSHORT, Instance count for a custom class, 91 */
-    bool bWasZombie;            /**< BIT, Was-a-proxy flag, 280*/
-    bool bIsEntity;             /**< BITSHORT, Is-an-entity flag, 281 */
-    short dClassNum;            // BITSHORT
-    short dClassVersion;        // BITSHORT
-};
-
-class OCAD_EXTERN CADClasses
+class OCAD_EXTERN CADLayer
 {
 public:
-    CADClasses();
+    CADLayer(CADFile * const file);
+    string getName() const;
+    void setName(const string &value);
 
-public:
-    void addClass(struct CADClass stClass);
-    void print() const;
+    bool getFrozen() const;
+    void setFrozen(bool value);
+
+    bool getOn() const;
+    void setOn(bool value);
+
+    bool getFrozenByDefault() const;
+    void setFrozenByDefault(bool value);
+
+    bool getLocked() const;
+    void setLocked(bool value);
+
+    bool getPlotting() const;
+    void setPlotting(bool value);
+
+    short getLineWeight() const;
+    void setLineWeight(short value);
+
+    short getColor() const;
+    void setColor(short value);
+
+    size_t getId() const;
+    void setId(const size_t &value);
+
+    long getHandle() const;
+    void setHandle(long value);
+
+    void addHandle(long handle, enum CADObject::ObjectType type);
+
+    size_t getGeometryCount () const;
+    CADGeometry* getGeometry(size_t index);
 
 protected:
-    vector<struct CADClass> classes;
+    string layerName;
+    bool frozen;
+    bool on;
+    bool frozenByDefault;
+    bool locked;
+    bool plotting;
+    short lineWeight;
+    short color;
+    size_t layerId;
+    long handle;
+    short geometryType; // if all geometry is same type set this type or -1
+
+    vector<long> geometryHandles;
+    vector<long> attributeHandles;
+
+    CADFile * const pCADFile;
 };
 
-#endif // CADCLASSES_H
+#endif // CADLAYER_H

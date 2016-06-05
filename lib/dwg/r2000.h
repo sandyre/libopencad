@@ -1,12 +1,14 @@
-/************************************************************************************
- *  Name: dwg_r2000.h
- *  Project: libOpenCAD OpenSource CAD formats support library
+/*******************************************************************************
+ *  Project: libopencad
+ *  Purpose: OpenSource CAD formats support library
  *  Author: Alexandr Borzykh, mush3d at gmail.com
+ *  Author: Dmitry Baryshnikov, bishop.dev@gmail.com
  *  Language: C++
- ************************************************************************************
+ *******************************************************************************
  *  The MIT License (MIT)
  *
  *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -25,55 +27,44 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
- ************************************************************************************/
+ *******************************************************************************/
 
 #ifndef DWG_R2000_H_H
 #define DWG_R2000_H_H
 
-#include "data_structs.h"
-#include "constants.h"
 #include "cadfile.h"
 
-#include <string>
-#include <map>
-#include <vector>
-#include <cadgeometries.h>
-
-struct DWG2000_CLASS
+struct SectionLocatorRecord
 {
-    int16_t     dClassNum; // BITSHORT
-    int16_t     dVersion; // BITSHORT
-    std::string      sAppName; // TV
-    std::string      sCppClassName; // TV
-    std::string      sDXFClassName; // TV
-    bool        bWasAZombie; // BIT
-    int16_t     dItemClassID; // BITSHORT
+    char byRecordNumber = 0;
+    int  dSeeker        = 0;
+    int  dSize          = 0;
 };
 
-struct DWG2000_CED
+struct DWG2000Ced
 {
-    int64_t     dLength;
-    int16_t     dType;
-    int32_t     dObjSizeInBits;
+    long      dLength;
+    short     dType;
+    int       dObjSizeInBits;
     CADHandle   hHandle;
-    std::vector < CAD_EED > eEED;
+    CADEedArray eEED;
     bool        bGraphicPresentFlag;
 
-    int8_t      dEntMode;
-    int32_t     dNumReactors;
+    char      dEntMode;
+    int       dNumReactors;
 
     bool        bNoLinks;
-    int16_t     dCMColorIndex;
+    short     dCMColorIndex;
     double      dfLtypeScale;
 
-    int8_t      ltype_flags;
-    int8_t      plotstyle_flags;
+    char      ltype_flags;
+    char      plotstyle_flags;
 
-    int16_t     dInvisibility;
-    int8_t      cLineWeight;
+    short     dInvisibility;
+    char      cLineWeight;
 };
 
-struct DWG2000_CEHD
+struct DWG2000Cehd
 {
     CADHandle hOwner;
     CADHandle hReactors;
@@ -84,57 +75,103 @@ struct DWG2000_CEHD
     CADHandle hplotstyle;
 };
 
-typedef std::pair< long long, long long > ObjHandleOffset;
 class DWGFileR2000 : public CADFile
 {
 public:
     DWGFileR2000(CADFileIO* poFileIO);
     virtual ~DWGFileR2000();
 
-    virtual size_t GetLayersCount();
-    virtual CADGeometry * GetGeometry( size_t layer_index, size_t index );
-
 protected:
-    virtual int ReadHeader();
-    virtual int ReadClasses();
-    virtual int ReadObjectMap();
+    virtual int readSectionLocator() override;
+    virtual int readHeader(enum OpenOptions eOptions) override;
+    virtual int readClasses(enum OpenOptions eOptions) override;
+    virtual int createFileMap() override;
 
-    Layer * GetLayer( size_t index );
-    CADObject * GetObject( size_t index );
-
+    CADObject * getObject(long index) override;
+    CADGeometry * getGeometry(long index) override;
 protected:
-    CADHandle stBlocksTable;
-    CADHandle stLayersTable;
-    CADHandle stStyleTable;
-    CADHandle stLineTypesTable;
-    CADHandle stViewTable;
-    CADHandle stUCSTable;
-    CADHandle stViewportTable;
-    CADHandle stAPPIDTable;
-    CADHandle stEntityTable;
-    CADHandle stACADGroupDict;
-    CADHandle stACADMLineStyleDict;
-    CADHandle stNamedObjectsDict;
-    CADHandle stLayoutsDict;
-    CADHandle stPlotSettingsDict;
-    CADHandle stPlotStylesDict;
-    CADHandle stBlockRecordPaperSpace;
-    CADHandle stBlockRecordModelSpace;
-    CADHandle LTYPE_BYLAYER;
-    CADHandle LTYPE_BYBLOCK;
-    CADHandle LTYPE_CONTINUOUS;
-
-    std::vector < Layer * > astPresentedLayers; // output usage
-    std::vector < CADLayer * > astPresentedCADLayers; // internal usage
-    std::vector < CADLineType * > astPresentedCADLTypes; // internal usage
-
-    std::map < long long, long long > amapObjectMap;
-    std::vector < ObjHandleOffset > astObjectMap;
-    std::vector < ObjHandleOffset > geometries_map;
-
-    int dImageSeeker;
-    short dCodePage;
-    std::vector < SLRecord >  SLRecords;
+    CADBlockObject *getBlock(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADEllipseObject *getEllipse(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADSolidObject *getSolid(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADPointObject *getPoint(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADPolyline3DObject *getPolyLine3D(long dObjectSize,
+                                       CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADRayObject *getRay(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADXLineObject *getXLine(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADLineObject *getLine(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADTextObject *getText(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADVertex3DObject *getVertex3D(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADCircleObject *getCircle(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADEndblkObject *getEndBlock(long dObjectSize, CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADPolyline2DObject *getPolyline2D(long dObjectSize, CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADAttribObject *getAttributes(long dObjectSize, CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADAttdefObject *getAttributesDefn(long dObjectSize, CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADLWPolylineObject *getLWPolyLine(long dObjectSize, CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADArcObject *getArc(long dObjectSize, CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADSplineObject *getSpline(long dObjectSize, CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADEntityObject *getEntity(int dObjectType, long dObjectSize,
+                               CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADDictionaryObject *getDictionary(long dObjectSize,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADLayerObject *getLayer(long dObjectSize,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADLayerControlObject *getLayerControl(long dObjectSize,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADBlockControlObject *getBlockControl(long dObjectSize,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADBlockHeaderObject *getBlockHeader(long dObjectSize,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADLineTypeControlObject *getLineTypeControl(long dObjectSize,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADLineTypeObject *getLineType1(long dObjectSize,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADMLineObject *getMLine(long dObjectSize, CADCommonED stCommonEntityData,
+                             const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADPolylinePFaceObject *getPolylinePFace(long dObjectSize,
+                                             CADCommonED stCommonEntityData,
+                                             const char *pabyInput,
+                                             size_t &nBitOffsetFromStart);
+    CADImageObject *getImage(long dObjectSize, CADCommonED stCommonEntityData,
+                            const char *pabyInput, size_t &nBitOffsetFromStart);
+    CAD3DFaceObject *get3DFace(long dObjectSize,  CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADVertexMeshObject *getVertexMesh(long dObjectSize,  CADCommonED stCommonEntityData,
+                                       const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADVertexPFaceObject *getVertexPFace(long dObjectSize, CADCommonED stCommonEntityData,
+                                         const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADDimensionObject *getDimension(short dObjectType, long dObjectSize,
+                                           CADCommonED stCommonEntityData,
+                                           const char *pabyInput,
+                                           size_t &nBitOffsetFromStart);
+    CADMTextObject *getMText(long dObjectSize, CADCommonED stCommonEntityData,
+                            const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADImageDefObject *getImageDef(long dObjectSize,
+                            const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADImageDefReactorObject *getImageDefReactor(long dObjectSize,
+                                                 const char *pabyInput,
+                                                 size_t &nBitOffsetFromStart);
+protected:
+    int imageSeeker;
+    std::vector<SectionLocatorRecord> sectionLocatorRecords;
 };
 
 #endif // DWG_R2000_H_H
