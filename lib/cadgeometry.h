@@ -151,7 +151,7 @@ protected:
 };
 
 /**
- * @brief Geometry class which represents Lwpolyline
+ * @brief Geometry class which represents LWPolyline
  */
 
 class CADLWPolyline : public CADPolyline3D
@@ -294,6 +294,9 @@ protected:
     std::vector < CADVector > averFitPoints;
 };
 
+/**
+ * @brief Geometry class which represents Solid
+ */
 class CADSolid : public CADPoint3D
 {
 public:
@@ -307,6 +310,9 @@ protected:
     vector < CADVector > avertCorners;
 };
 
+/**
+ * @brief Geometry class which represents Ray
+ */
 class CADRay : public CADPoint3D
 {
 public:
@@ -316,12 +322,18 @@ public:
     virtual void print () const override;
 };
 
+/**
+ * @brief Geometry class which represents Hatch
+ */
 class CADHatch : public CADGeometry
 {
 public:
     CADHatch();
 };
 
+/**
+ * @brief Geometry class which represents Image (Raster Image)
+ */
 class CADImage : public CADGeometry
 {
 public:
@@ -376,6 +388,9 @@ protected:
     vector < CADVector > avertClippingPolygon;
 };
 
+/**
+ * @brief Geometry class which represents MText
+ */
 class CADMText : public CADText
 {
 public:
@@ -406,6 +421,9 @@ protected:
     //long dBackgroundTransparency;
 };
 
+/**
+ * @brief Geometry class which represents 3DFace
+ */
 class CADFace3D : public CADGeometry
 {
 public:
@@ -421,6 +439,9 @@ protected:
     short invisFlags;
 };
 
+/**
+ * @brief Geometry class which represents Polyline (PFace)
+ */
 class CADPolylinePFace : public CADGeometry
 {
 public:
@@ -431,6 +452,9 @@ protected:
     vector < CADVector > vertexes;
 };
 
+/**
+ * @brief Geometry class which represents XLine
+ */
 class CADXLine : public CADRay
 {
 public:
@@ -438,6 +462,9 @@ public:
     virtual void print () const override;
 };
 
+/**
+ * @brief Geometry class which represents MLine
+ */
 class CADMLine : public CADPoint3D
 {
 public:
