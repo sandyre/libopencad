@@ -1,0 +1,284 @@
+\hypertarget{class_d_w_g_file_r2000}{}\section{D\+W\+G\+File\+R2000 Class Reference}
+\label{class_d_w_g_file_r2000}\index{D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}}
+Inheritance diagram for D\+W\+G\+File\+R2000\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_d_w_g_file_r2000}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries D\+W\+G\+File\+R2000} (\hyperlink{class_c_a_d_file_i_o}{C\+A\+D\+File\+IO} $\ast$po\+File\+IO)\hypertarget{class_d_w_g_file_r2000_aaa1057df3d7caf7e1d3463cbade38fce}{}\label{class_d_w_g_file_r2000_aaa1057df3d7caf7e1d3463cbade38fce}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual int \hyperlink{class_d_w_g_file_r2000_ab7e07561e251678368ffecdf6bcedf06}{read\+Section\+Locator} () override
+\begin{DoxyCompactList}\small\item\em initially read some basic values and section locator \end{DoxyCompactList}\item 
+virtual int \hyperlink{class_d_w_g_file_r2000_a6ffef545cd473a1f2a2639f2941e4946}{read\+Header} (enum \hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5a}{Open\+Options} e\+Options) override
+\begin{DoxyCompactList}\small\item\em Read header from C\+AD file. \end{DoxyCompactList}\item 
+virtual int \hyperlink{class_d_w_g_file_r2000_a9c0571cdd77cbc3c67612ebf8cabeccb}{read\+Classes} (enum \hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5a}{Open\+Options} e\+Options) override
+\begin{DoxyCompactList}\small\item\em Read classes from C\+AD file. \end{DoxyCompactList}\item 
+virtual int \hyperlink{class_d_w_g_file_r2000_a8ac0c8003944b948e3d1f16c713e8e27}{create\+File\+Map} () override
+\begin{DoxyCompactList}\small\item\em Create the file map for fast access to C\+AD objects. \end{DoxyCompactList}\item 
+\hyperlink{class_c_a_d_object}{C\+A\+D\+Object} $\ast$ \hyperlink{class_d_w_g_file_r2000_a4538211a1567cff8e340d769e8a0d2c3}{get\+Object} (long index) override
+\begin{DoxyCompactList}\small\item\em Get C\+AD Object from file. \end{DoxyCompactList}\item 
+\hyperlink{class_c_a_d_geometry}{C\+A\+D\+Geometry} $\ast$ \hyperlink{class_d_w_g_file_r2000_a8838da9ee3111f5aba1451aa59528760}{get\+Geometry} (long index) override
+\begin{DoxyCompactList}\small\item\em read geometry from C\+AD file \end{DoxyCompactList}\item 
+\hyperlink{class_c_a_d_block_object}{C\+A\+D\+Block\+Object} $\ast$ {\bfseries get\+Block} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_aa64c4f2a792ef83f9a8ed2632a7421bd}{}\label{class_d_w_g_file_r2000_aa64c4f2a792ef83f9a8ed2632a7421bd}
+
+\item 
+\hyperlink{class_c_a_d_ellipse_object}{C\+A\+D\+Ellipse\+Object} $\ast$ {\bfseries get\+Ellipse} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a5aacc129fdb56b60a9aeb7370e5a106a}{}\label{class_d_w_g_file_r2000_a5aacc129fdb56b60a9aeb7370e5a106a}
+
+\item 
+\hyperlink{class_c_a_d_solid_object}{C\+A\+D\+Solid\+Object} $\ast$ {\bfseries get\+Solid} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a371552427840b64e277c3ae05bdc580f}{}\label{class_d_w_g_file_r2000_a371552427840b64e277c3ae05bdc580f}
+
+\item 
+\hyperlink{class_c_a_d_point_object}{C\+A\+D\+Point\+Object} $\ast$ {\bfseries get\+Point} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a26b453c21456737baef9bf30f88d08ec}{}\label{class_d_w_g_file_r2000_a26b453c21456737baef9bf30f88d08ec}
+
+\item 
+\hyperlink{class_c_a_d_polyline3_d_object}{C\+A\+D\+Polyline3\+D\+Object} $\ast$ {\bfseries get\+Poly\+Line3D} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a04327b1684c7baf98dc4f174b6303c8d}{}\label{class_d_w_g_file_r2000_a04327b1684c7baf98dc4f174b6303c8d}
+
+\item 
+\hyperlink{class_c_a_d_ray_object}{C\+A\+D\+Ray\+Object} $\ast$ {\bfseries get\+Ray} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_ad18d20ec4cefc69c7448e5bb414d4090}{}\label{class_d_w_g_file_r2000_ad18d20ec4cefc69c7448e5bb414d4090}
+
+\item 
+\hyperlink{class_c_a_d_x_line_object}{C\+A\+D\+X\+Line\+Object} $\ast$ {\bfseries get\+X\+Line} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a5414536cf43721e28e6baeaa4d5a94a1}{}\label{class_d_w_g_file_r2000_a5414536cf43721e28e6baeaa4d5a94a1}
+
+\item 
+\hyperlink{class_c_a_d_line_object}{C\+A\+D\+Line\+Object} $\ast$ {\bfseries get\+Line} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a0378b7bc2aa0949d4a39c25d4957b19a}{}\label{class_d_w_g_file_r2000_a0378b7bc2aa0949d4a39c25d4957b19a}
+
+\item 
+\hyperlink{class_c_a_d_text_object}{C\+A\+D\+Text\+Object} $\ast$ {\bfseries get\+Text} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_aee97ae28227cf3b863ea8b7eeb2b9667}{}\label{class_d_w_g_file_r2000_aee97ae28227cf3b863ea8b7eeb2b9667}
+
+\item 
+\hyperlink{class_c_a_d_vertex3_d_object}{C\+A\+D\+Vertex3\+D\+Object} $\ast$ {\bfseries get\+Vertex3D} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_ad78933ce9d2bde76f7942c6834845f7f}{}\label{class_d_w_g_file_r2000_ad78933ce9d2bde76f7942c6834845f7f}
+
+\item 
+\hyperlink{class_c_a_d_circle_object}{C\+A\+D\+Circle\+Object} $\ast$ {\bfseries get\+Circle} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a38c1db17937fc9504f227250819a17e9}{}\label{class_d_w_g_file_r2000_a38c1db17937fc9504f227250819a17e9}
+
+\item 
+\hyperlink{class_c_a_d_endblk_object}{C\+A\+D\+Endblk\+Object} $\ast$ {\bfseries get\+End\+Block} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_ac294ef7c9cd622dcc2ad4eeddb5ad017}{}\label{class_d_w_g_file_r2000_ac294ef7c9cd622dcc2ad4eeddb5ad017}
+
+\item 
+\hyperlink{class_c_a_d_polyline2_d_object}{C\+A\+D\+Polyline2\+D\+Object} $\ast$ {\bfseries get\+Polyline2D} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_aaba322e7a18c5cc39925567cf9679b0b}{}\label{class_d_w_g_file_r2000_aaba322e7a18c5cc39925567cf9679b0b}
+
+\item 
+\hyperlink{class_c_a_d_attrib_object}{C\+A\+D\+Attrib\+Object} $\ast$ {\bfseries get\+Attributes} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a2c0165a86e2b76cdb4dc745c91f92857}{}\label{class_d_w_g_file_r2000_a2c0165a86e2b76cdb4dc745c91f92857}
+
+\item 
+\hyperlink{class_c_a_d_attdef_object}{C\+A\+D\+Attdef\+Object} $\ast$ {\bfseries get\+Attributes\+Defn} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_af886333636e1fb3785cda4f4d279bc9b}{}\label{class_d_w_g_file_r2000_af886333636e1fb3785cda4f4d279bc9b}
+
+\item 
+\hyperlink{class_c_a_d_l_w_polyline_object}{C\+A\+D\+L\+W\+Polyline\+Object} $\ast$ {\bfseries get\+L\+W\+Poly\+Line} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_ad66d0d3fbd417bcffd2916d7a4183bdd}{}\label{class_d_w_g_file_r2000_ad66d0d3fbd417bcffd2916d7a4183bdd}
+
+\item 
+\hyperlink{class_c_a_d_arc_object}{C\+A\+D\+Arc\+Object} $\ast$ {\bfseries get\+Arc} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_abfedb12aa1e14d339ae2a05d83d783b6}{}\label{class_d_w_g_file_r2000_abfedb12aa1e14d339ae2a05d83d783b6}
+
+\item 
+\hyperlink{class_c_a_d_spline_object}{C\+A\+D\+Spline\+Object} $\ast$ {\bfseries get\+Spline} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a6e3c76f201b920135baf6726ff7fea39}{}\label{class_d_w_g_file_r2000_a6e3c76f201b920135baf6726ff7fea39}
+
+\item 
+\hyperlink{class_c_a_d_entity_object}{C\+A\+D\+Entity\+Object} $\ast$ {\bfseries get\+Entity} (int d\+Object\+Type, long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_ae8cad516a5ff7bd4a65bf25ebdf48c75}{}\label{class_d_w_g_file_r2000_ae8cad516a5ff7bd4a65bf25ebdf48c75}
+
+\item 
+\hyperlink{class_c_a_d_dictionary_object}{C\+A\+D\+Dictionary\+Object} $\ast$ {\bfseries get\+Dictionary} (long d\+Object\+Size, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a8e6af59d453d136c6166084b3b8b03df}{}\label{class_d_w_g_file_r2000_a8e6af59d453d136c6166084b3b8b03df}
+
+\item 
+\hyperlink{class_c_a_d_layer_object}{C\+A\+D\+Layer\+Object} $\ast$ {\bfseries get\+Layer} (long d\+Object\+Size, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_ac361774a42901b5b8b9acd5a2e448f2b}{}\label{class_d_w_g_file_r2000_ac361774a42901b5b8b9acd5a2e448f2b}
+
+\item 
+\hyperlink{class_c_a_d_layer_control_object}{C\+A\+D\+Layer\+Control\+Object} $\ast$ {\bfseries get\+Layer\+Control} (long d\+Object\+Size, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a9ba9433665d0387c54b8650f494b8575}{}\label{class_d_w_g_file_r2000_a9ba9433665d0387c54b8650f494b8575}
+
+\item 
+\hyperlink{class_c_a_d_block_control_object}{C\+A\+D\+Block\+Control\+Object} $\ast$ {\bfseries get\+Block\+Control} (long d\+Object\+Size, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_aea2099cdee7e8a9743c03dafc4760963}{}\label{class_d_w_g_file_r2000_aea2099cdee7e8a9743c03dafc4760963}
+
+\item 
+\hyperlink{class_c_a_d_block_header_object}{C\+A\+D\+Block\+Header\+Object} $\ast$ {\bfseries get\+Block\+Header} (long d\+Object\+Size, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a4d5758b7c6f1d7ed3454f825210bbb9f}{}\label{class_d_w_g_file_r2000_a4d5758b7c6f1d7ed3454f825210bbb9f}
+
+\item 
+\hyperlink{class_c_a_d_line_type_control_object}{C\+A\+D\+Line\+Type\+Control\+Object} $\ast$ {\bfseries get\+Line\+Type\+Control} (long d\+Object\+Size, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a5eafc3510664066fe9121f958d47ba4c}{}\label{class_d_w_g_file_r2000_a5eafc3510664066fe9121f958d47ba4c}
+
+\item 
+\hyperlink{class_c_a_d_line_type_object}{C\+A\+D\+Line\+Type\+Object} $\ast$ {\bfseries get\+Line\+Type1} (long d\+Object\+Size, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_adcc5c22bdea1c613a54ea7389db81d37}{}\label{class_d_w_g_file_r2000_adcc5c22bdea1c613a54ea7389db81d37}
+
+\item 
+\hyperlink{class_c_a_d_m_line_object}{C\+A\+D\+M\+Line\+Object} $\ast$ {\bfseries get\+M\+Line} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a69f1d087e05c1f6625a5c7a0fad55619}{}\label{class_d_w_g_file_r2000_a69f1d087e05c1f6625a5c7a0fad55619}
+
+\item 
+\hyperlink{class_c_a_d_polyline_p_face_object}{C\+A\+D\+Polyline\+P\+Face\+Object} $\ast$ {\bfseries get\+Polyline\+P\+Face} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a7c69846ee9c90131b2b1976b4aac06bd}{}\label{class_d_w_g_file_r2000_a7c69846ee9c90131b2b1976b4aac06bd}
+
+\item 
+\hyperlink{class_c_a_d_image_object}{C\+A\+D\+Image\+Object} $\ast$ {\bfseries get\+Image} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_ae839c02b68f55e3c18ed815379213b1d}{}\label{class_d_w_g_file_r2000_ae839c02b68f55e3c18ed815379213b1d}
+
+\item 
+\hyperlink{class_c_a_d3_d_face_object}{C\+A\+D3\+D\+Face\+Object} $\ast$ {\bfseries get3\+D\+Face} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a1c9fb25a1411113abc0683cbb1a2d4e0}{}\label{class_d_w_g_file_r2000_a1c9fb25a1411113abc0683cbb1a2d4e0}
+
+\item 
+\hyperlink{class_c_a_d_vertex_mesh_object}{C\+A\+D\+Vertex\+Mesh\+Object} $\ast$ {\bfseries get\+Vertex\+Mesh} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_ab6cfe63adcd1492c073a72cab4fb06be}{}\label{class_d_w_g_file_r2000_ab6cfe63adcd1492c073a72cab4fb06be}
+
+\item 
+\hyperlink{class_c_a_d_vertex_p_face_object}{C\+A\+D\+Vertex\+P\+Face\+Object} $\ast$ {\bfseries get\+Vertex\+P\+Face} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a9cb53cb67a2614dca7fa8ef3bc4babfd}{}\label{class_d_w_g_file_r2000_a9cb53cb67a2614dca7fa8ef3bc4babfd}
+
+\item 
+\hyperlink{class_c_a_d_dimension_object}{C\+A\+D\+Dimension\+Object} $\ast$ {\bfseries get\+Dimension} (short d\+Object\+Type, long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a01861465a16717d6382b5ff0976af488}{}\label{class_d_w_g_file_r2000_a01861465a16717d6382b5ff0976af488}
+
+\item 
+\hyperlink{class_c_a_d_m_text_object}{C\+A\+D\+M\+Text\+Object} $\ast$ {\bfseries get\+M\+Text} (long d\+Object\+Size, \hyperlink{struct_c_a_d_common_e_d}{C\+A\+D\+Common\+ED} st\+Common\+Entity\+Data, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_aa10e0d19734b469b2d3f12b91189eec6}{}\label{class_d_w_g_file_r2000_aa10e0d19734b469b2d3f12b91189eec6}
+
+\item 
+\hyperlink{class_c_a_d_image_def_object}{C\+A\+D\+Image\+Def\+Object} $\ast$ {\bfseries get\+Image\+Def} (long d\+Object\+Size, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_ab3673fda114007677ed2c33b16504cf6}{}\label{class_d_w_g_file_r2000_ab3673fda114007677ed2c33b16504cf6}
+
+\item 
+\hyperlink{class_c_a_d_image_def_reactor_object}{C\+A\+D\+Image\+Def\+Reactor\+Object} $\ast$ {\bfseries get\+Image\+Def\+Reactor} (long d\+Object\+Size, const char $\ast$paby\+Input, size\+\_\+t \&n\+Bit\+Offset\+From\+Start)\hypertarget{class_d_w_g_file_r2000_a193022572da401fb72343c55bb1c55d1}{}\label{class_d_w_g_file_r2000_a193022572da401fb72343c55bb1c55d1}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries image\+Seeker}\hypertarget{class_d_w_g_file_r2000_a146140c0a6eb9da3b0b196a3feeef11a}{}\label{class_d_w_g_file_r2000_a146140c0a6eb9da3b0b196a3feeef11a}
+
+\item 
+std\+::vector$<$ \hyperlink{struct_section_locator_record}{Section\+Locator\+Record} $>$ {\bfseries section\+Locator\+Records}\hypertarget{class_d_w_g_file_r2000_a2d55b43d3610308eead999e88a2ec564}{}\label{class_d_w_g_file_r2000_a2d55b43d3610308eead999e88a2ec564}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Member Function Documentation}
+\index{D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}!create\+File\+Map@{create\+File\+Map}}
+\index{create\+File\+Map@{create\+File\+Map}!D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}}
+\subsubsection[{\texorpdfstring{create\+File\+Map() override}{createFileMap() override}}]{\setlength{\rightskip}{0pt plus 5cm}int D\+W\+G\+File\+R2000\+::create\+File\+Map (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{class_d_w_g_file_r2000_a8ac0c8003944b948e3d1f16c713e8e27}{}\label{class_d_w_g_file_r2000_a8ac0c8003944b948e3d1f16c713e8e27}
+
+
+Create the file map for fast access to C\+AD objects. 
+
+\begin{DoxyReturn}{Returns}
+C\+A\+D\+Error\+Codes\+::\+S\+U\+C\+C\+E\+SS if OK, or error code 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{class_c_a_d_file_aac33914479442df31a4ab45df8e9e8a3}{C\+A\+D\+File}.
+
+\index{D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}!get\+Geometry@{get\+Geometry}}
+\index{get\+Geometry@{get\+Geometry}!D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}}
+\subsubsection[{\texorpdfstring{get\+Geometry(long index) override}{getGeometry(long index) override}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf C\+A\+D\+Geometry} $\ast$ D\+W\+G\+File\+R2000\+::get\+Geometry (
+\begin{DoxyParamCaption}
+\item[{long}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{class_d_w_g_file_r2000_a8838da9ee3111f5aba1451aa59528760}{}\label{class_d_w_g_file_r2000_a8838da9ee3111f5aba1451aa59528760}
+
+
+read geometry from C\+AD file 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Handle of C\+AD object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+N\+U\+LL if failed or pointer which mast be feed by user 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{class_c_a_d_file_a1c841beaf00d33fe888d5f750841829b}{C\+A\+D\+File}.
+
+\index{D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}!get\+Object@{get\+Object}}
+\index{get\+Object@{get\+Object}!D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}}
+\subsubsection[{\texorpdfstring{get\+Object(long index) override}{getObject(long index) override}}]{\setlength{\rightskip}{0pt plus 5cm}{\bf C\+A\+D\+Object} $\ast$ D\+W\+G\+File\+R2000\+::get\+Object (
+\begin{DoxyParamCaption}
+\item[{long}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{class_d_w_g_file_r2000_a4538211a1567cff8e340d769e8a0d2c3}{}\label{class_d_w_g_file_r2000_a4538211a1567cff8e340d769e8a0d2c3}
+
+
+Get C\+AD Object from file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Object index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to \hyperlink{class_c_a_d_object}{C\+A\+D\+Object} or nullptr. User have to free returned pointer. 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{class_c_a_d_file_aeb68cd431afb9c5657ae7cbe06deffc6}{C\+A\+D\+File}.
+
+\index{D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}!read\+Classes@{read\+Classes}}
+\index{read\+Classes@{read\+Classes}!D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}}
+\subsubsection[{\texorpdfstring{read\+Classes(enum Open\+Options e\+Options) override}{readClasses(enum OpenOptions eOptions) override}}]{\setlength{\rightskip}{0pt plus 5cm}int D\+W\+G\+File\+R2000\+::read\+Classes (
+\begin{DoxyParamCaption}
+\item[{enum {\bf Open\+Options}}]{e\+Options}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{class_d_w_g_file_r2000_a9c0571cdd77cbc3c67612ebf8cabeccb}{}\label{class_d_w_g_file_r2000_a9c0571cdd77cbc3c67612ebf8cabeccb}
+
+
+Read classes from C\+AD file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+Options} & Read options \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+C\+A\+D\+Error\+Codes\+::\+S\+U\+C\+C\+E\+SS if OK, or error code 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{class_c_a_d_file_a3965f0e1668a25ce2ed06c9e8e1bffdd}{C\+A\+D\+File}.
+
+\index{D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}!read\+Header@{read\+Header}}
+\index{read\+Header@{read\+Header}!D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}}
+\subsubsection[{\texorpdfstring{read\+Header(enum Open\+Options e\+Options) override}{readHeader(enum OpenOptions eOptions) override}}]{\setlength{\rightskip}{0pt plus 5cm}int D\+W\+G\+File\+R2000\+::read\+Header (
+\begin{DoxyParamCaption}
+\item[{enum {\bf Open\+Options}}]{e\+Options}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{class_d_w_g_file_r2000_a6ffef545cd473a1f2a2639f2941e4946}{}\label{class_d_w_g_file_r2000_a6ffef545cd473a1f2a2639f2941e4946}
+
+
+Read header from C\+AD file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+Options} & Read options \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+C\+A\+D\+Error\+Codes\+::\+S\+U\+C\+C\+E\+SS if OK, or error code 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{class_c_a_d_file_a27a0eed4be75e5e1fcc9ca8ba9f881c8}{C\+A\+D\+File}.
+
+\index{D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}!read\+Section\+Locator@{read\+Section\+Locator}}
+\index{read\+Section\+Locator@{read\+Section\+Locator}!D\+W\+G\+File\+R2000@{D\+W\+G\+File\+R2000}}
+\subsubsection[{\texorpdfstring{read\+Section\+Locator() override}{readSectionLocator() override}}]{\setlength{\rightskip}{0pt plus 5cm}int D\+W\+G\+File\+R2000\+::read\+Section\+Locator (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{class_d_w_g_file_r2000_ab7e07561e251678368ffecdf6bcedf06}{}\label{class_d_w_g_file_r2000_ab7e07561e251678368ffecdf6bcedf06}
+
+
+initially read some basic values and section locator 
+
+\begin{DoxyReturn}{Returns}
+C\+A\+D\+Error\+Codes\+::\+S\+U\+C\+C\+E\+SS if OK, or error code 
+\end{DoxyReturn}
+
+
+Implements \hyperlink{class_c_a_d_file_a160199a6f2004ea5ed319639e2f1156e}{C\+A\+D\+File}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+dwg/r2000.\+h\item 
+dwg/r2000.\+cpp\end{DoxyCompactItemize}

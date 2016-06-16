@@ -1,0 +1,273 @@
+\hypertarget{class_c_a_d_file}{}\section{C\+A\+D\+File Class Reference}
+\label{class_c_a_d_file}\index{C\+A\+D\+File@{C\+A\+D\+File}}
+
+
+The abstact C\+AD file class.  
+
+
+
+
+{\ttfamily \#include $<$cadfile.\+h$>$}
+
+Inheritance diagram for C\+A\+D\+File\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_a_d_file}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5a}{Open\+Options} \{ \hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5aa31951f81322352b41b9969dfa90e8239}{R\+E\+A\+D\+\_\+\+A\+LL}, 
+\hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5aab28ae38caf2847fb4895de25acf5cbe7}{R\+E\+A\+D\+\_\+\+F\+A\+ST}, 
+\hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5aa0a071ae71397d2dcf724cf627e62ec65}{R\+E\+A\+D\+\_\+\+F\+A\+S\+T\+E\+ST}
+ \}\begin{DoxyCompactList}\small\item\em The C\+AD file open options enum. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries C\+A\+D\+File} (\hyperlink{class_c_a_d_file_i_o}{C\+A\+D\+File\+IO} $\ast$po\+File\+IO)\hypertarget{class_c_a_d_file_a29cf9e51220c9bd2242067f065fefa12}{}\label{class_c_a_d_file_a29cf9e51220c9bd2242067f065fefa12}
+
+\item 
+const \hyperlink{class_c_a_d_header}{C\+A\+D\+Header} \& {\bfseries get\+Header} () const \hypertarget{class_c_a_d_file_a7fd02ff6859073889ddc1f48ef231fb5}{}\label{class_c_a_d_file_a7fd02ff6859073889ddc1f48ef231fb5}
+
+\item 
+const \hyperlink{class_c_a_d_classes}{C\+A\+D\+Classes} \& {\bfseries get\+Classes} () const \hypertarget{class_c_a_d_file_a38f0e7d2f11f31be149a1d6f67e1dac7}{}\label{class_c_a_d_file_a38f0e7d2f11f31be149a1d6f67e1dac7}
+
+\item 
+const \hyperlink{class_c_a_d_tables}{C\+A\+D\+Tables} \& {\bfseries get\+Tables} () const \hypertarget{class_c_a_d_file_a950a209c6a096013fd7bdb61d22764d3}{}\label{class_c_a_d_file_a950a209c6a096013fd7bdb61d22764d3}
+
+\item 
+virtual int {\bfseries parse\+File} (enum \hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5a}{Open\+Options} e\+Options)\hypertarget{class_c_a_d_file_a591e193ee4fceda0f48811ca9e94858d}{}\label{class_c_a_d_file_a591e193ee4fceda0f48811ca9e94858d}
+
+\item 
+virtual size\+\_\+t {\bfseries get\+Layers\+Count} () const \hypertarget{class_c_a_d_file_a68b5053784e3ea7956abec99ed51727d}{}\label{class_c_a_d_file_a68b5053784e3ea7956abec99ed51727d}
+
+\item 
+virtual \hyperlink{class_c_a_d_layer}{C\+A\+D\+Layer} \& {\bfseries get\+Layer} (size\+\_\+t index)\hypertarget{class_c_a_d_file_a44f461c84fcd6afb4e9a3e76815a0e31}{}\label{class_c_a_d_file_a44f461c84fcd6afb4e9a3e76815a0e31}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual \hyperlink{class_c_a_d_object}{C\+A\+D\+Object} $\ast$ \hyperlink{class_c_a_d_file_aeb68cd431afb9c5657ae7cbe06deffc6}{get\+Object} (long index)=0
+\begin{DoxyCompactList}\small\item\em Get C\+AD Object from file. \end{DoxyCompactList}\item 
+virtual \hyperlink{class_c_a_d_geometry}{C\+A\+D\+Geometry} $\ast$ \hyperlink{class_c_a_d_file_a1c841beaf00d33fe888d5f750841829b}{get\+Geometry} (long index)=0
+\begin{DoxyCompactList}\small\item\em read geometry from C\+AD file \end{DoxyCompactList}\item 
+virtual int \hyperlink{class_c_a_d_file_a160199a6f2004ea5ed319639e2f1156e}{read\+Section\+Locator} ()=0
+\begin{DoxyCompactList}\small\item\em initially read some basic values and section locator \end{DoxyCompactList}\item 
+virtual int \hyperlink{class_c_a_d_file_a27a0eed4be75e5e1fcc9ca8ba9f881c8}{read\+Header} (enum \hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5a}{Open\+Options} e\+Options)=0
+\begin{DoxyCompactList}\small\item\em Read header from C\+AD file. \end{DoxyCompactList}\item 
+virtual int \hyperlink{class_c_a_d_file_a3965f0e1668a25ce2ed06c9e8e1bffdd}{read\+Classes} (enum \hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5a}{Open\+Options} e\+Options)=0
+\begin{DoxyCompactList}\small\item\em Read classes from C\+AD file. \end{DoxyCompactList}\item 
+virtual int \hyperlink{class_c_a_d_file_aac33914479442df31a4ab45df8e9e8a3}{create\+File\+Map} ()=0
+\begin{DoxyCompactList}\small\item\em Create the file map for fast access to C\+AD objects. \end{DoxyCompactList}\item 
+virtual int \hyperlink{class_c_a_d_file_a3e1d2a8827b5af6ba0ead4b746215eb7}{read\+Tables} (enum \hyperlink{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5a}{Open\+Options} e\+Options)
+\begin{DoxyCompactList}\small\item\em Read tables from C\+AD file. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_c_a_d_file_i_o}{C\+A\+D\+File\+IO} $\ast$ {\bfseries file\+IO}\hypertarget{class_c_a_d_file_a520638860613882f28d871a2b3144e4d}{}\label{class_c_a_d_file_a520638860613882f28d871a2b3144e4d}
+
+\item 
+\hyperlink{class_c_a_d_header}{C\+A\+D\+Header} {\bfseries header}\hypertarget{class_c_a_d_file_ac4d7214d67374a266f763c87a9aed14c}{}\label{class_c_a_d_file_ac4d7214d67374a266f763c87a9aed14c}
+
+\item 
+\hyperlink{class_c_a_d_classes}{C\+A\+D\+Classes} {\bfseries classes}\hypertarget{class_c_a_d_file_a7b2a7683e84744800db66aba4892ec8e}{}\label{class_c_a_d_file_a7b2a7683e84744800db66aba4892ec8e}
+
+\item 
+\hyperlink{class_c_a_d_tables}{C\+A\+D\+Tables} {\bfseries tables}\hypertarget{class_c_a_d_file_afada89607a282b33061b63d9f67ac89c}{}\label{class_c_a_d_file_afada89607a282b33061b63d9f67ac89c}
+
+\item 
+std\+::map$<$ long, long $>$ {\bfseries objects\+Map}\hypertarget{class_c_a_d_file_a83d212922cd2e95466c0aad6ae3a746f}{}\label{class_c_a_d_file_a83d212922cd2e95466c0aad6ae3a746f}
+
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+class {\bfseries C\+A\+D\+Tables}\hypertarget{class_c_a_d_file_abbe0590d91a084db4f9d96a24868b3a0}{}\label{class_c_a_d_file_abbe0590d91a084db4f9d96a24868b3a0}
+
+\item 
+class {\bfseries C\+A\+D\+Layer}\hypertarget{class_c_a_d_file_aa43e75f3b7c4e30bf22233f08cc9f31b}{}\label{class_c_a_d_file_aa43e75f3b7c4e30bf22233f08cc9f31b}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The abstact C\+AD file class. 
+
+\subsection{Member Enumeration Documentation}
+\index{C\+A\+D\+File@{C\+A\+D\+File}!Open\+Options@{Open\+Options}}
+\index{Open\+Options@{Open\+Options}!C\+A\+D\+File@{C\+A\+D\+File}}
+\subsubsection[{\texorpdfstring{Open\+Options}{OpenOptions}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf C\+A\+D\+File\+::\+Open\+Options}}\hypertarget{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5a}{}\label{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5a}
+
+
+The C\+AD file open options enum. 
+
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{R\+E\+A\+D\+\_\+\+A\+LL@{R\+E\+A\+D\+\_\+\+A\+LL}!C\+A\+D\+File@{C\+A\+D\+File}}\index{C\+A\+D\+File@{C\+A\+D\+File}!R\+E\+A\+D\+\_\+\+A\+LL@{R\+E\+A\+D\+\_\+\+A\+LL}}\item[{\em 
+R\+E\+A\+D\+\_\+\+A\+LL\hypertarget{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5aa31951f81322352b41b9969dfa90e8239}{}\label{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5aa31951f81322352b41b9969dfa90e8239}
+}]read all available information \index{R\+E\+A\+D\+\_\+\+F\+A\+ST@{R\+E\+A\+D\+\_\+\+F\+A\+ST}!C\+A\+D\+File@{C\+A\+D\+File}}\index{C\+A\+D\+File@{C\+A\+D\+File}!R\+E\+A\+D\+\_\+\+F\+A\+ST@{R\+E\+A\+D\+\_\+\+F\+A\+ST}}\item[{\em 
+R\+E\+A\+D\+\_\+\+F\+A\+ST\hypertarget{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5aab28ae38caf2847fb4895de25acf5cbe7}{}\label{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5aab28ae38caf2847fb4895de25acf5cbe7}
+}]read some methadata \index{R\+E\+A\+D\+\_\+\+F\+A\+S\+T\+E\+ST@{R\+E\+A\+D\+\_\+\+F\+A\+S\+T\+E\+ST}!C\+A\+D\+File@{C\+A\+D\+File}}\index{C\+A\+D\+File@{C\+A\+D\+File}!R\+E\+A\+D\+\_\+\+F\+A\+S\+T\+E\+ST@{R\+E\+A\+D\+\_\+\+F\+A\+S\+T\+E\+ST}}\item[{\em 
+R\+E\+A\+D\+\_\+\+F\+A\+S\+T\+E\+ST\hypertarget{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5aa0a071ae71397d2dcf724cf627e62ec65}{}\label{class_c_a_d_file_a4776c7f9fc5888cac0ee6eede900db5aa0a071ae71397d2dcf724cf627e62ec65}
+}]read only geometry and layers \end{description}
+\end{Desc}
+
+
+\subsection{Member Function Documentation}
+\index{C\+A\+D\+File@{C\+A\+D\+File}!create\+File\+Map@{create\+File\+Map}}
+\index{create\+File\+Map@{create\+File\+Map}!C\+A\+D\+File@{C\+A\+D\+File}}
+\subsubsection[{\texorpdfstring{create\+File\+Map()=0}{createFileMap()=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual int C\+A\+D\+File\+::create\+File\+Map (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}\hypertarget{class_c_a_d_file_aac33914479442df31a4ab45df8e9e8a3}{}\label{class_c_a_d_file_aac33914479442df31a4ab45df8e9e8a3}
+
+
+Create the file map for fast access to C\+AD objects. 
+
+\begin{DoxyReturn}{Returns}
+C\+A\+D\+Error\+Codes\+::\+S\+U\+C\+C\+E\+SS if OK, or error code 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{class_d_w_g_file_r2000_a8ac0c8003944b948e3d1f16c713e8e27}{D\+W\+G\+File\+R2000}.
+
+\index{C\+A\+D\+File@{C\+A\+D\+File}!get\+Geometry@{get\+Geometry}}
+\index{get\+Geometry@{get\+Geometry}!C\+A\+D\+File@{C\+A\+D\+File}}
+\subsubsection[{\texorpdfstring{get\+Geometry(long index)=0}{getGeometry(long index)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf C\+A\+D\+Geometry}$\ast$ C\+A\+D\+File\+::get\+Geometry (
+\begin{DoxyParamCaption}
+\item[{long}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}\hypertarget{class_c_a_d_file_a1c841beaf00d33fe888d5f750841829b}{}\label{class_c_a_d_file_a1c841beaf00d33fe888d5f750841829b}
+
+
+read geometry from C\+AD file 
+
+
+\begin{DoxyParams}{Parameters}
+{\em handle} & Handle of C\+AD object \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+N\+U\+LL if failed or pointer which mast be feed by user 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{class_d_w_g_file_r2000_a8838da9ee3111f5aba1451aa59528760}{D\+W\+G\+File\+R2000}.
+
+\index{C\+A\+D\+File@{C\+A\+D\+File}!get\+Object@{get\+Object}}
+\index{get\+Object@{get\+Object}!C\+A\+D\+File@{C\+A\+D\+File}}
+\subsubsection[{\texorpdfstring{get\+Object(long index)=0}{getObject(long index)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf C\+A\+D\+Object}$\ast$ C\+A\+D\+File\+::get\+Object (
+\begin{DoxyParamCaption}
+\item[{long}]{index}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}\hypertarget{class_c_a_d_file_aeb68cd431afb9c5657ae7cbe06deffc6}{}\label{class_c_a_d_file_aeb68cd431afb9c5657ae7cbe06deffc6}
+
+
+Get C\+AD Object from file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Object index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+pointer to \hyperlink{class_c_a_d_object}{C\+A\+D\+Object} or nullptr. User have to free returned pointer. 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{class_d_w_g_file_r2000_a4538211a1567cff8e340d769e8a0d2c3}{D\+W\+G\+File\+R2000}.
+
+\index{C\+A\+D\+File@{C\+A\+D\+File}!read\+Classes@{read\+Classes}}
+\index{read\+Classes@{read\+Classes}!C\+A\+D\+File@{C\+A\+D\+File}}
+\subsubsection[{\texorpdfstring{read\+Classes(enum Open\+Options e\+Options)=0}{readClasses(enum OpenOptions eOptions)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual int C\+A\+D\+File\+::read\+Classes (
+\begin{DoxyParamCaption}
+\item[{enum {\bf Open\+Options}}]{e\+Options}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}\hypertarget{class_c_a_d_file_a3965f0e1668a25ce2ed06c9e8e1bffdd}{}\label{class_c_a_d_file_a3965f0e1668a25ce2ed06c9e8e1bffdd}
+
+
+Read classes from C\+AD file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+Options} & Read options \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+C\+A\+D\+Error\+Codes\+::\+S\+U\+C\+C\+E\+SS if OK, or error code 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{class_d_w_g_file_r2000_a9c0571cdd77cbc3c67612ebf8cabeccb}{D\+W\+G\+File\+R2000}.
+
+\index{C\+A\+D\+File@{C\+A\+D\+File}!read\+Header@{read\+Header}}
+\index{read\+Header@{read\+Header}!C\+A\+D\+File@{C\+A\+D\+File}}
+\subsubsection[{\texorpdfstring{read\+Header(enum Open\+Options e\+Options)=0}{readHeader(enum OpenOptions eOptions)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual int C\+A\+D\+File\+::read\+Header (
+\begin{DoxyParamCaption}
+\item[{enum {\bf Open\+Options}}]{e\+Options}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}\hypertarget{class_c_a_d_file_a27a0eed4be75e5e1fcc9ca8ba9f881c8}{}\label{class_c_a_d_file_a27a0eed4be75e5e1fcc9ca8ba9f881c8}
+
+
+Read header from C\+AD file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+Options} & Read options \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+C\+A\+D\+Error\+Codes\+::\+S\+U\+C\+C\+E\+SS if OK, or error code 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{class_d_w_g_file_r2000_a6ffef545cd473a1f2a2639f2941e4946}{D\+W\+G\+File\+R2000}.
+
+\index{C\+A\+D\+File@{C\+A\+D\+File}!read\+Section\+Locator@{read\+Section\+Locator}}
+\index{read\+Section\+Locator@{read\+Section\+Locator}!C\+A\+D\+File@{C\+A\+D\+File}}
+\subsubsection[{\texorpdfstring{read\+Section\+Locator()=0}{readSectionLocator()=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual int C\+A\+D\+File\+::read\+Section\+Locator (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}\hypertarget{class_c_a_d_file_a160199a6f2004ea5ed319639e2f1156e}{}\label{class_c_a_d_file_a160199a6f2004ea5ed319639e2f1156e}
+
+
+initially read some basic values and section locator 
+
+\begin{DoxyReturn}{Returns}
+C\+A\+D\+Error\+Codes\+::\+S\+U\+C\+C\+E\+SS if OK, or error code 
+\end{DoxyReturn}
+
+
+Implemented in \hyperlink{class_d_w_g_file_r2000_ab7e07561e251678368ffecdf6bcedf06}{D\+W\+G\+File\+R2000}.
+
+\index{C\+A\+D\+File@{C\+A\+D\+File}!read\+Tables@{read\+Tables}}
+\index{read\+Tables@{read\+Tables}!C\+A\+D\+File@{C\+A\+D\+File}}
+\subsubsection[{\texorpdfstring{read\+Tables(enum Open\+Options e\+Options)}{readTables(enum OpenOptions eOptions)}}]{\setlength{\rightskip}{0pt plus 5cm}int C\+A\+D\+File\+::read\+Tables (
+\begin{DoxyParamCaption}
+\item[{enum {\bf Open\+Options}}]{e\+Options}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [virtual]}}\hypertarget{class_c_a_d_file_a3e1d2a8827b5af6ba0ead4b746215eb7}{}\label{class_c_a_d_file_a3e1d2a8827b5af6ba0ead4b746215eb7}
+
+
+Read tables from C\+AD file. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em e\+Options} & Read options \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+C\+A\+D\+Error\+Codes\+::\+S\+U\+C\+C\+E\+SS if OK, or error code 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cadfile.\+h\item 
+cadfile.\+cpp\end{DoxyCompactItemize}

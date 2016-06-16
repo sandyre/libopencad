@@ -1,0 +1,89 @@
+\hypertarget{class_c_a_d_geometry}{}\section{C\+A\+D\+Geometry Class Reference}
+\label{class_c_a_d_geometry}\index{C\+A\+D\+Geometry@{C\+A\+D\+Geometry}}
+
+
+Base C\+AD geometry class.  
+
+
+
+
+{\ttfamily \#include $<$cadgeometry.\+h$>$}
+
+Inheritance diagram for C\+A\+D\+Geometry\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=9.000000cm]{class_c_a_d_geometry}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{class_c_a_d_geometry_a0515ed61d3514d528f78b8ba6c4fc5f3}{Geometry\+Type} \{ \\*
+{\bfseries U\+N\+D\+E\+F\+I\+N\+ED} = 0, 
+{\bfseries P\+O\+I\+NT}, 
+{\bfseries C\+I\+R\+C\+LE}, 
+{\bfseries L\+W\+P\+O\+L\+Y\+L\+I\+NE}, 
+\\*
+{\bfseries E\+L\+L\+I\+P\+SE}, 
+{\bfseries L\+I\+NE}, 
+{\bfseries P\+O\+L\+Y\+L\+I\+N\+E3D}, 
+{\bfseries T\+E\+XT}, 
+\\*
+{\bfseries A\+RC}, 
+{\bfseries S\+P\+L\+I\+NE}, 
+{\bfseries S\+O\+L\+ID}, 
+{\bfseries R\+AY}, 
+\\*
+{\bfseries H\+A\+T\+CH}, 
+{\bfseries I\+M\+A\+GE}, 
+{\bfseries M\+T\+E\+XT}, 
+{\bfseries M\+L\+I\+NE}, 
+\\*
+{\bfseries X\+L\+I\+NE}, 
+{\bfseries F\+A\+C\+E3D}, 
+{\bfseries P\+O\+L\+Y\+L\+I\+N\+E\+\_\+\+P\+F\+A\+CE}
+ \}\hypertarget{class_c_a_d_geometry_a0515ed61d3514d528f78b8ba6c4fc5f3}{}\label{class_c_a_d_geometry_a0515ed61d3514d528f78b8ba6c4fc5f3}
+\begin{DoxyCompactList}\small\item\em The C\+AD geometry types enum. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{class_c_a_d_geometry_a0515ed61d3514d528f78b8ba6c4fc5f3}{Geometry\+Type} {\bfseries get\+Type} () const \hypertarget{class_c_a_d_geometry_a17ef31adb00b91060cf27595c8df6330}{}\label{class_c_a_d_geometry_a17ef31adb00b91060cf27595c8df6330}
+
+\item 
+double {\bfseries get\+Thickness} () const \hypertarget{class_c_a_d_geometry_afb804aa9994b188d8ea4728076c29964}{}\label{class_c_a_d_geometry_afb804aa9994b188d8ea4728076c29964}
+
+\item 
+void {\bfseries set\+Thickness} (double thicknes)\hypertarget{class_c_a_d_geometry_abd3022d752e37dac79b92519a15a7fe2}{}\label{class_c_a_d_geometry_abd3022d752e37dac79b92519a15a7fe2}
+
+\item 
+\hyperlink{struct_r_g_b_color}{R\+G\+B\+Color} {\bfseries get\+Color} () const \hypertarget{class_c_a_d_geometry_a1f77b5cdf9479129ccbc69d19be5d65e}{}\label{class_c_a_d_geometry_a1f77b5cdf9479129ccbc69d19be5d65e}
+
+\item 
+void {\bfseries set\+Color} (int A\+C\+I\+Color\+Index)\hypertarget{class_c_a_d_geometry_a894393c4f6fece4b7e9256aaa5448770}{}\label{class_c_a_d_geometry_a894393c4f6fece4b7e9256aaa5448770}
+
+\item 
+virtual void {\bfseries print} () const  =0\hypertarget{class_c_a_d_geometry_aece81ef419d3ad207171bcca57a097dd}{}\label{class_c_a_d_geometry_aece81ef419d3ad207171bcca57a097dd}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{class_c_a_d_geometry_a0515ed61d3514d528f78b8ba6c4fc5f3}{Geometry\+Type} {\bfseries geometry\+Type}\hypertarget{class_c_a_d_geometry_a34a284842b50d41052f7abc396ed7f91}{}\label{class_c_a_d_geometry_a34a284842b50d41052f7abc396ed7f91}
+
+\item 
+double {\bfseries thickness}\hypertarget{class_c_a_d_geometry_acbd206b728d8f720c3d0ac76ccdd0d33}{}\label{class_c_a_d_geometry_acbd206b728d8f720c3d0ac76ccdd0d33}
+
+\item 
+\hyperlink{struct_r_g_b_color}{R\+G\+B\+Color} {\bfseries geometry\+\_\+color}\hypertarget{class_c_a_d_geometry_a0d8a3754c859cc103c7ca839d14f279c}{}\label{class_c_a_d_geometry_a0d8a3754c859cc103c7ca839d14f279c}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Base C\+AD geometry class. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cadgeometry.\+h\item 
+cadgeometry.\+cpp\end{DoxyCompactItemize}

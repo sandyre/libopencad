@@ -1,0 +1,208 @@
+\hypertarget{class_c_a_d_object}{}\section{C\+A\+D\+Object Class Reference}
+\label{class_c_a_d_object}\index{C\+A\+D\+Object@{C\+A\+D\+Object}}
+
+
+The base C\+AD object class.  
+
+
+
+
+{\ttfamily \#include $<$cadobjects.\+h$>$}
+
+Inheritance diagram for C\+A\+D\+Object\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=10.000000cm]{class_c_a_d_object}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries Object\+Type} \{ \\*
+{\bfseries U\+N\+U\+S\+ED} = 0x0, 
+{\bfseries T\+E\+XT} = 0x1, 
+{\bfseries A\+T\+T\+R\+IB} = 0x2, 
+{\bfseries A\+T\+T\+D\+EF} = 0x3, 
+\\*
+{\bfseries B\+L\+O\+CK} = 0x4, 
+{\bfseries E\+N\+D\+B\+LK} = 0x5, 
+{\bfseries S\+E\+Q\+E\+ND} = 0x6, 
+{\bfseries I\+N\+S\+E\+RT} = 0x7, 
+\\*
+{\bfseries M\+I\+N\+S\+E\+R\+T1} = 0x8, 
+{\bfseries M\+I\+N\+S\+E\+R\+T2} = 0x9, 
+{\bfseries V\+E\+R\+T\+E\+X2D} = 0x0A, 
+{\bfseries V\+E\+R\+T\+E\+X3D} = 0x0B, 
+\\*
+{\bfseries V\+E\+R\+T\+E\+X\+\_\+\+M\+E\+SH} = 0x0C, 
+{\bfseries V\+E\+R\+T\+E\+X\+\_\+\+P\+F\+A\+CE} = 0x0D, 
+{\bfseries V\+E\+R\+T\+E\+X\+\_\+\+P\+F\+A\+C\+E\+\_\+\+F\+A\+CE} = 0x0E, 
+{\bfseries P\+O\+L\+Y\+L\+I\+N\+E2D} = 0x0F, 
+\\*
+{\bfseries P\+O\+L\+Y\+L\+I\+N\+E3D} = 0x10, 
+{\bfseries A\+RC} = 0x11, 
+{\bfseries C\+I\+R\+C\+LE} = 0x12, 
+{\bfseries L\+I\+NE} = 0x13, 
+\\*
+{\bfseries D\+I\+M\+E\+N\+S\+I\+O\+N\+\_\+\+O\+R\+D\+I\+N\+A\+TE} = 0x14, 
+{\bfseries D\+I\+M\+E\+N\+S\+I\+O\+N\+\_\+\+L\+I\+N\+E\+AR} = 0x15, 
+{\bfseries D\+I\+M\+E\+N\+S\+I\+O\+N\+\_\+\+A\+L\+I\+G\+N\+ED} = 0x16, 
+{\bfseries D\+I\+M\+E\+N\+S\+I\+O\+N\+\_\+\+A\+N\+G\+\_\+3\+PT} = 0x17, 
+\\*
+{\bfseries D\+I\+M\+E\+N\+S\+I\+O\+N\+\_\+\+A\+N\+G\+\_\+2\+LN} = 0x18, 
+{\bfseries D\+I\+M\+E\+N\+S\+I\+O\+N\+\_\+\+R\+A\+D\+I\+US} = 0x19, 
+{\bfseries D\+I\+M\+E\+N\+S\+I\+O\+N\+\_\+\+D\+I\+A\+M\+E\+T\+ER} = 0x1A, 
+{\bfseries P\+O\+I\+NT} = 0x1B, 
+\\*
+{\bfseries F\+A\+C\+E3D} = 0x1C, 
+{\bfseries P\+O\+L\+Y\+L\+I\+N\+E\+\_\+\+P\+F\+A\+CE} = 0x1D, 
+{\bfseries P\+O\+L\+Y\+L\+I\+N\+E\+\_\+\+M\+E\+SH} = 0x1E, 
+{\bfseries S\+O\+L\+ID} = 0x1F, 
+\\*
+{\bfseries T\+R\+A\+CE} = 0x20, 
+{\bfseries S\+H\+A\+PE} = 0x21, 
+{\bfseries V\+I\+E\+W\+P\+O\+RT} = 0x22, 
+{\bfseries E\+L\+L\+I\+P\+SE} = 0x23, 
+\\*
+{\bfseries S\+P\+L\+I\+NE} = 0x24, 
+{\bfseries R\+E\+G\+I\+ON} = 0x25, 
+{\bfseries S\+O\+L\+I\+D3D} = 0x26, 
+{\bfseries B\+O\+DY} = 0x27, 
+\\*
+{\bfseries R\+AY} = 0x28, 
+{\bfseries X\+L\+I\+NE} = 0x29, 
+{\bfseries D\+I\+C\+T\+I\+O\+N\+A\+RY} = 0x2A, 
+{\bfseries O\+L\+E\+F\+R\+A\+ME} = 0x2B, 
+\\*
+{\bfseries M\+T\+E\+XT} = 0x2C, 
+{\bfseries L\+E\+A\+D\+ER} = 0x2D, 
+{\bfseries T\+O\+L\+E\+R\+A\+N\+CE} = 0x2E, 
+{\bfseries M\+L\+I\+NE} = 0x2F, 
+\\*
+{\bfseries B\+L\+O\+C\+K\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+BJ} = 0x30, 
+{\bfseries B\+L\+O\+C\+K\+\_\+\+H\+E\+A\+D\+ER} = 0x31, 
+{\bfseries L\+A\+Y\+E\+R\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+BJ} = 0x32, 
+{\bfseries L\+A\+Y\+ER} = 0x33, 
+\\*
+{\bfseries S\+T\+Y\+L\+E\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+BJ} = 0x34, 
+{\bfseries S\+T\+Y\+L\+E1} = 0x35, 
+{\bfseries S\+T\+Y\+L\+E2} = 0x36, 
+{\bfseries S\+T\+Y\+L\+E3} = 0x37, 
+\\*
+{\bfseries L\+T\+Y\+P\+E\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+BJ} = 0x38, 
+{\bfseries L\+T\+Y\+P\+E1} = 0x39, 
+{\bfseries L\+T\+Y\+P\+E2} = 0x3A, 
+{\bfseries L\+T\+Y\+P\+E3} = 0x3B, 
+\\*
+{\bfseries V\+I\+E\+W\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+BJ} = 0x3C, 
+{\bfseries V\+I\+EW} = 0x3D, 
+{\bfseries U\+C\+S\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+BJ} = 0x3E, 
+{\bfseries U\+CS} = 0x3F, 
+\\*
+{\bfseries V\+P\+O\+R\+T\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+BJ} = 0x40, 
+{\bfseries V\+P\+O\+RT} = 0x41, 
+{\bfseries A\+P\+P\+I\+D\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+BJ} = 0x42, 
+{\bfseries A\+P\+P\+ID} = 0x43, 
+\\*
+{\bfseries D\+I\+M\+S\+T\+Y\+L\+E\+\_\+\+C\+O\+N\+T\+R\+O\+L\+\_\+\+O\+BJ} = 0x44, 
+{\bfseries D\+I\+M\+S\+T\+Y\+LE} = 0x45, 
+{\bfseries V\+P\+\_\+\+E\+N\+T\+\_\+\+H\+D\+R\+\_\+\+C\+T\+R\+L\+\_\+\+O\+BJ} = 0x46, 
+{\bfseries V\+P\+\_\+\+E\+N\+T\+\_\+\+H\+DR} = 0x47, 
+\\*
+{\bfseries G\+R\+O\+UP} = 0x48, 
+{\bfseries M\+L\+I\+N\+E\+S\+T\+Y\+LE} = 0x49, 
+{\bfseries O\+L\+E2\+F\+R\+A\+ME} = 0x4A, 
+{\bfseries D\+U\+M\+MY} = 0x4B, 
+\\*
+{\bfseries L\+O\+N\+G\+\_\+\+T\+R\+A\+N\+S\+A\+C\+T\+I\+ON} = 0x4C, 
+{\bfseries L\+W\+P\+O\+L\+Y\+L\+I\+NE} = 0x4D, 
+{\bfseries H\+A\+T\+CH} = 0x4E, 
+{\bfseries X\+R\+E\+C\+O\+RD} = 0x4F, 
+\\*
+{\bfseries A\+C\+D\+B\+P\+L\+A\+C\+E\+H\+O\+L\+D\+ER} = 0x50, 
+{\bfseries V\+B\+A\+\_\+\+P\+R\+O\+J\+E\+CT} = 0x51, 
+{\bfseries L\+A\+Y\+O\+UT} = 0x52, 
+{\bfseries C\+E\+L\+L\+S\+T\+Y\+L\+E\+M\+AP} = 0x53, 
+\\*
+{\bfseries D\+B\+C\+O\+L\+OR} = 0x54, 
+{\bfseries D\+I\+C\+T\+I\+O\+N\+A\+R\+Y\+V\+AR} = 0x55, 
+{\bfseries D\+I\+C\+T\+I\+O\+N\+A\+R\+Y\+W\+D\+F\+LT} = 0x56, 
+{\bfseries F\+I\+E\+LD} = 0x57, 
+\\*
+{\bfseries G\+R\+O\+U\+P\+\_\+\+U\+N\+F\+I\+X\+ED} = 0x58, 
+{\bfseries H\+A\+T\+C\+H\+\_\+\+U\+N\+F\+I\+X\+ED} = 0x59, 
+{\bfseries I\+D\+B\+U\+F\+F\+ER} = 0x5A, 
+{\bfseries I\+M\+A\+GE} = 0x5B, 
+\\*
+{\bfseries I\+M\+A\+G\+E\+D\+EF} = 0x5C, 
+{\bfseries I\+M\+A\+G\+E\+D\+E\+F\+R\+E\+A\+C\+T\+OR} = 0x5D, 
+{\bfseries L\+A\+Y\+E\+R\+\_\+\+I\+N\+D\+EX} = 0x5E, 
+{\bfseries L\+A\+Y\+O\+U\+T\+\_\+\+U\+N\+F\+I\+X\+ED} = 0x5F, 
+\\*
+{\bfseries L\+W\+P\+O\+L\+Y\+L\+I\+N\+E\+\_\+\+U\+N\+F\+I\+X\+ED} = 0x60, 
+{\bfseries M\+A\+T\+E\+R\+I\+AL} = 0x61, 
+{\bfseries M\+L\+E\+A\+D\+ER} = 0x62, 
+{\bfseries M\+L\+E\+A\+D\+E\+R\+S\+T\+Y\+LE} = 0x63, 
+\\*
+{\bfseries O\+L\+E2\+F\+R\+A\+M\+E\+\_\+\+U\+N\+F\+I\+X\+ED} = 0x64, 
+{\bfseries P\+L\+A\+C\+E\+H\+O\+L\+D\+ER} = 0x65, 
+{\bfseries P\+L\+O\+T\+S\+E\+T\+T\+I\+N\+GS} = 0x66, 
+{\bfseries R\+A\+S\+T\+E\+R\+V\+A\+R\+I\+A\+B\+L\+ES} = 0x67, 
+\\*
+{\bfseries S\+C\+A\+LE} = 0x68, 
+{\bfseries S\+O\+R\+T\+E\+N\+T\+S\+T\+A\+B\+LE} = 0x69, 
+{\bfseries S\+P\+A\+T\+I\+A\+L\+\_\+\+F\+I\+L\+T\+ER} = 0x6A, 
+{\bfseries S\+P\+A\+T\+I\+A\+L\+\_\+\+I\+N\+D\+EX} = 0x6B, 
+\\*
+{\bfseries T\+A\+B\+L\+E\+G\+E\+O\+M\+E\+T\+RY} = 0x6C, 
+{\bfseries T\+A\+B\+L\+E\+S\+T\+Y\+L\+ES} = 0x6D, 
+{\bfseries V\+B\+A\+\_\+\+P\+R\+O\+J\+E\+C\+T\+\_\+\+U\+N\+F\+I\+X\+ED} = 0x6E, 
+{\bfseries V\+I\+S\+U\+A\+L\+S\+T\+Y\+LE} = 0x6F, 
+\\*
+{\bfseries W\+I\+P\+E\+O\+U\+T\+V\+A\+R\+I\+A\+B\+LE} = 0x70, 
+{\bfseries X\+R\+E\+C\+O\+R\+D\+\_\+\+U\+N\+F\+I\+X\+ED} = 0x71
+ \}\hypertarget{class_c_a_d_object_a9db91e0070823b565bf904ac8bc52194}{}\label{class_c_a_d_object_a9db91e0070823b565bf904ac8bc52194}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Object\+Type {\bfseries get\+Type} () const \hypertarget{class_c_a_d_object_aeb28c49575260e805dcb6e89bcab66d1}{}\label{class_c_a_d_object_aeb28c49575260e805dcb6e89bcab66d1}
+
+\item 
+long {\bfseries get\+Size} () const \hypertarget{class_c_a_d_object_a8804309e9a149fbabfd154b66ed1cdc6}{}\label{class_c_a_d_object_a8804309e9a149fbabfd154b66ed1cdc6}
+
+\item 
+void {\bfseries set\+Size} (long value)\hypertarget{class_c_a_d_object_abf6a52a76f5bedee3a821dab283d6be5}{}\label{class_c_a_d_object_abf6a52a76f5bedee3a821dab283d6be5}
+
+\item 
+void {\bfseries set\+Type} (const Object\+Type \&value)\hypertarget{class_c_a_d_object_aadba6a4e9cc766c22f8d3293fd34f053}{}\label{class_c_a_d_object_aadba6a4e9cc766c22f8d3293fd34f053}
+
+\item 
+short {\bfseries get\+C\+RC} () const \hypertarget{class_c_a_d_object_aeb42f23220a144dc8de8c70ba61dfa64}{}\label{class_c_a_d_object_aeb42f23220a144dc8de8c70ba61dfa64}
+
+\item 
+void {\bfseries set\+C\+RC} (short value)\hypertarget{class_c_a_d_object_abc58fdb22314817f2d5adc32b8cb5686}{}\label{class_c_a_d_object_abc58fdb22314817f2d5adc32b8cb5686}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+long {\bfseries size}\hypertarget{class_c_a_d_object_a306f110c0f5e623796dddfd89c639501}{}\label{class_c_a_d_object_a306f110c0f5e623796dddfd89c639501}
+
+\item 
+Object\+Type {\bfseries type}\hypertarget{class_c_a_d_object_a6f467edf5a0fc2ed5e6b48d583623c2e}{}\label{class_c_a_d_object_a6f467edf5a0fc2ed5e6b48d583623c2e}
+
+\item 
+short {\bfseries C\+RC}\hypertarget{class_c_a_d_object_ab7af653f9c40a8de82f3a99cd705c6ae}{}\label{class_c_a_d_object_ab7af653f9c40a8de82f3a99cd705c6ae}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The base C\+AD object class. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cadobjects.\+h\item 
+cadobjects.\+cpp\end{DoxyCompactItemize}

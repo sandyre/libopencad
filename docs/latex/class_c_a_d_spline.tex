@@ -1,0 +1,99 @@
+\hypertarget{class_c_a_d_spline}{}\section{C\+A\+D\+Spline Class Reference}
+\label{class_c_a_d_spline}\index{C\+A\+D\+Spline@{C\+A\+D\+Spline}}
+
+
+Geometry class which represents Spline.  
+
+
+
+
+{\ttfamily \#include $<$cadgeometry.\+h$>$}
+
+Inheritance diagram for C\+A\+D\+Spline\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_a_d_spline}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+virtual void {\bfseries print} () const  override\hypertarget{class_c_a_d_spline_af55fc33b99264f27ba559fae0ca23079}{}\label{class_c_a_d_spline_af55fc33b99264f27ba559fae0ca23079}
+
+\item 
+long {\bfseries get\+Scenario} () const \hypertarget{class_c_a_d_spline_a0c07c11e312c020628a2d4cefda5df14}{}\label{class_c_a_d_spline_a0c07c11e312c020628a2d4cefda5df14}
+
+\item 
+void {\bfseries set\+Scenario} (long value)\hypertarget{class_c_a_d_spline_a86eb6f0dbd35068e87c16f45a9398a91}{}\label{class_c_a_d_spline_a86eb6f0dbd35068e87c16f45a9398a91}
+
+\item 
+bool {\bfseries get\+Rational} () const \hypertarget{class_c_a_d_spline_a021f37524ae01b13b9d938d08124f2f2}{}\label{class_c_a_d_spline_a021f37524ae01b13b9d938d08124f2f2}
+
+\item 
+void {\bfseries set\+Rational} (bool value)\hypertarget{class_c_a_d_spline_a39fbf9fd55607306d74e1b6df9532d0d}{}\label{class_c_a_d_spline_a39fbf9fd55607306d74e1b6df9532d0d}
+
+\item 
+bool {\bfseries get\+Closed} () const \hypertarget{class_c_a_d_spline_a362e3b03ce5b9a62bd8e0a7bb0c5d466}{}\label{class_c_a_d_spline_a362e3b03ce5b9a62bd8e0a7bb0c5d466}
+
+\item 
+void {\bfseries set\+Closed} (bool value)\hypertarget{class_c_a_d_spline_ab5bebcfe547c360f5eba02abff85a55e}{}\label{class_c_a_d_spline_ab5bebcfe547c360f5eba02abff85a55e}
+
+\item 
+void {\bfseries add\+Control\+Points\+Weight} (double weight)\hypertarget{class_c_a_d_spline_ae37d615fffef7a86c87faeffc1e864d6}{}\label{class_c_a_d_spline_ae37d615fffef7a86c87faeffc1e864d6}
+
+\item 
+void {\bfseries add\+Control\+Point} (const \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} \&point)\hypertarget{class_c_a_d_spline_ab85788ce19c1526dd195fb24e12bd9a4}{}\label{class_c_a_d_spline_ab85788ce19c1526dd195fb24e12bd9a4}
+
+\item 
+void {\bfseries add\+Fit\+Point} (const \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} \&point)\hypertarget{class_c_a_d_spline_a4d929d9ec79c818b72516ad232827991}{}\label{class_c_a_d_spline_a4d929d9ec79c818b72516ad232827991}
+
+\item 
+bool {\bfseries get\+Weight} () const \hypertarget{class_c_a_d_spline_a1b561646de65c97e29f5a5fbae4052bf}{}\label{class_c_a_d_spline_a1b561646de65c97e29f5a5fbae4052bf}
+
+\item 
+void {\bfseries set\+Weight} (bool value)\hypertarget{class_c_a_d_spline_a408e781dd2104cb1da4287660656dccd}{}\label{class_c_a_d_spline_a408e781dd2104cb1da4287660656dccd}
+
+\item 
+double {\bfseries get\+Fit\+Tollerance} () const \hypertarget{class_c_a_d_spline_a04c0d0eb3c8032c8aea061b03c5bce5f}{}\label{class_c_a_d_spline_a04c0d0eb3c8032c8aea061b03c5bce5f}
+
+\item 
+void {\bfseries set\+Fit\+Tollerance} (double value)\hypertarget{class_c_a_d_spline_a640de57f962e7079637024bb91151467}{}\label{class_c_a_d_spline_a640de57f962e7079637024bb91151467}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+long {\bfseries scenario}\hypertarget{class_c_a_d_spline_a3694c63ea80eef24a1a31a0da4d3ef64}{}\label{class_c_a_d_spline_a3694c63ea80eef24a1a31a0da4d3ef64}
+
+\item 
+bool {\bfseries rational}\hypertarget{class_c_a_d_spline_a0b52ed3223ee5db7381468131b031d64}{}\label{class_c_a_d_spline_a0b52ed3223ee5db7381468131b031d64}
+
+\item 
+bool {\bfseries closed}\hypertarget{class_c_a_d_spline_af28e1bca878a13fdfa0d8ad48168b763}{}\label{class_c_a_d_spline_af28e1bca878a13fdfa0d8ad48168b763}
+
+\item 
+bool {\bfseries weight}\hypertarget{class_c_a_d_spline_ae8d3331548fdc5558603d9c5dde9eafc}{}\label{class_c_a_d_spline_ae8d3331548fdc5558603d9c5dde9eafc}
+
+\item 
+double {\bfseries fit\+Tollerance}\hypertarget{class_c_a_d_spline_a1b6b07b03f68c241dc1e4829172b36a7}{}\label{class_c_a_d_spline_a1b6b07b03f68c241dc1e4829172b36a7}
+
+\item 
+std\+::vector$<$ double $>$ {\bfseries ctrl\+Points\+Weight}\hypertarget{class_c_a_d_spline_ad4fb6172b48df3e9d9dc0d37b3efec56}{}\label{class_c_a_d_spline_ad4fb6172b48df3e9d9dc0d37b3efec56}
+
+\item 
+std\+::vector$<$ \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} $>$ {\bfseries avert\+Ctrl\+Points}\hypertarget{class_c_a_d_spline_a1e6ba0c33afe2a48cff959df91548cde}{}\label{class_c_a_d_spline_a1e6ba0c33afe2a48cff959df91548cde}
+
+\item 
+std\+::vector$<$ \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} $>$ {\bfseries aver\+Fit\+Points}\hypertarget{class_c_a_d_spline_a47265225f19e08e6409842508b25208d}{}\label{class_c_a_d_spline_a47265225f19e08e6409842508b25208d}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Geometry class which represents Spline. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cadgeometry.\+h\item 
+cadgeometry.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,120 @@
+\hypertarget{class_c_a_d_image}{}\section{C\+A\+D\+Image Class Reference}
+\label{class_c_a_d_image}\index{C\+A\+D\+Image@{C\+A\+D\+Image}}
+
+
+Geometry class which represents Image (Raster Image)  
+
+
+
+
+{\ttfamily \#include $<$cadgeometry.\+h$>$}
+
+Inheritance diagram for C\+A\+D\+Image\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_a_d_image}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} {\bfseries get\+Vert\+Insertion\+Point} () const \hypertarget{class_c_a_d_image_a0d801f1e4f26c493d30b77124c04d9e8}{}\label{class_c_a_d_image_a0d801f1e4f26c493d30b77124c04d9e8}
+
+\item 
+void {\bfseries set\+Vert\+Insertion\+Point} (const \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} \&value)\hypertarget{class_c_a_d_image_ad44b9711c05eee17f0cfb0bb60f7970b}{}\label{class_c_a_d_image_ad44b9711c05eee17f0cfb0bb60f7970b}
+
+\item 
+\hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} {\bfseries get\+Image\+Size} () const \hypertarget{class_c_a_d_image_aaa76930e115facb70310199360786da4}{}\label{class_c_a_d_image_aaa76930e115facb70310199360786da4}
+
+\item 
+void {\bfseries set\+Image\+Size} (const \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} \&value)\hypertarget{class_c_a_d_image_a806094956012bbfe4b3cd3123f1da75b}{}\label{class_c_a_d_image_a806094956012bbfe4b3cd3123f1da75b}
+
+\item 
+\hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} {\bfseries get\+Image\+Size\+In\+Px} () const \hypertarget{class_c_a_d_image_af111d15469ad9f41f85b8f7f39e22b82}{}\label{class_c_a_d_image_af111d15469ad9f41f85b8f7f39e22b82}
+
+\item 
+void {\bfseries set\+Image\+Size\+In\+Px} (const \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} \&value)\hypertarget{class_c_a_d_image_a4b6631ac8973ed25f40e9b5369f068da}{}\label{class_c_a_d_image_a4b6631ac8973ed25f40e9b5369f068da}
+
+\item 
+\hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} {\bfseries get\+Pixel\+Size\+In\+A\+C\+A\+D\+Units} () const \hypertarget{class_c_a_d_image_afdaf3bfebbad316f6add46c64bea59e1}{}\label{class_c_a_d_image_afdaf3bfebbad316f6add46c64bea59e1}
+
+\item 
+void {\bfseries set\+Pixel\+Size\+In\+A\+C\+A\+D\+Units} (const \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} \&value)\hypertarget{class_c_a_d_image_a1bc2f6b57b11ac1d7afd5f24cadbf4c7}{}\label{class_c_a_d_image_a1bc2f6b57b11ac1d7afd5f24cadbf4c7}
+
+\item 
+short {\bfseries get\+Clipping\+Boundary\+Type} () const \hypertarget{class_c_a_d_image_a577f2d1a9f5d65ce58b4967af3fbae69}{}\label{class_c_a_d_image_a577f2d1a9f5d65ce58b4967af3fbae69}
+
+\item 
+void {\bfseries set\+Clipping\+Boundary\+Type} (short value)\hypertarget{class_c_a_d_image_aa4cc4146fa6ca1bbdc32a777ffa061f1}{}\label{class_c_a_d_image_aa4cc4146fa6ca1bbdc32a777ffa061f1}
+
+\item 
+unsigned char {\bfseries get\+Resolution\+Units} () const \hypertarget{class_c_a_d_image_aac9e62121508ae4b1e9c68bd07218c49}{}\label{class_c_a_d_image_aac9e62121508ae4b1e9c68bd07218c49}
+
+\item 
+void {\bfseries set\+Resolution\+Units} (unsigned char value)\hypertarget{class_c_a_d_image_a42f06a2f48b78b741607ee6defa22642}{}\label{class_c_a_d_image_a42f06a2f48b78b741607ee6defa22642}
+
+\item 
+string {\bfseries get\+File\+Path} () const \hypertarget{class_c_a_d_image_aaac79b3c18e301c5d1ca24323bab4766}{}\label{class_c_a_d_image_aaac79b3c18e301c5d1ca24323bab4766}
+
+\item 
+void {\bfseries set\+File\+Path} (const string \&value)\hypertarget{class_c_a_d_image_af3a88e40c65175c089c1d5f2dee364c2}{}\label{class_c_a_d_image_af3a88e40c65175c089c1d5f2dee364c2}
+
+\item 
+void {\bfseries set\+Options} (bool transparency, bool clip, unsigned char brightness, unsigned char contrast)\hypertarget{class_c_a_d_image_af01bb204aaab3e84bd13e6be0f4aa602}{}\label{class_c_a_d_image_af01bb204aaab3e84bd13e6be0f4aa602}
+
+\item 
+virtual void {\bfseries print} () const  override\hypertarget{class_c_a_d_image_af05c090911108ad91b8edda1eeb0ce8f}{}\label{class_c_a_d_image_af05c090911108ad91b8edda1eeb0ce8f}
+
+\item 
+void {\bfseries add\+Clipping\+Point} (const \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} \&pt)\hypertarget{class_c_a_d_image_a84331cc0502fde358bf4ccfc4725e9b1}{}\label{class_c_a_d_image_a84331cc0502fde358bf4ccfc4725e9b1}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} {\bfseries vert\+Insertion\+Point}\hypertarget{class_c_a_d_image_a8829a273086dadedda0719d8d83a4904}{}\label{class_c_a_d_image_a8829a273086dadedda0719d8d83a4904}
+
+\item 
+\hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} {\bfseries image\+Size}\hypertarget{class_c_a_d_image_a87c6eb73a7b81fe28c8df3203553e547}{}\label{class_c_a_d_image_a87c6eb73a7b81fe28c8df3203553e547}
+
+\item 
+bool {\bfseries b\+Transparency}\hypertarget{class_c_a_d_image_a209d0125f3d725be201df93852a46e17}{}\label{class_c_a_d_image_a209d0125f3d725be201df93852a46e17}
+
+\item 
+bool {\bfseries b\+Clipping}\hypertarget{class_c_a_d_image_a44ba67554699da20f767f13b6a3a6214}{}\label{class_c_a_d_image_a44ba67554699da20f767f13b6a3a6214}
+
+\item 
+unsigned char {\bfseries d\+Brightness}\hypertarget{class_c_a_d_image_aee4ce055b1e5341c6da019485aa4c6e1}{}\label{class_c_a_d_image_aee4ce055b1e5341c6da019485aa4c6e1}
+
+\item 
+unsigned char {\bfseries d\+Contrast}\hypertarget{class_c_a_d_image_a78d8f337b278072db1c3c290bea6096c}{}\label{class_c_a_d_image_a78d8f337b278072db1c3c290bea6096c}
+
+\item 
+\hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} {\bfseries image\+Size\+In\+Px}\hypertarget{class_c_a_d_image_ad9b830757e767e508945a60b12d5269a}{}\label{class_c_a_d_image_ad9b830757e767e508945a60b12d5269a}
+
+\item 
+string {\bfseries file\+Path}\hypertarget{class_c_a_d_image_ad88a985c9f856e4c569c32e6a47e4ac6}{}\label{class_c_a_d_image_ad88a985c9f856e4c569c32e6a47e4ac6}
+
+\item 
+unsigned char {\bfseries resolution\+Units}\hypertarget{class_c_a_d_image_aac598b7bc4642ec14b5d20befb8108e7}{}\label{class_c_a_d_image_aac598b7bc4642ec14b5d20befb8108e7}
+
+\item 
+\hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} {\bfseries pixel\+Size\+In\+A\+C\+A\+D\+Units}\hypertarget{class_c_a_d_image_a963c7c65f866d1e7ca74b643d0104c3a}{}\label{class_c_a_d_image_a963c7c65f866d1e7ca74b643d0104c3a}
+
+\item 
+short {\bfseries clipping\+Boundary\+Type}\hypertarget{class_c_a_d_image_a5e74db472d61a9fc85aafdfe6d3dc798}{}\label{class_c_a_d_image_a5e74db472d61a9fc85aafdfe6d3dc798}
+
+\item 
+vector$<$ \hyperlink{class_c_a_d_vector}{C\+A\+D\+Vector} $>$ {\bfseries avert\+Clipping\+Polygon}\hypertarget{class_c_a_d_image_acbe02cefac39b90208d57a445e114dbc}{}\label{class_c_a_d_image_acbe02cefac39b90208d57a445e114dbc}
+
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+Geometry class which represents Image (Raster Image) 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cadgeometry.\+h\item 
+cadgeometry.\+cpp\end{DoxyCompactItemize}

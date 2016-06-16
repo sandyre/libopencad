@@ -1,0 +1,105 @@
+\hypertarget{class_c_a_d_file_i_o}{}\section{C\+A\+D\+File\+IO Class Reference}
+\label{class_c_a_d_file_i_o}\index{C\+A\+D\+File\+IO@{C\+A\+D\+File\+IO}}
+
+
+The \hyperlink{class_c_a_d_file_i_o}{C\+A\+D\+File\+IO} class provides in/out file operations as read, write, seek, etc. This is abstract class.  
+
+
+
+
+{\ttfamily \#include $<$cadfileio.\+h$>$}
+
+Inheritance diagram for C\+A\+D\+File\+IO\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_c_a_d_file_i_o}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4f}{Seek\+Origin} \{ \hyperlink{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4facdf5cd8617366687b19657108513b589}{Seek\+Origin\+::\+B\+EG}, 
+\hyperlink{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4faf32924c53f864144ab34d1f7c12a0d4a}{Seek\+Origin\+::\+C\+UR}, 
+\hyperlink{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4fab1a326c06d88bf042f73d70f50197905}{Seek\+Origin\+::\+E\+ND}
+ \}
+\item 
+enum {\bfseries Open\+Mode} \{ {\bfseries binary} = 1L $<$$<$ 2, 
+{\bfseries read} = 1L $<$$<$ 3, 
+{\bfseries write} = 1L $<$$<$ 4
+ \}\hypertarget{class_c_a_d_file_i_o_a81582712e60f9c460ea0396901c4d424}{}\label{class_c_a_d_file_i_o_a81582712e60f9c460ea0396901c4d424}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries C\+A\+D\+File\+IO} (const char $\ast$psz\+File\+Name)\hypertarget{class_c_a_d_file_i_o_aa57658d4c091348ed0e8ee83839e4b38}{}\label{class_c_a_d_file_i_o_aa57658d4c091348ed0e8ee83839e4b38}
+
+\item 
+virtual const char $\ast$ {\bfseries Read\+Line} ()=0\hypertarget{class_c_a_d_file_i_o_a60790ed49f2d9e2227e175d2c4b93941}{}\label{class_c_a_d_file_i_o_a60790ed49f2d9e2227e175d2c4b93941}
+
+\item 
+virtual bool {\bfseries Eof} ()=0\hypertarget{class_c_a_d_file_i_o_a078e8e9e04c2e0e95d7a23c580d35057}{}\label{class_c_a_d_file_i_o_a078e8e9e04c2e0e95d7a23c580d35057}
+
+\item 
+virtual bool {\bfseries Open} (int mode)=0\hypertarget{class_c_a_d_file_i_o_a8787c68af68fdcfd4032f0009360e682}{}\label{class_c_a_d_file_i_o_a8787c68af68fdcfd4032f0009360e682}
+
+\item 
+virtual bool {\bfseries Is\+Opened} () const \hypertarget{class_c_a_d_file_i_o_aeefa9bdc1b424cd536994b83d84098bc}{}\label{class_c_a_d_file_i_o_aeefa9bdc1b424cd536994b83d84098bc}
+
+\item 
+virtual bool {\bfseries Close} ()\hypertarget{class_c_a_d_file_i_o_a1d704902febf2642246d78e83190b5ce}{}\label{class_c_a_d_file_i_o_a1d704902febf2642246d78e83190b5ce}
+
+\item 
+virtual int {\bfseries Seek} (long int offset, \hyperlink{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4f}{Seek\+Origin} origin)=0\hypertarget{class_c_a_d_file_i_o_aeef35becc5396734f635e8b1c0465f62}{}\label{class_c_a_d_file_i_o_aeef35becc5396734f635e8b1c0465f62}
+
+\item 
+virtual long int {\bfseries Tell} ()=0\hypertarget{class_c_a_d_file_i_o_af52fda7fe054d1dd5ca0fca8790f9369}{}\label{class_c_a_d_file_i_o_af52fda7fe054d1dd5ca0fca8790f9369}
+
+\item 
+virtual size\+\_\+t {\bfseries Read} (void $\ast$ptr, size\+\_\+t size)=0\hypertarget{class_c_a_d_file_i_o_a5b7ade5ba5ac0e283a984542ebcfb401}{}\label{class_c_a_d_file_i_o_a5b7ade5ba5ac0e283a984542ebcfb401}
+
+\item 
+virtual size\+\_\+t {\bfseries Write} (void $\ast$ptr, size\+\_\+t size)=0\hypertarget{class_c_a_d_file_i_o_a95a9d0c0bfd80745c3518fbad9deba23}{}\label{class_c_a_d_file_i_o_a95a9d0c0bfd80745c3518fbad9deba23}
+
+\item 
+virtual void {\bfseries Rewind} ()=0\hypertarget{class_c_a_d_file_i_o_a6b56667f2314c4e723e6ec08c6b25239}{}\label{class_c_a_d_file_i_o_a6b56667f2314c4e723e6ec08c6b25239}
+
+\item 
+const char $\ast$ {\bfseries Get\+File\+Path} () const \hypertarget{class_c_a_d_file_i_o_a822fa996646f385af02347573c72595a}{}\label{class_c_a_d_file_i_o_a822fa996646f385af02347573c72595a}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+const char $\ast$ {\bfseries m\+\_\+psz\+File\+Path}\hypertarget{class_c_a_d_file_i_o_ad599920913832905e953bdd1f756d581}{}\label{class_c_a_d_file_i_o_ad599920913832905e953bdd1f756d581}
+
+\item 
+bool {\bfseries m\+\_\+b\+Is\+Opened}\hypertarget{class_c_a_d_file_i_o_ae5136f019aca44848d9f366f1cb61d4f}{}\label{class_c_a_d_file_i_o_ae5136f019aca44848d9f366f1cb61d4f}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The \hyperlink{class_c_a_d_file_i_o}{C\+A\+D\+File\+IO} class provides in/out file operations as read, write, seek, etc. This is abstract class. 
+
+\subsection{Member Enumeration Documentation}
+\index{C\+A\+D\+File\+IO@{C\+A\+D\+File\+IO}!Seek\+Origin@{Seek\+Origin}}
+\index{Seek\+Origin@{Seek\+Origin}!C\+A\+D\+File\+IO@{C\+A\+D\+File\+IO}}
+\subsubsection[{\texorpdfstring{Seek\+Origin}{SeekOrigin}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf C\+A\+D\+File\+I\+O\+::\+Seek\+Origin}\hspace{0.3cm}{\ttfamily [strong]}}\hypertarget{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4f}{}\label{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4f}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{B\+EG@{B\+EG}!C\+A\+D\+File\+IO@{C\+A\+D\+File\+IO}}\index{C\+A\+D\+File\+IO@{C\+A\+D\+File\+IO}!B\+EG@{B\+EG}}\item[{\em 
+B\+EG\hypertarget{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4facdf5cd8617366687b19657108513b589}{}\label{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4facdf5cd8617366687b19657108513b589}
+}]Begin of the file \index{C\+UR@{C\+UR}!C\+A\+D\+File\+IO@{C\+A\+D\+File\+IO}}\index{C\+A\+D\+File\+IO@{C\+A\+D\+File\+IO}!C\+UR@{C\+UR}}\item[{\em 
+C\+UR\hypertarget{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4faf32924c53f864144ab34d1f7c12a0d4a}{}\label{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4faf32924c53f864144ab34d1f7c12a0d4a}
+}]Current position of the pointer \index{E\+ND@{E\+ND}!C\+A\+D\+File\+IO@{C\+A\+D\+File\+IO}}\index{C\+A\+D\+File\+IO@{C\+A\+D\+File\+IO}!E\+ND@{E\+ND}}\item[{\em 
+E\+ND\hypertarget{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4fab1a326c06d88bf042f73d70f50197905}{}\label{class_c_a_d_file_i_o_ac02f709414ed2d228f8dfdabb4eb1b4fab1a326c06d88bf042f73d70f50197905}
+}]End of file \end{description}
+\end{Desc}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cadfileio.\+h\item 
+cadfileio.\+cpp\end{DoxyCompactItemize}

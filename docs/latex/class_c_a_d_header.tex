@@ -1,0 +1,842 @@
+\hypertarget{class_c_a_d_header}{}\section{C\+A\+D\+Header Class Reference}
+\label{class_c_a_d_header}\index{C\+A\+D\+Header@{C\+A\+D\+Header}}
+
+
+The common C\+AD header class.  
+
+
+
+
+{\ttfamily \#include $<$cadheader.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886}{C\+A\+D\+Header\+Constants} \{ \\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac570bb6faa7e12a10313aded00349764}{O\+P\+E\+N\+C\+A\+D\+V\+ER} = 1, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a08eac45804230354d6b972f5a9981971}{A\+C\+A\+D\+M\+A\+I\+N\+T\+V\+ER}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7cb3808df0a44802acb276850d312f1b}{A\+C\+A\+D\+V\+ER}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a914b5e6703ac3ae3ba2ad1d8bcc6175e}{A\+N\+G\+B\+A\+SE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abcc055b7295d45575da28eae50f7f302}{A\+N\+G\+D\+IR}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae8aa631aff58cf84d03bd77da4c50473}{A\+T\+T\+M\+O\+DE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8cc860ea44c317a03d4dd81a57017c58}{A\+T\+T\+R\+EQ}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aeaa7a19dab0af3cb33e7c151bdaced04}{A\+T\+T\+D\+IA}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886affaf0b90f87d06c32805139104125920}{A\+U\+N\+I\+TS}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a41913505a805581218882d8117d6c63b}{A\+U\+P\+R\+EC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ace72893b71d488480334f9f49434a784}{C\+E\+C\+O\+L\+OR}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a54b0492ee3fd90097137c82f5971f674}{C\+E\+L\+T\+S\+C\+A\+LE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4239205cf0507d30e15d16a437ff95e5}{C\+E\+L\+T\+Y\+PE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6e76da81b5369a9b9fd5a2e7c1771a06}{C\+E\+L\+W\+E\+I\+G\+HT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a465dae989fc175e2946fd056631ecb12}{C\+E\+P\+S\+N\+ID}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab7f7c6192148fc397662116c93e240ef}{C\+E\+P\+S\+N\+T\+Y\+PE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa76898ce968f9195b2bad9cd15e53135}{C\+H\+A\+M\+F\+E\+RA}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a92be5ad05fd62029256d6e9189cd0423}{C\+H\+A\+M\+F\+E\+RB}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abd950cc26f3278de1f188122d98d7e91}{C\+H\+A\+M\+F\+E\+RC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6df5e6b1b201bcafb618b54a0b466464}{C\+H\+A\+M\+F\+E\+RD}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8671da84e5d297bba5ed682cb3a35bfd}{C\+L\+A\+Y\+ER}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af56740ddb035e586bfc4e0dd2eb69c07}{C\+M\+L\+J\+U\+ST}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa434f94f9538ff6d49b1f332280f157f}{C\+M\+L\+S\+C\+A\+LE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a43580a83274342d1c9f5db3387991920}{C\+M\+L\+S\+T\+Y\+LE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a38e1d0a624c0bec121ba548e04af675f}{C\+S\+H\+A\+D\+OW}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1af09f968b84b10fbae183e9dda8e7d9}{D\+I\+M\+A\+D\+EC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7b1884767d6d6d497d13e07a217e5956}{D\+I\+M\+A\+LT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a69e81b4a4932f714034bba1ab6a44e81}{D\+I\+M\+A\+L\+TD}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa3ea717e4f3efb9b31c2e133e235b790}{D\+I\+M\+A\+L\+TF}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7f3fc9dbba0b8d985c9ac415e0d34e9a}{D\+I\+M\+A\+L\+T\+R\+ND}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a57f8b6dadd0218acd4a4d1137a7dae9a}{D\+I\+M\+A\+L\+T\+TD}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8a3517d84a3b6ef6e0c3fc16746f4eae}{D\+I\+M\+A\+L\+T\+TZ}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a676bbba20b2092ea6d0abc231dc31b2d}{D\+I\+M\+A\+L\+TU}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3ce7061f52ab9718cc62c0078ce9d24e}{D\+I\+M\+A\+L\+TZ}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab3af0953d44cd4241efc386e788aa3d7}{D\+I\+M\+A\+P\+O\+ST}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab617c127464445b85c569c2045f16fcd}{D\+I\+M\+A\+SO}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a94a37e359554c9f3a888b2c5de3cc580}{D\+I\+M\+A\+S\+S\+OC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aec207abcb0e4d1e9d6c538a87b7c0b73}{D\+I\+M\+A\+SZ}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad765da78e92fe997cca7c1b2c592f580}{D\+I\+M\+A\+T\+F\+IT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab13da86ce0e3438558ee113c5dbfe4fe}{D\+I\+M\+A\+U\+N\+IT}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a866553a56a8f144a0b3fbdf43c753c85}{D\+I\+M\+A\+Z\+IN}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abc5664d77a2e45666c09e9862b546920}{D\+I\+M\+B\+LK}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9f465d9407bcec2a976f25e9a36339ad}{D\+I\+M\+B\+L\+K1}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adb8d8963f36798f902f276e8091c1050}{D\+I\+M\+B\+L\+K2}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac73edd9add46d1a954ceaca50c5d18a1}{D\+I\+M\+C\+EN}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9efebc2669e92af02a55df46d7c1bda0}{D\+I\+M\+C\+L\+RD}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ace78d776397db84da7fa1176efcd73b2}{D\+I\+M\+C\+L\+RE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ada33abc8dd3608e2b5aabcf7763b7a14}{D\+I\+M\+C\+L\+RT}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a687ebc12b1a661d8c1b2ed7cee2299f2}{D\+I\+M\+D\+EC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1482ed5b5dfd18bba76479d856c01950}{D\+I\+M\+D\+LE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af139a1b63dd2d93784aef97ae9b4d55e}{D\+I\+M\+D\+LI}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0473ac1a18e859c0ae58c24a085c7aca}{D\+I\+M\+D\+S\+EP}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9598b8806c1cff8eb280a27048b95c12}{D\+I\+M\+E\+XE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af4f602686e381d9e61da1f3d7177caad}{D\+I\+M\+E\+XO}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7a449b422e0e2fa92df674a6d8e84ecd}{D\+I\+M\+F\+AC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac03300484d341ee71b9c648b600f08e4}{D\+I\+M\+G\+AP}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4e3839a44dee79ecf03939b3900e454c}{D\+I\+M\+J\+U\+ST}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abb1299cb3fb61a8c34eaec06be4cc095}{D\+I\+M\+L\+D\+R\+B\+LK}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af9f9761c672a41e4e736212fd5942a4a}{D\+I\+M\+L\+F\+AC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1476f0e0fb38b9c70dce9eb0c674d58d}{D\+I\+M\+L\+IM}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8d8347db70dc7f66335dc27c83feda3b}{D\+I\+M\+L\+U\+N\+IT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aeacf8893f9ce9bf285aa555ee7494d04}{D\+I\+M\+L\+WD}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4ee6a6cd95762d0398172a18fc4cdc5d}{D\+I\+M\+L\+WE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afbd978578868969456b557466588a629}{D\+I\+M\+P\+O\+ST}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8114511828160b6cb5a531f8e4a8a640}{D\+I\+M\+R\+ND}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0b192097bf5fd49eb8c9d4b4ba7b6a9b}{D\+I\+M\+S\+AH}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a020ae1301863dbcddaebd54ec2942074}{D\+I\+M\+S\+C\+A\+LE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae432f0e77584022f0b2cbf15b385947c}{D\+I\+M\+S\+D1}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae9969bdac45add0b1e5abffb5b2f191b}{D\+I\+M\+S\+D2}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adbd9808d07a12bf767e288901d410fd4}{D\+I\+M\+S\+E1}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2f35827a49b3b4f7b55129f3f9b6bf66}{D\+I\+M\+S\+E2}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3eaf77d9741c3207c6a60d4f58d317fc}{D\+I\+M\+S\+HO}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2f96ab587a533d69c27c67d4e2c65963}{D\+I\+M\+S\+O\+XD}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7390bf45cba0b6275768e21dc592c920}{D\+I\+M\+S\+T\+Y\+LE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aabe4434794dc20cb9813761c07b25481}{D\+I\+M\+T\+AD}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a17978b1cefa950e913e9f7b37492150b}{D\+I\+M\+T\+D\+EC}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a04abec802fc66a450ca0ec0e648c5184}{D\+I\+M\+T\+F\+AC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acecc4886020d2ed1ada226b67ac6e0d1}{D\+I\+M\+T\+IH}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a04f66c86c0eb24ab6c2f3f5feb58b5ca}{D\+I\+M\+T\+IX}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aacff260f281dbaa5b95c425e12dfb019}{D\+I\+M\+TM}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3cbb25735b68f093809fb9ea01db7e5d}{D\+I\+M\+T\+M\+O\+VE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a378df39d0ebea264e144ad7819b5d60b}{D\+I\+M\+T\+O\+FL}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a067b6df52e133b6fbbb56b5b5200248e}{D\+I\+M\+T\+OH}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a382acabaf4b27cb5a880547ccf2511fc}{D\+I\+M\+T\+OL}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a559aafe3cb45cb88e0e4339761956d9c}{D\+I\+M\+T\+O\+LJ}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6f4933ba50455974519a4d0f5fd27fec}{D\+I\+M\+TP}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a40035435e79526f44df98ea541209917}{D\+I\+M\+T\+SZ}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a060ece3d757784a446731b0e8ebd859a}{D\+I\+M\+T\+VP}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3223469c7cb866d22d389b45060a920a}{D\+I\+M\+T\+X\+S\+TY}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9f93c170199ee719a94ed7dcb482d8c3}{D\+I\+M\+T\+XT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a68c9a8fdd8634ef564eb40b29a7ce014}{D\+I\+M\+T\+Z\+IN}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a296f52bfbcf9bfd3846c2766078d871c}{D\+I\+M\+U\+PT}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a35307893fd6f5cd7af23123a47c2b93e}{D\+I\+M\+Z\+IN}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2531728e27a69698ebdab51abaca2caf}{D\+I\+S\+P\+S\+I\+LH}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3b1911bf3fcdd053b27fe718b71e317d}{D\+R\+A\+G\+VS}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7d8393f3c06479f6db9a789ad6937bcf}{D\+W\+G\+C\+O\+D\+E\+P\+A\+GE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a30f263bb82409f50d3738441dea6e207}{E\+L\+E\+V\+A\+T\+I\+ON}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7b17b801f1c9f39f7f9f5c67be4fc5fc}{E\+N\+D\+C\+A\+PS}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aafa05d1c11168e2ebed258aff81d8d51}{E\+X\+T\+M\+AX}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afba4e43bf29f7dcf76c34e3134ced73c}{E\+X\+T\+M\+IN}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2b22d44ac28f419e1393790986ea292d}{E\+X\+T\+N\+A\+M\+ES}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aed813e7f842a510975a70b9011fadd97}{F\+I\+L\+L\+E\+T\+R\+AD}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac8948c5714edbd842719aff4bc179139}{F\+I\+L\+L\+M\+O\+DE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5b049d1bdddd729d5c50f8b4329d868f}{F\+I\+N\+G\+E\+R\+P\+R\+I\+N\+T\+G\+U\+ID}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a228b8cc6b7683b1089fcb78a6ed54027}{H\+A\+L\+O\+G\+AP}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8350730cc6af4e40d5f221cbef7db728}{H\+A\+N\+D\+S\+E\+ED}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a75327037466fbd7ebadc7dd94e3c8cd6}{H\+I\+D\+E\+T\+E\+XT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9654d04ccd7e6bdceffbe51f9c37849c}{H\+Y\+P\+E\+R\+L\+I\+N\+K\+B\+A\+SE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a943570b77842628b772b43aded0b1b05}{I\+N\+D\+E\+X\+C\+TL}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abac70dd41c3ee084f5c49b9f6b732041}{I\+N\+S\+B\+A\+SE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5d91e3ef97387612b04d10c8b85595a4}{I\+N\+S\+U\+N\+I\+TS}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afd091aea346a0a74d2b8caad565e51c2}{I\+N\+T\+E\+R\+F\+E\+R\+E\+C\+O\+L\+OR}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a462fdeee3a1d9f39f15a29ecebfb8822}{I\+N\+T\+E\+R\+F\+E\+R\+E\+O\+B\+J\+VS}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa64f3fb3349df32b55d546c491392122}{I\+N\+T\+E\+R\+F\+E\+R\+E\+V\+P\+VS}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac73763bf067503d98e4e48b56d46bdaf}{I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+C\+O\+L\+OR}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af573c1944f92a7e33f87fc20a428517b}{I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+D\+I\+S\+P\+L\+AY}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad958e38c5235cb2627bf85763e71143f}{J\+O\+I\+N\+S\+T\+Y\+LE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a55c6aca5cb40ebabe375fd0eab885856}{L\+I\+M\+C\+H\+E\+CK}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a125515dabcdb939961f5f8f72997867d}{L\+I\+M\+M\+AX}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac3495533519a545050e84196dde65c3f}{L\+I\+M\+M\+IN}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a74fe9dec505bc43ce0cb4433226f551f}{L\+T\+S\+C\+A\+LE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad4a8a24e3b3a5bf9ee68431e15b3985c}{L\+U\+N\+I\+TS}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aac8eb1d489784b33e4b6cf3772cca2e9}{L\+U\+P\+R\+EC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9350112285e7d0cefa12c2703c0013a2}{L\+W\+D\+I\+S\+P\+L\+AY}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab4641c79c45f7caa73ee61387d6ff72f}{M\+A\+X\+A\+C\+T\+VP}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac82af6f66bfdf203381e511e2ccbda3f}{M\+E\+A\+S\+U\+R\+E\+M\+E\+NT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8e25cca479ee85520ece2a62a93ee775}{M\+E\+NU}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab9c819d5f3d2b0a9182344c2c98b20d1}{M\+I\+R\+R\+T\+E\+XT}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2d78a3c49c635a923203efc313d1c968}{O\+B\+S\+C\+O\+L\+OR}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a716cfa454794e6a9b4b43faa7767b2c1}{O\+B\+S\+L\+T\+Y\+PE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a20a2feb84bc2d160bd16202916b64e6b}{O\+R\+T\+H\+O\+M\+O\+DE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aaf8996048afb6a49c007d0746a4ed309}{P\+D\+M\+O\+DE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aecc0a6540b6ae33499f4c6f4ef560a6a}{P\+D\+S\+I\+ZE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a350e657af362566eb7a00a66e3ef0f3a}{P\+E\+L\+E\+V\+A\+T\+I\+ON}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a55b1c9882cb14afb4d666042ca9392c7}{P\+E\+X\+T\+M\+AX}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af382c325f89233336ddf5d7e20d40cd3}{P\+E\+X\+T\+M\+IN}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6cc3a5f3142799d716854fe53402aef0}{P\+I\+N\+S\+B\+A\+SE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a474630b41af9b90392333e69011bf3ca}{P\+L\+I\+M\+C\+H\+E\+CK}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5aa564a99534fc8d583117f95fba5395}{P\+L\+I\+M\+M\+AX}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adea675c00346f03ebf5ce19e83a5b0fa}{P\+L\+I\+M\+M\+IN}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a717cfd50b8c6710d7b63ed252871c0fc}{P\+L\+I\+N\+E\+G\+EN}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6fa1bcddff8cd3b096f64643d7eb2d93}{P\+L\+I\+N\+E\+W\+ID}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac9b6ac3088c11c3e386dd220eff6ed5a}{P\+R\+O\+J\+E\+C\+T\+N\+A\+ME}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae877ef963bc68f5d41f734066cbcd4b4}{P\+R\+O\+X\+Y\+G\+R\+A\+P\+H\+I\+CS}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5d1d63da87d30431c36bf968f381613c}{P\+S\+L\+T\+S\+C\+A\+LE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a69c6e9ec01d115782c287592e79c525f}{P\+S\+T\+Y\+L\+E\+M\+O\+DE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a71c3465a156fa31e31211dce87be2415}{P\+S\+V\+P\+S\+C\+A\+LE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a106c6316a7f145d03eff37817beb141a}{P\+U\+C\+S\+B\+A\+SE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac29607e9495ab59773c0794729dd10cd}{P\+U\+C\+S\+N\+A\+ME}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad758d1fd46a102c49151235aa4d5a85b}{P\+U\+C\+S\+O\+RG}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2d4da9654033cafa52e91313d531f619}{P\+U\+C\+S\+O\+R\+G\+B\+A\+CK}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4f3408a06a9c73de18c3175d94baa094}{P\+U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2409c0f1482d64b39f5095a42b7b3444}{P\+U\+C\+S\+O\+R\+G\+F\+R\+O\+NT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0f1b1ff39c52461b8e2c1fdc114f26e5}{P\+U\+C\+S\+O\+R\+G\+L\+E\+FT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acd2b4a3057bd04b949fdd4fc9e417b88}{P\+U\+C\+S\+O\+R\+G\+R\+I\+G\+HT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2f0dbfb41dbe5e9070093d4615d5f00f}{P\+U\+C\+S\+O\+R\+G\+T\+OP}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae33d7119327ff6bd8d3a68ad18119e50}{P\+U\+C\+S\+O\+R\+T\+H\+O\+R\+EF}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a13f84e991a3002c869f4b5f578cbe268}{P\+U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acd0dc2de2eddca02e3e5ef9ba28df707}{P\+U\+C\+S\+X\+D\+IR}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7a33cb15687b8a798d27adb47991aaf1}{P\+U\+C\+S\+Y\+D\+IR}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1b42d547886b05e0e4b3f0810b318f6a}{Q\+T\+E\+X\+T\+M\+O\+DE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a29296a568f18a258dc47cd75a6d7cf03}{R\+E\+G\+E\+N\+M\+O\+DE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7c5f32a4146f387dceb152ca2944038e}{S\+H\+A\+D\+E\+D\+GE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3f1a8467964e8d829ddc091b478c6c79}{S\+H\+A\+D\+E\+D\+IF}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9fd9e059bbc8a47725482c2bb8fc3e8e}{S\+H\+A\+D\+O\+W\+P\+L\+A\+N\+E\+L\+O\+C\+A\+T\+I\+ON}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad41348c6e6255f666f63061430e90d05}{S\+K\+E\+T\+C\+H\+I\+NC}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aacb2165ff3c4bf51088e2b47bd39ff73}{S\+K\+P\+O\+LY}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab7efa856c989567ef66644e05b3d8334}{S\+O\+R\+T\+E\+N\+TS}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae6731cea5ff873ba88da93c2971d7003}{S\+P\+L\+I\+N\+E\+S\+E\+GS}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a454c87af288f6831ddd3e9ef21aeab9e}{S\+P\+L\+I\+N\+E\+T\+Y\+PE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a220e43663cb21e0e8ca640787b442e03}{S\+U\+R\+F\+T\+A\+B1}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4df698aad8944a5cd8fbae33fe76f248}{S\+U\+R\+F\+T\+A\+B2}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aec2d15b2339c02d5798049ae6c1aeb3f}{S\+U\+R\+F\+T\+Y\+PE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae3960f8bda99114c123b63c56f0f766a}{S\+U\+R\+FU}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a02c02f09bee8e376086fbc806ba1fcfb}{S\+U\+R\+FV}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a53985e9ed978cfb35930a710c4351f1f}{T\+D\+C\+R\+E\+A\+TE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a60852c0f83b55c19076a3768c772c176}{T\+D\+I\+N\+D\+WG}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6b048e7996bf2468ba7a698fb8f34864}{T\+D\+U\+C\+R\+E\+A\+TE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2901376ecb684fe1c440562f15eb73f3}{T\+D\+U\+P\+D\+A\+TE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a29b7127bbffbdccb9e36665aeb5c98f2}{T\+D\+U\+S\+R\+T\+I\+M\+ER}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8c229fb121cc19b9a94a1765bbbdd440}{T\+D\+U\+U\+P\+D\+A\+TE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8635c496af40439759037abb70cf2ea8}{T\+E\+X\+T\+S\+I\+ZE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afea5969dcc97c7b2ee630b05352b7c5c}{T\+E\+X\+T\+S\+T\+Y\+LE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a176c8b6bb45d625bbf8791f3a53693ef}{T\+H\+I\+C\+K\+N\+E\+SS}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a212f97594bd177084a59ca91ac47ad20}{T\+I\+L\+E\+M\+O\+DE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2ab5c71629e35fb2224cc435c60fee36}{T\+R\+A\+C\+E\+W\+ID}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab45224634b324b6695e92f367840af31}{T\+R\+E\+E\+D\+E\+P\+TH}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a03cff61ba6eac15372300b8f17759663}{U\+C\+S\+B\+A\+SE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a79ed8033f1c56abe61fc14a2321daad2}{U\+C\+S\+N\+A\+ME}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adfc4bfaebf9567193d6eb775a1c8d736}{U\+C\+S\+O\+RG}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab55107523caef697786632f890280de5}{U\+C\+S\+O\+R\+G\+B\+A\+CK}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a434f2b340421e7c797f49444d9373af0}{U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a42972f72fef44bb007a6f8f1a681f8f0}{U\+C\+S\+O\+R\+G\+F\+R\+O\+NT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa201b0578392812d276d9d23a6f8201d}{U\+C\+S\+O\+R\+G\+L\+E\+FT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af4a1a05f29e8276d1bfe2f259b831919}{U\+C\+S\+O\+R\+G\+R\+I\+G\+HT}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9badade58920b72ec3bcd35c44bc1e66}{U\+C\+S\+O\+R\+G\+T\+OP}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a34b979b2dbe7209cf244a6995e0b0869}{U\+C\+S\+O\+R\+T\+H\+O\+R\+EF}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0284925d4cba45f471d418c3e315a82a}{U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac52ea9b5dc1a62e2906d519c9ed3144b}{U\+C\+S\+X\+D\+IR}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af09f83c7c9f7892d7736a944a2647c76}{U\+C\+S\+Y\+D\+IR}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2e68d1e84f1eab249e55ba29fba71084}{U\+N\+I\+T\+M\+O\+DE}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9fca09d5ede6f4b269158cfe471dc542}{U\+S\+E\+R\+I1}, 
+{\bfseries U\+S\+E\+R\+I2}, 
+{\bfseries U\+S\+E\+R\+I3}, 
+\\*
+{\bfseries U\+S\+E\+R\+I4}, 
+{\bfseries U\+S\+E\+R\+I5}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9afa38205aa6eae4bac9fe2a47396fdb}{U\+S\+E\+R\+R1}, 
+{\bfseries U\+S\+E\+R\+R2}, 
+\\*
+{\bfseries U\+S\+E\+R\+R3}, 
+{\bfseries U\+S\+E\+R\+R4}, 
+{\bfseries U\+S\+E\+R\+R5}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af51978c519b55c723d0317200801a312}{U\+S\+R\+T\+I\+M\+ER}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8b1ac2e7736ee50f9f8d602055be7d61}{V\+E\+R\+S\+I\+O\+N\+G\+U\+ID}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abdcc83230c295f567caf2781a8b59ea1}{V\+I\+S\+R\+E\+T\+A\+IN}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab2930a2e265052312bd759bfc0ec6cf1}{W\+O\+R\+L\+D\+V\+I\+EW}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a61c00c87ceffb9a84a4b96275fa5d77c}{X\+C\+L\+I\+P\+F\+R\+A\+ME}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abfdc739888ced20da3813e30d448ae18}{X\+E\+D\+IT}, 
+{\bfseries S\+P\+L\+F\+R\+A\+ME}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a719e06ab0df2ea7ad482857c2a7b4d38}{W\+O\+R\+D\+L\+V\+I\+EW}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af40c66b7649167b773cd25621d09b3b5}{P\+E\+L\+L\+I\+P\+SE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aff7db36e7a077b4bc550fb110c58e2ca}{I\+S\+O\+L\+I\+N\+ES}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acfee17d2e52f9520592ce6102e3c7056}{T\+E\+X\+T\+Q\+L\+TY}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a182c402edc4f3686229c9edc4afefb8a}{F\+A\+C\+E\+T\+R\+ES}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a793cc413cf55a88d06244d08d6918287}{D\+I\+M\+F\+R\+AC}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af93fc410bb58212ad43956fe69c9686e}{O\+L\+E\+S\+T\+A\+R\+T\+UP}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab01373a926d5a25238000a4613058b3e}{S\+T\+Y\+L\+E\+S\+H\+E\+ET}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2dc8dd9f4980b96c154eb3b94987b1b1}{T\+S\+T\+A\+C\+K\+A\+L\+I\+GN}, 
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a23c0fec34caffaf827cc89fbd6dc792c}{T\+S\+T\+A\+C\+K\+S\+I\+ZE}, 
+\\*
+\hyperlink{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1e5db9191e11e71875557403e39a2adb}{M\+A\+X\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+C\+O\+N\+S\+T\+A\+NT} = 1000
+ \}\begin{DoxyCompactList}\small\item\em The C\+AD нeader сonstants enum get from dxf reference\+: \href{http://help.autodesk.com/view/ACD/2016/ENU/?guid=GUID-A85E8E67-27CD-4C59-BE61-4DC9FADBE74A}{\tt http\+://help.\+autodesk.\+com/view/\+A\+C\+D/2016/\+E\+N\+U/?guid=\+G\+U\+I\+D-\/\+A85\+E8\+E67-\/27\+C\+D-\/4\+C59-\/\+B\+E61-\/4\+D\+C9\+F\+A\+D\+B\+E74A}. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{class_c_a_d_header_a473f456d99e96825bb5207a5c4abeaa4}{add\+Value} (short code, const \hyperlink{class_c_a_d_variant}{C\+A\+D\+Variant} \&val)
+\begin{DoxyCompactList}\small\item\em Add new value to the C\+AD file header. \end{DoxyCompactList}\item 
+int {\bfseries add\+Value} (short code, const char $\ast$val)\hypertarget{class_c_a_d_header_a038229e6e88cabe0cddede5efa7b0323}{}\label{class_c_a_d_header_a038229e6e88cabe0cddede5efa7b0323}
+
+\item 
+int {\bfseries add\+Value} (short code, long val)\hypertarget{class_c_a_d_header_ad640a6fc267d3fd0233ec5f75e786e4f}{}\label{class_c_a_d_header_ad640a6fc267d3fd0233ec5f75e786e4f}
+
+\item 
+int {\bfseries add\+Value} (short code, int val)\hypertarget{class_c_a_d_header_aef299b22e5974227674f0fa2e827dfc9}{}\label{class_c_a_d_header_aef299b22e5974227674f0fa2e827dfc9}
+
+\item 
+int {\bfseries add\+Value} (short code, short val)\hypertarget{class_c_a_d_header_a3189f204e968e731c20e4ca7a684e154}{}\label{class_c_a_d_header_a3189f204e968e731c20e4ca7a684e154}
+
+\item 
+int {\bfseries add\+Value} (short code, double val)\hypertarget{class_c_a_d_header_ac78e2f7126160dde71ab2b8d0abe4c37}{}\label{class_c_a_d_header_ac78e2f7126160dde71ab2b8d0abe4c37}
+
+\item 
+int {\bfseries add\+Value} (short code, const std\+::string \&val)\hypertarget{class_c_a_d_header_aa34a737e643a1b727f89ff86fdf4ffa1}{}\label{class_c_a_d_header_aa34a737e643a1b727f89ff86fdf4ffa1}
+
+\item 
+int {\bfseries add\+Value} (short code, bool val)\hypertarget{class_c_a_d_header_a9c406b04d9e03ccaa6ed0a22bf1c1151}{}\label{class_c_a_d_header_a9c406b04d9e03ccaa6ed0a22bf1c1151}
+
+\item 
+int {\bfseries add\+Value} (short code, double x, double y, double z=0)\hypertarget{class_c_a_d_header_a015793c4620fd3323a9021b1f2c2c618}{}\label{class_c_a_d_header_a015793c4620fd3323a9021b1f2c2c618}
+
+\item 
+int {\bfseries add\+Value} (short code, long julianday, long milliseconds)\hypertarget{class_c_a_d_header_a2d652dc82fef10ae68e22eec3881eef6}{}\label{class_c_a_d_header_a2d652dc82fef10ae68e22eec3881eef6}
+
+\item 
+int {\bfseries get\+Group\+Code} (short code) const \hypertarget{class_c_a_d_header_a4179a7f07f613d7cdb4616682be1f0e6}{}\label{class_c_a_d_header_a4179a7f07f613d7cdb4616682be1f0e6}
+
+\item 
+const \hyperlink{class_c_a_d_variant}{C\+A\+D\+Variant} \& {\bfseries get\+Value} (short code, const \hyperlink{class_c_a_d_variant}{C\+A\+D\+Variant} \&val=\hyperlink{class_c_a_d_variant}{C\+A\+D\+Variant}()) const \hypertarget{class_c_a_d_header_a02948a3df4e9ca9d1433ab8bd23001a6}{}\label{class_c_a_d_header_a02948a3df4e9ca9d1433ab8bd23001a6}
+
+\item 
+const char $\ast$ {\bfseries get\+Value\+Name} (short code) const \hypertarget{class_c_a_d_header_a16a7d769a8b50940a84f199cae857a55}{}\label{class_c_a_d_header_a16a7d769a8b50940a84f199cae857a55}
+
+\item 
+void {\bfseries print} () const \hypertarget{class_c_a_d_header_a3a4a94f0b0bc51a9bdf358e4385ed5c9}{}\label{class_c_a_d_header_a3a4a94f0b0bc51a9bdf358e4385ed5c9}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+std\+::map$<$ short, \hyperlink{class_c_a_d_variant}{C\+A\+D\+Variant} $>$ {\bfseries values\+Map}\hypertarget{class_c_a_d_header_a264f6f84f2f54d0bc50ca33139b2e8a5}{}\label{class_c_a_d_header_a264f6f84f2f54d0bc50ca33139b2e8a5}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The common C\+AD header class. 
+
+\subsection{Member Enumeration Documentation}
+\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+A\+D\+Header\+Constants@{C\+A\+D\+Header\+Constants}}
+\index{C\+A\+D\+Header\+Constants@{C\+A\+D\+Header\+Constants}!C\+A\+D\+Header@{C\+A\+D\+Header}}
+\subsubsection[{\texorpdfstring{C\+A\+D\+Header\+Constants}{CADHeaderConstants}}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf C\+A\+D\+Header\+::\+C\+A\+D\+Header\+Constants}}\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886}
+
+
+The C\+AD нeader сonstants enum get from dxf reference\+: \href{http://help.autodesk.com/view/ACD/2016/ENU/?guid=GUID-A85E8E67-27CD-4C59-BE61-4DC9FADBE74A}{\tt http\+://help.\+autodesk.\+com/view/\+A\+C\+D/2016/\+E\+N\+U/?guid=\+G\+U\+I\+D-\/\+A85\+E8\+E67-\/27\+C\+D-\/4\+C59-\/\+B\+E61-\/4\+D\+C9\+F\+A\+D\+B\+E74A}. 
+
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{O\+P\+E\+N\+C\+A\+D\+V\+ER@{O\+P\+E\+N\+C\+A\+D\+V\+ER}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!O\+P\+E\+N\+C\+A\+D\+V\+ER@{O\+P\+E\+N\+C\+A\+D\+V\+ER}}\item[{\em 
+O\+P\+E\+N\+C\+A\+D\+V\+ER\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac570bb6faa7e12a10313aded00349764}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac570bb6faa7e12a10313aded00349764}
+}]enum C\+A\+D\+Versions value \index{A\+C\+A\+D\+M\+A\+I\+N\+T\+V\+ER@{A\+C\+A\+D\+M\+A\+I\+N\+T\+V\+ER}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!A\+C\+A\+D\+M\+A\+I\+N\+T\+V\+ER@{A\+C\+A\+D\+M\+A\+I\+N\+T\+V\+ER}}\item[{\em 
+A\+C\+A\+D\+M\+A\+I\+N\+T\+V\+ER\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a08eac45804230354d6b972f5a9981971}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a08eac45804230354d6b972f5a9981971}
+}]Maintenance version number (should be ignored) \index{A\+C\+A\+D\+V\+ER@{A\+C\+A\+D\+V\+ER}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!A\+C\+A\+D\+V\+ER@{A\+C\+A\+D\+V\+ER}}\item[{\em 
+A\+C\+A\+D\+V\+ER\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7cb3808df0a44802acb276850d312f1b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7cb3808df0a44802acb276850d312f1b}
+}]The Auto\+C\+AD drawing database version number\+: A\+C1006 = R10 A\+C1009 = R11 and R12 A\+C1012 = R13 A\+C1014 = R14 A\+C1015 = Auto\+C\+AD 2000 A\+C1018 = Auto\+C\+AD 2004 A\+C1021 = Auto\+C\+AD 2007 A\+C1024 = Auto\+C\+AD 2010 A\+C1027 = Auto\+C\+AD 2013 \index{A\+N\+G\+B\+A\+SE@{A\+N\+G\+B\+A\+SE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!A\+N\+G\+B\+A\+SE@{A\+N\+G\+B\+A\+SE}}\item[{\em 
+A\+N\+G\+B\+A\+SE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a914b5e6703ac3ae3ba2ad1d8bcc6175e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a914b5e6703ac3ae3ba2ad1d8bcc6175e}
+}]Angle 0 direction \index{A\+N\+G\+D\+IR@{A\+N\+G\+D\+IR}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!A\+N\+G\+D\+IR@{A\+N\+G\+D\+IR}}\item[{\em 
+A\+N\+G\+D\+IR\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abcc055b7295d45575da28eae50f7f302}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abcc055b7295d45575da28eae50f7f302}
+}]1 (Clockwise angles) or 0 (Counterclockwise angles) \index{A\+T\+T\+M\+O\+DE@{A\+T\+T\+M\+O\+DE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!A\+T\+T\+M\+O\+DE@{A\+T\+T\+M\+O\+DE}}\item[{\em 
+A\+T\+T\+M\+O\+DE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae8aa631aff58cf84d03bd77da4c50473}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae8aa631aff58cf84d03bd77da4c50473}
+}]Attribute visibility\+: 0,1,2 \index{A\+T\+T\+R\+EQ@{A\+T\+T\+R\+EQ}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!A\+T\+T\+R\+EQ@{A\+T\+T\+R\+EQ}}\item[{\em 
+A\+T\+T\+R\+EQ\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8cc860ea44c317a03d4dd81a57017c58}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8cc860ea44c317a03d4dd81a57017c58}
+}]todo\+: \index{A\+T\+T\+D\+IA@{A\+T\+T\+D\+IA}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!A\+T\+T\+D\+IA@{A\+T\+T\+D\+IA}}\item[{\em 
+A\+T\+T\+D\+IA\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aeaa7a19dab0af3cb33e7c151bdaced04}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aeaa7a19dab0af3cb33e7c151bdaced04}
+}]todo\+: \index{A\+U\+N\+I\+TS@{A\+U\+N\+I\+TS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!A\+U\+N\+I\+TS@{A\+U\+N\+I\+TS}}\item[{\em 
+A\+U\+N\+I\+TS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886affaf0b90f87d06c32805139104125920}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886affaf0b90f87d06c32805139104125920}
+}]Units format for angles \index{A\+U\+P\+R\+EC@{A\+U\+P\+R\+EC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!A\+U\+P\+R\+EC@{A\+U\+P\+R\+EC}}\item[{\em 
+A\+U\+P\+R\+EC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a41913505a805581218882d8117d6c63b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a41913505a805581218882d8117d6c63b}
+}]Units precision for angles \index{C\+E\+C\+O\+L\+OR@{C\+E\+C\+O\+L\+OR}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+E\+C\+O\+L\+OR@{C\+E\+C\+O\+L\+OR}}\item[{\em 
+C\+E\+C\+O\+L\+OR\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ace72893b71d488480334f9f49434a784}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ace72893b71d488480334f9f49434a784}
+}]0 = B\+Y\+B\+L\+O\+CK; 256 = B\+Y\+L\+A\+Y\+ER \index{C\+E\+L\+T\+S\+C\+A\+LE@{C\+E\+L\+T\+S\+C\+A\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+E\+L\+T\+S\+C\+A\+LE@{C\+E\+L\+T\+S\+C\+A\+LE}}\item[{\em 
+C\+E\+L\+T\+S\+C\+A\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a54b0492ee3fd90097137c82f5971f674}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a54b0492ee3fd90097137c82f5971f674}
+}]Current entity linetype scale \index{C\+E\+L\+T\+Y\+PE@{C\+E\+L\+T\+Y\+PE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+E\+L\+T\+Y\+PE@{C\+E\+L\+T\+Y\+PE}}\item[{\em 
+C\+E\+L\+T\+Y\+PE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4239205cf0507d30e15d16a437ff95e5}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4239205cf0507d30e15d16a437ff95e5}
+}]Entity linetype name, or B\+Y\+B\+L\+O\+CK or B\+Y\+L\+A\+Y\+ER \index{C\+E\+L\+W\+E\+I\+G\+HT@{C\+E\+L\+W\+E\+I\+G\+HT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+E\+L\+W\+E\+I\+G\+HT@{C\+E\+L\+W\+E\+I\+G\+HT}}\item[{\em 
+C\+E\+L\+W\+E\+I\+G\+HT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6e76da81b5369a9b9fd5a2e7c1771a06}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6e76da81b5369a9b9fd5a2e7c1771a06}
+}]Lineweight of new objects \index{C\+E\+P\+S\+N\+ID@{C\+E\+P\+S\+N\+ID}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+E\+P\+S\+N\+ID@{C\+E\+P\+S\+N\+ID}}\item[{\em 
+C\+E\+P\+S\+N\+ID\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a465dae989fc175e2946fd056631ecb12}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a465dae989fc175e2946fd056631ecb12}
+}]Plotstyle handle of new objects; if C\+E\+P\+S\+N\+T\+Y\+PE is 3, then this value indicates the handle \index{C\+E\+P\+S\+N\+T\+Y\+PE@{C\+E\+P\+S\+N\+T\+Y\+PE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+E\+P\+S\+N\+T\+Y\+PE@{C\+E\+P\+S\+N\+T\+Y\+PE}}\item[{\em 
+C\+E\+P\+S\+N\+T\+Y\+PE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab7f7c6192148fc397662116c93e240ef}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab7f7c6192148fc397662116c93e240ef}
+}]Plot style type of new objects\+: 0 = Plot style by layer, 1 = Plot style by block, 2 = Plot style by dictionary default, 3 = Plot style by object I\+D/handle \index{C\+H\+A\+M\+F\+E\+RA@{C\+H\+A\+M\+F\+E\+RA}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+H\+A\+M\+F\+E\+RA@{C\+H\+A\+M\+F\+E\+RA}}\item[{\em 
+C\+H\+A\+M\+F\+E\+RA\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa76898ce968f9195b2bad9cd15e53135}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa76898ce968f9195b2bad9cd15e53135}
+}]First chamfer distance \index{C\+H\+A\+M\+F\+E\+RB@{C\+H\+A\+M\+F\+E\+RB}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+H\+A\+M\+F\+E\+RB@{C\+H\+A\+M\+F\+E\+RB}}\item[{\em 
+C\+H\+A\+M\+F\+E\+RB\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a92be5ad05fd62029256d6e9189cd0423}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a92be5ad05fd62029256d6e9189cd0423}
+}]Second chamfer distance \index{C\+H\+A\+M\+F\+E\+RC@{C\+H\+A\+M\+F\+E\+RC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+H\+A\+M\+F\+E\+RC@{C\+H\+A\+M\+F\+E\+RC}}\item[{\em 
+C\+H\+A\+M\+F\+E\+RC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abd950cc26f3278de1f188122d98d7e91}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abd950cc26f3278de1f188122d98d7e91}
+}]Chamfer length \index{C\+H\+A\+M\+F\+E\+RD@{C\+H\+A\+M\+F\+E\+RD}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+H\+A\+M\+F\+E\+RD@{C\+H\+A\+M\+F\+E\+RD}}\item[{\em 
+C\+H\+A\+M\+F\+E\+RD\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6df5e6b1b201bcafb618b54a0b466464}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6df5e6b1b201bcafb618b54a0b466464}
+}]Chamfer angle \index{C\+L\+A\+Y\+ER@{C\+L\+A\+Y\+ER}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+L\+A\+Y\+ER@{C\+L\+A\+Y\+ER}}\item[{\em 
+C\+L\+A\+Y\+ER\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8671da84e5d297bba5ed682cb3a35bfd}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8671da84e5d297bba5ed682cb3a35bfd}
+}]Current layer name \index{C\+M\+L\+J\+U\+ST@{C\+M\+L\+J\+U\+ST}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+M\+L\+J\+U\+ST@{C\+M\+L\+J\+U\+ST}}\item[{\em 
+C\+M\+L\+J\+U\+ST\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af56740ddb035e586bfc4e0dd2eb69c07}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af56740ddb035e586bfc4e0dd2eb69c07}
+}]Current multiline justification\+: 0 = Top; 1 = Middle; 2 = Bottom \index{C\+M\+L\+S\+C\+A\+LE@{C\+M\+L\+S\+C\+A\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+M\+L\+S\+C\+A\+LE@{C\+M\+L\+S\+C\+A\+LE}}\item[{\em 
+C\+M\+L\+S\+C\+A\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa434f94f9538ff6d49b1f332280f157f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa434f94f9538ff6d49b1f332280f157f}
+}]Current multiline scale \index{C\+M\+L\+S\+T\+Y\+LE@{C\+M\+L\+S\+T\+Y\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+M\+L\+S\+T\+Y\+LE@{C\+M\+L\+S\+T\+Y\+LE}}\item[{\em 
+C\+M\+L\+S\+T\+Y\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a43580a83274342d1c9f5db3387991920}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a43580a83274342d1c9f5db3387991920}
+}]Current multiline style name \index{C\+S\+H\+A\+D\+OW@{C\+S\+H\+A\+D\+OW}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!C\+S\+H\+A\+D\+OW@{C\+S\+H\+A\+D\+OW}}\item[{\em 
+C\+S\+H\+A\+D\+OW\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a38e1d0a624c0bec121ba548e04af675f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a38e1d0a624c0bec121ba548e04af675f}
+}]Shadow mode for a 3D object\+: 0 = Casts and receives shadows 1 = Casts shadows 2 = Receives shadows 3 = Ignores shadows \index{D\+I\+M\+A\+D\+EC@{D\+I\+M\+A\+D\+EC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+D\+EC@{D\+I\+M\+A\+D\+EC}}\item[{\em 
+D\+I\+M\+A\+D\+EC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1af09f968b84b10fbae183e9dda8e7d9}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1af09f968b84b10fbae183e9dda8e7d9}
+}]Number of precision places displayed in angular dimensions \index{D\+I\+M\+A\+LT@{D\+I\+M\+A\+LT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+LT@{D\+I\+M\+A\+LT}}\item[{\em 
+D\+I\+M\+A\+LT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7b1884767d6d6d497d13e07a217e5956}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7b1884767d6d6d497d13e07a217e5956}
+}]Alternate unit dimensioning performed if nonzero \index{D\+I\+M\+A\+L\+TD@{D\+I\+M\+A\+L\+TD}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+L\+TD@{D\+I\+M\+A\+L\+TD}}\item[{\em 
+D\+I\+M\+A\+L\+TD\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a69e81b4a4932f714034bba1ab6a44e81}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a69e81b4a4932f714034bba1ab6a44e81}
+}]Alternate unit decimal places \index{D\+I\+M\+A\+L\+TF@{D\+I\+M\+A\+L\+TF}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+L\+TF@{D\+I\+M\+A\+L\+TF}}\item[{\em 
+D\+I\+M\+A\+L\+TF\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa3ea717e4f3efb9b31c2e133e235b790}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa3ea717e4f3efb9b31c2e133e235b790}
+}]Alternate unit scale factor \index{D\+I\+M\+A\+L\+T\+R\+ND@{D\+I\+M\+A\+L\+T\+R\+ND}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+L\+T\+R\+ND@{D\+I\+M\+A\+L\+T\+R\+ND}}\item[{\em 
+D\+I\+M\+A\+L\+T\+R\+ND\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7f3fc9dbba0b8d985c9ac415e0d34e9a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7f3fc9dbba0b8d985c9ac415e0d34e9a}
+}]Determines rounding of alternate units \index{D\+I\+M\+A\+L\+T\+TD@{D\+I\+M\+A\+L\+T\+TD}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+L\+T\+TD@{D\+I\+M\+A\+L\+T\+TD}}\item[{\em 
+D\+I\+M\+A\+L\+T\+TD\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a57f8b6dadd0218acd4a4d1137a7dae9a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a57f8b6dadd0218acd4a4d1137a7dae9a}
+}]Number of decimal places for tolerance values of an alternate units dimension \index{D\+I\+M\+A\+L\+T\+TZ@{D\+I\+M\+A\+L\+T\+TZ}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+L\+T\+TZ@{D\+I\+M\+A\+L\+T\+TZ}}\item[{\em 
+D\+I\+M\+A\+L\+T\+TZ\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8a3517d84a3b6ef6e0c3fc16746f4eae}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8a3517d84a3b6ef6e0c3fc16746f4eae}
+}]Controls suppression of zeros for alternate tolerance values\+: 0 = Suppresses zero feet and precisely zero inches 1 = Includes zero feet and precisely zero inches 2 = Includes zero feet and suppresses zero inches 3 = Includes zero inches and suppresses zero feet \index{D\+I\+M\+A\+L\+TU@{D\+I\+M\+A\+L\+TU}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+L\+TU@{D\+I\+M\+A\+L\+TU}}\item[{\em 
+D\+I\+M\+A\+L\+TU\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a676bbba20b2092ea6d0abc231dc31b2d}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a676bbba20b2092ea6d0abc231dc31b2d}
+}]Units format for alternate units of all dimension style family members except angular\+: 1 = Scientific 2 = Decimal 3 = Engineering 4 = Architectural (stacked) 5 = Fractional (stacked) 6 = Architectural 7 = Fractional \index{D\+I\+M\+A\+L\+TZ@{D\+I\+M\+A\+L\+TZ}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+L\+TZ@{D\+I\+M\+A\+L\+TZ}}\item[{\em 
+D\+I\+M\+A\+L\+TZ\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3ce7061f52ab9718cc62c0078ce9d24e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3ce7061f52ab9718cc62c0078ce9d24e}
+}]Controls suppression of zeros for alternate unit dimension, values\+: 0 = Suppresses zero feet and precisely zero inches 1 = Includes zero feet and precisely zero inches 2 = Includes zero feet and suppresses zero inches 3 = Includes zero inches and suppresses zero feet \index{D\+I\+M\+A\+P\+O\+ST@{D\+I\+M\+A\+P\+O\+ST}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+P\+O\+ST@{D\+I\+M\+A\+P\+O\+ST}}\item[{\em 
+D\+I\+M\+A\+P\+O\+ST\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab3af0953d44cd4241efc386e788aa3d7}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab3af0953d44cd4241efc386e788aa3d7}
+}]Alternate dimensioning suffix \index{D\+I\+M\+A\+SO@{D\+I\+M\+A\+SO}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+SO@{D\+I\+M\+A\+SO}}\item[{\em 
+D\+I\+M\+A\+SO\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab617c127464445b85c569c2045f16fcd}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab617c127464445b85c569c2045f16fcd}
+}]1 = Create associative dimensioning, 0 = Draw individual entities \index{D\+I\+M\+A\+S\+S\+OC@{D\+I\+M\+A\+S\+S\+OC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+S\+S\+OC@{D\+I\+M\+A\+S\+S\+OC}}\item[{\em 
+D\+I\+M\+A\+S\+S\+OC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a94a37e359554c9f3a888b2c5de3cc580}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a94a37e359554c9f3a888b2c5de3cc580}
+}]Controls the associativity of dimension objects\+: 0 = Creates exploded dimensions; there is no association between elements of the dimension, and the lines, arcs, arrowheads, and text of a dimension are drawn as separate objects 1 = Creates non-\/associative dimension objects; the elements of the dimension are formed into a single object, and if the definition point on the object moves, then the dimension value is updated 2 = Creates associative dimension objects; the elements of the dimension are formed into a single object and one or more definition points of the dimension are coupled with association points on geometric objects \index{D\+I\+M\+A\+SZ@{D\+I\+M\+A\+SZ}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+SZ@{D\+I\+M\+A\+SZ}}\item[{\em 
+D\+I\+M\+A\+SZ\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aec207abcb0e4d1e9d6c538a87b7c0b73}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aec207abcb0e4d1e9d6c538a87b7c0b73}
+}]Dimensioning arrow size \index{D\+I\+M\+A\+T\+F\+IT@{D\+I\+M\+A\+T\+F\+IT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+T\+F\+IT@{D\+I\+M\+A\+T\+F\+IT}}\item[{\em 
+D\+I\+M\+A\+T\+F\+IT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad765da78e92fe997cca7c1b2c592f580}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad765da78e92fe997cca7c1b2c592f580}
+}]Controls dimension text and arrow placement when space is not sufficient to place both within the extension lines\+: 0 = Places both text and arrows outside extension lines 1 = Moves arrows first, then text 2 = Moves text first, then arrows 3 = Moves either text or arrows, whichever fits best Auto\+C\+AD adds a leader to moved dimension text when D\+I\+M\+T\+M\+O\+VE is set to 1 \index{D\+I\+M\+A\+U\+N\+IT@{D\+I\+M\+A\+U\+N\+IT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+U\+N\+IT@{D\+I\+M\+A\+U\+N\+IT}}\item[{\em 
+D\+I\+M\+A\+U\+N\+IT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab13da86ce0e3438558ee113c5dbfe4fe}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab13da86ce0e3438558ee113c5dbfe4fe}
+}]Angle format for angular dimensions\+: 0 = Decimal degrees 1 = Degrees/minutes/seconds 2 = Gradians 3 = Radians 4 = Surveyor\textquotesingle{}s units \index{D\+I\+M\+A\+Z\+IN@{D\+I\+M\+A\+Z\+IN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+A\+Z\+IN@{D\+I\+M\+A\+Z\+IN}}\item[{\em 
+D\+I\+M\+A\+Z\+IN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a866553a56a8f144a0b3fbdf43c753c85}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a866553a56a8f144a0b3fbdf43c753c85}
+}]Controls suppression of zeros for angular dimensions\+: 0 = Displays all leading and trailing zeros 1 = Suppresses leading zeros in decimal dimensions 2 = Suppresses trailing zeros in decimal dimensions 3 = Suppresses leading and trailing zeros \index{D\+I\+M\+B\+LK@{D\+I\+M\+B\+LK}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+B\+LK@{D\+I\+M\+B\+LK}}\item[{\em 
+D\+I\+M\+B\+LK\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abc5664d77a2e45666c09e9862b546920}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abc5664d77a2e45666c09e9862b546920}
+}]Arrow block name \index{D\+I\+M\+B\+L\+K1@{D\+I\+M\+B\+L\+K1}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+B\+L\+K1@{D\+I\+M\+B\+L\+K1}}\item[{\em 
+D\+I\+M\+B\+L\+K1\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9f465d9407bcec2a976f25e9a36339ad}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9f465d9407bcec2a976f25e9a36339ad}
+}]First arrow block name \index{D\+I\+M\+B\+L\+K2@{D\+I\+M\+B\+L\+K2}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+B\+L\+K2@{D\+I\+M\+B\+L\+K2}}\item[{\em 
+D\+I\+M\+B\+L\+K2\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adb8d8963f36798f902f276e8091c1050}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adb8d8963f36798f902f276e8091c1050}
+}]Second arrow block name \index{D\+I\+M\+C\+EN@{D\+I\+M\+C\+EN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+C\+EN@{D\+I\+M\+C\+EN}}\item[{\em 
+D\+I\+M\+C\+EN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac73edd9add46d1a954ceaca50c5d18a1}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac73edd9add46d1a954ceaca50c5d18a1}
+}]Size of center mark/lines \index{D\+I\+M\+C\+L\+RD@{D\+I\+M\+C\+L\+RD}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+C\+L\+RD@{D\+I\+M\+C\+L\+RD}}\item[{\em 
+D\+I\+M\+C\+L\+RD\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9efebc2669e92af02a55df46d7c1bda0}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9efebc2669e92af02a55df46d7c1bda0}
+}]Dimension line color\+: range is 0 = B\+Y\+B\+L\+O\+CK; 256 = B\+Y\+L\+A\+Y\+ER \index{D\+I\+M\+C\+L\+RE@{D\+I\+M\+C\+L\+RE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+C\+L\+RE@{D\+I\+M\+C\+L\+RE}}\item[{\em 
+D\+I\+M\+C\+L\+RE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ace78d776397db84da7fa1176efcd73b2}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ace78d776397db84da7fa1176efcd73b2}
+}]Dimension extension line color\+: range is 0 = B\+Y\+B\+L\+O\+CK; 256 = B\+Y\+L\+A\+Y\+ER \index{D\+I\+M\+C\+L\+RT@{D\+I\+M\+C\+L\+RT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+C\+L\+RT@{D\+I\+M\+C\+L\+RT}}\item[{\em 
+D\+I\+M\+C\+L\+RT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ada33abc8dd3608e2b5aabcf7763b7a14}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ada33abc8dd3608e2b5aabcf7763b7a14}
+}]Dimension text color\+: range is 0 = B\+Y\+B\+L\+O\+CK; 256 = B\+Y\+L\+A\+Y\+ER \index{D\+I\+M\+D\+EC@{D\+I\+M\+D\+EC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+D\+EC@{D\+I\+M\+D\+EC}}\item[{\em 
+D\+I\+M\+D\+EC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a687ebc12b1a661d8c1b2ed7cee2299f2}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a687ebc12b1a661d8c1b2ed7cee2299f2}
+}]Number of decimal places for the tolerance values of a primary units dimension \index{D\+I\+M\+D\+LE@{D\+I\+M\+D\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+D\+LE@{D\+I\+M\+D\+LE}}\item[{\em 
+D\+I\+M\+D\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1482ed5b5dfd18bba76479d856c01950}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1482ed5b5dfd18bba76479d856c01950}
+}]Dimension line extension \index{D\+I\+M\+D\+LI@{D\+I\+M\+D\+LI}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+D\+LI@{D\+I\+M\+D\+LI}}\item[{\em 
+D\+I\+M\+D\+LI\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af139a1b63dd2d93784aef97ae9b4d55e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af139a1b63dd2d93784aef97ae9b4d55e}
+}]Dimension line increment \index{D\+I\+M\+D\+S\+EP@{D\+I\+M\+D\+S\+EP}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+D\+S\+EP@{D\+I\+M\+D\+S\+EP}}\item[{\em 
+D\+I\+M\+D\+S\+EP\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0473ac1a18e859c0ae58c24a085c7aca}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0473ac1a18e859c0ae58c24a085c7aca}
+}]Single-\/character decimal separator used when creating dimensions whose unit format is decimal \index{D\+I\+M\+E\+XE@{D\+I\+M\+E\+XE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+E\+XE@{D\+I\+M\+E\+XE}}\item[{\em 
+D\+I\+M\+E\+XE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9598b8806c1cff8eb280a27048b95c12}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9598b8806c1cff8eb280a27048b95c12}
+}]Extension line extension \index{D\+I\+M\+E\+XO@{D\+I\+M\+E\+XO}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+E\+XO@{D\+I\+M\+E\+XO}}\item[{\em 
+D\+I\+M\+E\+XO\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af4f602686e381d9e61da1f3d7177caad}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af4f602686e381d9e61da1f3d7177caad}
+}]Extension line offset \index{D\+I\+M\+F\+AC@{D\+I\+M\+F\+AC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+F\+AC@{D\+I\+M\+F\+AC}}\item[{\em 
+D\+I\+M\+F\+AC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7a449b422e0e2fa92df674a6d8e84ecd}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7a449b422e0e2fa92df674a6d8e84ecd}
+}]Scale factor used to calculate the height of text for dimension fractions and tolerances. Auto\+C\+AD multiplies D\+I\+M\+T\+XT by D\+I\+M\+T\+F\+AC to set the fractional or tolerance text height \index{D\+I\+M\+G\+AP@{D\+I\+M\+G\+AP}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+G\+AP@{D\+I\+M\+G\+AP}}\item[{\em 
+D\+I\+M\+G\+AP\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac03300484d341ee71b9c648b600f08e4}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac03300484d341ee71b9c648b600f08e4}
+}]Dimension line gap \index{D\+I\+M\+J\+U\+ST@{D\+I\+M\+J\+U\+ST}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+J\+U\+ST@{D\+I\+M\+J\+U\+ST}}\item[{\em 
+D\+I\+M\+J\+U\+ST\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4e3839a44dee79ecf03939b3900e454c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4e3839a44dee79ecf03939b3900e454c}
+}]Horizontal dimension text position\+: 0 = Above dimension line and center-\/justified between extension lines 1 = Above dimension line and next to first extension line 2 = Above dimension line and next to second extension line 3 = Above and center-\/justified to first extension line 4 = Above and center-\/justified to second extension line \index{D\+I\+M\+L\+D\+R\+B\+LK@{D\+I\+M\+L\+D\+R\+B\+LK}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+L\+D\+R\+B\+LK@{D\+I\+M\+L\+D\+R\+B\+LK}}\item[{\em 
+D\+I\+M\+L\+D\+R\+B\+LK\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abb1299cb3fb61a8c34eaec06be4cc095}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abb1299cb3fb61a8c34eaec06be4cc095}
+}]Arrow block name for leaders \index{D\+I\+M\+L\+F\+AC@{D\+I\+M\+L\+F\+AC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+L\+F\+AC@{D\+I\+M\+L\+F\+AC}}\item[{\em 
+D\+I\+M\+L\+F\+AC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af9f9761c672a41e4e736212fd5942a4a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af9f9761c672a41e4e736212fd5942a4a}
+}]Linear measurements scale factor \index{D\+I\+M\+L\+IM@{D\+I\+M\+L\+IM}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+L\+IM@{D\+I\+M\+L\+IM}}\item[{\em 
+D\+I\+M\+L\+IM\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1476f0e0fb38b9c70dce9eb0c674d58d}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1476f0e0fb38b9c70dce9eb0c674d58d}
+}]Dimension limits generated if nonzero \index{D\+I\+M\+L\+U\+N\+IT@{D\+I\+M\+L\+U\+N\+IT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+L\+U\+N\+IT@{D\+I\+M\+L\+U\+N\+IT}}\item[{\em 
+D\+I\+M\+L\+U\+N\+IT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8d8347db70dc7f66335dc27c83feda3b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8d8347db70dc7f66335dc27c83feda3b}
+}]Sets units for all dimension types except Angular\+: 1 = Scientific 2 = Decimal 3 = Engineering 4 = Architectural 5 = Fractional 6 = Windows desktop \index{D\+I\+M\+L\+WD@{D\+I\+M\+L\+WD}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+L\+WD@{D\+I\+M\+L\+WD}}\item[{\em 
+D\+I\+M\+L\+WD\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aeacf8893f9ce9bf285aa555ee7494d04}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aeacf8893f9ce9bf285aa555ee7494d04}
+}]Dimension line lineweight\+: -\/3 = Standard -\/2 = By\+Layer -\/1 = By\+Block 0-\/211 = an integer representing 100th of mm \index{D\+I\+M\+L\+WE@{D\+I\+M\+L\+WE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+L\+WE@{D\+I\+M\+L\+WE}}\item[{\em 
+D\+I\+M\+L\+WE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4ee6a6cd95762d0398172a18fc4cdc5d}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4ee6a6cd95762d0398172a18fc4cdc5d}
+}]Extension line lineweight\+: -\/3 = Standard -\/2 = By\+Layer -\/1 = By\+Block 0-\/211 = an integer representing 100th of mm \index{D\+I\+M\+P\+O\+ST@{D\+I\+M\+P\+O\+ST}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+P\+O\+ST@{D\+I\+M\+P\+O\+ST}}\item[{\em 
+D\+I\+M\+P\+O\+ST\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afbd978578868969456b557466588a629}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afbd978578868969456b557466588a629}
+}]General dimensioning suffix \index{D\+I\+M\+R\+ND@{D\+I\+M\+R\+ND}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+R\+ND@{D\+I\+M\+R\+ND}}\item[{\em 
+D\+I\+M\+R\+ND\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8114511828160b6cb5a531f8e4a8a640}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8114511828160b6cb5a531f8e4a8a640}
+}]Rounding value for dimension distances \index{D\+I\+M\+S\+AH@{D\+I\+M\+S\+AH}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+S\+AH@{D\+I\+M\+S\+AH}}\item[{\em 
+D\+I\+M\+S\+AH\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0b192097bf5fd49eb8c9d4b4ba7b6a9b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0b192097bf5fd49eb8c9d4b4ba7b6a9b}
+}]Use separate arrow blocks if nonzero \index{D\+I\+M\+S\+C\+A\+LE@{D\+I\+M\+S\+C\+A\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+S\+C\+A\+LE@{D\+I\+M\+S\+C\+A\+LE}}\item[{\em 
+D\+I\+M\+S\+C\+A\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a020ae1301863dbcddaebd54ec2942074}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a020ae1301863dbcddaebd54ec2942074}
+}]Overall dimensioning scale factor \index{D\+I\+M\+S\+D1@{D\+I\+M\+S\+D1}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+S\+D1@{D\+I\+M\+S\+D1}}\item[{\em 
+D\+I\+M\+S\+D1\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae432f0e77584022f0b2cbf15b385947c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae432f0e77584022f0b2cbf15b385947c}
+}]Suppression of first extension line\+: 0 = Not suppressed 1 = Suppressed \index{D\+I\+M\+S\+D2@{D\+I\+M\+S\+D2}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+S\+D2@{D\+I\+M\+S\+D2}}\item[{\em 
+D\+I\+M\+S\+D2\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae9969bdac45add0b1e5abffb5b2f191b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae9969bdac45add0b1e5abffb5b2f191b}
+}]Suppression of second extension line\+: 0 = Not suppressed 1 = Suppressed \index{D\+I\+M\+S\+E1@{D\+I\+M\+S\+E1}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+S\+E1@{D\+I\+M\+S\+E1}}\item[{\em 
+D\+I\+M\+S\+E1\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adbd9808d07a12bf767e288901d410fd4}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adbd9808d07a12bf767e288901d410fd4}
+}]First extension line suppressed if nonzero \index{D\+I\+M\+S\+E2@{D\+I\+M\+S\+E2}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+S\+E2@{D\+I\+M\+S\+E2}}\item[{\em 
+D\+I\+M\+S\+E2\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2f35827a49b3b4f7b55129f3f9b6bf66}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2f35827a49b3b4f7b55129f3f9b6bf66}
+}]Second extension line suppressed if nonzero \index{D\+I\+M\+S\+HO@{D\+I\+M\+S\+HO}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+S\+HO@{D\+I\+M\+S\+HO}}\item[{\em 
+D\+I\+M\+S\+HO\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3eaf77d9741c3207c6a60d4f58d317fc}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3eaf77d9741c3207c6a60d4f58d317fc}
+}]1 = Recompute dimensions while dragging 0 = Drag original image \index{D\+I\+M\+S\+O\+XD@{D\+I\+M\+S\+O\+XD}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+S\+O\+XD@{D\+I\+M\+S\+O\+XD}}\item[{\em 
+D\+I\+M\+S\+O\+XD\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2f96ab587a533d69c27c67d4e2c65963}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2f96ab587a533d69c27c67d4e2c65963}
+}]Suppress outside-\/extensions dimension lines if nonzero \index{D\+I\+M\+S\+T\+Y\+LE@{D\+I\+M\+S\+T\+Y\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+S\+T\+Y\+LE@{D\+I\+M\+S\+T\+Y\+LE}}\item[{\em 
+D\+I\+M\+S\+T\+Y\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7390bf45cba0b6275768e21dc592c920}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7390bf45cba0b6275768e21dc592c920}
+}]Dimension style name \index{D\+I\+M\+T\+AD@{D\+I\+M\+T\+AD}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+AD@{D\+I\+M\+T\+AD}}\item[{\em 
+D\+I\+M\+T\+AD\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aabe4434794dc20cb9813761c07b25481}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aabe4434794dc20cb9813761c07b25481}
+}]Text above dimension line if nonzero \index{D\+I\+M\+T\+D\+EC@{D\+I\+M\+T\+D\+EC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+D\+EC@{D\+I\+M\+T\+D\+EC}}\item[{\em 
+D\+I\+M\+T\+D\+EC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a17978b1cefa950e913e9f7b37492150b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a17978b1cefa950e913e9f7b37492150b}
+}]Number of decimal places to display the tolerance values \index{D\+I\+M\+T\+F\+AC@{D\+I\+M\+T\+F\+AC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+F\+AC@{D\+I\+M\+T\+F\+AC}}\item[{\em 
+D\+I\+M\+T\+F\+AC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a04abec802fc66a450ca0ec0e648c5184}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a04abec802fc66a450ca0ec0e648c5184}
+}]Dimension tolerance display scale factor \index{D\+I\+M\+T\+IH@{D\+I\+M\+T\+IH}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+IH@{D\+I\+M\+T\+IH}}\item[{\em 
+D\+I\+M\+T\+IH\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acecc4886020d2ed1ada226b67ac6e0d1}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acecc4886020d2ed1ada226b67ac6e0d1}
+}]Text inside horizontal if nonzero \index{D\+I\+M\+T\+IX@{D\+I\+M\+T\+IX}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+IX@{D\+I\+M\+T\+IX}}\item[{\em 
+D\+I\+M\+T\+IX\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a04f66c86c0eb24ab6c2f3f5feb58b5ca}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a04f66c86c0eb24ab6c2f3f5feb58b5ca}
+}]Force text inside extensions if nonzero \index{D\+I\+M\+TM@{D\+I\+M\+TM}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+TM@{D\+I\+M\+TM}}\item[{\em 
+D\+I\+M\+TM\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aacff260f281dbaa5b95c425e12dfb019}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aacff260f281dbaa5b95c425e12dfb019}
+}]Minus tolerance \index{D\+I\+M\+T\+M\+O\+VE@{D\+I\+M\+T\+M\+O\+VE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+M\+O\+VE@{D\+I\+M\+T\+M\+O\+VE}}\item[{\em 
+D\+I\+M\+T\+M\+O\+VE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3cbb25735b68f093809fb9ea01db7e5d}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3cbb25735b68f093809fb9ea01db7e5d}
+}]Dimension text movement rules\+: 0 = Moves the dimension line with dimension text 1 = Adds a leader when dimension text is moved 2 = Allows text to be moved freely without a leader \index{D\+I\+M\+T\+O\+FL@{D\+I\+M\+T\+O\+FL}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+O\+FL@{D\+I\+M\+T\+O\+FL}}\item[{\em 
+D\+I\+M\+T\+O\+FL\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a378df39d0ebea264e144ad7819b5d60b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a378df39d0ebea264e144ad7819b5d60b}
+}]If text is outside extensions, force line extensions between extensions if nonzero \index{D\+I\+M\+T\+OH@{D\+I\+M\+T\+OH}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+OH@{D\+I\+M\+T\+OH}}\item[{\em 
+D\+I\+M\+T\+OH\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a067b6df52e133b6fbbb56b5b5200248e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a067b6df52e133b6fbbb56b5b5200248e}
+}]Text outside horizontal if nonzero \index{D\+I\+M\+T\+OL@{D\+I\+M\+T\+OL}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+OL@{D\+I\+M\+T\+OL}}\item[{\em 
+D\+I\+M\+T\+OL\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a382acabaf4b27cb5a880547ccf2511fc}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a382acabaf4b27cb5a880547ccf2511fc}
+}]Dimension tolerances generated if nonzero \index{D\+I\+M\+T\+O\+LJ@{D\+I\+M\+T\+O\+LJ}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+O\+LJ@{D\+I\+M\+T\+O\+LJ}}\item[{\em 
+D\+I\+M\+T\+O\+LJ\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a559aafe3cb45cb88e0e4339761956d9c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a559aafe3cb45cb88e0e4339761956d9c}
+}]Vertical justification for tolerance values\+: 0 = Top 1 = Middle 2 = Bottom \index{D\+I\+M\+TP@{D\+I\+M\+TP}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+TP@{D\+I\+M\+TP}}\item[{\em 
+D\+I\+M\+TP\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6f4933ba50455974519a4d0f5fd27fec}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6f4933ba50455974519a4d0f5fd27fec}
+}]Plus tolerance \index{D\+I\+M\+T\+SZ@{D\+I\+M\+T\+SZ}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+SZ@{D\+I\+M\+T\+SZ}}\item[{\em 
+D\+I\+M\+T\+SZ\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a40035435e79526f44df98ea541209917}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a40035435e79526f44df98ea541209917}
+}]Dimensioning tick size\+: 0 = No ticks \index{D\+I\+M\+T\+VP@{D\+I\+M\+T\+VP}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+VP@{D\+I\+M\+T\+VP}}\item[{\em 
+D\+I\+M\+T\+VP\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a060ece3d757784a446731b0e8ebd859a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a060ece3d757784a446731b0e8ebd859a}
+}]Text vertical position \index{D\+I\+M\+T\+X\+S\+TY@{D\+I\+M\+T\+X\+S\+TY}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+X\+S\+TY@{D\+I\+M\+T\+X\+S\+TY}}\item[{\em 
+D\+I\+M\+T\+X\+S\+TY\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3223469c7cb866d22d389b45060a920a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3223469c7cb866d22d389b45060a920a}
+}]Dimension text style \index{D\+I\+M\+T\+XT@{D\+I\+M\+T\+XT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+XT@{D\+I\+M\+T\+XT}}\item[{\em 
+D\+I\+M\+T\+XT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9f93c170199ee719a94ed7dcb482d8c3}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9f93c170199ee719a94ed7dcb482d8c3}
+}]Dimensioning text height \index{D\+I\+M\+T\+Z\+IN@{D\+I\+M\+T\+Z\+IN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+T\+Z\+IN@{D\+I\+M\+T\+Z\+IN}}\item[{\em 
+D\+I\+M\+T\+Z\+IN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a68c9a8fdd8634ef564eb40b29a7ce014}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a68c9a8fdd8634ef564eb40b29a7ce014}
+}]Controls suppression of zeros for tolerance values\+: 0 = Suppresses zero feet and precisely zero inches 1 = Includes zero feet and precisely zero inches 2 = Includes zero feet and suppresses zero inches 3 = Includes zero inches and suppresses zero feet \index{D\+I\+M\+U\+PT@{D\+I\+M\+U\+PT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+U\+PT@{D\+I\+M\+U\+PT}}\item[{\em 
+D\+I\+M\+U\+PT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a296f52bfbcf9bfd3846c2766078d871c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a296f52bfbcf9bfd3846c2766078d871c}
+}]Cursor functionality for user-\/positioned text\+: 0 = Controls only the dimension line location 1 = Controls the text position as well as the dimension line location \index{D\+I\+M\+Z\+IN@{D\+I\+M\+Z\+IN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+Z\+IN@{D\+I\+M\+Z\+IN}}\item[{\em 
+D\+I\+M\+Z\+IN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a35307893fd6f5cd7af23123a47c2b93e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a35307893fd6f5cd7af23123a47c2b93e}
+}]Controls suppression of zeros for primary unit values\+: 0 = Suppresses zero feet and precisely zero inches 1 = Includes zero feet and precisely zero inches 2 = Includes zero feet and suppresses zero inches 3 = Includes zero inches and suppresses zero feet \index{D\+I\+S\+P\+S\+I\+LH@{D\+I\+S\+P\+S\+I\+LH}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+S\+P\+S\+I\+LH@{D\+I\+S\+P\+S\+I\+LH}}\item[{\em 
+D\+I\+S\+P\+S\+I\+LH\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2531728e27a69698ebdab51abaca2caf}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2531728e27a69698ebdab51abaca2caf}
+}]Controls the display of silhouette curves of body objects in Wireframe mode\+: 0 = Off 1 = On \index{D\+R\+A\+G\+VS@{D\+R\+A\+G\+VS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+R\+A\+G\+VS@{D\+R\+A\+G\+VS}}\item[{\em 
+D\+R\+A\+G\+VS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3b1911bf3fcdd053b27fe718b71e317d}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3b1911bf3fcdd053b27fe718b71e317d}
+}]Hard-\/pointer ID to visual style while creating 3D solid primitives. The defualt value is N\+U\+LL \index{D\+W\+G\+C\+O\+D\+E\+P\+A\+GE@{D\+W\+G\+C\+O\+D\+E\+P\+A\+GE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+W\+G\+C\+O\+D\+E\+P\+A\+GE@{D\+W\+G\+C\+O\+D\+E\+P\+A\+GE}}\item[{\em 
+D\+W\+G\+C\+O\+D\+E\+P\+A\+GE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7d8393f3c06479f6db9a789ad6937bcf}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7d8393f3c06479f6db9a789ad6937bcf}
+}]Drawing code page; set to the system code page when a new drawing is created, but not otherwise maintained by Auto\+C\+AD \index{E\+L\+E\+V\+A\+T\+I\+ON@{E\+L\+E\+V\+A\+T\+I\+ON}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!E\+L\+E\+V\+A\+T\+I\+ON@{E\+L\+E\+V\+A\+T\+I\+ON}}\item[{\em 
+E\+L\+E\+V\+A\+T\+I\+ON\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a30f263bb82409f50d3738441dea6e207}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a30f263bb82409f50d3738441dea6e207}
+}]Current elevation set by E\+L\+EV command \index{E\+N\+D\+C\+A\+PS@{E\+N\+D\+C\+A\+PS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!E\+N\+D\+C\+A\+PS@{E\+N\+D\+C\+A\+PS}}\item[{\em 
+E\+N\+D\+C\+A\+PS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7b17b801f1c9f39f7f9f5c67be4fc5fc}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7b17b801f1c9f39f7f9f5c67be4fc5fc}
+}]Lineweight endcaps setting for new objects\+: 0 = none 1 = round 2 = angle 3 = square \index{E\+X\+T\+M\+AX@{E\+X\+T\+M\+AX}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!E\+X\+T\+M\+AX@{E\+X\+T\+M\+AX}}\item[{\em 
+E\+X\+T\+M\+AX\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aafa05d1c11168e2ebed258aff81d8d51}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aafa05d1c11168e2ebed258aff81d8d51}
+}]X, Y, and Z drawing extents upper-\/right corner (in W\+CS) \index{E\+X\+T\+M\+IN@{E\+X\+T\+M\+IN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!E\+X\+T\+M\+IN@{E\+X\+T\+M\+IN}}\item[{\em 
+E\+X\+T\+M\+IN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afba4e43bf29f7dcf76c34e3134ced73c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afba4e43bf29f7dcf76c34e3134ced73c}
+}]X, Y, and Z drawing extents lower-\/left corner (in W\+CS) \index{E\+X\+T\+N\+A\+M\+ES@{E\+X\+T\+N\+A\+M\+ES}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!E\+X\+T\+N\+A\+M\+ES@{E\+X\+T\+N\+A\+M\+ES}}\item[{\em 
+E\+X\+T\+N\+A\+M\+ES\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2b22d44ac28f419e1393790986ea292d}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2b22d44ac28f419e1393790986ea292d}
+}]Controls symbol table naming\+: 0 = Release 14 compatibility. Limits names to 31 characters in length. Names can include the letters A to Z, the numerals 0 to 9, and the special characters dollar sign (\$), underscore (\+\_\+), and hyphen (-\/). 1 = Auto\+C\+AD 2000. Names can be up to 255 characters in length, and can include the letters A to Z, the numerals 0 to 9, spaces, and any special characters not used for other purposes by Microsoft Windows and Auto\+C\+AD \index{F\+I\+L\+L\+E\+T\+R\+AD@{F\+I\+L\+L\+E\+T\+R\+AD}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!F\+I\+L\+L\+E\+T\+R\+AD@{F\+I\+L\+L\+E\+T\+R\+AD}}\item[{\em 
+F\+I\+L\+L\+E\+T\+R\+AD\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aed813e7f842a510975a70b9011fadd97}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aed813e7f842a510975a70b9011fadd97}
+}]Fillet radius \index{F\+I\+L\+L\+M\+O\+DE@{F\+I\+L\+L\+M\+O\+DE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!F\+I\+L\+L\+M\+O\+DE@{F\+I\+L\+L\+M\+O\+DE}}\item[{\em 
+F\+I\+L\+L\+M\+O\+DE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac8948c5714edbd842719aff4bc179139}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac8948c5714edbd842719aff4bc179139}
+}]Fill mode on if nonzero \index{F\+I\+N\+G\+E\+R\+P\+R\+I\+N\+T\+G\+U\+ID@{F\+I\+N\+G\+E\+R\+P\+R\+I\+N\+T\+G\+U\+ID}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!F\+I\+N\+G\+E\+R\+P\+R\+I\+N\+T\+G\+U\+ID@{F\+I\+N\+G\+E\+R\+P\+R\+I\+N\+T\+G\+U\+ID}}\item[{\em 
+F\+I\+N\+G\+E\+R\+P\+R\+I\+N\+T\+G\+U\+ID\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5b049d1bdddd729d5c50f8b4329d868f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5b049d1bdddd729d5c50f8b4329d868f}
+}]Set at creation time, uniquely identifies a particular drawing \index{H\+A\+L\+O\+G\+AP@{H\+A\+L\+O\+G\+AP}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!H\+A\+L\+O\+G\+AP@{H\+A\+L\+O\+G\+AP}}\item[{\em 
+H\+A\+L\+O\+G\+AP\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a228b8cc6b7683b1089fcb78a6ed54027}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a228b8cc6b7683b1089fcb78a6ed54027}
+}]Specifies a gap to be displayed where an object is hidden by another object; the value is specified as a percent of one unit and is independent of the zoom level. A haloed line is shortened at the point where it is hidden when H\+I\+DE or the Hidden option of S\+H\+A\+D\+E\+M\+O\+DE is used \index{H\+A\+N\+D\+S\+E\+ED@{H\+A\+N\+D\+S\+E\+ED}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!H\+A\+N\+D\+S\+E\+ED@{H\+A\+N\+D\+S\+E\+ED}}\item[{\em 
+H\+A\+N\+D\+S\+E\+ED\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8350730cc6af4e40d5f221cbef7db728}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8350730cc6af4e40d5f221cbef7db728}
+}]Next available handle \index{H\+I\+D\+E\+T\+E\+XT@{H\+I\+D\+E\+T\+E\+XT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!H\+I\+D\+E\+T\+E\+XT@{H\+I\+D\+E\+T\+E\+XT}}\item[{\em 
+H\+I\+D\+E\+T\+E\+XT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a75327037466fbd7ebadc7dd94e3c8cd6}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a75327037466fbd7ebadc7dd94e3c8cd6}
+}]Specifies H\+I\+D\+E\+T\+E\+XT system variable\+: 0 = H\+I\+DE ignores text objects when producing the hidden view 1 = H\+I\+DE does not ignore text objects \index{H\+Y\+P\+E\+R\+L\+I\+N\+K\+B\+A\+SE@{H\+Y\+P\+E\+R\+L\+I\+N\+K\+B\+A\+SE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!H\+Y\+P\+E\+R\+L\+I\+N\+K\+B\+A\+SE@{H\+Y\+P\+E\+R\+L\+I\+N\+K\+B\+A\+SE}}\item[{\em 
+H\+Y\+P\+E\+R\+L\+I\+N\+K\+B\+A\+SE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9654d04ccd7e6bdceffbe51f9c37849c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9654d04ccd7e6bdceffbe51f9c37849c}
+}]Path for all relative hyperlinks in the drawing. If null, the drawing path is used \index{I\+N\+D\+E\+X\+C\+TL@{I\+N\+D\+E\+X\+C\+TL}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!I\+N\+D\+E\+X\+C\+TL@{I\+N\+D\+E\+X\+C\+TL}}\item[{\em 
+I\+N\+D\+E\+X\+C\+TL\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a943570b77842628b772b43aded0b1b05}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a943570b77842628b772b43aded0b1b05}
+}]Controls whether layer and spatial indexes are created and saved in drawing files\+: 0 = No indexes are created 1 = Layer index is created 2 = Spatial index is created 3 = Layer and spatial indexes are created \index{I\+N\+S\+B\+A\+SE@{I\+N\+S\+B\+A\+SE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!I\+N\+S\+B\+A\+SE@{I\+N\+S\+B\+A\+SE}}\item[{\em 
+I\+N\+S\+B\+A\+SE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abac70dd41c3ee084f5c49b9f6b732041}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abac70dd41c3ee084f5c49b9f6b732041}
+}]Insertion base set by B\+A\+SE command (in W\+CS) \index{I\+N\+S\+U\+N\+I\+TS@{I\+N\+S\+U\+N\+I\+TS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!I\+N\+S\+U\+N\+I\+TS@{I\+N\+S\+U\+N\+I\+TS}}\item[{\em 
+I\+N\+S\+U\+N\+I\+TS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5d91e3ef97387612b04d10c8b85595a4}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5d91e3ef97387612b04d10c8b85595a4}
+}]Default drawing units for Auto\+C\+AD Design\+Center blocks\+: 0 = Unitless 1 = Inches 2 = Feet 3 = Miles 4 = Millimeters 5 = Centimeters 6 = Meters 7 = Kilometers 8 = Microinches 9 = Mils 10 = Yards 11 = Angstroms 12 = Nanometers 13 = Microns 14 = Decimeters 15 = Decameters 16 = Hectometers 17 = Gigameters 18 = Astronomical units 19 = Light years 20 = Parsecs \index{I\+N\+T\+E\+R\+F\+E\+R\+E\+C\+O\+L\+OR@{I\+N\+T\+E\+R\+F\+E\+R\+E\+C\+O\+L\+OR}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!I\+N\+T\+E\+R\+F\+E\+R\+E\+C\+O\+L\+OR@{I\+N\+T\+E\+R\+F\+E\+R\+E\+C\+O\+L\+OR}}\item[{\em 
+I\+N\+T\+E\+R\+F\+E\+R\+E\+C\+O\+L\+OR\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afd091aea346a0a74d2b8caad565e51c2}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afd091aea346a0a74d2b8caad565e51c2}
+}]Represents the A\+CI color index of the \char`\"{}interference objects\char`\"{} created during the interfere command. Default value is 1 \index{I\+N\+T\+E\+R\+F\+E\+R\+E\+O\+B\+J\+VS@{I\+N\+T\+E\+R\+F\+E\+R\+E\+O\+B\+J\+VS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!I\+N\+T\+E\+R\+F\+E\+R\+E\+O\+B\+J\+VS@{I\+N\+T\+E\+R\+F\+E\+R\+E\+O\+B\+J\+VS}}\item[{\em 
+I\+N\+T\+E\+R\+F\+E\+R\+E\+O\+B\+J\+VS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a462fdeee3a1d9f39f15a29ecebfb8822}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a462fdeee3a1d9f39f15a29ecebfb8822}
+}]Hard-\/pointer ID to the visual style for interference objects. Default visual style is Conceptual \index{I\+N\+T\+E\+R\+F\+E\+R\+E\+V\+P\+VS@{I\+N\+T\+E\+R\+F\+E\+R\+E\+V\+P\+VS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!I\+N\+T\+E\+R\+F\+E\+R\+E\+V\+P\+VS@{I\+N\+T\+E\+R\+F\+E\+R\+E\+V\+P\+VS}}\item[{\em 
+I\+N\+T\+E\+R\+F\+E\+R\+E\+V\+P\+VS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa64f3fb3349df32b55d546c491392122}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa64f3fb3349df32b55d546c491392122}
+}]Hard-\/pointer ID to the visual style for the viewport during interference checking. Default visual style is 3d Wireframe. \index{I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+C\+O\+L\+OR@{I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+C\+O\+L\+OR}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+C\+O\+L\+OR@{I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+C\+O\+L\+OR}}\item[{\em 
+I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+C\+O\+L\+OR\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac73763bf067503d98e4e48b56d46bdaf}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac73763bf067503d98e4e48b56d46bdaf}
+}]Specifies the entity color of intersection polylines\+: Values 1-\/255 designate an Auto\+C\+AD color index (A\+CI) 0 = Color B\+Y\+B\+L\+O\+CK 256 = Color B\+Y\+L\+A\+Y\+ER 257 = Color B\+Y\+E\+N\+T\+I\+TY \index{I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+D\+I\+S\+P\+L\+AY@{I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+D\+I\+S\+P\+L\+AY}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+D\+I\+S\+P\+L\+AY@{I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+D\+I\+S\+P\+L\+AY}}\item[{\em 
+I\+N\+T\+E\+R\+S\+E\+C\+T\+I\+O\+N\+D\+I\+S\+P\+L\+AY\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af573c1944f92a7e33f87fc20a428517b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af573c1944f92a7e33f87fc20a428517b}
+}]Specifies the display of intersection polylines\+: 0 = Turns off the display of intersection polylines 1 = Turns on the display of intersection polylines \index{J\+O\+I\+N\+S\+T\+Y\+LE@{J\+O\+I\+N\+S\+T\+Y\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!J\+O\+I\+N\+S\+T\+Y\+LE@{J\+O\+I\+N\+S\+T\+Y\+LE}}\item[{\em 
+J\+O\+I\+N\+S\+T\+Y\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad958e38c5235cb2627bf85763e71143f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad958e38c5235cb2627bf85763e71143f}
+}]Lineweight joint setting for new objects\+: 0 = none 1 = round 2 = angle 3 = flat \index{L\+I\+M\+C\+H\+E\+CK@{L\+I\+M\+C\+H\+E\+CK}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!L\+I\+M\+C\+H\+E\+CK@{L\+I\+M\+C\+H\+E\+CK}}\item[{\em 
+L\+I\+M\+C\+H\+E\+CK\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a55c6aca5cb40ebabe375fd0eab885856}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a55c6aca5cb40ebabe375fd0eab885856}
+}]Nonzero if limits checking is on \index{L\+I\+M\+M\+AX@{L\+I\+M\+M\+AX}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!L\+I\+M\+M\+AX@{L\+I\+M\+M\+AX}}\item[{\em 
+L\+I\+M\+M\+AX\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a125515dabcdb939961f5f8f72997867d}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a125515dabcdb939961f5f8f72997867d}
+}]XY drawing limits upper-\/right corner (in W\+CS) \index{L\+I\+M\+M\+IN@{L\+I\+M\+M\+IN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!L\+I\+M\+M\+IN@{L\+I\+M\+M\+IN}}\item[{\em 
+L\+I\+M\+M\+IN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac3495533519a545050e84196dde65c3f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac3495533519a545050e84196dde65c3f}
+}]XY drawing limits lower-\/left corner (in W\+CS) \index{L\+T\+S\+C\+A\+LE@{L\+T\+S\+C\+A\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!L\+T\+S\+C\+A\+LE@{L\+T\+S\+C\+A\+LE}}\item[{\em 
+L\+T\+S\+C\+A\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a74fe9dec505bc43ce0cb4433226f551f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a74fe9dec505bc43ce0cb4433226f551f}
+}]Global linetype scale \index{L\+U\+N\+I\+TS@{L\+U\+N\+I\+TS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!L\+U\+N\+I\+TS@{L\+U\+N\+I\+TS}}\item[{\em 
+L\+U\+N\+I\+TS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad4a8a24e3b3a5bf9ee68431e15b3985c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad4a8a24e3b3a5bf9ee68431e15b3985c}
+}]Units format for coordinates and distances \index{L\+U\+P\+R\+EC@{L\+U\+P\+R\+EC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!L\+U\+P\+R\+EC@{L\+U\+P\+R\+EC}}\item[{\em 
+L\+U\+P\+R\+EC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aac8eb1d489784b33e4b6cf3772cca2e9}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aac8eb1d489784b33e4b6cf3772cca2e9}
+}]Units precision for coordinates and distances \index{L\+W\+D\+I\+S\+P\+L\+AY@{L\+W\+D\+I\+S\+P\+L\+AY}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!L\+W\+D\+I\+S\+P\+L\+AY@{L\+W\+D\+I\+S\+P\+L\+AY}}\item[{\em 
+L\+W\+D\+I\+S\+P\+L\+AY\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9350112285e7d0cefa12c2703c0013a2}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9350112285e7d0cefa12c2703c0013a2}
+}]Controls the display of lineweights on the Model or Layout tab\+: 0 = Lineweight is not displayed 1 = Lineweight is displayed \index{M\+A\+X\+A\+C\+T\+VP@{M\+A\+X\+A\+C\+T\+VP}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!M\+A\+X\+A\+C\+T\+VP@{M\+A\+X\+A\+C\+T\+VP}}\item[{\em 
+M\+A\+X\+A\+C\+T\+VP\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab4641c79c45f7caa73ee61387d6ff72f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab4641c79c45f7caa73ee61387d6ff72f}
+}]Sets maximum number of viewports to be regenerated \index{M\+E\+A\+S\+U\+R\+E\+M\+E\+NT@{M\+E\+A\+S\+U\+R\+E\+M\+E\+NT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!M\+E\+A\+S\+U\+R\+E\+M\+E\+NT@{M\+E\+A\+S\+U\+R\+E\+M\+E\+NT}}\item[{\em 
+M\+E\+A\+S\+U\+R\+E\+M\+E\+NT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac82af6f66bfdf203381e511e2ccbda3f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac82af6f66bfdf203381e511e2ccbda3f}
+}]Sets drawing units\+: 0 = English 1 = Metric \index{M\+E\+NU@{M\+E\+NU}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!M\+E\+NU@{M\+E\+NU}}\item[{\em 
+M\+E\+NU\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8e25cca479ee85520ece2a62a93ee775}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8e25cca479ee85520ece2a62a93ee775}
+}]Name of menu file \index{M\+I\+R\+R\+T\+E\+XT@{M\+I\+R\+R\+T\+E\+XT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!M\+I\+R\+R\+T\+E\+XT@{M\+I\+R\+R\+T\+E\+XT}}\item[{\em 
+M\+I\+R\+R\+T\+E\+XT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab9c819d5f3d2b0a9182344c2c98b20d1}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab9c819d5f3d2b0a9182344c2c98b20d1}
+}]Mirror text if nonzero \index{O\+B\+S\+C\+O\+L\+OR@{O\+B\+S\+C\+O\+L\+OR}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!O\+B\+S\+C\+O\+L\+OR@{O\+B\+S\+C\+O\+L\+OR}}\item[{\em 
+O\+B\+S\+C\+O\+L\+OR\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2d78a3c49c635a923203efc313d1c968}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2d78a3c49c635a923203efc313d1c968}
+}]Specifies the color of obscured lines. An obscured line is a hidden line made visible by changing its color and linetype and is visible only when the H\+I\+DE or S\+H\+A\+D\+E\+M\+O\+DE command is used. The O\+B\+S\+C\+U\+R\+E\+D\+C\+O\+L\+OR setting is visible only if the O\+B\+S\+C\+U\+R\+E\+D\+L\+T\+Y\+PE is turned ON by setting it to a value other than 0. 0 and 256 = Entity color 1-\/255 = An Auto\+C\+AD color index (A\+CI) \index{O\+B\+S\+L\+T\+Y\+PE@{O\+B\+S\+L\+T\+Y\+PE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!O\+B\+S\+L\+T\+Y\+PE@{O\+B\+S\+L\+T\+Y\+PE}}\item[{\em 
+O\+B\+S\+L\+T\+Y\+PE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a716cfa454794e6a9b4b43faa7767b2c1}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a716cfa454794e6a9b4b43faa7767b2c1}
+}]Specifies the linetype of obscured lines. Obscured linetypes are independent of zoom level, unlike regular Auto\+C\+AD linetypes. Value 0 turns off display of obscured lines and is the default. Linetype values are defined as follows\+: 0 = Off 1 = Solid 2 = Dashed 3 = Dotted 4 = Short Dash 5 = Medium Dash 6 = Long Dash 7 = Double Short Dash 8 = Double Medium Dash 9 = Double Long Dash 10 = Medium Long Dash 11 = Sparse Dot \index{O\+R\+T\+H\+O\+M\+O\+DE@{O\+R\+T\+H\+O\+M\+O\+DE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!O\+R\+T\+H\+O\+M\+O\+DE@{O\+R\+T\+H\+O\+M\+O\+DE}}\item[{\em 
+O\+R\+T\+H\+O\+M\+O\+DE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a20a2feb84bc2d160bd16202916b64e6b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a20a2feb84bc2d160bd16202916b64e6b}
+}]Ortho mode on if nonzero \index{P\+D\+M\+O\+DE@{P\+D\+M\+O\+DE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+D\+M\+O\+DE@{P\+D\+M\+O\+DE}}\item[{\em 
+P\+D\+M\+O\+DE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aaf8996048afb6a49c007d0746a4ed309}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aaf8996048afb6a49c007d0746a4ed309}
+}]Point display mode \index{P\+D\+S\+I\+ZE@{P\+D\+S\+I\+ZE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+D\+S\+I\+ZE@{P\+D\+S\+I\+ZE}}\item[{\em 
+P\+D\+S\+I\+ZE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aecc0a6540b6ae33499f4c6f4ef560a6a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aecc0a6540b6ae33499f4c6f4ef560a6a}
+}]Point display size \index{P\+E\+L\+E\+V\+A\+T\+I\+ON@{P\+E\+L\+E\+V\+A\+T\+I\+ON}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+E\+L\+E\+V\+A\+T\+I\+ON@{P\+E\+L\+E\+V\+A\+T\+I\+ON}}\item[{\em 
+P\+E\+L\+E\+V\+A\+T\+I\+ON\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a350e657af362566eb7a00a66e3ef0f3a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a350e657af362566eb7a00a66e3ef0f3a}
+}]Current paper space elevation \index{P\+E\+X\+T\+M\+AX@{P\+E\+X\+T\+M\+AX}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+E\+X\+T\+M\+AX@{P\+E\+X\+T\+M\+AX}}\item[{\em 
+P\+E\+X\+T\+M\+AX\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a55b1c9882cb14afb4d666042ca9392c7}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a55b1c9882cb14afb4d666042ca9392c7}
+}]Maximum X, Y, and Z extents for paper space \index{P\+E\+X\+T\+M\+IN@{P\+E\+X\+T\+M\+IN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+E\+X\+T\+M\+IN@{P\+E\+X\+T\+M\+IN}}\item[{\em 
+P\+E\+X\+T\+M\+IN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af382c325f89233336ddf5d7e20d40cd3}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af382c325f89233336ddf5d7e20d40cd3}
+}]Minimum X, Y, and Z extents for paper space \index{P\+I\+N\+S\+B\+A\+SE@{P\+I\+N\+S\+B\+A\+SE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+I\+N\+S\+B\+A\+SE@{P\+I\+N\+S\+B\+A\+SE}}\item[{\em 
+P\+I\+N\+S\+B\+A\+SE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6cc3a5f3142799d716854fe53402aef0}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6cc3a5f3142799d716854fe53402aef0}
+}]Paper space insertion base point \index{P\+L\+I\+M\+C\+H\+E\+CK@{P\+L\+I\+M\+C\+H\+E\+CK}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+L\+I\+M\+C\+H\+E\+CK@{P\+L\+I\+M\+C\+H\+E\+CK}}\item[{\em 
+P\+L\+I\+M\+C\+H\+E\+CK\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a474630b41af9b90392333e69011bf3ca}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a474630b41af9b90392333e69011bf3ca}
+}]Limits checking in paper space when nonzero \index{P\+L\+I\+M\+M\+AX@{P\+L\+I\+M\+M\+AX}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+L\+I\+M\+M\+AX@{P\+L\+I\+M\+M\+AX}}\item[{\em 
+P\+L\+I\+M\+M\+AX\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5aa564a99534fc8d583117f95fba5395}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5aa564a99534fc8d583117f95fba5395}
+}]Maximum X and Y limits in paper space \index{P\+L\+I\+M\+M\+IN@{P\+L\+I\+M\+M\+IN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+L\+I\+M\+M\+IN@{P\+L\+I\+M\+M\+IN}}\item[{\em 
+P\+L\+I\+M\+M\+IN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adea675c00346f03ebf5ce19e83a5b0fa}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adea675c00346f03ebf5ce19e83a5b0fa}
+}]Minimum X and Y limits in paper space \index{P\+L\+I\+N\+E\+G\+EN@{P\+L\+I\+N\+E\+G\+EN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+L\+I\+N\+E\+G\+EN@{P\+L\+I\+N\+E\+G\+EN}}\item[{\em 
+P\+L\+I\+N\+E\+G\+EN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a717cfd50b8c6710d7b63ed252871c0fc}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a717cfd50b8c6710d7b63ed252871c0fc}
+}]Governs the generation of linetype patterns around the vertices of a 2D polyline\+: 1 = Linetype is generated in a continuous pattern around vertices of the polyline 0 = Each segment of the polyline starts and ends with a dash \index{P\+L\+I\+N\+E\+W\+ID@{P\+L\+I\+N\+E\+W\+ID}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+L\+I\+N\+E\+W\+ID@{P\+L\+I\+N\+E\+W\+ID}}\item[{\em 
+P\+L\+I\+N\+E\+W\+ID\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6fa1bcddff8cd3b096f64643d7eb2d93}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6fa1bcddff8cd3b096f64643d7eb2d93}
+}]Default polyline width \index{P\+R\+O\+J\+E\+C\+T\+N\+A\+ME@{P\+R\+O\+J\+E\+C\+T\+N\+A\+ME}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+R\+O\+J\+E\+C\+T\+N\+A\+ME@{P\+R\+O\+J\+E\+C\+T\+N\+A\+ME}}\item[{\em 
+P\+R\+O\+J\+E\+C\+T\+N\+A\+ME\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac9b6ac3088c11c3e386dd220eff6ed5a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac9b6ac3088c11c3e386dd220eff6ed5a}
+}]Assigns a project name to the current drawing. Used when an external reference or image is not found on its original path. The project name points to a section in the registry that can contain one or more search paths for each project name defined. Project names and their search directories are created from the Files tab of the Options dialog box \index{P\+R\+O\+X\+Y\+G\+R\+A\+P\+H\+I\+CS@{P\+R\+O\+X\+Y\+G\+R\+A\+P\+H\+I\+CS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+R\+O\+X\+Y\+G\+R\+A\+P\+H\+I\+CS@{P\+R\+O\+X\+Y\+G\+R\+A\+P\+H\+I\+CS}}\item[{\em 
+P\+R\+O\+X\+Y\+G\+R\+A\+P\+H\+I\+CS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae877ef963bc68f5d41f734066cbcd4b4}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae877ef963bc68f5d41f734066cbcd4b4}
+}]Controls the saving of proxy object images \index{P\+S\+L\+T\+S\+C\+A\+LE@{P\+S\+L\+T\+S\+C\+A\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+S\+L\+T\+S\+C\+A\+LE@{P\+S\+L\+T\+S\+C\+A\+LE}}\item[{\em 
+P\+S\+L\+T\+S\+C\+A\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5d1d63da87d30431c36bf968f381613c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a5d1d63da87d30431c36bf968f381613c}
+}]Controls paper space linetype scaling\+: 1 = No special linetype scaling 0 = Viewport scaling governs linetype scaling \index{P\+S\+T\+Y\+L\+E\+M\+O\+DE@{P\+S\+T\+Y\+L\+E\+M\+O\+DE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+S\+T\+Y\+L\+E\+M\+O\+DE@{P\+S\+T\+Y\+L\+E\+M\+O\+DE}}\item[{\em 
+P\+S\+T\+Y\+L\+E\+M\+O\+DE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a69c6e9ec01d115782c287592e79c525f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a69c6e9ec01d115782c287592e79c525f}
+}]Indicates whether the current drawing is in a Color-\/\+Dependent or Named Plot Style mode\+: 0 = Uses named plot style tables in the current drawing 1 = Uses color-\/dependent plot style tables in the current drawing \index{P\+S\+V\+P\+S\+C\+A\+LE@{P\+S\+V\+P\+S\+C\+A\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+S\+V\+P\+S\+C\+A\+LE@{P\+S\+V\+P\+S\+C\+A\+LE}}\item[{\em 
+P\+S\+V\+P\+S\+C\+A\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a71c3465a156fa31e31211dce87be2415}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a71c3465a156fa31e31211dce87be2415}
+}]View scale factor for new viewports\+: 0 = Scaled to fit $>$0 = Scale factor (a positive real value) \index{P\+U\+C\+S\+B\+A\+SE@{P\+U\+C\+S\+B\+A\+SE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+B\+A\+SE@{P\+U\+C\+S\+B\+A\+SE}}\item[{\em 
+P\+U\+C\+S\+B\+A\+SE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a106c6316a7f145d03eff37817beb141a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a106c6316a7f145d03eff37817beb141a}
+}]Name of the U\+CS that defines the origin and orientation of orthographic U\+CS settings (paper space only) \index{P\+U\+C\+S\+N\+A\+ME@{P\+U\+C\+S\+N\+A\+ME}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+N\+A\+ME@{P\+U\+C\+S\+N\+A\+ME}}\item[{\em 
+P\+U\+C\+S\+N\+A\+ME\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac29607e9495ab59773c0794729dd10cd}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac29607e9495ab59773c0794729dd10cd}
+}]Current paper space U\+CS name \index{P\+U\+C\+S\+O\+RG@{P\+U\+C\+S\+O\+RG}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+O\+RG@{P\+U\+C\+S\+O\+RG}}\item[{\em 
+P\+U\+C\+S\+O\+RG\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad758d1fd46a102c49151235aa4d5a85b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad758d1fd46a102c49151235aa4d5a85b}
+}]Current paper space U\+CS origin \index{P\+U\+C\+S\+O\+R\+G\+B\+A\+CK@{P\+U\+C\+S\+O\+R\+G\+B\+A\+CK}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+O\+R\+G\+B\+A\+CK@{P\+U\+C\+S\+O\+R\+G\+B\+A\+CK}}\item[{\em 
+P\+U\+C\+S\+O\+R\+G\+B\+A\+CK\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2d4da9654033cafa52e91313d531f619}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2d4da9654033cafa52e91313d531f619}
+}]Point which becomes the new U\+CS origin after changing paper space U\+CS to B\+A\+CK when P\+U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{P\+U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM@{P\+U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM@{P\+U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM}}\item[{\em 
+P\+U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4f3408a06a9c73de18c3175d94baa094}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4f3408a06a9c73de18c3175d94baa094}
+}]Point which becomes the new U\+CS origin after changing paper space U\+CS to B\+O\+T\+T\+OM when P\+U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{P\+U\+C\+S\+O\+R\+G\+F\+R\+O\+NT@{P\+U\+C\+S\+O\+R\+G\+F\+R\+O\+NT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+O\+R\+G\+F\+R\+O\+NT@{P\+U\+C\+S\+O\+R\+G\+F\+R\+O\+NT}}\item[{\em 
+P\+U\+C\+S\+O\+R\+G\+F\+R\+O\+NT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2409c0f1482d64b39f5095a42b7b3444}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2409c0f1482d64b39f5095a42b7b3444}
+}]Point which becomes the new U\+CS origin after changing paper space U\+CS to F\+R\+O\+NT when P\+U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{P\+U\+C\+S\+O\+R\+G\+L\+E\+FT@{P\+U\+C\+S\+O\+R\+G\+L\+E\+FT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+O\+R\+G\+L\+E\+FT@{P\+U\+C\+S\+O\+R\+G\+L\+E\+FT}}\item[{\em 
+P\+U\+C\+S\+O\+R\+G\+L\+E\+FT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0f1b1ff39c52461b8e2c1fdc114f26e5}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0f1b1ff39c52461b8e2c1fdc114f26e5}
+}]Point which becomes the new U\+CS origin after changing paper space U\+CS to L\+E\+FT when P\+U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{P\+U\+C\+S\+O\+R\+G\+R\+I\+G\+HT@{P\+U\+C\+S\+O\+R\+G\+R\+I\+G\+HT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+O\+R\+G\+R\+I\+G\+HT@{P\+U\+C\+S\+O\+R\+G\+R\+I\+G\+HT}}\item[{\em 
+P\+U\+C\+S\+O\+R\+G\+R\+I\+G\+HT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acd2b4a3057bd04b949fdd4fc9e417b88}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acd2b4a3057bd04b949fdd4fc9e417b88}
+}]Point which becomes the new U\+CS origin after changing paper space U\+CS to R\+I\+G\+HT when P\+U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{P\+U\+C\+S\+O\+R\+G\+T\+OP@{P\+U\+C\+S\+O\+R\+G\+T\+OP}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+O\+R\+G\+T\+OP@{P\+U\+C\+S\+O\+R\+G\+T\+OP}}\item[{\em 
+P\+U\+C\+S\+O\+R\+G\+T\+OP\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2f0dbfb41dbe5e9070093d4615d5f00f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2f0dbfb41dbe5e9070093d4615d5f00f}
+}]Point which becomes the new U\+CS origin after changing paper space U\+CS to T\+OP when P\+U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{P\+U\+C\+S\+O\+R\+T\+H\+O\+R\+EF@{P\+U\+C\+S\+O\+R\+T\+H\+O\+R\+EF}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+O\+R\+T\+H\+O\+R\+EF@{P\+U\+C\+S\+O\+R\+T\+H\+O\+R\+EF}}\item[{\em 
+P\+U\+C\+S\+O\+R\+T\+H\+O\+R\+EF\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae33d7119327ff6bd8d3a68ad18119e50}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae33d7119327ff6bd8d3a68ad18119e50}
+}]If paper space U\+CS is orthographic (P\+U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW not equal to 0), this is the name of the U\+CS that the orthographic U\+CS is relative to. If blank, U\+CS is relative to W\+O\+R\+LD \index{P\+U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW@{P\+U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW@{P\+U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW}}\item[{\em 
+P\+U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a13f84e991a3002c869f4b5f578cbe268}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a13f84e991a3002c869f4b5f578cbe268}
+}]Orthographic view type of paper space U\+CS\+: 0 = U\+CS is not orthographic 1 = Top 2 = Bottom 3 = Front 4 = Back 5 = Left 6 = Right \index{P\+U\+C\+S\+X\+D\+IR@{P\+U\+C\+S\+X\+D\+IR}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+X\+D\+IR@{P\+U\+C\+S\+X\+D\+IR}}\item[{\em 
+P\+U\+C\+S\+X\+D\+IR\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acd0dc2de2eddca02e3e5ef9ba28df707}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acd0dc2de2eddca02e3e5ef9ba28df707}
+}]Current paper space U\+CS X axis \index{P\+U\+C\+S\+Y\+D\+IR@{P\+U\+C\+S\+Y\+D\+IR}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+U\+C\+S\+Y\+D\+IR@{P\+U\+C\+S\+Y\+D\+IR}}\item[{\em 
+P\+U\+C\+S\+Y\+D\+IR\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7a33cb15687b8a798d27adb47991aaf1}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7a33cb15687b8a798d27adb47991aaf1}
+}]Current paper space U\+CS Y axis \index{Q\+T\+E\+X\+T\+M\+O\+DE@{Q\+T\+E\+X\+T\+M\+O\+DE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!Q\+T\+E\+X\+T\+M\+O\+DE@{Q\+T\+E\+X\+T\+M\+O\+DE}}\item[{\em 
+Q\+T\+E\+X\+T\+M\+O\+DE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1b42d547886b05e0e4b3f0810b318f6a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1b42d547886b05e0e4b3f0810b318f6a}
+}]Quick Text mode on if nonzero \index{R\+E\+G\+E\+N\+M\+O\+DE@{R\+E\+G\+E\+N\+M\+O\+DE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!R\+E\+G\+E\+N\+M\+O\+DE@{R\+E\+G\+E\+N\+M\+O\+DE}}\item[{\em 
+R\+E\+G\+E\+N\+M\+O\+DE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a29296a568f18a258dc47cd75a6d7cf03}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a29296a568f18a258dc47cd75a6d7cf03}
+}]R\+E\+G\+E\+N\+A\+U\+TO mode on if nonzero \index{S\+H\+A\+D\+E\+D\+GE@{S\+H\+A\+D\+E\+D\+GE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+H\+A\+D\+E\+D\+GE@{S\+H\+A\+D\+E\+D\+GE}}\item[{\em 
+S\+H\+A\+D\+E\+D\+GE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7c5f32a4146f387dceb152ca2944038e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a7c5f32a4146f387dceb152ca2944038e}
+}]0 = Faces shaded, edges not highlighted 1 = Faces shaded, edges highlighted in black 2 = Faces not filled, edges in entity color 3 = Faces in entity color, edges in black \index{S\+H\+A\+D\+E\+D\+IF@{S\+H\+A\+D\+E\+D\+IF}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+H\+A\+D\+E\+D\+IF@{S\+H\+A\+D\+E\+D\+IF}}\item[{\em 
+S\+H\+A\+D\+E\+D\+IF\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3f1a8467964e8d829ddc091b478c6c79}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a3f1a8467964e8d829ddc091b478c6c79}
+}]Percent ambient/diffuse light range 1-\/100 default 70 \index{S\+H\+A\+D\+O\+W\+P\+L\+A\+N\+E\+L\+O\+C\+A\+T\+I\+ON@{S\+H\+A\+D\+O\+W\+P\+L\+A\+N\+E\+L\+O\+C\+A\+T\+I\+ON}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+H\+A\+D\+O\+W\+P\+L\+A\+N\+E\+L\+O\+C\+A\+T\+I\+ON@{S\+H\+A\+D\+O\+W\+P\+L\+A\+N\+E\+L\+O\+C\+A\+T\+I\+ON}}\item[{\em 
+S\+H\+A\+D\+O\+W\+P\+L\+A\+N\+E\+L\+O\+C\+A\+T\+I\+ON\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9fd9e059bbc8a47725482c2bb8fc3e8e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9fd9e059bbc8a47725482c2bb8fc3e8e}
+}]Location of the ground shadow plane. This is a Z axis ordinate. \index{S\+K\+E\+T\+C\+H\+I\+NC@{S\+K\+E\+T\+C\+H\+I\+NC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+K\+E\+T\+C\+H\+I\+NC@{S\+K\+E\+T\+C\+H\+I\+NC}}\item[{\em 
+S\+K\+E\+T\+C\+H\+I\+NC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad41348c6e6255f666f63061430e90d05}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ad41348c6e6255f666f63061430e90d05}
+}]Sketch record increment \index{S\+K\+P\+O\+LY@{S\+K\+P\+O\+LY}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+K\+P\+O\+LY@{S\+K\+P\+O\+LY}}\item[{\em 
+S\+K\+P\+O\+LY\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aacb2165ff3c4bf51088e2b47bd39ff73}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aacb2165ff3c4bf51088e2b47bd39ff73}
+}]0 = Sketch lines 1 = Sketch polylines \index{S\+O\+R\+T\+E\+N\+TS@{S\+O\+R\+T\+E\+N\+TS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+O\+R\+T\+E\+N\+TS@{S\+O\+R\+T\+E\+N\+TS}}\item[{\em 
+S\+O\+R\+T\+E\+N\+TS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab7efa856c989567ef66644e05b3d8334}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab7efa856c989567ef66644e05b3d8334}
+}]Controls the object sorting methods; accessible from the Options dialog box User Preferences tab. S\+O\+R\+T\+E\+N\+TS uses the following bitcodes\+: 0 = Disables S\+O\+R\+T\+E\+N\+TS 1 = Sorts for object selection 2 = Sorts for object snap 4 = Sorts for redraws 8 = Sorts for M\+S\+L\+I\+DE command slide creation 16 = Sorts for R\+E\+G\+EN commands 32 = Sorts for plotting 64 = Sorts for Post\+Script output \index{S\+P\+L\+I\+N\+E\+S\+E\+GS@{S\+P\+L\+I\+N\+E\+S\+E\+GS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+P\+L\+I\+N\+E\+S\+E\+GS@{S\+P\+L\+I\+N\+E\+S\+E\+GS}}\item[{\em 
+S\+P\+L\+I\+N\+E\+S\+E\+GS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae6731cea5ff873ba88da93c2971d7003}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae6731cea5ff873ba88da93c2971d7003}
+}]Number of line segments per spline patch \index{S\+P\+L\+I\+N\+E\+T\+Y\+PE@{S\+P\+L\+I\+N\+E\+T\+Y\+PE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+P\+L\+I\+N\+E\+T\+Y\+PE@{S\+P\+L\+I\+N\+E\+T\+Y\+PE}}\item[{\em 
+S\+P\+L\+I\+N\+E\+T\+Y\+PE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a454c87af288f6831ddd3e9ef21aeab9e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a454c87af288f6831ddd3e9ef21aeab9e}
+}]Spline curve type for P\+E\+D\+IT Spline \index{S\+U\+R\+F\+T\+A\+B1@{S\+U\+R\+F\+T\+A\+B1}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+U\+R\+F\+T\+A\+B1@{S\+U\+R\+F\+T\+A\+B1}}\item[{\em 
+S\+U\+R\+F\+T\+A\+B1\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a220e43663cb21e0e8ca640787b442e03}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a220e43663cb21e0e8ca640787b442e03}
+}]Number of mesh tabulations in first direction \index{S\+U\+R\+F\+T\+A\+B2@{S\+U\+R\+F\+T\+A\+B2}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+U\+R\+F\+T\+A\+B2@{S\+U\+R\+F\+T\+A\+B2}}\item[{\em 
+S\+U\+R\+F\+T\+A\+B2\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4df698aad8944a5cd8fbae33fe76f248}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a4df698aad8944a5cd8fbae33fe76f248}
+}]Number of mesh tabulations in second direction \index{S\+U\+R\+F\+T\+Y\+PE@{S\+U\+R\+F\+T\+Y\+PE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+U\+R\+F\+T\+Y\+PE@{S\+U\+R\+F\+T\+Y\+PE}}\item[{\em 
+S\+U\+R\+F\+T\+Y\+PE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aec2d15b2339c02d5798049ae6c1aeb3f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aec2d15b2339c02d5798049ae6c1aeb3f}
+}]Surface type for P\+E\+D\+IT Smooth \index{S\+U\+R\+FU@{S\+U\+R\+FU}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+U\+R\+FU@{S\+U\+R\+FU}}\item[{\em 
+S\+U\+R\+FU\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae3960f8bda99114c123b63c56f0f766a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ae3960f8bda99114c123b63c56f0f766a}
+}]Surface density (for P\+E\+D\+IT Smooth) in M direction \index{S\+U\+R\+FV@{S\+U\+R\+FV}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+U\+R\+FV@{S\+U\+R\+FV}}\item[{\em 
+S\+U\+R\+FV\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a02c02f09bee8e376086fbc806ba1fcfb}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a02c02f09bee8e376086fbc806ba1fcfb}
+}]Surface density (for P\+E\+D\+IT Smooth) in N direction \index{T\+D\+C\+R\+E\+A\+TE@{T\+D\+C\+R\+E\+A\+TE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+D\+C\+R\+E\+A\+TE@{T\+D\+C\+R\+E\+A\+TE}}\item[{\em 
+T\+D\+C\+R\+E\+A\+TE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a53985e9ed978cfb35930a710c4351f1f}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a53985e9ed978cfb35930a710c4351f1f}
+}]Local date/time of drawing creation (see “\+Special Handling of Date/\+Time Variables”) \index{T\+D\+I\+N\+D\+WG@{T\+D\+I\+N\+D\+WG}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+D\+I\+N\+D\+WG@{T\+D\+I\+N\+D\+WG}}\item[{\em 
+T\+D\+I\+N\+D\+WG\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a60852c0f83b55c19076a3768c772c176}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a60852c0f83b55c19076a3768c772c176}
+}]Cumulative editing time for this drawing \index{T\+D\+U\+C\+R\+E\+A\+TE@{T\+D\+U\+C\+R\+E\+A\+TE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+D\+U\+C\+R\+E\+A\+TE@{T\+D\+U\+C\+R\+E\+A\+TE}}\item[{\em 
+T\+D\+U\+C\+R\+E\+A\+TE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6b048e7996bf2468ba7a698fb8f34864}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a6b048e7996bf2468ba7a698fb8f34864}
+}]Universal date/time the drawing was created \index{T\+D\+U\+P\+D\+A\+TE@{T\+D\+U\+P\+D\+A\+TE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+D\+U\+P\+D\+A\+TE@{T\+D\+U\+P\+D\+A\+TE}}\item[{\em 
+T\+D\+U\+P\+D\+A\+TE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2901376ecb684fe1c440562f15eb73f3}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2901376ecb684fe1c440562f15eb73f3}
+}]Local date/time of last drawing update \index{T\+D\+U\+S\+R\+T\+I\+M\+ER@{T\+D\+U\+S\+R\+T\+I\+M\+ER}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+D\+U\+S\+R\+T\+I\+M\+ER@{T\+D\+U\+S\+R\+T\+I\+M\+ER}}\item[{\em 
+T\+D\+U\+S\+R\+T\+I\+M\+ER\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a29b7127bbffbdccb9e36665aeb5c98f2}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a29b7127bbffbdccb9e36665aeb5c98f2}
+}]User-\/elapsed timer \index{T\+D\+U\+U\+P\+D\+A\+TE@{T\+D\+U\+U\+P\+D\+A\+TE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+D\+U\+U\+P\+D\+A\+TE@{T\+D\+U\+U\+P\+D\+A\+TE}}\item[{\em 
+T\+D\+U\+U\+P\+D\+A\+TE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8c229fb121cc19b9a94a1765bbbdd440}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8c229fb121cc19b9a94a1765bbbdd440}
+}]Universal date/time of the last update/save \index{T\+E\+X\+T\+S\+I\+ZE@{T\+E\+X\+T\+S\+I\+ZE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+E\+X\+T\+S\+I\+ZE@{T\+E\+X\+T\+S\+I\+ZE}}\item[{\em 
+T\+E\+X\+T\+S\+I\+ZE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8635c496af40439759037abb70cf2ea8}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8635c496af40439759037abb70cf2ea8}
+}]Default text height \index{T\+E\+X\+T\+S\+T\+Y\+LE@{T\+E\+X\+T\+S\+T\+Y\+LE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+E\+X\+T\+S\+T\+Y\+LE@{T\+E\+X\+T\+S\+T\+Y\+LE}}\item[{\em 
+T\+E\+X\+T\+S\+T\+Y\+LE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afea5969dcc97c7b2ee630b05352b7c5c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886afea5969dcc97c7b2ee630b05352b7c5c}
+}]Current text style name \index{T\+H\+I\+C\+K\+N\+E\+SS@{T\+H\+I\+C\+K\+N\+E\+SS}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+H\+I\+C\+K\+N\+E\+SS@{T\+H\+I\+C\+K\+N\+E\+SS}}\item[{\em 
+T\+H\+I\+C\+K\+N\+E\+SS\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a176c8b6bb45d625bbf8791f3a53693ef}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a176c8b6bb45d625bbf8791f3a53693ef}
+}]Current thickness set by E\+L\+EV command \index{T\+I\+L\+E\+M\+O\+DE@{T\+I\+L\+E\+M\+O\+DE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+I\+L\+E\+M\+O\+DE@{T\+I\+L\+E\+M\+O\+DE}}\item[{\em 
+T\+I\+L\+E\+M\+O\+DE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a212f97594bd177084a59ca91ac47ad20}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a212f97594bd177084a59ca91ac47ad20}
+}]1 for previous release compatibility mode 0 otherwise \index{T\+R\+A\+C\+E\+W\+ID@{T\+R\+A\+C\+E\+W\+ID}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+R\+A\+C\+E\+W\+ID@{T\+R\+A\+C\+E\+W\+ID}}\item[{\em 
+T\+R\+A\+C\+E\+W\+ID\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2ab5c71629e35fb2224cc435c60fee36}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2ab5c71629e35fb2224cc435c60fee36}
+}]Default trace width \index{T\+R\+E\+E\+D\+E\+P\+TH@{T\+R\+E\+E\+D\+E\+P\+TH}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+R\+E\+E\+D\+E\+P\+TH@{T\+R\+E\+E\+D\+E\+P\+TH}}\item[{\em 
+T\+R\+E\+E\+D\+E\+P\+TH\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab45224634b324b6695e92f367840af31}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab45224634b324b6695e92f367840af31}
+}]Specifies the maximum depth of the spatial index \index{U\+C\+S\+B\+A\+SE@{U\+C\+S\+B\+A\+SE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+B\+A\+SE@{U\+C\+S\+B\+A\+SE}}\item[{\em 
+U\+C\+S\+B\+A\+SE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a03cff61ba6eac15372300b8f17759663}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a03cff61ba6eac15372300b8f17759663}
+}]Name of the U\+CS that defines the origin and orientation of orthographic U\+CS settings \index{U\+C\+S\+N\+A\+ME@{U\+C\+S\+N\+A\+ME}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+N\+A\+ME@{U\+C\+S\+N\+A\+ME}}\item[{\em 
+U\+C\+S\+N\+A\+ME\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a79ed8033f1c56abe61fc14a2321daad2}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a79ed8033f1c56abe61fc14a2321daad2}
+}]Name of current U\+CS \index{U\+C\+S\+O\+RG@{U\+C\+S\+O\+RG}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+O\+RG@{U\+C\+S\+O\+RG}}\item[{\em 
+U\+C\+S\+O\+RG\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adfc4bfaebf9567193d6eb775a1c8d736}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886adfc4bfaebf9567193d6eb775a1c8d736}
+}]Origin of current U\+CS (in W\+CS) \index{U\+C\+S\+O\+R\+G\+B\+A\+CK@{U\+C\+S\+O\+R\+G\+B\+A\+CK}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+O\+R\+G\+B\+A\+CK@{U\+C\+S\+O\+R\+G\+B\+A\+CK}}\item[{\em 
+U\+C\+S\+O\+R\+G\+B\+A\+CK\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab55107523caef697786632f890280de5}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab55107523caef697786632f890280de5}
+}]Point which becomes the new U\+CS origin after changing model space U\+CS to B\+A\+CK when U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM@{U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM@{U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM}}\item[{\em 
+U\+C\+S\+O\+R\+G\+B\+O\+T\+T\+OM\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a434f2b340421e7c797f49444d9373af0}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a434f2b340421e7c797f49444d9373af0}
+}]Point which becomes the new U\+CS origin after changing model space U\+CS to B\+O\+T\+T\+OM when U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{U\+C\+S\+O\+R\+G\+F\+R\+O\+NT@{U\+C\+S\+O\+R\+G\+F\+R\+O\+NT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+O\+R\+G\+F\+R\+O\+NT@{U\+C\+S\+O\+R\+G\+F\+R\+O\+NT}}\item[{\em 
+U\+C\+S\+O\+R\+G\+F\+R\+O\+NT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a42972f72fef44bb007a6f8f1a681f8f0}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a42972f72fef44bb007a6f8f1a681f8f0}
+}]Point which becomes the new U\+CS origin after changing model space U\+CS to F\+R\+O\+NT when U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{U\+C\+S\+O\+R\+G\+L\+E\+FT@{U\+C\+S\+O\+R\+G\+L\+E\+FT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+O\+R\+G\+L\+E\+FT@{U\+C\+S\+O\+R\+G\+L\+E\+FT}}\item[{\em 
+U\+C\+S\+O\+R\+G\+L\+E\+FT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa201b0578392812d276d9d23a6f8201d}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aa201b0578392812d276d9d23a6f8201d}
+}]Point which becomes the new U\+CS origin after changing model space U\+CS to L\+E\+FT when U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{U\+C\+S\+O\+R\+G\+R\+I\+G\+HT@{U\+C\+S\+O\+R\+G\+R\+I\+G\+HT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+O\+R\+G\+R\+I\+G\+HT@{U\+C\+S\+O\+R\+G\+R\+I\+G\+HT}}\item[{\em 
+U\+C\+S\+O\+R\+G\+R\+I\+G\+HT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af4a1a05f29e8276d1bfe2f259b831919}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af4a1a05f29e8276d1bfe2f259b831919}
+}]Point which becomes the new U\+CS origin after changing model space U\+CS to R\+I\+G\+HT when U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{U\+C\+S\+O\+R\+G\+T\+OP@{U\+C\+S\+O\+R\+G\+T\+OP}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+O\+R\+G\+T\+OP@{U\+C\+S\+O\+R\+G\+T\+OP}}\item[{\em 
+U\+C\+S\+O\+R\+G\+T\+OP\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9badade58920b72ec3bcd35c44bc1e66}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9badade58920b72ec3bcd35c44bc1e66}
+}]Point which becomes the new U\+CS origin after changing model space U\+CS to T\+OP when U\+C\+S\+B\+A\+SE is set to W\+O\+R\+LD \index{U\+C\+S\+O\+R\+T\+H\+O\+R\+EF@{U\+C\+S\+O\+R\+T\+H\+O\+R\+EF}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+O\+R\+T\+H\+O\+R\+EF@{U\+C\+S\+O\+R\+T\+H\+O\+R\+EF}}\item[{\em 
+U\+C\+S\+O\+R\+T\+H\+O\+R\+EF\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a34b979b2dbe7209cf244a6995e0b0869}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a34b979b2dbe7209cf244a6995e0b0869}
+}]If model space U\+CS is orthographic (U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW not equal to 0), this is the name of the U\+CS that the orthographic U\+CS is relative to. If blank, U\+CS is relative to W\+O\+R\+LD \index{U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW@{U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW@{U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW}}\item[{\em 
+U\+C\+S\+O\+R\+T\+H\+O\+V\+I\+EW\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0284925d4cba45f471d418c3e315a82a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a0284925d4cba45f471d418c3e315a82a}
+}]Orthographic view type of model space U\+CS\+: 0 = U\+CS is not orthographic 1 = Top 2 = Bottom 3 = Front 4 = Back 5 = Left 6 = Right \index{U\+C\+S\+X\+D\+IR@{U\+C\+S\+X\+D\+IR}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+X\+D\+IR@{U\+C\+S\+X\+D\+IR}}\item[{\em 
+U\+C\+S\+X\+D\+IR\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac52ea9b5dc1a62e2906d519c9ed3144b}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ac52ea9b5dc1a62e2906d519c9ed3144b}
+}]Direction of the current U\+CS X axis (in W\+CS) \index{U\+C\+S\+Y\+D\+IR@{U\+C\+S\+Y\+D\+IR}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+C\+S\+Y\+D\+IR@{U\+C\+S\+Y\+D\+IR}}\item[{\em 
+U\+C\+S\+Y\+D\+IR\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af09f83c7c9f7892d7736a944a2647c76}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af09f83c7c9f7892d7736a944a2647c76}
+}]Direction of the current U\+CS Y axis (in W\+CS) \index{U\+N\+I\+T\+M\+O\+DE@{U\+N\+I\+T\+M\+O\+DE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+N\+I\+T\+M\+O\+DE@{U\+N\+I\+T\+M\+O\+DE}}\item[{\em 
+U\+N\+I\+T\+M\+O\+DE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2e68d1e84f1eab249e55ba29fba71084}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2e68d1e84f1eab249e55ba29fba71084}
+}]Low bit set = Display fractions, feet-\/and-\/inches, and surveyor\textquotesingle{}s angles in input format \index{U\+S\+E\+R\+I1@{U\+S\+E\+R\+I1}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+S\+E\+R\+I1@{U\+S\+E\+R\+I1}}\item[{\em 
+U\+S\+E\+R\+I1\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9fca09d5ede6f4b269158cfe471dc542}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9fca09d5ede6f4b269158cfe471dc542}
+}]Five integer variables intended for use by third-\/party developers \index{U\+S\+E\+R\+R1@{U\+S\+E\+R\+R1}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+S\+E\+R\+R1@{U\+S\+E\+R\+R1}}\item[{\em 
+U\+S\+E\+R\+R1\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9afa38205aa6eae4bac9fe2a47396fdb}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a9afa38205aa6eae4bac9fe2a47396fdb}
+}]Five real variables intended for use by third-\/party developers \index{U\+S\+R\+T\+I\+M\+ER@{U\+S\+R\+T\+I\+M\+ER}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!U\+S\+R\+T\+I\+M\+ER@{U\+S\+R\+T\+I\+M\+ER}}\item[{\em 
+U\+S\+R\+T\+I\+M\+ER\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af51978c519b55c723d0317200801a312}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af51978c519b55c723d0317200801a312}
+}]0 = Timer off 1 = Timer on \index{V\+E\+R\+S\+I\+O\+N\+G\+U\+ID@{V\+E\+R\+S\+I\+O\+N\+G\+U\+ID}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!V\+E\+R\+S\+I\+O\+N\+G\+U\+ID@{V\+E\+R\+S\+I\+O\+N\+G\+U\+ID}}\item[{\em 
+V\+E\+R\+S\+I\+O\+N\+G\+U\+ID\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8b1ac2e7736ee50f9f8d602055be7d61}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a8b1ac2e7736ee50f9f8d602055be7d61}
+}]Uniquely identifies a particular version of a drawing. Updated when the drawing is modified \index{V\+I\+S\+R\+E\+T\+A\+IN@{V\+I\+S\+R\+E\+T\+A\+IN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!V\+I\+S\+R\+E\+T\+A\+IN@{V\+I\+S\+R\+E\+T\+A\+IN}}\item[{\em 
+V\+I\+S\+R\+E\+T\+A\+IN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abdcc83230c295f567caf2781a8b59ea1}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abdcc83230c295f567caf2781a8b59ea1}
+}]0 = Don\textquotesingle{}t retain xref-\/dependent visibility settings 1 = Retain xref-\/dependent visibility settings \index{W\+O\+R\+L\+D\+V\+I\+EW@{W\+O\+R\+L\+D\+V\+I\+EW}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!W\+O\+R\+L\+D\+V\+I\+EW@{W\+O\+R\+L\+D\+V\+I\+EW}}\item[{\em 
+W\+O\+R\+L\+D\+V\+I\+EW\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab2930a2e265052312bd759bfc0ec6cf1}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab2930a2e265052312bd759bfc0ec6cf1}
+}]1 = Set U\+CS to W\+CS during D\+V\+I\+E\+W/\+V\+P\+O\+I\+NT 0 = Don\textquotesingle{}t change U\+CS \index{X\+C\+L\+I\+P\+F\+R\+A\+ME@{X\+C\+L\+I\+P\+F\+R\+A\+ME}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!X\+C\+L\+I\+P\+F\+R\+A\+ME@{X\+C\+L\+I\+P\+F\+R\+A\+ME}}\item[{\em 
+X\+C\+L\+I\+P\+F\+R\+A\+ME\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a61c00c87ceffb9a84a4b96275fa5d77c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a61c00c87ceffb9a84a4b96275fa5d77c}
+}]Controls the visibility of xref clipping boundaries\+: 0 = Clipping boundary is not visible 1 = Clipping boundary is visible \index{X\+E\+D\+IT@{X\+E\+D\+IT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!X\+E\+D\+IT@{X\+E\+D\+IT}}\item[{\em 
+X\+E\+D\+IT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abfdc739888ced20da3813e30d448ae18}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886abfdc739888ced20da3813e30d448ae18}
+}]Controls whether the current drawing can be edited in-\/place when being referenced by another drawing. 0 = Can\textquotesingle{}t use in-\/place reference editing 1 = Can use in-\/place reference editing \index{W\+O\+R\+D\+L\+V\+I\+EW@{W\+O\+R\+D\+L\+V\+I\+EW}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!W\+O\+R\+D\+L\+V\+I\+EW@{W\+O\+R\+D\+L\+V\+I\+EW}}\item[{\em 
+W\+O\+R\+D\+L\+V\+I\+EW\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a719e06ab0df2ea7ad482857c2a7b4d38}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a719e06ab0df2ea7ad482857c2a7b4d38}
+}]? \index{P\+E\+L\+L\+I\+P\+SE@{P\+E\+L\+L\+I\+P\+SE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!P\+E\+L\+L\+I\+P\+SE@{P\+E\+L\+L\+I\+P\+SE}}\item[{\em 
+P\+E\+L\+L\+I\+P\+SE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af40c66b7649167b773cd25621d09b3b5}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af40c66b7649167b773cd25621d09b3b5}
+}]? \index{I\+S\+O\+L\+I\+N\+ES@{I\+S\+O\+L\+I\+N\+ES}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!I\+S\+O\+L\+I\+N\+ES@{I\+S\+O\+L\+I\+N\+ES}}\item[{\em 
+I\+S\+O\+L\+I\+N\+ES\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aff7db36e7a077b4bc550fb110c58e2ca}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886aff7db36e7a077b4bc550fb110c58e2ca}
+}]? \index{T\+E\+X\+T\+Q\+L\+TY@{T\+E\+X\+T\+Q\+L\+TY}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+E\+X\+T\+Q\+L\+TY@{T\+E\+X\+T\+Q\+L\+TY}}\item[{\em 
+T\+E\+X\+T\+Q\+L\+TY\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acfee17d2e52f9520592ce6102e3c7056}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886acfee17d2e52f9520592ce6102e3c7056}
+}]? \index{F\+A\+C\+E\+T\+R\+ES@{F\+A\+C\+E\+T\+R\+ES}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!F\+A\+C\+E\+T\+R\+ES@{F\+A\+C\+E\+T\+R\+ES}}\item[{\em 
+F\+A\+C\+E\+T\+R\+ES\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a182c402edc4f3686229c9edc4afefb8a}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a182c402edc4f3686229c9edc4afefb8a}
+}]? \index{D\+I\+M\+F\+R\+AC@{D\+I\+M\+F\+R\+AC}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!D\+I\+M\+F\+R\+AC@{D\+I\+M\+F\+R\+AC}}\item[{\em 
+D\+I\+M\+F\+R\+AC\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a793cc413cf55a88d06244d08d6918287}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a793cc413cf55a88d06244d08d6918287}
+}]? \index{O\+L\+E\+S\+T\+A\+R\+T\+UP@{O\+L\+E\+S\+T\+A\+R\+T\+UP}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!O\+L\+E\+S\+T\+A\+R\+T\+UP@{O\+L\+E\+S\+T\+A\+R\+T\+UP}}\item[{\em 
+O\+L\+E\+S\+T\+A\+R\+T\+UP\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af93fc410bb58212ad43956fe69c9686e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886af93fc410bb58212ad43956fe69c9686e}
+}]? \index{S\+T\+Y\+L\+E\+S\+H\+E\+ET@{S\+T\+Y\+L\+E\+S\+H\+E\+ET}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!S\+T\+Y\+L\+E\+S\+H\+E\+ET@{S\+T\+Y\+L\+E\+S\+H\+E\+ET}}\item[{\em 
+S\+T\+Y\+L\+E\+S\+H\+E\+ET\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab01373a926d5a25238000a4613058b3e}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886ab01373a926d5a25238000a4613058b3e}
+}]? \index{T\+S\+T\+A\+C\+K\+A\+L\+I\+GN@{T\+S\+T\+A\+C\+K\+A\+L\+I\+GN}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+S\+T\+A\+C\+K\+A\+L\+I\+GN@{T\+S\+T\+A\+C\+K\+A\+L\+I\+GN}}\item[{\em 
+T\+S\+T\+A\+C\+K\+A\+L\+I\+GN\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2dc8dd9f4980b96c154eb3b94987b1b1}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a2dc8dd9f4980b96c154eb3b94987b1b1}
+}]? default = 1 (not present in D\+XF) \index{T\+S\+T\+A\+C\+K\+S\+I\+ZE@{T\+S\+T\+A\+C\+K\+S\+I\+ZE}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!T\+S\+T\+A\+C\+K\+S\+I\+ZE@{T\+S\+T\+A\+C\+K\+S\+I\+ZE}}\item[{\em 
+T\+S\+T\+A\+C\+K\+S\+I\+ZE\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a23c0fec34caffaf827cc89fbd6dc792c}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a23c0fec34caffaf827cc89fbd6dc792c}
+}]default = 70 (not present in D\+XF) \index{M\+A\+X\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+C\+O\+N\+S\+T\+A\+NT@{M\+A\+X\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+C\+O\+N\+S\+T\+A\+NT}!C\+A\+D\+Header@{C\+A\+D\+Header}}\index{C\+A\+D\+Header@{C\+A\+D\+Header}!M\+A\+X\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+C\+O\+N\+S\+T\+A\+NT@{M\+A\+X\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+C\+O\+N\+S\+T\+A\+NT}}\item[{\em 
+M\+A\+X\+\_\+\+H\+E\+A\+D\+E\+R\+\_\+\+C\+O\+N\+S\+T\+A\+NT\hypertarget{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1e5db9191e11e71875557403e39a2adb}{}\label{class_c_a_d_header_abd894aab7aa85b4c4634e67fb93d6886a1e5db9191e11e71875557403e39a2adb}
+}]max + num for user constants \end{description}
+\end{Desc}
+
+
+\subsection{Member Function Documentation}
+\index{C\+A\+D\+Header@{C\+A\+D\+Header}!add\+Value@{add\+Value}}
+\index{add\+Value@{add\+Value}!C\+A\+D\+Header@{C\+A\+D\+Header}}
+\subsubsection[{\texorpdfstring{add\+Value(short code, const C\+A\+D\+Variant \&val)}{addValue(short code, const CADVariant &val)}}]{\setlength{\rightskip}{0pt plus 5cm}int C\+A\+D\+Header\+::add\+Value (
+\begin{DoxyParamCaption}
+\item[{short}]{code, }
+\item[{const {\bf C\+A\+D\+Variant} \&}]{val}
+\end{DoxyParamCaption}
+)}\hypertarget{class_c_a_d_header_a473f456d99e96825bb5207a5c4abeaa4}{}\label{class_c_a_d_header_a473f456d99e96825bb5207a5c4abeaa4}
+
+
+Add new value to the C\+AD file header. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em code} & The code from constants enum \\
+\hline
+{\em val} & Value to add \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+S\+U\+C\+C\+E\+SS or some value from C\+A\+D\+Error\+Codes 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cadheader.\+h\item 
+cadheader.\+cpp\end{DoxyCompactItemize}

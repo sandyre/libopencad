@@ -1,0 +1,107 @@
+\hypertarget{class_c_a_d_variant}{}\section{C\+A\+D\+Variant Class Reference}
+\label{class_c_a_d_variant}\index{C\+A\+D\+Variant@{C\+A\+D\+Variant}}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum {\bfseries Data\+Type} \{ \\*
+{\bfseries I\+N\+V\+A\+L\+ID} = 0, 
+{\bfseries D\+E\+C\+I\+M\+AL}, 
+{\bfseries R\+E\+AL}, 
+{\bfseries S\+T\+R\+I\+NG}, 
+\\*
+{\bfseries D\+A\+T\+E\+T\+I\+ME}, 
+{\bfseries C\+O\+O\+R\+D\+I\+N\+A\+T\+ES}, 
+{\bfseries H\+A\+N\+D\+LE}
+ \}\hypertarget{class_c_a_d_variant_aa4669662c406fee57bbf5fbf5d261e6b}{}\label{class_c_a_d_variant_aa4669662c406fee57bbf5fbf5d261e6b}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries C\+A\+D\+Variant} (const char $\ast$val)\hypertarget{class_c_a_d_variant_a68ce24d11069e687fddbb2367e5a071a}{}\label{class_c_a_d_variant_a68ce24d11069e687fddbb2367e5a071a}
+
+\item 
+{\bfseries C\+A\+D\+Variant} (int val)\hypertarget{class_c_a_d_variant_ad3f6fdeb0ff96df77a4a40a539680504}{}\label{class_c_a_d_variant_ad3f6fdeb0ff96df77a4a40a539680504}
+
+\item 
+{\bfseries C\+A\+D\+Variant} (short val)\hypertarget{class_c_a_d_variant_a48705f35cd660d75385a5d5b8a6affe3}{}\label{class_c_a_d_variant_a48705f35cd660d75385a5d5b8a6affe3}
+
+\item 
+{\bfseries C\+A\+D\+Variant} (double val)\hypertarget{class_c_a_d_variant_a23b521277df3c62d867f28ab0285e5db}{}\label{class_c_a_d_variant_a23b521277df3c62d867f28ab0285e5db}
+
+\item 
+{\bfseries C\+A\+D\+Variant} (double x, double y, double z=0)\hypertarget{class_c_a_d_variant_a46f4d49111213f913e384175bcd39841}{}\label{class_c_a_d_variant_a46f4d49111213f913e384175bcd39841}
+
+\item 
+{\bfseries C\+A\+D\+Variant} (const \hyperlink{class_c_a_d_handle}{C\+A\+D\+Handle} \&val)\hypertarget{class_c_a_d_variant_a09d2bfde4868907c2a945bb4f0848d7b}{}\label{class_c_a_d_variant_a09d2bfde4868907c2a945bb4f0848d7b}
+
+\item 
+{\bfseries C\+A\+D\+Variant} (const std\+::string \&val)\hypertarget{class_c_a_d_variant_a809d13c722cc0b252d47f0b72c33e19a}{}\label{class_c_a_d_variant_a809d13c722cc0b252d47f0b72c33e19a}
+
+\item 
+{\bfseries C\+A\+D\+Variant} (time\+\_\+t val)\hypertarget{class_c_a_d_variant_a43cc75aec23c681cedbd06b4ef2d9296}{}\label{class_c_a_d_variant_a43cc75aec23c681cedbd06b4ef2d9296}
+
+\item 
+{\bfseries C\+A\+D\+Variant} (const \hyperlink{class_c_a_d_variant}{C\+A\+D\+Variant} \&orig)\hypertarget{class_c_a_d_variant_a5a6a5b5babb63b0a834ff2015bfaf647}{}\label{class_c_a_d_variant_a5a6a5b5babb63b0a834ff2015bfaf647}
+
+\item 
+\hyperlink{class_c_a_d_variant}{C\+A\+D\+Variant} \& {\bfseries operator=} (const \hyperlink{class_c_a_d_variant}{C\+A\+D\+Variant} \&orig)\hypertarget{class_c_a_d_variant_a260d29f3aa99eed02ea742c2ddc2313c}{}\label{class_c_a_d_variant_a260d29f3aa99eed02ea742c2ddc2313c}
+
+\item 
+long {\bfseries get\+Decimal} () const \hypertarget{class_c_a_d_variant_a6a265d865868d3f4b3419eb1cd345532}{}\label{class_c_a_d_variant_a6a265d865868d3f4b3419eb1cd345532}
+
+\item 
+double {\bfseries get\+Real} () const \hypertarget{class_c_a_d_variant_a5df0a04b59b49dbca75d1f1db55153ab}{}\label{class_c_a_d_variant_a5df0a04b59b49dbca75d1f1db55153ab}
+
+\item 
+const std\+::string \& {\bfseries get\+String} () const \hypertarget{class_c_a_d_variant_ae344804201e52110e53cac94692d78a2}{}\label{class_c_a_d_variant_ae344804201e52110e53cac94692d78a2}
+
+\item 
+enum Data\+Type {\bfseries get\+Type} () const \hypertarget{class_c_a_d_variant_a6c71f92e7012ac5ca85331d33e6c5821}{}\label{class_c_a_d_variant_a6c71f92e7012ac5ca85331d33e6c5821}
+
+\item 
+double {\bfseries getX} () const \hypertarget{class_c_a_d_variant_a6b2b730d0ab1566305855df53cb32437}{}\label{class_c_a_d_variant_a6b2b730d0ab1566305855df53cb32437}
+
+\item 
+double {\bfseries getY} () const \hypertarget{class_c_a_d_variant_a5a4cda78486f7d8431e473644970d0b4}{}\label{class_c_a_d_variant_a5a4cda78486f7d8431e473644970d0b4}
+
+\item 
+double {\bfseries getZ} () const \hypertarget{class_c_a_d_variant_a40e209ceb96c1936fe0c365ab8d374ff}{}\label{class_c_a_d_variant_a40e209ceb96c1936fe0c365ab8d374ff}
+
+\item 
+const \hyperlink{class_c_a_d_handle}{C\+A\+D\+Handle} \& {\bfseries get\+Handle} () const \hypertarget{class_c_a_d_variant_ad7be9eb2e34e369c00598d7b279603e0}{}\label{class_c_a_d_variant_ad7be9eb2e34e369c00598d7b279603e0}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+enum Data\+Type {\bfseries type}\hypertarget{class_c_a_d_variant_a7f8b541079fd781dd8b64951518c33ef}{}\label{class_c_a_d_variant_a7f8b541079fd781dd8b64951518c33ef}
+
+\item 
+long {\bfseries decimal\+Val}\hypertarget{class_c_a_d_variant_a1add0d317794ac0280075758eee14ddc}{}\label{class_c_a_d_variant_a1add0d317794ac0280075758eee14ddc}
+
+\item 
+double {\bfseries x\+Val}\hypertarget{class_c_a_d_variant_a58c570bbd559fb8febaf34dad8e007fb}{}\label{class_c_a_d_variant_a58c570bbd559fb8febaf34dad8e007fb}
+
+\item 
+double {\bfseries y\+Val}\hypertarget{class_c_a_d_variant_ad21bffaf6339f26f2275e104e62b7a41}{}\label{class_c_a_d_variant_ad21bffaf6339f26f2275e104e62b7a41}
+
+\item 
+double {\bfseries z\+Val}\hypertarget{class_c_a_d_variant_a9b4c220cbac96fe93a0a468dddaf38b8}{}\label{class_c_a_d_variant_a9b4c220cbac96fe93a0a468dddaf38b8}
+
+\item 
+std\+::string {\bfseries string\+Val}\hypertarget{class_c_a_d_variant_ac7f329313629f746aaff9fa9b96ce40d}{}\label{class_c_a_d_variant_ac7f329313629f746aaff9fa9b96ce40d}
+
+\item 
+\hyperlink{class_c_a_d_handle}{C\+A\+D\+Handle} {\bfseries handle\+Val}\hypertarget{class_c_a_d_variant_aa56db12b2590935af02223110880e0e3}{}\label{class_c_a_d_variant_aa56db12b2590935af02223110880e0e3}
+
+\item 
+time\+\_\+t {\bfseries date\+Time\+Val}\hypertarget{class_c_a_d_variant_ad1fe695d98e524bfad16b2d0275b9564}{}\label{class_c_a_d_variant_ad1fe695d98e524bfad16b2d0275b9564}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cadheader.\+h\item 
+cadheader.\+cpp\end{DoxyCompactItemize}

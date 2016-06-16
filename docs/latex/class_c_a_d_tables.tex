@@ -1,0 +1,82 @@
+\hypertarget{class_c_a_d_tables}{}\section{C\+A\+D\+Tables Class Reference}
+\label{class_c_a_d_tables}\index{C\+A\+D\+Tables@{C\+A\+D\+Tables}}
+
+
+The C\+AD tables class. Store tables.  
+
+
+
+
+{\ttfamily \#include $<$cadtables.\+h$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{class_c_a_d_tables_a83b3acba13e77ca6961fcc4a2b85ddb5}{Table\+Type} \{ \\*
+{\bfseries Current\+Viewport\+Table}, 
+{\bfseries Blocks\+Table}, 
+{\bfseries Layers\+Table}, 
+{\bfseries Style\+Table}, 
+\\*
+{\bfseries Line\+Types\+Table}, 
+{\bfseries View\+Table}, 
+{\bfseries U\+C\+S\+Table}, 
+{\bfseries Viewport\+Table}, 
+\\*
+{\bfseries A\+P\+P\+I\+D\+Table}, 
+{\bfseries Entity\+Table}, 
+{\bfseries A\+C\+A\+D\+Group\+Dict}, 
+{\bfseries A\+C\+A\+D\+M\+Line\+Style\+Dict}, 
+\\*
+{\bfseries Named\+Objects\+Dict}, 
+{\bfseries Layouts\+Dict}, 
+{\bfseries Plot\+Settings\+Dict}, 
+{\bfseries Plot\+Styles\+Dict}, 
+\\*
+{\bfseries Block\+Record\+Paper\+Space}, 
+{\bfseries Block\+Record\+Model\+Space}
+ \}\hypertarget{class_c_a_d_tables_a83b3acba13e77ca6961fcc4a2b85ddb5}{}\label{class_c_a_d_tables_a83b3acba13e77ca6961fcc4a2b85ddb5}
+\begin{DoxyCompactList}\small\item\em The C\+AD table types enum. \end{DoxyCompactList}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries add\+Table} (enum \hyperlink{class_c_a_d_tables_a83b3acba13e77ca6961fcc4a2b85ddb5}{Table\+Type} e\+Type, \hyperlink{class_c_a_d_handle}{C\+A\+D\+Handle} h\+Handle)\hypertarget{class_c_a_d_tables_ace15042d80d5aef41150dd3230646e40}{}\label{class_c_a_d_tables_ace15042d80d5aef41150dd3230646e40}
+
+\item 
+int {\bfseries read\+Table} (\hyperlink{class_c_a_d_file}{C\+A\+D\+File} $\ast$const file, enum \hyperlink{class_c_a_d_tables_a83b3acba13e77ca6961fcc4a2b85ddb5}{Table\+Type} e\+Type)\hypertarget{class_c_a_d_tables_afce1da87a965970b97749000bb914292}{}\label{class_c_a_d_tables_afce1da87a965970b97749000bb914292}
+
+\item 
+size\+\_\+t {\bfseries get\+Layer\+Count} () const \hypertarget{class_c_a_d_tables_ac82dab510143ea234d0cdfa1dcc47631}{}\label{class_c_a_d_tables_ac82dab510143ea234d0cdfa1dcc47631}
+
+\item 
+\hyperlink{class_c_a_d_layer}{C\+A\+D\+Layer} \& {\bfseries get\+Layer} (size\+\_\+t index)\hypertarget{class_c_a_d_tables_a03068ffaec5d5d1846e9fe9aaafe4e49}{}\label{class_c_a_d_tables_a03068ffaec5d5d1846e9fe9aaafe4e49}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+int {\bfseries read\+Layers\+Table} (\hyperlink{class_c_a_d_file}{C\+A\+D\+File} $\ast$const file, long index)\hypertarget{class_c_a_d_tables_a087cdffd84ad8ae898557de06eb8fa28}{}\label{class_c_a_d_tables_a087cdffd84ad8ae898557de06eb8fa28}
+
+\item 
+void {\bfseries fill\+Layer} (const \hyperlink{class_c_a_d_entity_object}{C\+A\+D\+Entity\+Object} $\ast$ent)\hypertarget{class_c_a_d_tables_acb7f241606c5059fb631bb8e9806b388}{}\label{class_c_a_d_tables_acb7f241606c5059fb631bb8e9806b388}
+
+\end{DoxyCompactItemize}
+\subsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+map$<$ enum \hyperlink{class_c_a_d_tables_a83b3acba13e77ca6961fcc4a2b85ddb5}{Table\+Type}, \hyperlink{class_c_a_d_handle}{C\+A\+D\+Handle} $>$ {\bfseries table\+Map}\hypertarget{class_c_a_d_tables_a3dbbb4335767a3217596004237a9b636}{}\label{class_c_a_d_tables_a3dbbb4335767a3217596004237a9b636}
+
+\item 
+vector$<$ \hyperlink{class_c_a_d_layer}{C\+A\+D\+Layer} $>$ {\bfseries layers}\hypertarget{class_c_a_d_tables_ac0a73fea4bd1e3d1f327231544dffdb3}{}\label{class_c_a_d_tables_ac0a73fea4bd1e3d1f327231544dffdb3}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+The C\+AD tables class. Store tables. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+cadtables.\+h\item 
+cadtables.\+cpp\end{DoxyCompactItemize}
