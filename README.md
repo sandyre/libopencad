@@ -3,7 +3,7 @@ OpenSource library under X11/MIT license for everyday use. Under development, bu
 This project is being developed by Alexandr Borzykh ([sandyre](https://github.com/sandyre)) under mentorship of Dmitry Baryshnikov ([NextGIS](http://nextgis.ru/en/)).
 
 All help will be very good for project. A lot of TODO's in code, so you can fix something you want.
-
+[Library documentation link](http://sandyre.github.io/libopencad/docs/html/index.html).
 API
 ---
 Libopencad typical usage pipeline is shown below:
@@ -42,16 +42,15 @@ for ( auto i = 0; i < nLayersCount; ++i )
 
 Current features list:
 1. Added reading of layers.
-2. Added reading of geometries: Text, Point, LWPolyline/Polyline2D/Polyline3D, Arc, Circle, Ellipse, Line, Spline.
+2. [Supported geometries list](https://github.com/sandyre/libopencad/wiki/Supported-geometries).
 
 Up on the list:
 1. Reading of attributes.
 2. Reading of blocks.
 
 Now supported CAD files version are:
-
 1. R2000 (read-only). Its under development still, and a lot of geometries are missed, but it will all come with time.
-2. Next up on the list: R2004.
+2. Next up on the list: R13-14 (will be done in August), R2004.
 
 Build status
 ------------
