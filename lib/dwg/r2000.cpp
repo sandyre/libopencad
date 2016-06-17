@@ -769,7 +769,7 @@ int DWGFileR2000::createFileMap ()
     return CADErrorCodes::SUCCESS;
 }
 
-CADObject * DWGFileR2000::getObject (long index )
+CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
 {
     CADObject * readed_object = nullptr;
 
@@ -1115,6 +1115,50 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         circle->setThickness(cadCircle->dfThickness);
 
         return circle;
+    }
+
+    case CADObject::ATTRIB:
+    {
+        CADAttrib * attrib = new CADAttrib();
+        CADAttribObject * cadAttrib = static_cast<CADAttribObject*>(
+                readedObject.get() );
+
+        attrib->setPosition (cadAttrib->vertInsetionPoint);
+        attrib->setColor (cadAttrib->stCed.nCMColor);
+        attrib->setExtrusion (cadAttrib->vectExtrusion);
+        attrib->setRotationAngle (cadAttrib->dfRotationAng);
+        attrib->setAlignmentPoint (cadAttrib->vertAlignmentPoint);
+        attrib->setElevation (cadAttrib->dfElevation);
+        attrib->setHeight (cadAttrib->dfHeight);
+        attrib->setObliqueAngle (cadAttrib->dfObliqueAng);
+        attrib->setPositionLocked (cadAttrib->bLockPosition);
+        attrib->setTag (cadAttrib->sTag);
+        attrib->setTextValue (cadAttrib->sTextValue);
+        attrib->setThickness (cadAttrib->dfThickness);
+
+        return attrib;
+    }
+
+    case CADObject::ATTDEF:
+    {
+        CADAttdef * attdef = new CADAttdef();
+        CADAttdefObject * cadAttrib = static_cast<CADAttdefObject*>(
+                readedObject.get() );
+
+        attdef->setPosition (cadAttrib->vertInsetionPoint);
+        attdef->setColor (cadAttrib->stCed.nCMColor);
+        attdef->setExtrusion (cadAttrib->vectExtrusion);
+        attdef->setRotationAngle (cadAttrib->dfRotationAng);
+        attdef->setAlignmentPoint (cadAttrib->vertAlignmentPoint);
+        attdef->setElevation (cadAttrib->dfElevation);
+        attdef->setHeight (cadAttrib->dfHeight);
+        attdef->setObliqueAngle (cadAttrib->dfObliqueAng);
+        attdef->setPositionLocked (cadAttrib->bLockPosition);
+        attdef->setTag (cadAttrib->sTag);
+        attdef->setTextValue (cadAttrib->sTextValue);
+        attdef->setThickness (cadAttrib->dfThickness);
+
+        return attdef;
     }
 
     case CADObject::ELLIPSE:

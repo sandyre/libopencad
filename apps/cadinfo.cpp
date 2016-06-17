@@ -116,6 +116,8 @@ int main(int argc, char *argv[])
     classes.print ();
     cout << endl;
 
+    int attdefCount = 0;
+    int attribCount = 0;
     int polylinesPface = 0;
     int face3dsCount = 0;
     int raysCount = 0;
@@ -217,7 +219,12 @@ int main(int argc, char *argv[])
             case CADGeometry::FACE3D:
                 ++face3dsCount;
                 break;
-
+            case CADGeometry::ATTDEF:
+                ++attdefCount;
+                break;
+            case CADGeometry::ATTRIB:
+                ++attribCount;
+                break;
             case CADGeometry::UNDEFINED:
             case CADGeometry::HATCH:
                 break;
@@ -242,4 +249,6 @@ int main(int argc, char *argv[])
     cout << "Circles count: " << circlesCount << std::endl;
     cout << "Arcs count: " << arcCount << std::endl;
     cout << "Texts count: " << textCount << std::endl;
+    cout << "Attdefs count: " << attdefCount << std::endl;
+    cout << "Attribs count: " << attribCount << std::endl;
 }
