@@ -74,22 +74,27 @@ void CADGeometry::setColor(int ACIColorIndex)
     geometry_color = CADACIColors[ACIColorIndex];
 }
 
-vector< CADAttdef > CADGeometry::getAttributes ()
+map< string, CADAttdef> CADGeometry::getAttributes ()
 {
-    return astAttributes;
+    return mapstAttributes;
 }
 
 void CADGeometry::addAttribute( CADAttrib* attrib )
 {
     // FIXME: very dangerous. should be casted to attdef
     // manually
-    if ( attrib != nullptr ) astAttributes.push_back(
-                *( CADAttdef* ) attrib);
+    if ( attrib != nullptr )
+    {
+        mapstAttributes.insert( make_pair( attrib->getTag (), *( CADAttdef* ) attrib ) );
+    }
 }
 
 void CADGeometry::addAttribute( CADAttdef* attdef )
 {
-    if( attdef != nullptr ) astAttributes.push_back( *attdef );
+    if( attdef != nullptr )
+    {
+        mapstAttributes.insert ( make_pair( attdef->getTag (), *attdef ) );
+    }
 }
 
 //------------------------------------------------------------------------------
@@ -827,6 +832,11 @@ CADFace3D::CADFace3D()
 void CADFace3D::addCorner(const CADVector &corner)
 {
     avertCorners.push_back (corner);
+}
+
+CADVector CADFace3D::getCorner ( size_t index )
+{
+    return avertCorners[index];
 }
 
 void CADFace3D::print() const

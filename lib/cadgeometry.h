@@ -86,12 +86,12 @@ class CADGeometry
 
     void addAttribute( CADAttdef* );
     void addAttribute( CADAttrib* );
-    vector< CADAttdef > getAttributes();
+    map< string, CADAttdef> getAttributes();
 protected:
     enum GeometryType geometryType;
     double          thickness;
     RGBColor        geometry_color;
-    vector< CADAttdef > astAttributes;
+    map< string, CADAttdef> mapstAttributes;
 };
 
 /**
@@ -434,6 +434,7 @@ class CADFace3D : public CADGeometry
 public:
     CADFace3D();
     void addCorner(const CADVector &corner);
+    CADVector getCorner( size_t index );
     virtual void print () const override;
 
     short getInvisFlags() const;
