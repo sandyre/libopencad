@@ -143,9 +143,9 @@ virtual <a class="el" href="class_c_a_d_layer.html">CADLayer</a> &amp;&#160;</td
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:aeb68cd431afb9c5657ae7cbe06deffc6"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_a_d_object.html">CADObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_a_d_file.html#aeb68cd431afb9c5657ae7cbe06deffc6">getObject</a> (long index)=0</td></tr>
-<tr class="memdesc:aeb68cd431afb9c5657ae7cbe06deffc6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get CAD Object from file.  <a href="#aeb68cd431afb9c5657ae7cbe06deffc6">More...</a><br /></td></tr>
-<tr class="separator:aeb68cd431afb9c5657ae7cbe06deffc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a185f58e71432aa69affe49929cb44be4"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_a_d_object.html">CADObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_a_d_file.html#a185f58e71432aa69affe49929cb44be4">getObject</a> (long index, bool bHandlesOnly=false)=0</td></tr>
+<tr class="memdesc:a185f58e71432aa69affe49929cb44be4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get CAD Object from file.  <a href="#a185f58e71432aa69affe49929cb44be4">More...</a><br /></td></tr>
+<tr class="separator:a185f58e71432aa69affe49929cb44be4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1c841beaf00d33fe888d5f750841829b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="class_c_a_d_geometry.html">CADGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_c_a_d_file.html#a1c841beaf00d33fe888d5f750841829b">getGeometry</a> (long index)=0</td></tr>
 <tr class="memdesc:a1c841beaf00d33fe888d5f750841829b"><td class="mdescLeft">&#160;</td><td class="mdescRight">read geometry from CAD file  <a href="#a1c841beaf00d33fe888d5f750841829b">More...</a><br /></td></tr>
 <tr class="separator:a1c841beaf00d33fe888d5f750841829b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -284,7 +284,7 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>CADLayer</b></td></t
 
 </div>
 </div>
-<a class="anchor" id="aeb68cd431afb9c5657ae7cbe06deffc6"></a>
+<a class="anchor" id="a185f58e71432aa69affe49929cb44be4"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -295,8 +295,18 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>CADLayer</b></td></t
           <td class="memname">virtual <a class="el" href="class_c_a_d_object.html">CADObject</a>* CADFile::getObject </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bHandlesOnly</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -310,12 +320,13 @@ class&#160;</td><td class="memItemRight" valign="bottom"><b>CADLayer</b></td></t
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">index</td><td>Object index </td></tr>
+    <tr><td class="paramname">bHandlesOnly</td><td>set TRUE if object data should be skipped, and only object handles should be read. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>pointer to <a class="el" href="class_c_a_d_object.html" title="The base CAD object class. ">CADObject</a> or nullptr. User have to free returned pointer. </dd></dl>
 
-<p>Implemented in <a class="el" href="class_d_w_g_file_r2000.html#a4538211a1567cff8e340d769e8a0d2c3">DWGFileR2000</a>.</p>
+<p>Implemented in <a class="el" href="class_d_w_g_file_r2000.html#acf783d35f2fc64756d38a5cb30f4885f">DWGFileR2000</a>.</p>
 
 </div>
 </div>

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>libopencad: CADText Class Reference</title>
+<title>libopencad: CADAttdef Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -85,59 +85,90 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-attribs">Protected Attributes</a> &#124;
-<a href="class_c_a_d_text-members.html">List of all members</a>  </div>
+<a href="class_c_a_d_attdef-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">CADText Class Reference</div>  </div>
+<div class="title">CADAttdef Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Geometry class which represents Text.  
- <a href="class_c_a_d_text.html#details">More...</a></p>
+<p>Geometry class which represents Attribute definition.  
+ <a href="class_c_a_d_attdef.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="cadgeometry_8h_source.html">cadgeometry.h</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for CADText:</div>
+Inheritance diagram for CADAttdef:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="class_c_a_d_text.png" usemap="#CADText_map" alt=""/>
-  <map id="CADText_map" name="CADText_map">
-<area href="class_c_a_d_point3_d.html" title="Geometry class which a single Point. " alt="CADPoint3D" shape="rect" coords="51,56,144,80"/>
-<area href="class_c_a_d_geometry.html" title="Base CAD geometry class. " alt="CADGeometry" shape="rect" coords="51,0,144,24"/>
+  <img src="class_c_a_d_attdef.png" usemap="#CADAttdef_map" alt=""/>
+  <map id="CADAttdef_map" name="CADAttdef_map">
 <area href="class_c_a_d_attrib.html" title="Geometry class which represents Attribute. " alt="CADAttrib" shape="rect" coords="0,168,93,192"/>
-<area href="class_c_a_d_m_text.html" title="Geometry class which represents MText. " alt="CADMText" shape="rect" coords="103,168,196,192"/>
-<area href="class_c_a_d_attdef.html" title="Geometry class which represents Attribute definition. " alt="CADAttdef" shape="rect" coords="0,224,93,248"/>
+<area href="class_c_a_d_text.html" title="Geometry class which represents Text. " alt="CADText" shape="rect" coords="0,112,93,136"/>
+<area href="class_c_a_d_point3_d.html" title="Geometry class which a single Point. " alt="CADPoint3D" shape="rect" coords="0,56,93,80"/>
+<area href="class_c_a_d_geometry.html" title="Base CAD geometry class. " alt="CADGeometry" shape="rect" coords="0,0,93,24"/>
 </map>
  </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa23f4117f7b42683e8ab0e1d8aa1bec9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa23f4117f7b42683e8ab0e1d8aa1bec9"></a>
-string&#160;</td><td class="memItemRight" valign="bottom"><b>getTextValue</b> () const </td></tr>
-<tr class="separator:aa23f4117f7b42683e8ab0e1d8aa1bec9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a09043f7cfd6b20f03c01f5805a90377f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a09043f7cfd6b20f03c01f5805a90377f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setTextValue</b> (const string &amp;value)</td></tr>
-<tr class="separator:a09043f7cfd6b20f03c01f5805a90377f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e14406eca5833295c9bee2d8d02d678"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9e14406eca5833295c9bee2d8d02d678"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getHeight</b> () const </td></tr>
-<tr class="separator:a9e14406eca5833295c9bee2d8d02d678"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb577188997168fcad594abcb0e19640"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb577188997168fcad594abcb0e19640"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setHeight</b> (double value)</td></tr>
-<tr class="separator:aeb577188997168fcad594abcb0e19640"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15e7c20fbee34e1fbf7f0a43c68e010f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15e7c20fbee34e1fbf7f0a43c68e010f"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getRotationAngle</b> () const </td></tr>
-<tr class="separator:a15e7c20fbee34e1fbf7f0a43c68e010f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a989946acfe857923ff2bd0c6a1309d08"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a989946acfe857923ff2bd0c6a1309d08"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setRotationAngle</b> (double value)</td></tr>
-<tr class="separator:a989946acfe857923ff2bd0c6a1309d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7aafb746aee2dc2504d9efab44d7524c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7aafb746aee2dc2504d9efab44d7524c"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>getObliqueAngle</b> () const </td></tr>
-<tr class="separator:a7aafb746aee2dc2504d9efab44d7524c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac74b8f4815e2799f958dcf4dd02b666c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac74b8f4815e2799f958dcf4dd02b666c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setObliqueAngle</b> (double value)</td></tr>
-<tr class="separator:ac74b8f4815e2799f958dcf4dd02b666c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0399640e5be819d48fc1852d99f5f0d2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0399640e5be819d48fc1852d99f5f0d2"></a>
+<tr class="memitem:afda633f92e0cf0cbbc30fe7cdb21457e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afda633f92e0cf0cbbc30fe7cdb21457e"></a>
 virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>print</b> () const  override</td></tr>
-<tr class="separator:a0399640e5be819d48fc1852d99f5f0d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:afda633f92e0cf0cbbc30fe7cdb21457e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac862ce2b130777db87b861f7bf80e530"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac862ce2b130777db87b861f7bf80e530"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>getPrompt</b> () const </td></tr>
+<tr class="separator:ac862ce2b130777db87b861f7bf80e530"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8597b99e32dcb8b4e9c9436ee104219"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab8597b99e32dcb8b4e9c9436ee104219"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setPrompt</b> (const string &amp;)</td></tr>
+<tr class="separator:ab8597b99e32dcb8b4e9c9436ee104219"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_c_a_d_attrib"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_c_a_d_attrib')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_a_d_attrib.html">CADAttrib</a></td></tr>
+<tr class="memitem:afb3c3335f16852f401d7313fcb9dc637 inherit pub_methods_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afb3c3335f16852f401d7313fcb9dc637"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getElevation</b> () const </td></tr>
+<tr class="separator:afb3c3335f16852f401d7313fcb9dc637 inherit pub_methods_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff3d2d57609b1bbd98d393dc55498da5 inherit pub_methods_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aff3d2d57609b1bbd98d393dc55498da5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setElevation</b> (double)</td></tr>
+<tr class="separator:aff3d2d57609b1bbd98d393dc55498da5 inherit pub_methods_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a197eaef21150a38ffc4a0011195329f7 inherit pub_methods_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a197eaef21150a38ffc4a0011195329f7"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>getTag</b> () const </td></tr>
+<tr class="separator:a197eaef21150a38ffc4a0011195329f7 inherit pub_methods_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a51dbe97cbccb9228e35e5e5a0d321bbb inherit pub_methods_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a51dbe97cbccb9228e35e5e5a0d321bbb"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTag</b> (const string &amp;)</td></tr>
+<tr class="separator:a51dbe97cbccb9228e35e5e5a0d321bbb inherit pub_methods_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3885ec44a8b70a2bc2a55048f9f36aac inherit pub_methods_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3885ec44a8b70a2bc2a55048f9f36aac"></a>
+<a class="el" href="class_c_a_d_vector.html">CADVector</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getAlignmentPoint</b> () const </td></tr>
+<tr class="separator:a3885ec44a8b70a2bc2a55048f9f36aac inherit pub_methods_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a81b06be0005dcbc51ce95378785dbc44 inherit pub_methods_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a81b06be0005dcbc51ce95378785dbc44"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setAlignmentPoint</b> (const <a class="el" href="class_c_a_d_vector.html">CADVector</a> &amp;)</td></tr>
+<tr class="separator:a81b06be0005dcbc51ce95378785dbc44 inherit pub_methods_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacb0f9874e95a0e4d4e24afa86e25cee inherit pub_methods_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacb0f9874e95a0e4d4e24afa86e25cee"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isPositionLocked</b> () const </td></tr>
+<tr class="separator:aacb0f9874e95a0e4d4e24afa86e25cee inherit pub_methods_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4e342b54aeb90cded953f8e47f32b08 inherit pub_methods_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa4e342b54aeb90cded953f8e47f32b08"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setPositionLocked</b> (bool)</td></tr>
+<tr class="separator:aa4e342b54aeb90cded953f8e47f32b08 inherit pub_methods_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_c_a_d_text"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_c_a_d_text')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_a_d_text.html">CADText</a></td></tr>
+<tr class="memitem:aa23f4117f7b42683e8ab0e1d8aa1bec9 inherit pub_methods_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa23f4117f7b42683e8ab0e1d8aa1bec9"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>getTextValue</b> () const </td></tr>
+<tr class="separator:aa23f4117f7b42683e8ab0e1d8aa1bec9 inherit pub_methods_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09043f7cfd6b20f03c01f5805a90377f inherit pub_methods_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a09043f7cfd6b20f03c01f5805a90377f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setTextValue</b> (const string &amp;value)</td></tr>
+<tr class="separator:a09043f7cfd6b20f03c01f5805a90377f inherit pub_methods_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e14406eca5833295c9bee2d8d02d678 inherit pub_methods_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9e14406eca5833295c9bee2d8d02d678"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getHeight</b> () const </td></tr>
+<tr class="separator:a9e14406eca5833295c9bee2d8d02d678 inherit pub_methods_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb577188997168fcad594abcb0e19640 inherit pub_methods_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aeb577188997168fcad594abcb0e19640"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setHeight</b> (double value)</td></tr>
+<tr class="separator:aeb577188997168fcad594abcb0e19640 inherit pub_methods_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15e7c20fbee34e1fbf7f0a43c68e010f inherit pub_methods_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15e7c20fbee34e1fbf7f0a43c68e010f"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getRotationAngle</b> () const </td></tr>
+<tr class="separator:a15e7c20fbee34e1fbf7f0a43c68e010f inherit pub_methods_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a989946acfe857923ff2bd0c6a1309d08 inherit pub_methods_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a989946acfe857923ff2bd0c6a1309d08"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setRotationAngle</b> (double value)</td></tr>
+<tr class="separator:a989946acfe857923ff2bd0c6a1309d08 inherit pub_methods_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7aafb746aee2dc2504d9efab44d7524c inherit pub_methods_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7aafb746aee2dc2504d9efab44d7524c"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>getObliqueAngle</b> () const </td></tr>
+<tr class="separator:a7aafb746aee2dc2504d9efab44d7524c inherit pub_methods_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac74b8f4815e2799f958dcf4dd02b666c inherit pub_methods_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac74b8f4815e2799f958dcf4dd02b666c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>setObliqueAngle</b> (double value)</td></tr>
+<tr class="separator:ac74b8f4815e2799f958dcf4dd02b666c inherit pub_methods_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_c_a_d_point3_d"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_c_a_d_point3_d')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_c_a_d_point3_d.html">CADPoint3D</a></td></tr>
 <tr class="memitem:a2b90070589b8f309581c7ce40154b492 inherit pub_methods_class_c_a_d_point3_d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2b90070589b8f309581c7ce40154b492"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>CADPoint3D</b> (const <a class="el" href="class_c_a_d_vector.html">CADVector</a> &amp;positionIn, double thicknessIn)</td></tr>
@@ -188,18 +219,35 @@ map&lt; string, <a class="el" href="class_c_a_d_attdef.html">CADAttdef</a> &gt;&
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a8c58daa962ea19d9d9d7a6febb6af661"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c58daa962ea19d9d9d7a6febb6af661"></a>
+<tr class="memitem:aceae65be743858330a8b8d765935d16b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aceae65be743858330a8b8d765935d16b"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>sPrompt</b></td></tr>
+<tr class="separator:aceae65be743858330a8b8d765935d16b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_a_d_attrib"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_c_a_d_attrib')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_a_d_attrib.html">CADAttrib</a></td></tr>
+<tr class="memitem:aead893b2d8dcb83afd25b379a2d18185 inherit pro_attribs_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aead893b2d8dcb83afd25b379a2d18185"></a>
+<a class="el" href="class_c_a_d_vector.html">CADVector</a>&#160;</td><td class="memItemRight" valign="bottom"><b>vertAlignmentPoint</b></td></tr>
+<tr class="separator:aead893b2d8dcb83afd25b379a2d18185 inherit pro_attribs_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7aec72015ed67dec7bd81e9400af1a32 inherit pro_attribs_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7aec72015ed67dec7bd81e9400af1a32"></a>
+double&#160;</td><td class="memItemRight" valign="bottom"><b>dfElevation</b></td></tr>
+<tr class="separator:a7aec72015ed67dec7bd81e9400af1a32 inherit pro_attribs_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a739fe51000f950dac526f397eaa995aa inherit pro_attribs_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a739fe51000f950dac526f397eaa995aa"></a>
+string&#160;</td><td class="memItemRight" valign="bottom"><b>sTag</b></td></tr>
+<tr class="separator:a739fe51000f950dac526f397eaa995aa inherit pro_attribs_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac57f77ae05f7651e4c9266796d4e335a inherit pro_attribs_class_c_a_d_attrib"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac57f77ae05f7651e4c9266796d4e335a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>bLockPosition</b></td></tr>
+<tr class="separator:ac57f77ae05f7651e4c9266796d4e335a inherit pro_attribs_class_c_a_d_attrib"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_class_c_a_d_text"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_c_a_d_text')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_a_d_text.html">CADText</a></td></tr>
+<tr class="memitem:a8c58daa962ea19d9d9d7a6febb6af661 inherit pro_attribs_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c58daa962ea19d9d9d7a6febb6af661"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>obliqueAngle</b></td></tr>
-<tr class="separator:a8c58daa962ea19d9d9d7a6febb6af661"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad7f1d1413f0027849e06ca9d7ae6912e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad7f1d1413f0027849e06ca9d7ae6912e"></a>
+<tr class="separator:a8c58daa962ea19d9d9d7a6febb6af661 inherit pro_attribs_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7f1d1413f0027849e06ca9d7ae6912e inherit pro_attribs_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad7f1d1413f0027849e06ca9d7ae6912e"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>rotationAngle</b></td></tr>
-<tr class="separator:ad7f1d1413f0027849e06ca9d7ae6912e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae714f0e81916b396509f0f568c2d6e4b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae714f0e81916b396509f0f568c2d6e4b"></a>
+<tr class="separator:ad7f1d1413f0027849e06ca9d7ae6912e inherit pro_attribs_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae714f0e81916b396509f0f568c2d6e4b inherit pro_attribs_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae714f0e81916b396509f0f568c2d6e4b"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>height</b></td></tr>
-<tr class="separator:ae714f0e81916b396509f0f568c2d6e4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab3ce20d3a4ee8952d9fe12092194f56"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab3ce20d3a4ee8952d9fe12092194f56"></a>
+<tr class="separator:ae714f0e81916b396509f0f568c2d6e4b inherit pro_attribs_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab3ce20d3a4ee8952d9fe12092194f56 inherit pro_attribs_class_c_a_d_text"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aab3ce20d3a4ee8952d9fe12092194f56"></a>
 string&#160;</td><td class="memItemRight" valign="bottom"><b>textValue</b></td></tr>
-<tr class="separator:aab3ce20d3a4ee8952d9fe12092194f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aab3ce20d3a4ee8952d9fe12092194f56 inherit pro_attribs_class_c_a_d_text"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_attribs_class_c_a_d_point3_d"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_class_c_a_d_point3_d')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="class_c_a_d_point3_d.html">CADPoint3D</a></td></tr>
 <tr class="memitem:a0ebb31ec5b9d7744849099d4f618f0f4 inherit pro_attribs_class_c_a_d_point3_d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0ebb31ec5b9d7744849099d4f618f0f4"></a>
 <a class="el" href="class_c_a_d_vector.html">CADVector</a>&#160;</td><td class="memItemRight" valign="bottom"><b>position</b></td></tr>
@@ -260,7 +308,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="separator:a0515ed61d3514d528f78b8ba6c4fc5f3 inherit pub_types_class_c_a_d_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Geometry class which represents Text. </p>
+<div class="textblock"><p>Geometry class which represents Attribute definition. </p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
 <li><a class="el" href="cadgeometry_8h_source.html">cadgeometry.h</a></li>
 <li>cadgeometry.cpp</li>

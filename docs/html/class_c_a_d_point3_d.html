@@ -109,8 +109,10 @@ Inheritance diagram for CADPoint3D:</div>
 <area href="class_c_a_d_text.html" title="Geometry class which represents Text. " alt="CADText" shape="rect" coords="412,112,505,136"/>
 <area href="class_c_a_d_arc.html" title="Geometry class which represents Arc. " alt="CADArc" shape="rect" coords="0,168,93,192"/>
 <area href="class_c_a_d_x_line.html" title="Geometry class which represents XLine. " alt="CADXLine" shape="rect" coords="206,168,299,192"/>
-<area href="class_c_a_d_m_text.html" title="Geometry class which represents MText. " alt="CADMText" shape="rect" coords="412,168,505,192"/>
+<area href="class_c_a_d_attrib.html" title="Geometry class which represents Attribute. " alt="CADAttrib" shape="rect" coords="360,168,453,192"/>
+<area href="class_c_a_d_m_text.html" title="Geometry class which represents MText. " alt="CADMText" shape="rect" coords="463,168,556,192"/>
 <area href="class_c_a_d_ellipse.html" title="Geometry class which represents Ellipse. " alt="CADEllipse" shape="rect" coords="0,224,93,248"/>
+<area href="class_c_a_d_attdef.html" title="Geometry class which represents Attribute definition. " alt="CADAttdef" shape="rect" coords="360,224,453,248"/>
 </map>
  </div></div>
 <table class="memberdecls">
@@ -156,6 +158,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>setThickness</b> (dou
 <tr class="memitem:a894393c4f6fece4b7e9256aaa5448770 inherit pub_methods_class_c_a_d_geometry"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a894393c4f6fece4b7e9256aaa5448770"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>setColor</b> (int ACIColorIndex)</td></tr>
 <tr class="separator:a894393c4f6fece4b7e9256aaa5448770 inherit pub_methods_class_c_a_d_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9ae152b28fa7e33d547796fe72c991f inherit pub_methods_class_c_a_d_geometry"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa9ae152b28fa7e33d547796fe72c991f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addAttribute</b> (<a class="el" href="class_c_a_d_attdef.html">CADAttdef</a> *)</td></tr>
+<tr class="separator:aa9ae152b28fa7e33d547796fe72c991f inherit pub_methods_class_c_a_d_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c4b7c01d57665e65ed0689cc598593a inherit pub_methods_class_c_a_d_geometry"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0c4b7c01d57665e65ed0689cc598593a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>addAttribute</b> (<a class="el" href="class_c_a_d_attrib.html">CADAttrib</a> *)</td></tr>
+<tr class="separator:a0c4b7c01d57665e65ed0689cc598593a inherit pub_methods_class_c_a_d_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38ff1804c40b9d6d683bbd06a9715523 inherit pub_methods_class_c_a_d_geometry"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a38ff1804c40b9d6d683bbd06a9715523"></a>
+map&lt; string, <a class="el" href="class_c_a_d_attdef.html">CADAttdef</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getAttributes</b> ()</td></tr>
+<tr class="separator:a38ff1804c40b9d6d683bbd06a9715523 inherit pub_methods_class_c_a_d_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
@@ -178,6 +189,9 @@ double&#160;</td><td class="memItemRight" valign="bottom"><b>thickness</b></td><
 <tr class="memitem:a0d8a3754c859cc103c7ca839d14f279c inherit pro_attribs_class_c_a_d_geometry"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0d8a3754c859cc103c7ca839d14f279c"></a>
 <a class="el" href="struct_r_g_b_color.html">RGBColor</a>&#160;</td><td class="memItemRight" valign="bottom"><b>geometry_color</b></td></tr>
 <tr class="separator:a0d8a3754c859cc103c7ca839d14f279c inherit pro_attribs_class_c_a_d_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac19dcae705c7b896a880de525f701b51 inherit pro_attribs_class_c_a_d_geometry"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac19dcae705c7b896a880de525f701b51"></a>
+map&lt; string, <a class="el" href="class_c_a_d_attdef.html">CADAttdef</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>mapstAttributes</b></td></tr>
+<tr class="separator:ac19dcae705c7b896a880de525f701b51 inherit pro_attribs_class_c_a_d_geometry"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -205,7 +219,10 @@ Additional Inherited Members</h2></td></tr>
 <br />
 &#160;&#160;<b>XLINE</b>, 
 <b>FACE3D</b>, 
-<b>POLYLINE_PFACE</b>
+<b>POLYLINE_PFACE</b>, 
+<b>ATTRIB</b>, 
+<br />
+&#160;&#160;<b>ATTDEF</b>
 <br />
  }<tr class="memdesc:a0515ed61d3514d528f78b8ba6c4fc5f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The CAD geometry types enum. <br /></td></tr>
 </td></tr>

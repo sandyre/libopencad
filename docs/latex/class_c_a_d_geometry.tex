@@ -41,7 +41,10 @@ enum \hyperlink{class_c_a_d_geometry_a0515ed61d3514d528f78b8ba6c4fc5f3}{Geometry
 \\*
 {\bfseries X\+L\+I\+NE}, 
 {\bfseries F\+A\+C\+E3D}, 
-{\bfseries P\+O\+L\+Y\+L\+I\+N\+E\+\_\+\+P\+F\+A\+CE}
+{\bfseries P\+O\+L\+Y\+L\+I\+N\+E\+\_\+\+P\+F\+A\+CE}, 
+{\bfseries A\+T\+T\+R\+IB}, 
+\\*
+{\bfseries A\+T\+T\+D\+EF}
  \}\hypertarget{class_c_a_d_geometry_a0515ed61d3514d528f78b8ba6c4fc5f3}{}\label{class_c_a_d_geometry_a0515ed61d3514d528f78b8ba6c4fc5f3}
 \begin{DoxyCompactList}\small\item\em The C\+AD geometry types enum. \end{DoxyCompactList}
 \end{DoxyCompactItemize}
@@ -65,6 +68,15 @@ void {\bfseries set\+Color} (int A\+C\+I\+Color\+Index)\hypertarget{class_c_a_d_
 \item 
 virtual void {\bfseries print} () const  =0\hypertarget{class_c_a_d_geometry_aece81ef419d3ad207171bcca57a097dd}{}\label{class_c_a_d_geometry_aece81ef419d3ad207171bcca57a097dd}
 
+\item 
+void {\bfseries add\+Attribute} (\hyperlink{class_c_a_d_attdef}{C\+A\+D\+Attdef} $\ast$)\hypertarget{class_c_a_d_geometry_aa9ae152b28fa7e33d547796fe72c991f}{}\label{class_c_a_d_geometry_aa9ae152b28fa7e33d547796fe72c991f}
+
+\item 
+void {\bfseries add\+Attribute} (\hyperlink{class_c_a_d_attrib}{C\+A\+D\+Attrib} $\ast$)\hypertarget{class_c_a_d_geometry_a0c4b7c01d57665e65ed0689cc598593a}{}\label{class_c_a_d_geometry_a0c4b7c01d57665e65ed0689cc598593a}
+
+\item 
+map$<$ string, \hyperlink{class_c_a_d_attdef}{C\+A\+D\+Attdef} $>$ {\bfseries get\+Attributes} ()\hypertarget{class_c_a_d_geometry_a38ff1804c40b9d6d683bbd06a9715523}{}\label{class_c_a_d_geometry_a38ff1804c40b9d6d683bbd06a9715523}
+
 \end{DoxyCompactItemize}
 \subsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
@@ -76,6 +88,9 @@ double {\bfseries thickness}\hypertarget{class_c_a_d_geometry_acbd206b728d8f720c
 
 \item 
 \hyperlink{struct_r_g_b_color}{R\+G\+B\+Color} {\bfseries geometry\+\_\+color}\hypertarget{class_c_a_d_geometry_a0d8a3754c859cc103c7ca839d14f279c}{}\label{class_c_a_d_geometry_a0d8a3754c859cc103c7ca839d14f279c}
+
+\item 
+map$<$ string, \hyperlink{class_c_a_d_attdef}{C\+A\+D\+Attdef} $>$ {\bfseries mapst\+Attributes}\hypertarget{class_c_a_d_geometry_ac19dcae705c7b896a880de525f701b51}{}\label{class_c_a_d_geometry_ac19dcae705c7b896a880de525f701b51}
 
 \end{DoxyCompactItemize}
 

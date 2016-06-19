@@ -143,9 +143,9 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a8ac0c8003944b948e3d1f16c713e8e27"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_w_g_file_r2000.html#a8ac0c8003944b948e3d1f16c713e8e27">createFileMap</a> () override</td></tr>
 <tr class="memdesc:a8ac0c8003944b948e3d1f16c713e8e27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create the file map for fast access to CAD objects.  <a href="#a8ac0c8003944b948e3d1f16c713e8e27">More...</a><br /></td></tr>
 <tr class="separator:a8ac0c8003944b948e3d1f16c713e8e27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4538211a1567cff8e340d769e8a0d2c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_a_d_object.html">CADObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_w_g_file_r2000.html#a4538211a1567cff8e340d769e8a0d2c3">getObject</a> (long index) override</td></tr>
-<tr class="memdesc:a4538211a1567cff8e340d769e8a0d2c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get CAD Object from file.  <a href="#a4538211a1567cff8e340d769e8a0d2c3">More...</a><br /></td></tr>
-<tr class="separator:a4538211a1567cff8e340d769e8a0d2c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf783d35f2fc64756d38a5cb30f4885f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_a_d_object.html">CADObject</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_w_g_file_r2000.html#acf783d35f2fc64756d38a5cb30f4885f">getObject</a> (long index, bool bHandlesOnly=false) override</td></tr>
+<tr class="memdesc:acf783d35f2fc64756d38a5cb30f4885f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get CAD Object from file.  <a href="#acf783d35f2fc64756d38a5cb30f4885f">More...</a><br /></td></tr>
+<tr class="separator:acf783d35f2fc64756d38a5cb30f4885f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8838da9ee3111f5aba1451aa59528760"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_c_a_d_geometry.html">CADGeometry</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_d_w_g_file_r2000.html#a8838da9ee3111f5aba1451aa59528760">getGeometry</a> (long index) override</td></tr>
 <tr class="memdesc:a8838da9ee3111f5aba1451aa59528760"><td class="mdescLeft">&#160;</td><td class="mdescRight">read geometry from CAD file  <a href="#a8838da9ee3111f5aba1451aa59528760">More...</a><br /></td></tr>
 <tr class="separator:a8838da9ee3111f5aba1451aa59528760"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -361,7 +361,7 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a4538211a1567cff8e340d769e8a0d2c3"></a>
+<a class="anchor" id="acf783d35f2fc64756d38a5cb30f4885f"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -372,8 +372,18 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname"><a class="el" href="class_c_a_d_object.html">CADObject</a> * DWGFileR2000::getObject </td>
           <td>(</td>
           <td class="paramtype">long&#160;</td>
-          <td class="paramname"><em>index</em></td><td>)</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>bHandlesOnly</em> = <code>false</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -387,12 +397,13 @@ Additional Inherited Members</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">index</td><td>Object index </td></tr>
+    <tr><td class="paramname">bHandlesOnly</td><td>set TRUE if object data should be skipped, and only object handles should be read. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>pointer to <a class="el" href="class_c_a_d_object.html" title="The base CAD object class. ">CADObject</a> or nullptr. User have to free returned pointer. </dd></dl>
 
-<p>Implements <a class="el" href="class_c_a_d_file.html#aeb68cd431afb9c5657ae7cbe06deffc6">CADFile</a>.</p>
+<p>Implements <a class="el" href="class_c_a_d_file.html#a185f58e71432aa69affe49929cb44be4">CADFile</a>.</p>
 
 </div>
 </div>

@@ -50,7 +50,7 @@ virtual \hyperlink{class_c_a_d_layer}{C\+A\+D\+Layer} \& {\bfseries get\+Layer} 
 \subsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-virtual \hyperlink{class_c_a_d_object}{C\+A\+D\+Object} $\ast$ \hyperlink{class_c_a_d_file_aeb68cd431afb9c5657ae7cbe06deffc6}{get\+Object} (long index)=0
+virtual \hyperlink{class_c_a_d_object}{C\+A\+D\+Object} $\ast$ \hyperlink{class_c_a_d_file_a185f58e71432aa69affe49929cb44be4}{get\+Object} (long index, bool b\+Handles\+Only=false)=0
 \begin{DoxyCompactList}\small\item\em Get C\+AD Object from file. \end{DoxyCompactList}\item 
 virtual \hyperlink{class_c_a_d_geometry}{C\+A\+D\+Geometry} $\ast$ \hyperlink{class_c_a_d_file_a1c841beaf00d33fe888d5f750841829b}{get\+Geometry} (long index)=0
 \begin{DoxyCompactList}\small\item\em read geometry from C\+AD file \end{DoxyCompactList}\item 
@@ -161,11 +161,12 @@ Implemented in \hyperlink{class_d_w_g_file_r2000_a8838da9ee3111f5aba1451aa595287
 
 \index{C\+A\+D\+File@{C\+A\+D\+File}!get\+Object@{get\+Object}}
 \index{get\+Object@{get\+Object}!C\+A\+D\+File@{C\+A\+D\+File}}
-\subsubsection[{\texorpdfstring{get\+Object(long index)=0}{getObject(long index)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf C\+A\+D\+Object}$\ast$ C\+A\+D\+File\+::get\+Object (
+\subsubsection[{\texorpdfstring{get\+Object(long index, bool b\+Handles\+Only=false)=0}{getObject(long index, bool bHandlesOnly=false)=0}}]{\setlength{\rightskip}{0pt plus 5cm}virtual {\bf C\+A\+D\+Object}$\ast$ C\+A\+D\+File\+::get\+Object (
 \begin{DoxyParamCaption}
-\item[{long}]{index}
+\item[{long}]{index, }
+\item[{bool}]{b\+Handles\+Only = {\ttfamily false}}
 \end{DoxyParamCaption}
-)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}\hypertarget{class_c_a_d_file_aeb68cd431afb9c5657ae7cbe06deffc6}{}\label{class_c_a_d_file_aeb68cd431afb9c5657ae7cbe06deffc6}
+)\hspace{0.3cm}{\ttfamily [protected]}, {\ttfamily [pure virtual]}}\hypertarget{class_c_a_d_file_a185f58e71432aa69affe49929cb44be4}{}\label{class_c_a_d_file_a185f58e71432aa69affe49929cb44be4}
 
 
 Get C\+AD Object from file. 
@@ -174,13 +175,15 @@ Get C\+AD Object from file.
 \begin{DoxyParams}{Parameters}
 {\em index} & Object index \\
 \hline
+{\em b\+Handles\+Only} & set T\+R\+UE if object data should be skipped, and only object handles should be read. \\
+\hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 pointer to \hyperlink{class_c_a_d_object}{C\+A\+D\+Object} or nullptr. User have to free returned pointer. 
 \end{DoxyReturn}
 
 
-Implemented in \hyperlink{class_d_w_g_file_r2000_a4538211a1567cff8e340d769e8a0d2c3}{D\+W\+G\+File\+R2000}.
+Implemented in \hyperlink{class_d_w_g_file_r2000_acf783d35f2fc64756d38a5cb30f4885f}{D\+W\+G\+File\+R2000}.
 
 \index{C\+A\+D\+File@{C\+A\+D\+File}!read\+Classes@{read\+Classes}}
 \index{read\+Classes@{read\+Classes}!C\+A\+D\+File@{C\+A\+D\+File}}
