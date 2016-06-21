@@ -13,7 +13,7 @@ script: cmake -DBUILD_TESTS=ON CMakeLists.txt
 after_success:
 - make -j4
 - cd tests
-- ./libopencad_tests
+- /home/travis/build/sandyre/libopencad/tests/libopencad_tests
 branches:
   only:
   - master
