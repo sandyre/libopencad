@@ -9,11 +9,12 @@ os:
 before_install:
 - echo $LANG
 - echo $LC_ALL
-script: cmake -DBUILD_TESTS=ON CMakeLists.txt
-after_success:
-- make -j4
-- cd tests
-- /home/travis/build/sandyre/libopencad/tests/libopencad_tests
+script: 
+- mkdir build
+- cd build
+- cmake -DBUILD_TESTS=ON ..
+- cmake --build . --target all -- -j4
+- cmake --build . --target test
 branches:
   only:
   - master

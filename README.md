@@ -1,57 +1,115 @@
-# Libopencad
-OpenSource library under X11/MIT license for everyday use. Under development, but some of basic functionality is already available.
-This project is being developed by Alexandr Borzykh ([sandyre](https://github.com/sandyre)) under mentorship of Dmitry Baryshnikov ([NextGIS](http://nextgis.ru/en/)).
+# libopencad
 
-All help will be very good for project. A lot of TODO's in code, so you can fix something you want.
-[Library documentation link](http://sandyre.github.io/libopencad/docs/html/index.html).
-API
----
-Libopencad typical usage pipeline is shown below:
-Open CAD file:
+Ubuntu 14.04 (gcc 4.8 + clang): [![Build Status](https://travis-ci.org/sandyre/libopencad.svg?branch=master)](https://travis-ci.org/sandyre/libopencad)
+
+OpenSource library under X11/MIT license for everyday use.
+Under development, but some of basic functionality is already available. This project is being developed by Alexandr Borzykh ([sandyre](https://github.com/sandyre)) under mentorship of Dmitry Baryshnikov ([NextGIS](http://nextgis.ru/en/)).
+
+Current project state:
+
+| DWG 	| Read 	| Write 	| Features 	| Missing 	|
+|--------	|------	|-------	|------------------------------------------------------------------------------------	|-----------------------------------------------	|
+| R13-14 	| - 	| - 	| - 	| - 	|
+| R15 	| + 	| - 	|  Reading of layers.Basic geometry reading. Exporting header variables and classes. 	| Linetypes, CRC calculation, by-block reading. 	|
+| R17 	| - 	| - 	| - 	| - 	|
+
+## Getting started
+
+First you need to download repository
+
+```sh
+git clone https://github.com/sandyre/libopencad
+```
+
+### Static library way
+
+Then, run cmake
+
+```sh
+cmake CMakeLists.txt
+```
+
+Build the project
+
+```sh
+make -j4
+```
+
+At this point, you will have a static library at lib/libopencadstatic.(your OS static library extension)
+All you have to do now - is to link library with your project, and include associated header files - opencad_api.h, cadgeometries.h and others.
+
+### Dynamic library way
+
+Then, run cmake
+
+```sh
+cmake -DBUILD_SHARED_LIBS=ON CMakeLists.txt
+```
+
+Build the project
+
+```sh
+make -j4
+```
+
+At this point, you will have a dynamic library at lib/libopencad{library version}.(your OS dynamic library extension)
+All you have to do now - is to link library with your project, and include associated header files - opencad_api.h, cadgeometries.h and others.
+
+### Library sources inclusion way
+
+All you have to do is to lib/ directory to your project file tree, thats actually it.
+
+### Usage example
+
+As an example of library usage, there is a built-in app called cadinfo (builds by default with library, available in apps/ directory).
+
 ```cpp
 #include <iostream>
 # include "lib/opencad_api.h"
 
-CADFile * opendwg = OpenCADFile("/path/to/example.dwg/dxf");
-```
+// returns nullptr on fail. GetLastErrorCode() returns an error code.
+CADFile *pCADFile = OpenCADFile( pszCADFilePath,
+                                      CADFile::OpenOptions::READ_ALL ); 
+                                      
+const CADHeader& header = pCADFile->getHeader ();
+header.print (); // prints CAD Header variables.
+cout << endl;
 
-From now on, you can access geometries like this:
-```cpp
-size_t nLayersCount = opendwg->GetLayersCount();
-Layer * layer;
-for ( auto i = 0; i < nLayersCount; ++i )
+const CADClasses& classes = pCADFile->getClasses ();
+classes.print (); // prints custom CAD classes
+cout << endl;
+
+for ( size_t i = 0; i < pCADFile->getLayersCount (); ++i )
 {
-    layer = opendwg->GetLayer (i);
-    for( auto j = 0; j < layer->GeometriesCount(); ++j )
+    CADLayer &layer = pCADFile->getLayer (i);
+    cout << "Layer #" << i << " contains "
+         << layer.getGeometryCount () << " geometries" << endl;
+
+    for ( size_t j = 0; j < layer.getGeometryCount (); ++j )
     {
-        CADGeometries::CADGeometry * geom = layer->GetGeometry (j);
-        // now, geom->sGeometryType stores a type of returned geometry. Then,
-        // you have to cast it to this class, eg.
-        if ( geom->sGeometryType == CADGeometries::CADGeometryType::CIRCLE )
+        unique_ptr<CADGeometry> geom(layer.getGeometry (j));
+
+        if ( geom == nullptr )
+            continue;
+
+        switch ( geom->getType() ) // returns GeometryType enum.
         {
-            CADGeometries::Circle * circle = geom;
-            // There you go. Now you can get all the data you want, eg.
-            std::cout << circle->dfCenterX;
-            std::cout << circle->dfCenterY;
-            std::cout << circle->dfCenterZ;
-            std::cout << circle->dfRadius;
+            case CADGeometry::CIRCLE:
+                CADCircle * poCADCircle = ( CADCircle* ) geom.get();
+                std::cout << poCADCircle->getPosition().getX() << std::endl;
+                std::cout << poCADCircle->getPosition().getY() << std::endl;
+                std::cout << poCADCircle->getPosition().getZ() << std::endl;
+                break;
+            // any other geometry type you need.
         }
     }
 }
 ```
 
-Current features list:
-1. Added reading of layers.
-2. [Supported geometries list](https://github.com/sandyre/libopencad/wiki/Supported-geometries).
+## Contribution
 
-Up on the list:
-1. Reading of attributes.
-2. Reading of blocks.
+Feel free to submit an issue, or make a pull request. To begin with, it's better to fix some FIXME/TODO's, to get more familiar with code base.
 
-Now supported CAD files version are:
-1. R2000 (read-only). Its under development still, and a lot of geometries are missed, but it will all come with time.
-2. Next up on the list: R13-14 (will be done in August), R2004.
+## Library documentation
 
-Build status
-------------
-Linux: [![Build Status](https://travis-ci.org/sandyre/libopencad.svg?branch=master)](https://travis-ci.org/sandyre/libopencad)
+Documentation is generated by Doxygen, available at this [link](http://sandyre.github.io/libopencad/docs/html/index.html)
