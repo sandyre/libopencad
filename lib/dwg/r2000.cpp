@@ -1496,21 +1496,15 @@ CADEllipseObject *DWGFileR2000::getEllipse(long dObjectSize,
     ellipse->setSize(dObjectSize);
     ellipse->stCed = stCommonEntityData;
 
-    CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
 
     ellipse->vertPosition = vertPosition;
 
-    CADVector vectSMAxis(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectSMAxis = ReadVector(pabyInput, nBitOffsetFromStart);
 
     ellipse->vectSMAxis = vectSMAxis;
 
-    CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
 
     ellipse->vectExtrusion = vectExtrusion;
 
@@ -1569,24 +1563,22 @@ CADSolidObject *DWGFileR2000::getSolid(long dObjectSize,
     solid->dfElevation = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
 
     CADVector oCorner;
-                for ( size_t i = 0; i < 4; ++i )
-                {
+    for ( size_t i = 0; i < 4; ++i )
+    {
         oCorner.setX(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
         oCorner.setY(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
         solid->avertCorners.push_back ( oCorner );
-                }
+    }
 
     if ( ReadBIT (pabyInput, nBitOffsetFromStart) )
-                {
+    {
         solid->vectExtrusion = CADVector(0.0f, 0.0f, 1.0f);
-                }
-                else
-                {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    }
+    else
+    {
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         solid->vectExtrusion = vectExtrusion;
-                }
+    }
 
     if ( solid->stCed.bbEntMode == 0 )
         solid->stChed.hOwner = ReadHANDLE (pabyInput, nBitOffsetFromStart);
@@ -1634,9 +1626,7 @@ CADPointObject *DWGFileR2000::getPoint(long dObjectSize,
     point->setSize( dObjectSize );
     point->stCed = stCommonEntityData;
 
-    CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
 
     point->vertPosition = vertPosition;
 
@@ -1649,9 +1639,7 @@ CADPointObject *DWGFileR2000::getPoint(long dObjectSize,
     }
     else
     {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         point->vectExtrusion = vectExtrusion;
     }
 
@@ -1755,15 +1743,11 @@ CADRayObject *DWGFileR2000::getRay(long dObjectSize,
     ray->setSize(dObjectSize);
     ray->stCed = stCommonEntityData;
 
-    CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
 
     ray->vertPosition = vertPosition;
 
-    CADVector vectVector(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectVector = ReadVector(pabyInput, nBitOffsetFromStart);
     ray->vectVector = vectVector;
 
     if ( ray->stCed.bbEntMode == 0 )
@@ -1810,15 +1794,11 @@ CADXLineObject *DWGFileR2000::getXLine(long dObjectSize,
     xline->setSize( dObjectSize );
     xline->stCed = stCommonEntityData;
 
-    CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
 
     xline->vertPosition = vertPosition;
 
-    CADVector vectVector(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectVector = ReadVector(pabyInput, nBitOffsetFromStart);
     xline->vectVector = vectVector;
 
     if ( xline->stCed.bbEntMode == 0 )
@@ -1894,9 +1874,7 @@ CADLineObject *DWGFileR2000::getLine(long dObjectSize,
     }
     else
     {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         line->vectExtrusion = vectExtrusion;
     }
 
@@ -1952,17 +1930,19 @@ CADTextObject *DWGFileR2000::getText(long dObjectSize,
     if ( !( text->DataFlags & 0x01 ) )
         text->dfElevation = ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
 
-    CADVector vertInsetionPoint(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertInsetionPoint = ReadRAWVector (pabyInput,
+                                                 nBitOffsetFromStart);
 
     text->vertInsetionPoint = vertInsetionPoint;
 
     if ( !( text->DataFlags & 0x02 ) )
     {
-        CADVector vertAlignmentPoint(ReadBITDOUBLEWD (pabyInput,
-                                nBitOffsetFromStart, vertInsetionPoint.getX()),
-                                     ReadBITDOUBLEWD (pabyInput,
-                                nBitOffsetFromStart, vertInsetionPoint.getY()));
+        double x, y;
+        x = ReadBITDOUBLEWD (pabyInput,
+                             nBitOffsetFromStart, vertInsetionPoint.getX());
+        y = ReadBITDOUBLEWD (pabyInput,
+                             nBitOffsetFromStart, vertInsetionPoint.getY());
+        CADVector vertAlignmentPoint(x, y);
         text->vertAlignmentPoint = vertAlignmentPoint;
     }
 
@@ -1972,9 +1952,7 @@ CADTextObject *DWGFileR2000::getText(long dObjectSize,
     }
     else
     {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         text->vectExtrusion = vectExtrusion;
     }
 
@@ -2048,10 +2026,7 @@ CADVertex3DObject *DWGFileR2000::getVertex3D(long dObjectSize,
 
     /*unsigned char Flags = */ReadCHAR (pabyInput, nBitOffsetFromStart);
 
-    CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
-
+    CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);;
     vertex->vertPosition = vertPosition;
 
     if ( vertex->stCed.bbEntMode == 0 )
@@ -2098,9 +2073,7 @@ CADCircleObject *DWGFileR2000::getCircle(long dObjectSize,
     circle->setSize(dObjectSize);
     circle->stCed = stCommonEntityData;
 
-    CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
     circle->vertPosition = vertPosition;
     circle->dfRadius    = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
     circle->dfThickness = ReadBIT (pabyInput, nBitOffsetFromStart) ?
@@ -2112,9 +2085,7 @@ CADCircleObject *DWGFileR2000::getCircle(long dObjectSize,
     }
     else
     {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         circle->vectExtrusion = vectExtrusion;
     }
 
@@ -2225,9 +2196,7 @@ CADPolyline2DObject *DWGFileR2000::getPolyline2D(long dObjectSize,
     }
     else
     {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         polyline->vectExtrusion = vectExtrusion;
     }
 
@@ -2282,16 +2251,18 @@ CADAttribObject *DWGFileR2000::getAttributes(long dObjectSize,
     if ( !(attrib->DataFlags & 0x01) )
         attrib->dfElevation = ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
 
-    CADVector vertInsetionPoint(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
+    double x, y;
+
+    CADVector vertInsetionPoint = ReadRAWVector(pabyInput, nBitOffsetFromStart);
     attrib->vertInsetionPoint = vertInsetionPoint;
 
     if ( !(attrib->DataFlags & 0x02) )
     {
-        CADVector vertAlignmentPoint(ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
-                                                   vertInsetionPoint.getX()),
-                                    ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
-                                                   vertInsetionPoint.getY()));
+        x = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
+                             vertInsetionPoint.getX());
+        y = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
+                             vertInsetionPoint.getY());
+        CADVector vertAlignmentPoint(x, y);
         attrib->vertAlignmentPoint = vertAlignmentPoint;
     }
 
@@ -2301,9 +2272,7 @@ CADAttribObject *DWGFileR2000::getAttributes(long dObjectSize,
     }
     else
     {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         attrib->vectExtrusion = vectExtrusion;
     }
 
@@ -2375,18 +2344,16 @@ CADAttdefObject *DWGFileR2000::getAttributesDefn(long dObjectSize,
     if ( !(attdef->DataFlags & 0x01) )
         attdef->dfElevation = ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
 
-    CADVector vertInsetionPoint(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertInsetionPoint = ReadRAWVector(pabyInput, nBitOffsetFromStart);
     attdef->vertInsetionPoint = vertInsetionPoint;
 
     if ( !(attdef->DataFlags & 0x02) )
     {
-        CADVector vertAlignmentPoint(ReadBITDOUBLEWD (pabyInput,
-                                                      nBitOffsetFromStart,
-                                                      vertInsetionPoint.getX()),
-                                     ReadBITDOUBLEWD (pabyInput,
-                                                      nBitOffsetFromStart,
-                                                      vertInsetionPoint.getY()));
+        double x = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
+                                    vertInsetionPoint.getX());
+        double y = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
+                                    vertInsetionPoint.getY());
+        CADVector vertAlignmentPoint(x, y);
         attdef->vertAlignmentPoint = vertAlignmentPoint;
     }
 
@@ -2396,9 +2363,7 @@ CADAttdefObject *DWGFileR2000::getAttributesDefn(long dObjectSize,
     }
     else
     {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         attdef->vectExtrusion = vectExtrusion;
     }
 
@@ -2469,6 +2434,7 @@ CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
     polyline->setSize(dObjectSize);
     polyline->stCed = stCommonEntityData;
 
+    double x, y;
     int vertixesCount  = 0, nBulges = 0, nNumWidths = 0;
     short dataFlag = ReadBITSHORT (pabyInput, nBitOffsetFromStart);
     if ( dataFlag & 4 )
@@ -2479,9 +2445,7 @@ CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
         polyline->dfThickness  = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
     if ( dataFlag & 1 )
     {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         polyline->vectExtrusion = vectExtrusion;
     }
 
@@ -2499,9 +2463,8 @@ CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
     }
 
     // First of all, read first vertex.
-    CADVector vertex(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                     ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
-                polyline->avertVertexes.push_back (vertex);
+    CADVector vertex = ReadRAWVector(pabyInput, nBitOffsetFromStart);
+    polyline->avertVertexes.push_back (vertex);
 
     // All the others are not raw doubles; bitdoubles with default instead,
     // where default is previous point coords.
@@ -2509,17 +2472,18 @@ CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
     for ( int i = 1; i < vertixesCount; ++i )
     {
         prev = size_t(i - 1);
-        CADVector vertex(ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
-                                          polyline->avertVertexes[prev].getX()),
-                         ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
-                                          polyline->avertVertexes[prev].getY()));
-                    polyline->avertVertexes.push_back (vertex);
+        x = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
+                                           polyline->avertVertexes[prev].getX());
+        y = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
+                                           polyline->avertVertexes[prev].getY());
+        CADVector vertex(x, y);
+        polyline->avertVertexes.push_back (vertex);
     }
 
     for ( int i = 0; i < nBulges; ++i )
     {
         double dfBulgeValue = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
-                    polyline->adfBulges.push_back (dfBulgeValue);
+        polyline->adfBulges.push_back (dfBulgeValue);
     }
 
     for ( int i = 0; i < nNumWidths; ++i )
@@ -2575,9 +2539,7 @@ CADArcObject *DWGFileR2000::getArc(long dObjectSize,
 
     arc->stCed = stCommonEntityData;
 
-    CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
     arc->vertPosition    = vertPosition;
     arc->dfRadius        = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
     arc->dfThickness     = ReadBIT (pabyInput, nBitOffsetFromStart) ?
@@ -2589,9 +2551,7 @@ CADArcObject *DWGFileR2000::getArc(long dObjectSize,
     }
     else
     {
-        CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
         arc->vectExtrusion = vectExtrusion;
     }
 
@@ -2640,7 +2600,6 @@ CADSplineObject *DWGFileR2000::getSpline(long dObjectSize,
                                          size_t &nBitOffsetFromStart)
 {
     CADSplineObject * spline = new CADSplineObject();
-
     spline->setSize(dObjectSize);
     spline->stCed = stCommonEntityData;
     spline->dScenario = ReadBITLONG (pabyInput, nBitOffsetFromStart);
@@ -2649,13 +2608,9 @@ CADSplineObject *DWGFileR2000::getSpline(long dObjectSize,
     if ( spline->dScenario == 2 )
     {
         spline->dfFitTol = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
-        CADVector vectBegTangDir(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                 ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                 ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectBegTangDir = ReadVector(pabyInput, nBitOffsetFromStart);
         spline->vectBegTangDir = vectBegTangDir;
-        CADVector vectEndTangDir(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                 ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                 ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectEndTangDir = ReadVector(pabyInput, nBitOffsetFromStart);
         spline->vectEndTangDir = vectEndTangDir;
         spline->nNumFitPts = ReadBITLONG (pabyInput, nBitOffsetFromStart);
     }
@@ -2679,21 +2634,17 @@ CADSplineObject *DWGFileR2000::getSpline(long dObjectSize,
     for ( long i = 0; i < spline->nNumKnots; ++i )
         spline->adfKnots.push_back ( ReadBITDOUBLE (pabyInput, nBitOffsetFromStart) );
     for ( long i = 0; i < spline->nNumCtrlPts; ++i )
-                {
-        CADVector vertex(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
-                    spline->avertCtrlPoints.push_back ( vertex );
-                    if ( spline->bWeight )
+    {
+        CADVector vertex = ReadVector(pabyInput, nBitOffsetFromStart);
+        spline->avertCtrlPoints.push_back ( vertex );
+        if ( spline->bWeight )
             spline->adfCtrlPointsWeight.push_back (
                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart) );
     }
     for ( long i = 0; i < spline->nNumFitPts; ++i )
     {
-        CADVector vertex(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                         ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
-                    spline->averFitPoints.push_back ( vertex );
+        CADVector vertex = ReadVector(pabyInput, nBitOffsetFromStart);
+        spline->averFitPoints.push_back ( vertex );
     }
 
     if (spline->stCed.bbEntMode == 0 )
@@ -3038,9 +2989,7 @@ CADBlockHeaderObject *DWGFileR2000::getBlockHeader(long dObjectSize,
     blockHeader->bXRefOverlaid = ReadBIT (pabyInput, nBitOffsetFromStart);
     blockHeader->bLoadedBit = ReadBIT (pabyInput, nBitOffsetFromStart);
 
-    CADVector vertBasePoint(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertBasePoint = ReadVector(pabyInput, nBitOffsetFromStart);
     blockHeader->vertBasePoint = vertBasePoint;
     blockHeader->sXRefPName = ReadTV (pabyInput, nBitOffsetFromStart);
     unsigned char Tmp;
@@ -3214,14 +3163,10 @@ CADMLineObject *DWGFileR2000::getMLine(long dObjectSize,
     mline->dfScale = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
     mline->dJust = ReadCHAR (pabyInput, nBitOffsetFromStart);
 
-    CADVector vertBasePoint(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertBasePoint = ReadVector(pabyInput, nBitOffsetFromStart);
     mline->vertBasePoint = vertBasePoint;
 
-    CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
     mline->vectExtrusion = vectExtrusion;
     mline->dOpenClosed = ReadBITSHORT (pabyInput, nBitOffsetFromStart);
     mline->nLinesInStyle = ReadCHAR (pabyInput, nBitOffsetFromStart);
@@ -3231,19 +3176,13 @@ CADMLineObject *DWGFileR2000::getMLine(long dObjectSize,
     CADLineStyle stLStyle;
     for ( long i = 0; i < mline->nNumVertexes; ++i )
     {
-        CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
         stVertex.vertPosition = vertPosition;
 
-        CADVector vectDirection (ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                 ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                 ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectDirection = ReadVector(pabyInput, nBitOffsetFromStart);
         stVertex.vectDirection = vectDirection;
 
-        CADVector vectMIterDirection(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                     ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                     ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vectMIterDirection = ReadVector(pabyInput, nBitOffsetFromStart);
         stVertex.vectMIterDirection = vectMIterDirection;
         for ( size_t j = 0; j < mline->nLinesInStyle; ++j )
         {
@@ -3359,19 +3298,13 @@ CADImageObject *DWGFileR2000::getImage(long dObjectSize,
 
     image->dClassVersion = ReadBITLONG (pabyInput, nBitOffsetFromStart);
 
-    CADVector vertInsertion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertInsertion = ReadVector(pabyInput, nBitOffsetFromStart);
     image->vertInsertion = vertInsertion;
 
-    CADVector vectUDirection(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                             ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                             ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectUDirection = ReadVector(pabyInput, nBitOffsetFromStart);
     image->vectUDirection = vectUDirection;
 
-    CADVector vectVDirection(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                             ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                             ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectVDirection = ReadVector(pabyInput, nBitOffsetFromStart);
     image->vectVDirection = vectVDirection;
 
     image->dfSizeX = ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
@@ -3386,11 +3319,10 @@ CADImageObject *DWGFileR2000::getImage(long dObjectSize,
 
     if ( image->dClipBoundaryType == 1 )
     {
-        CADVector vertPoint1(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                             ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
+        CADVector vertPoint1 = ReadRAWVector(pabyInput, nBitOffsetFromStart);
         image->avertClippingPolygonVertexes.push_back(vertPoint1);
-        CADVector vertPoint2(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                             ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
+
+        CADVector vertPoint2 = ReadRAWVector(pabyInput, nBitOffsetFromStart);
         image->avertClippingPolygonVertexes.push_back(vertPoint2);
     }
     else
@@ -3400,8 +3332,7 @@ CADImageObject *DWGFileR2000::getImage(long dObjectSize,
 
         for ( long i = 0; i < image->nNumberVertexesInClipPolygon; ++i )
         {
-            CADVector vertPoint(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                                ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vertPoint = ReadRAWVector(pabyInput, nBitOffsetFromStart);
             image->avertClippingPolygonVertexes.push_back(vertPoint);
         }
     }
@@ -3457,20 +3388,24 @@ CAD3DFaceObject *DWGFileR2000::get3DFace(long dObjectSize,
     face->bHasNoFlagInd = ReadBIT (pabyInput, nBitOffsetFromStart);
     face->bZZero = ReadBIT (pabyInput, nBitOffsetFromStart);
 
-    CADVector vertex(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                     ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
-    if ( !face->bZZero )
-        vertex.setZ (ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
+    double x, y, z;
 
+    CADVector vertex = ReadRAWVector(pabyInput, nBitOffsetFromStart);
+    if ( !face->bZZero ){
+        z = ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
+        vertex.setZ (z);
+    }
     face->avertCorners.push_back (vertex);
     for ( size_t i = 1; i < 4; ++i )
     {
-        CADVector corner(ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
-                                          face->avertCorners[i-1].getX()),
-                         ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
-                                          face->avertCorners[i-1].getY()),
-                         ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
-                                          face->avertCorners[i-1].getZ()));
+        x = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
+                             face->avertCorners[i-1].getX());
+        y = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
+                             face->avertCorners[i-1].getY());
+        z = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
+                             face->avertCorners[i-1].getZ());
+
+        CADVector corner(x, y, z);
         face->avertCorners.push_back (corner);
     }
 
@@ -3522,9 +3457,7 @@ CADVertexMeshObject *DWGFileR2000::getVertexMesh(long dObjectSize,
     vertex->stCed = stCommonEntityData;
 
     /*unsigned char Flags = */ReadCHAR (pabyInput, nBitOffsetFromStart);
-    CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
     vertex->vertPosition = vertPosition;
 
     if ( vertex->stCed.bbEntMode == 0 )
@@ -3571,9 +3504,7 @@ CADVertexPFaceObject *DWGFileR2000::getVertexPFace(long dObjectSize,
     vertex->stCed = stCommonEntityData;
 
     /*unsigned char Flags = */ReadCHAR (pabyInput, nBitOffsetFromStart);
-    CADVector vertPosition(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
     vertex->vertPosition = vertPosition;
 
     if ( vertex->stCed.bbEntMode == 0 )
@@ -3618,19 +3549,13 @@ CADMTextObject *DWGFileR2000::getMText(long dObjectSize,
     text->setSize (dObjectSize);
     text->stCed = stCommonEntityData;
 
-    CADVector vertInsertionPoint(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                 ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                                 ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertInsertionPoint = ReadVector(pabyInput, nBitOffsetFromStart);
     text->vertInsertionPoint = vertInsertionPoint;
 
-    CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
     text->vectExtrusion = vectExtrusion;
 
-    CADVector vectXAxisDir(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                           ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectXAxisDir = ReadVector(pabyInput, nBitOffsetFromStart);
     text->vectXAxisDir = vectXAxisDir;
 
     text->dfRectWidth = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
@@ -3687,13 +3612,10 @@ CADDimensionObject *DWGFileR2000::getDimension(short dObjectType,long dObjectSiz
 {
     CADCommonDimensionData stCDD;
 
-    CADVector vectExtrusion(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vectExtrusion = ReadVector(pabyInput, nBitOffsetFromStart);
     stCDD.vectExtrusion = vectExtrusion;
 
-    CADVector vertTextMidPt(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                            ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vertTextMidPt = ReadRAWVector(pabyInput, nBitOffsetFromStart);
     stCDD.vertTextMidPt = vertTextMidPt;
 
     stCDD.dfElevation = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
@@ -3713,8 +3635,7 @@ CADDimensionObject *DWGFileR2000::getDimension(short dObjectType,long dObjectSiz
     stCDD.dfLineSpacingFactor = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
     stCDD.dfActualMeasurement = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
 
-    CADVector vert12Pt(ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart),
-                       ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart));
+    CADVector vert12Pt = ReadRAWVector(pabyInput, nBitOffsetFromStart);
     stCDD.vert12Pt = vert12Pt;
 
     switch(dObjectType)
@@ -3728,20 +3649,13 @@ CADDimensionObject *DWGFileR2000::getDimension(short dObjectType,long dObjectSiz
             dimension->stCed = stCommonEntityData;
             dimension->cdd = stCDD;
 
-            CADVector vert10pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert10pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert10pt = vert10pt;
 
-
-            CADVector vert13pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert13pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert13pt = vert13pt;
 
-            CADVector vert14pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert14pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert14pt = vert14pt;
 
             dimension->Flags2 = ReadCHAR (pabyInput, nBitOffsetFromStart);
@@ -3794,19 +3708,13 @@ CADDimensionObject *DWGFileR2000::getDimension(short dObjectType,long dObjectSiz
             dimension->stCed = stCommonEntityData;
             dimension->cdd = stCDD;
 
-            CADVector vert13pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert13pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert13pt = vert13pt;
 
-            CADVector vert14pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert14pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert14pt = vert14pt;
 
-            CADVector vert10pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert10pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert10pt = vert10pt;
 
             dimension->dfExtLnRot = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
@@ -3862,19 +3770,13 @@ CADDimensionObject *DWGFileR2000::getDimension(short dObjectType,long dObjectSiz
             dimension->stCed = stCommonEntityData;
             dimension->cdd = stCDD;
 
-            CADVector vert13pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert13pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert13pt = vert13pt;
 
-            CADVector vert14pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert14pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert14pt = vert14pt;
 
-            CADVector vert10pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert10pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert10pt = vert10pt;
 
             dimension->dfExtLnRot =
@@ -3931,24 +3833,16 @@ CADDimensionObject *DWGFileR2000::getDimension(short dObjectType,long dObjectSiz
             dimension->stCed = stCommonEntityData;
             dimension->cdd = stCDD;
 
-            CADVector vert10pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert10pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert10pt = vert10pt;
 
-            CADVector vert13pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert13pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert13pt = vert13pt;
 
-            CADVector vert14pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert14pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert14pt = vert14pt;
 
-            CADVector vert15pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert15pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert15pt = vert15pt;
 
             if (dimension->stCed.bbEntMode == 0 )
@@ -3999,29 +3893,19 @@ CADDimensionObject *DWGFileR2000::getDimension(short dObjectType,long dObjectSiz
             dimension->stCed = stCommonEntityData;
             dimension->cdd = stCDD;
 
-            CADVector vert16pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert16pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert16pt = vert16pt;
 
-            CADVector vert13pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert13pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert13pt = vert13pt;
 
-            CADVector vert14pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert14pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert14pt = vert14pt;
 
-            CADVector vert15pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert15pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert15pt = vert15pt;
 
-            CADVector vert10pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert10pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert10pt = vert10pt;
 
             if (dimension->stCed.bbEntMode == 0 )
@@ -4072,14 +3956,10 @@ CADDimensionObject *DWGFileR2000::getDimension(short dObjectType,long dObjectSiz
             dimension->stCed = stCommonEntityData;
             dimension->cdd = stCDD;
 
-            CADVector vert10pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert10pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert10pt = vert10pt;
 
-            CADVector vert15pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert15pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert15pt = vert15pt;
 
             dimension->dfLeaderLen = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
@@ -4133,14 +4013,10 @@ CADDimensionObject *DWGFileR2000::getDimension(short dObjectType,long dObjectSiz
             dimension->stCed = stCommonEntityData;
             dimension->cdd = stCDD;
 
-            CADVector vert15pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert15pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert15pt = vert15pt;
 
-            CADVector vert10pt(ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart),
-                               ReadBITDOUBLE (pabyInput, nBitOffsetFromStart));
+            CADVector vert10pt = ReadVector(pabyInput, nBitOffsetFromStart);
             dimension->vert10pt = vert10pt;
 
             dimension->dfLeaderLen = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
