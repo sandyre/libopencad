@@ -31,6 +31,7 @@ TEST(reading_geometries, 24127_circles_128_lines)
     delete openedDwg;
 }
 
+
 TEST(reading_geometries, 256_polylines_7vertexes)
 {
     auto opened_dwg = OpenCADFile ("./data/r2000/256_lwpolylines_7vertexes.dwg",
@@ -204,3 +205,4 @@ TEST(reading_circles, triplet)
 
     delete openedDwg;
 }
+
