@@ -76,6 +76,8 @@ int main(int argc, char *argv[])
 {
     if( argc < 1 )
        return -argc;
+    else if(argc == 1)
+        return Usage();
 
     const char  *pszCADFilePath = nullptr;
 
