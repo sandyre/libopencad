@@ -1187,6 +1187,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
 
         ellipse->setColor (cadEllipse->stCed.nCMColor);
         ellipse->setPosition (cadEllipse->vertPosition);
+        ellipse->setSMAxis (cadEllipse->vectSMAxis);
         ellipse->setAxisRatio (cadEllipse->dfAxisRatio);
         ellipse->setEndingAngle (cadEllipse->dfEndAngle);
         ellipse->setStartingAngle (cadEllipse->dfBegAngle);
