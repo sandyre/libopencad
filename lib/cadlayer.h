@@ -79,6 +79,8 @@ public:
     CADGeometry* getGeometry(size_t index);
 
 protected:
+    bool addAttribute(const CADObject* pObject);
+protected:
     string layerName;
     bool frozen;
     bool on;

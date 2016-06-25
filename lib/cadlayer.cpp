@@ -141,49 +141,31 @@ void CADLayer::setHandle(long value)
 
 void CADLayer::addHandle(long handle, CADObject::ObjectType type)
 {
+    cout << "addHandle: " << handle << " type: " << type << endl;
+    if( type == CADObject::ATTRIB || type == CADObject::ATTDEF )
+    {
+        unique_ptr< CADObject > geometry( pCADFile->getObject ( handle, false ) );
+
+        switch( type )
+        {
+            case CADObject::ATTRIB:
+            if(addAttribute(geometry.get()))
+                return;
+            break;
+
+            case CADObject::ATTDEF:
+            if(addAttribute(geometry.get()))
+                return;
+            break;
+        }
+    }
+
     if(isGeometryType (type))
     {
-        if( type == CADObject::ATTRIB || type == CADObject::ATTDEF )
-        {
-            unique_ptr< CADObject > geometry( pCADFile->getObject ( handle, false ) );
-            if ( geometry.get() == nullptr ) return;
-
-            switch( geometry->getType () )
-            {
-                case CADObject::ATTRIB:
-                {
-                    auto attrib = ( CADAttribObject* ) geometry.get();
-                    for ( auto i = geometryAttributes.begin (); i != geometryAttributes.end(); ++i )
-                    {
-                        if ( i->first == attrib->stChed.hOwner.getAsLong () )
-                        {
-                            i->second.insert ( make_pair ( attrib->sTag, handle ) );
-                            return;
-                        }
-                    }
-                    break;
-                }
-
-                case CADObject::ATTDEF:
-                {
-                    auto attrib = ( CADAttdefObject* ) geometry.get();
-                    for ( auto i = geometryAttributes.begin (); i != geometryAttributes.end(); ++i )
-                    {
-                        if ( i->first == attrib->stChed.hOwner.getAsLong () )
-                        {
-                            i->second.insert ( make_pair( attrib->sTag, handle ) );
-                            return;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-
         geometryHandles.push_back( handle );
         if( geometryType == -2 ) // if not inited set type for first geometry
             geometryType = type;
-        else if( geometryType != type ) // if type differs from previous geometry this is geometry bag
+        else if( geometryType != type ) // if type differs from previous geometry this is geometry bag (geometry type any)
             geometryType = -1;
     }
 }
@@ -196,4 +178,22 @@ size_t CADLayer::getGeometryCount() const
 CADGeometry *CADLayer::getGeometry(size_t index)
 {
     return pCADFile->getGeometry(geometryHandles[index]);
+}
+
+bool CADLayer::addAttribute(const CADObject *pObject)
+{
+    if(nullptr == pObject)
+        return true;
+
+    auto attrib = static_cast<const CADAttribObject*>(pObject);
+    for ( auto i = geometryAttributes.begin (); i != geometryAttributes.end(); ++i )
+    {
+        if ( i->first == attrib->stChed.hOwner.getAsLong () )
+        {
+            i->second.insert ( make_pair( attrib->sTag, handle ) );
+            return true;
+        }
+    }
+
+    return false;
 }
