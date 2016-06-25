@@ -255,9 +255,13 @@ public:
     CADEllipse();
     double getAxisRatio() const;
     void setAxisRatio(double value);
-    virtual void print () const override;
 
+    CADVector getSMAxis();
+    void setSMAxis(const CADVector& vectSMA);
+
+    virtual void print () const override;
 protected:
+    CADVector vectSMAxis;
     double axisRatio;
 };
 
@@ -287,12 +291,15 @@ public:
     double getFitTollerance() const;
     void setFitTollerance(double value);
 
+    long getDegree() const;
+    void setDegree(long value);
 protected:
     long scenario;
     bool rational;
     bool closed;
     bool weight;
     double fitTollerance;
+    long degree;
 
     std::vector < double > ctrlPointsWeight;
     std::vector < CADVector > avertCtrlPoints;
@@ -533,7 +540,6 @@ public:
 protected:
     string sPrompt;
 };
-
 
 //class EXTERN LineType
 //{

@@ -1187,6 +1187,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
 
         ellipse->setColor (cadEllipse->stCed.nCMColor);
         ellipse->setPosition (cadEllipse->vertPosition);
+        ellipse->setSMAxis (cadEllipse->vectSMAxis);
         ellipse->setAxisRatio (cadEllipse->dfAxisRatio);
         ellipse->setEndingAngle (cadEllipse->dfEndAngle);
         ellipse->setStartingAngle (cadEllipse->dfBegAngle);
@@ -1226,8 +1227,10 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         CADSplineObject * cadSpline = static_cast<CADSplineObject *>(
                     readedObject.get());
 
+
         spline->setColor (cadSpline->stCed.nCMColor);
         spline->setScenario (cadSpline->dScenario);
+        spline->setDegree( cadSpline->dDegree );
         if ( spline->getScenario() == 2 )
         {
             spline->setFitTollerance (cadSpline->dfFitTol);
