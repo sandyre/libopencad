@@ -43,7 +43,7 @@ using namespace std;
 
 static int Usage(const char* pszErrorMsg = nullptr)
 {
-    cout << "Usage: cadinfo [--help] [--formats][--version]\n"
+    cout << "Usage: cadinfo [--summary][--help][--formats][--version]\n"
             "               file_name" << endl;
 
     if( pszErrorMsg != nullptr )
@@ -76,7 +76,10 @@ int main(int argc, char *argv[])
 {
     if( argc < 1 )
        return -argc;
+    else if(argc == 1)
+        return Usage();
 
+    bool bSummary = false;
     const char  *pszCADFilePath = nullptr;
 
     for( int iArg = 1; iArg < argc; ++iArg)
@@ -92,6 +95,10 @@ int main(int argc, char *argv[])
         else if(strcmp(argv[iArg],"-v")==0 || strcmp(argv[iArg],"--version")==0)
         {
             return Version();
+        }
+        else if(strcmp(argv[iArg],"-so")==0 || strcmp(argv[iArg],"--summary")==0)
+        {
+            bSummary = true;
         }
         else
         {
@@ -141,8 +148,9 @@ int main(int argc, char *argv[])
     for ( i = 0; i < pCADFile->getLayersCount (); ++i )
     {
         CADLayer &layer = pCADFile->getLayer (i);
-        cout << "Layer #" << i << " contains "
+        cout << i+1 << ". Layer " << layer.getName () << " contains "
              << layer.getGeometryCount () << " geometries" << endl;
+
 
         for ( j = 0; j < layer.getGeometryCount (); ++j )
         {
@@ -151,7 +159,8 @@ int main(int argc, char *argv[])
             if ( geom == nullptr )
                 continue;
 
-            geom->print ();
+            if(!bSummary)
+                geom->print ();
 
             switch ( geom->getType() )
             {
@@ -232,23 +241,24 @@ int main(int argc, char *argv[])
         }
     }
 
-    cout << "Polylines Pface: " << polylinesPface << std::endl;
-    cout << "3DFaces: " << face3dsCount << std::endl;
-    cout << "Rays: " << raysCount << std::endl;
-    cout << "XLines: " << xlinesCount << std::endl;
-    cout << "MLines: " << mlinesCount << std::endl;
-    cout << "MTexts: " << mtextsCount << std::endl;
-    cout << "Images: " << imagesCount << std::endl;
-    cout << "Solids: " << solidsCount << std::endl;
-    cout << "Points: " << pointCount << std::endl;
-    cout << "Ellipses: " << ellipsesCount << std::endl;
-    cout << "Lines count: " << linesCount << std::endl;
-    cout << "Plines count: " << plineCount << std::endl;
-    cout << "Plines3d count: " << pline3dCount << std::endl;
-    cout << "Splines count: " << splinesCount << std::endl;
-    cout << "Circles count: " << circlesCount << std::endl;
-    cout << "Arcs count: " << arcCount << std::endl;
-    cout << "Texts count: " << textCount << std::endl;
-    cout << "Attdefs count: " << attdefCount << std::endl;
-    cout << "Attribs count: " << attribCount << std::endl;
+    cout << "\n============== geometry summary ==============" << endl;
+    cout << "Polylines Pface: " << polylinesPface << endl;
+    cout << "3DFaces: " << face3dsCount << endl;
+    cout << "Rays: " << raysCount << endl;
+    cout << "XLines: " << xlinesCount << endl;
+    cout << "MLines: " << mlinesCount << endl;
+    cout << "MTexts: " << mtextsCount << endl;
+    cout << "Images: " << imagesCount << endl;
+    cout << "Solids: " << solidsCount << endl;
+    cout << "Points: " << pointCount << endl;
+    cout << "Ellipses: " << ellipsesCount << endl;
+    cout << "Lines count: " << linesCount << endl;
+    cout << "Plines count: " << plineCount << endl;
+    cout << "Plines3d count: " << pline3dCount << endl;
+    cout << "Splines count: " << splinesCount << endl;
+    cout << "Circles count: " << circlesCount << endl;
+    cout << "Arcs count: " << arcCount << endl;
+    cout << "Texts count: " << textCount << endl;
+    cout << "Attdefs count: " << attdefCount << endl;
+    cout << "Attribs count: " << attribCount << endl;
 }
