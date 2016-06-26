@@ -141,26 +141,31 @@ void CADLayer::setHandle(long value)
 
 void CADLayer::addHandle(long handle, CADObject::ObjectType type)
 {
+#ifdef _DEBUG
     cout << "addHandle: " << handle << " type: " << type << endl;
+#endif //_DEBUG
     if( type == CADObject::ATTRIB || type == CADObject::ATTDEF )
     {
         unique_ptr< CADObject > geometry( pCADFile->getObject ( handle, false ) );
 
-        switch( type )
-        {
-            case CADObject::ATTRIB:
-            if(addAttribute(geometry.get()))
-                return;
-            break;
+        if(addAttribute(geometry.get()))
+            return;
+    }
 
-            case CADObject::ATTDEF:
-            if(addAttribute(geometry.get()))
-                return;
-            break;
+    if( type == CADObject::INSERT){
+        // TODO: transform insert to block of objects (do we need to transform
+        // coordinates according to insert point)?
+        unique_ptr< CADObject > insert( pCADFile->getObject ( handle, false ) );
+        CADInsertObject *pInsert = static_cast<CADInsertObject *>(insert.get ());
+        if(nullptr != pInsert){
+            addHandle(pInsert->hBlockHeader.getAsLong (), CADObject::BLOCK_HEADER);
+            for (CADHandle attr : pInsert->hAtrribs) {
+                addHandle(attr.getAsLong (), CADObject::ATTRIB);
+            }
         }
     }
 
-    if(isGeometryType (type))
+    if(isCommonEntityType (type))
     {
         geometryHandles.push_back( handle );
         if( geometryType == -2 ) // if not inited set type for first geometry

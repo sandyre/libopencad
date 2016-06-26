@@ -130,9 +130,12 @@ protected:
     CADEntityObject *getEntity(int dObjectType, long dObjectSize,
                                CADCommonED stCommonEntityData,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADInsertObject *getInsert(int dObjectType, long dObjectSize,
+                               CADCommonED stCommonEntityData,
+                               const char *pabyInput, size_t &nBitOffsetFromStart);
     CADDictionaryObject *getDictionary(long dObjectSize,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
-    CADLayerObject *getLayer(long dObjectSize,
+    CADLayerObject *getLayerObject(long dObjectSize,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
     CADLayerControlObject *getLayerControl(long dObjectSize,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
@@ -169,6 +172,8 @@ protected:
     CADImageDefReactorObject *getImageDefReactor(long dObjectSize,
                                                  const char *pabyInput,
                                                  size_t &nBitOffsetFromStart);
+    void fillCommonEntityHandleData(CADEntityObject *pEnt, const char *pabyInput,
+                                    size_t &nBitOffsetFromStart);
 protected:
     int imageSeeker;
     std::vector<SectionLocatorRecord> sectionLocatorRecords;

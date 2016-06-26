@@ -81,8 +81,6 @@ map< string, CADAttdef> CADGeometry::getAttributes ()
 
 void CADGeometry::addAttribute( CADAttrib* attrib )
 {
-    // FIXME: very dangerous. should be casted to attdef
-    // manually
     if ( attrib != nullptr )
     {        
         mapstAttributes.insert( make_pair( attrib->getTag (), *static_cast<CADAttdef*>(attrib) ) );

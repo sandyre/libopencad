@@ -121,15 +121,15 @@ int CADTables::readLayersTable( CADFile  * const file, long index)
 
         /* TODO: this check is excessive, but if something goes wrong way -
          * some part of geometries will be parsed. */
-        if ( ent == nullptr )
-            break;
-        fillLayer(ent.get ());
+        if ( ent != nullptr ) {
+            fillLayer(ent.get ());
 
-        if ( ent->stCed.bNoLinks )
-            ++dCurrentEntHandle;
-        else
-            dCurrentEntHandle = ent->stChed.hNextEntity.getAsLong (
-                        ent->stCed.hObjectHandle);
+            if ( ent->stCed.bNoLinks )
+                ++dCurrentEntHandle;
+            else
+                dCurrentEntHandle = ent->stChed.hNextEntity.getAsLong (
+                            ent->stCed.hObjectHandle);
+        }
 
         if ( dCurrentEntHandle == dLastEntHandle )
         {
