@@ -190,6 +190,7 @@ void CADLayer::addHandle(long handle, CADObject::ObjectType type)
             //    addHandle(attr.getAsLong (), CADObject::ATTRIB);
             //}
         }
+        return;
     }
 
     if( type == CADObject::BLOCK || type == CADObject::IMAGE  ||
