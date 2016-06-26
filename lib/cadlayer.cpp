@@ -31,6 +31,7 @@
 #include <iostream>
 #include "cadlayer.h"
 #include "cadfile.h"
+#include <cassert>
 
 CADLayer::CADLayer(CADFile * const file) : frozen(false), on(true),
     frozenByDefault(false), locked(false), plotting(false), lineWeight(1),
@@ -158,11 +159,44 @@ void CADLayer::addHandle(long handle, CADObject::ObjectType type)
         unique_ptr< CADObject > insert( pCADFile->getObject ( handle, false ) );
         CADInsertObject *pInsert = static_cast<CADInsertObject *>(insert.get ());
         if(nullptr != pInsert){
-            addHandle(pInsert->hBlockHeader.getAsLong (), CADObject::BLOCK_HEADER);
-            for (CADHandle attr : pInsert->hAtrribs) {
-                addHandle(attr.getAsLong (), CADObject::ATTRIB);
+            unique_ptr< CADObject > blockHeader(
+                        pCADFile->getObject (
+                            pInsert->hBlockHeader.getAsLong (), false ));
+            CADBlockHeaderObject *pBlockHeader =
+                    static_cast<CADBlockHeaderObject *>(blockHeader.get ());
+            if(nullptr != pBlockHeader){
+#ifdef _DEBUG
+               if(pBlockHeader->bBlkisXRef){
+                   assert(0);
+               }
+#endif //_DEBUG
+               for(CADHandle entHandle : pBlockHeader->hEntities){
+                   unique_ptr< CADObject > entity(
+                               pCADFile->getObject ( entHandle.getAsLong (),
+                                                     false ) );
+                   if(nullptr == entity)
+                       continue;
+                   addHandle(entHandle.getAsLong (), entity->getType ());
+                   // add shift/scale/rotate to transform map
+                   transformations[entHandle.getAsLong ()] =
+                        {pInsert->vertInsertionPoint,
+                         pInsert->vertScales,
+                         pInsert->dfRotation};
+               }
             }
+
+            // TODO: what todo with attributes of insertion?
+            //for (CADHandle attr : pInsert->hAtrribs) {
+            //    addHandle(attr.getAsLong (), CADObject::ATTRIB);
+            //}
         }
+    }
+
+    if( type == CADObject::BLOCK || type == CADObject::IMAGE  ||
+            type == CADObject::IMAGEDEF || type == CADObject::IMAGEDEFREACTOR) {
+#ifdef _DEBUG
+        assert(0);
+#endif //_DEBUG
     }
 
     if(isCommonEntityType (type))
@@ -182,6 +216,7 @@ size_t CADLayer::getGeometryCount() const
 
 CADGeometry *CADLayer::getGeometry(size_t index)
 {
+    // TODO: transform geometry if geometryHandles[index] is in transformations
     return pCADFile->getGeometry(geometryHandles[index]);
 }
 
