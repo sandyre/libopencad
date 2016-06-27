@@ -1017,6 +1017,10 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
         case CADObject::IMAGEDEFREACTOR:
             return getImageDefReactor (dObjectSize, pabySectionContent,
                                        nBitOffsetFromStart);
+
+        case CADObject::XRECORD:
+            return getXRecord (dObjectSize, pabySectionContent,
+                                nBitOffsetFromStart);
             }
         }
 
@@ -3518,6 +3522,64 @@ CADImageDefReactorObject *DWGFileR2000::getImageDefReactor(long dObjectSize,
 #endif
 
     return imagedefreactor;
+}
+
+CADXRecordObject *DWGFileR2000::getXRecord(long dObjectSize,
+                                           const char *pabyInput,
+                                           size_t &nBitOffsetFromStart)
+
+{
+    CADXRecordObject * xrecord = new CADXRecordObject();
+
+    xrecord->setSize (dObjectSize);
+    xrecord->nObjectSizeInBits = ReadRAWLONG( pabyInput, nBitOffsetFromStart );
+    xrecord->hObjectHandle = ReadHANDLE8BLENGTH( pabyInput, nBitOffsetFromStart );
+
+    short dEEDSize = 0;
+    CADEed dwgEed;
+    while ( (dEEDSize = ReadBITSHORT( pabyInput, nBitOffsetFromStart ) ) != 0 )
+    {
+        dwgEed.dLength = dEEDSize;
+        dwgEed.hApplication = ReadHANDLE (pabyInput, nBitOffsetFromStart);
+
+        for ( short i = 0; i < dEEDSize; ++i )
+        {
+            dwgEed.acData.push_back( ReadCHAR (pabyInput, nBitOffsetFromStart) );
+        }
+
+        xrecord->aEED.push_back (dwgEed);
+    }
+
+    xrecord->nNumReactors = ReadBITLONG( pabyInput, nBitOffsetFromStart );
+    xrecord->nNumDataBytes = ReadBITLONG (pabyInput, nBitOffsetFromStart);
+
+    for( size_t i = 0; i < xrecord->nNumDataBytes; ++i )
+    {
+        xrecord->abyDataBytes.push_back( ReadCHAR(pabyInput, nBitOffsetFromStart) );
+    }
+
+    xrecord->dCloningFlag = ReadBITSHORT( pabyInput, nBitOffsetFromStart );
+    xrecord->hParentHandle = ReadHANDLE (pabyInput, nBitOffsetFromStart);
+
+    for ( long i = 0; i < xrecord->nNumReactors; ++i )
+        xrecord->hReactors.push_back (ReadHANDLE (pabyInput, nBitOffsetFromStart) );
+
+    xrecord->hXDictionary = ReadHANDLE (pabyInput, nBitOffsetFromStart);
+
+    while( nBitOffsetFromStart / 8 < (dObjectSize + 6) )
+    {
+        xrecord->hObjIdHandles.push_back( ReadHANDLE(pabyInput, nBitOffsetFromStart) );
+    }
+
+    nBitOffsetFromStart += 8 - ( nBitOffsetFromStart % 8 );
+    xrecord->setCRC (ReadRAWSHORT (pabyInput, nBitOffsetFromStart));
+#ifdef _DEBUG
+    if ( (nBitOffsetFromStart/8) != (dObjectSize + 4) )
+        DebugMsg ("Assertion failed at %d in %s\nSize difference: %d\n",
+                  __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
+#endif
+
+    return xrecord;
 }
 
 void DWGFileR2000::fillCommonEntityHandleData(CADEntityObject* pEnt,

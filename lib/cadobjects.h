@@ -1230,4 +1230,26 @@ public:
     } _path_segment;
 };
 
+/**
+ * @brief The CADXRecordObject class
+ */
+class CADXRecordObject : public CADObject
+{
+public:
+    CADXRecordObject();
+    long nObjectSizeInBits;
+    CADHandle hObjectHandle;
+    CADEedArray aEED;
+    long nNumReactors;
+    bool bNoXDictionaryPresent;
+    long nNumDataBytes;
+    vector < char > abyDataBytes;
+    short dCloningFlag;
+    vector < pair < short, vector < char > > > astXRecordData;
+    CADHandle hParentHandle;
+    vector < CADHandle > hReactors;
+    CADHandle hXDictionary;
+    vector < CADHandle > hObjIdHandles;
+};
+
 #endif //CADOBJECTS_H

@@ -135,6 +135,8 @@ protected:
                                const char *pabyInput, size_t &nBitOffsetFromStart);
     CADDictionaryObject *getDictionary(long dObjectSize,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
+    CADXRecordObject *getXRecord(long dObjectSize,
+                                const char *pabyInput, size_t &nBitOffsetFromStart);
     CADLayerObject *getLayerObject(long dObjectSize,
                                const char *pabyInput, size_t &nBitOffsetFromStart);
     CADLayerControlObject *getLayerControl(long dObjectSize,
