@@ -144,6 +144,11 @@ int CADTables::readLayersTable( CADFile  * const file, long index)
                            file->getObject (dCurrentEntHandle, true) ) );
             if(nullptr != ent)
                 fillLayer(ent.get ());
+            else{
+    #ifdef _DEBUG
+                assert(0);
+    #endif //_DEBUG
+            }
             break;
         }
     }
