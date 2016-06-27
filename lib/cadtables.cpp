@@ -72,6 +72,12 @@ CADLayer& CADTables::getLayer(size_t index)
     return layers[index];
 }
 
+CADHandle CADTables::getTableHandle ( enum TableType type )
+{
+    // FIXME: need to add try/catch to prevent crashes on not found elem.
+    return tableMap[type];
+}
+
 int CADTables::readLayersTable( CADFile  * const file, long index)
 {
     // Reading Layer Control obj, and layers.

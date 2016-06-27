@@ -550,7 +550,6 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     CADHandle stNamedObjectsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
     tables.addTable (CADTables::NamedObjectsDict, stNamedObjectsDict);
 
-
     if(eOptions == OpenOptions::READ_ALL)
     {
         header.addValue(CADHeader::TSTACKALIGN, ReadBITSHORT (pabyBuf,
@@ -782,6 +781,13 @@ int DWGFileR2000::createFileMap ()
         */
 
         delete[] pabySectionContent;
+    }
+
+    CADDictionaryObject * dict = ( CADDictionaryObject* ) getObject (tables.getTableHandle (CADTables::NamedObjectsDict).getAsLong () );
+    for( size_t i = 0; i < dict->hItemHandles.size(); ++i )
+    {
+        CADXRecordObject *xrecord = ( CADXRecordObject* ) getObject( dict->hItemHandles[i].getAsLong () );
+        int grek = 0;
     }
 
     return CADErrorCodes::SUCCESS;
@@ -2431,7 +2437,6 @@ CADDictionaryObject *DWGFileR2000::getDictionary(long dObjectSize,
     dictionary->dCloningFlag = ReadBITSHORT (pabyInput, nBitOffsetFromStart);
     dictionary->dHardOwnerFlag = ReadCHAR (pabyInput, nBitOffsetFromStart);
 
-    dictionary->sDictionaryEntryName = ReadTV (pabyInput, nBitOffsetFromStart);
     for ( long i = 0; i < dictionary->nNumItems; ++i )
         dictionary->sItemNames.push_back ( ReadTV (pabyInput,
                                                    nBitOffsetFromStart) );

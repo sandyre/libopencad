@@ -837,7 +837,6 @@ public:
     short dCloningFlag;
     unsigned char  dHardOwnerFlag;
 
-    string sDictionaryEntryName;
     vector<string> sItemNames;
 
     CADHandle hParentHandle;
