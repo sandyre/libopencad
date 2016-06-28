@@ -682,7 +682,7 @@ int DWGFileR2000::readClasses (enum OpenOptions eOptions)
 
         while ( ( nBitOffsetFromStart / 8 ) + 1 < dSectionSize )
         {
-            struct CADClass stClass;
+            CADClass stClass;
             stClass.dClassNum = ReadBITSHORT (pabySectionContent,
                                               nBitOffsetFromStart);
             stClass.dProxyCapFlag = ReadBITSHORT (pabySectionContent,
@@ -806,7 +806,8 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
     // And read whole data chunk into memory for future parsing.
     // + nBitOffsetFromStart/8 + 2 is because dObjectSize doesn't cover CRC and itself.
     size_t nSectionSize = dObjectSize + nBitOffsetFromStart/8 + 2;
-    char * pabySectionContent = new char[nSectionSize + 4];
+    unique_ptr<char[]> sectionContentPtr(new char[nSectionSize + 4]);
+    char* pabySectionContent = sectionContentPtr.get ();
     fileIO->Seek (objectsMap[index], CADFileIO::SeekOrigin::BEG);
     fileIO->Read (pabySectionContent, nSectionSize);
 
@@ -814,10 +815,23 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
     dObjectSize = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
     short dObjectType = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
 
+    if(dObjectType >= 500){
+        CADClass cadClass = classes.getClassByNum (dObjectType);
+        if(cadClass.sCppClassName == "AcDbRasterImage"){
+            dObjectType = CADObject::IMAGE;
+        }
+        else if(cadClass.sCppClassName == "AcDbRasterImageDef"){
+            dObjectType = CADObject::IMAGEDEF;
+        }
+        else if(cadClass.sCppClassName == "AcDbRasterImageDefReactor"){
+            dObjectType = CADObject::IMAGEDEFREACTOR;
+        }
+    }
+
     // Entities handling
     if ( isCommonEntityType(dObjectType) )
     {
-        struct CADCommonED stCommonEntityData; // common for all entities ofc.
+        struct CADCommonED stCommonEntityData; // common for all entities
 
         stCommonEntityData.nObjectSizeInBits = ReadRAWLONG (pabySectionContent,
                                                             nBitOffsetFromStart);
@@ -844,6 +858,13 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
 
         stCommonEntityData.bGraphicsPresented = ReadBIT (pabySectionContent,
                                                          nBitOffsetFromStart);
+        if(stCommonEntityData.bGraphicsPresented){
+            size_t nGraphicsDataSize = static_cast<size_t>(ReadRAWLONG (
+                                                    pabySectionContent,
+                                                    nBitOffsetFromStart));
+            // skip read graphics data
+            nBitOffsetFromStart += nGraphicsDataSize * 8;
+        }
         stCommonEntityData.bbEntMode = Read2B (pabySectionContent,
                                                nBitOffsetFromStart);
         stCommonEntityData.nNumReactors = ReadBITLONG (pabySectionContent,
