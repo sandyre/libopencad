@@ -692,3 +692,12 @@ CADPolylinePFaceObject::CADPolylinePFaceObject()
 {
     type = POLYLINE_PFACE;
 }
+
+//------------------------------------------------------------------------------
+// CADXRecordObject
+//------------------------------------------------------------------------------
+
+CADXRecordObject::CADXRecordObject ()
+{
+    type = XRECORD;
+}
