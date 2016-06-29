@@ -783,13 +783,6 @@ int DWGFileR2000::createFileMap ()
         delete[] pabySectionContent;
     }
 
-    CADDictionaryObject * dict = ( CADDictionaryObject* ) getObject (tables.getTableHandle (CADTables::NamedObjectsDict).getAsLong () );
-    for( size_t i = 0; i < dict->hItemHandles.size(); ++i )
-    {
-        CADXRecordObject *xrecord = ( CADXRecordObject* ) getObject( dict->hItemHandles[i].getAsLong () );
-        int grek = 0;
-    }
-
     return CADErrorCodes::SUCCESS;
 }
 
@@ -3585,6 +3578,32 @@ CADXRecordObject *DWGFileR2000::getXRecord(long dObjectSize,
     }
 
     xrecord->dCloningFlag = ReadBITSHORT( pabyInput, nBitOffsetFromStart );
+
+    short dIndicatorNumber = ReadRAWSHORT( pabyInput, nBitOffsetFromStart );
+    if( dIndicatorNumber == 1 )
+    {
+        unsigned char nStringSize = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+        char dCodePage   = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+        for ( unsigned char i = 0; i < nStringSize; ++i )
+        {
+            ReadCHAR ( pabyInput, nBitOffsetFromStart );
+        }
+    }
+    else if ( dIndicatorNumber == 70 )
+    {
+        ReadRAWSHORT (pabyInput, nBitOffsetFromStart);
+    }
+    else if ( dIndicatorNumber == 10 )
+    {
+        ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
+        ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
+        ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
+    }
+    else if ( dIndicatorNumber == 40 )
+    {
+        ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
+    }
+
     xrecord->hParentHandle = ReadHANDLE (pabyInput, nBitOffsetFromStart);
 
     for ( long i = 0; i < xrecord->nNumReactors; ++i )
@@ -3592,7 +3611,7 @@ CADXRecordObject *DWGFileR2000::getXRecord(long dObjectSize,
 
     xrecord->hXDictionary = ReadHANDLE (pabyInput, nBitOffsetFromStart);
 
-    while( nBitOffsetFromStart / 8 < (dObjectSize + 6) )
+    while( nBitOffsetFromStart / 8 < (dObjectSize + 4) )
     {
         xrecord->hObjIdHandles.push_back( ReadHANDLE(pabyInput, nBitOffsetFromStart) );
     }
@@ -3689,4 +3708,50 @@ int DWGFileR2000::readSectionLocator()
     }
 
     return CADErrorCodes::SUCCESS;
+}
+
+// TODO: code is really bad. Just for test purposes only, will fix later.
+string DWGFileR2000::getESRISpatialRef()
+{
+    unique_ptr< CADDictionaryObject > spoNamedDictObj( ( CADDictionaryObject* )
+                                                               getObject (tables.getTableHandle (CADTables::NamedObjectsDict).getAsLong () ) );
+
+    for( size_t i = 0; i < spoNamedDictObj->sItemNames.size(); ++i )
+    {
+        if ( !strcmp ("ESRI_PRJ", spoNamedDictObj->sItemNames[i].c_str()) )
+        {
+            unique_ptr<CADXRecordObject> spoXRecordObj (
+                    ( CADXRecordObject * ) getObject (spoNamedDictObj->hItemHandles[i].getAsLong ()));
+
+            if( spoXRecordObj.get() == nullptr ) return string("");
+
+            size_t esri_prj_begins = 10000;
+            for( size_t j = 0; j < spoXRecordObj->abyDataBytes.size(); ++j )
+            {
+                if( spoXRecordObj->abyDataBytes[j] == 'G' )
+                {
+                    if( spoXRecordObj->abyDataBytes[j+1] == 'E' )
+                    {
+                        esri_prj_begins = j;
+                        break;
+                    }
+                }
+            }
+
+            if( esri_prj_begins > spoXRecordObj->abyDataBytes.size() )
+            {
+                return string("");
+            }
+
+            string esri_prj;
+            for( size_t j = esri_prj_begins; j < spoXRecordObj->abyDataBytes.size(); ++j )
+            {
+                esri_prj.push_back( spoXRecordObj->abyDataBytes[j] );
+            }
+
+            return esri_prj;
+        }
+    }
+
+    return string("");
 }

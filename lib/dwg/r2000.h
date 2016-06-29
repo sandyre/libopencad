@@ -89,6 +89,8 @@ protected:
 
     CADObject * getObject(long index, bool bHandlesOnly = false) override;
     CADGeometry * getGeometry(long index) override;
+
+    string getESRISpatialRef() override;
 protected:
     CADBlockObject *getBlock(long dObjectSize, CADCommonED stCommonEntityData,
                              const char *pabyInput, size_t &nBitOffsetFromStart);
