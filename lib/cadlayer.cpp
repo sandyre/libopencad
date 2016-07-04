@@ -193,13 +193,13 @@ void CADLayer::addHandle(long handle, CADObject::ObjectType type)
         return;
     }
 
-    if( type == CADObject::BLOCK || type == CADObject::IMAGE  ||
+/*    if( type == CADObject::BLOCK || type == CADObject::IMAGE  ||
             type == CADObject::IMAGEDEF || type == CADObject::IMAGEDEFREACTOR) {
 #ifdef _DEBUG
         assert(0);
 #endif //_DEBUG
     }
-
+*/
     if(isCommonEntityType (type))
     {
         geometryHandles.push_back( handle );
