@@ -208,7 +208,7 @@ TEST(reading_circles, triplet)
 
 TEST(reading_geometries, 3rays_5xlines)
 {
-    auto opened_dwg = OpenCADFile ("./data/r2000/3rays_5xlines.dwg",
+    auto opened_dwg = OpenCADFile ("./data/r2000/5rays_3xlines.dwg",
                                    CADFile::OpenOptions::READ_FAST);
     ASSERT_NE (opened_dwg, nullptr);
 
@@ -236,7 +236,7 @@ TEST(reading_geometries, 3rays_5xlines)
         delete geom;
     }
 
-    ASSERT_EQ (3, rays_count);
-    ASSERT_EQ (5, xlines_count);
+    ASSERT_EQ (5, rays_count);
+    ASSERT_EQ (3, xlines_count);
     delete opened_dwg;
 }
