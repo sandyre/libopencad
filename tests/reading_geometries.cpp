@@ -269,3 +269,32 @@ TEST(reading_geometries, 4solid)
     ASSERT_EQ (4, solids_count);
     delete opened_dwg;
 }
+
+TEST(reading_geometries, 1arc)
+{
+    auto opened_dwg = OpenCADFile ("./data/r2000/1arc.dwg",
+                                   CADFile::OpenOptions::READ_FAST);
+    ASSERT_NE (opened_dwg, nullptr);
+
+    auto arcs_count = 0;
+
+    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
+
+    CADLayer &layer = opened_dwg->getLayer (0);
+    ASSERT_EQ ( layer.getGeometryCount(), 1 );
+
+    CADGeometry * geom;
+    for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
+    {
+        geom = layer.getGeometry (i);
+        if ( geom->getType() == CADGeometry::ARC )
+        {
+            ++arcs_count;
+        }
+
+        delete geom;
+    }
+
+    ASSERT_EQ (1, arcs_count);
+    delete opened_dwg;
+}
