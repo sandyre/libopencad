@@ -657,7 +657,7 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
 
 int DWGFileR2000::readClasses (enum OpenOptions eOptions)
 {
-    if(eOptions == OpenOptions::READ_ALL){
+    if(eOptions == OpenOptions::READ_ALL || eOptions == OpenOptions::READ_FAST ){
         char    *pabySectionContent;
         char    buffer[255];
         size_t dSectionSize = 0;
