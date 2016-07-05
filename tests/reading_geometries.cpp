@@ -206,3 +206,95 @@ TEST(reading_circles, triplet)
     delete openedDwg;
 }
 
+TEST(reading_geometries, 3rays_5xlines)
+{
+    auto opened_dwg = OpenCADFile ("./data/r2000/5rays_3xlines.dwg",
+                                   CADFile::OpenOptions::READ_FAST);
+    ASSERT_NE (opened_dwg, nullptr);
+
+    auto rays_count = 0;
+    auto xlines_count = 0;
+
+    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
+
+    CADLayer &layer = opened_dwg->getLayer (0);
+    ASSERT_EQ ( layer.getGeometryCount(), 8 );
+
+    CADGeometry * geom;
+    for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
+    {
+        geom = layer.getGeometry (i);
+        if ( geom->getType() == CADGeometry::XLINE )
+        {
+            ++xlines_count;
+        }
+        if ( geom->getType() == CADGeometry::RAY )
+        {
+            ++rays_count;
+        }
+
+        delete geom;
+    }
+
+    ASSERT_EQ (5, rays_count);
+    ASSERT_EQ (3, xlines_count);
+    delete opened_dwg;
+}
+
+TEST(reading_geometries, 4solid)
+{
+    auto opened_dwg = OpenCADFile ("./data/r2000/4solids.dwg",
+                                   CADFile::OpenOptions::READ_FAST);
+    ASSERT_NE (opened_dwg, nullptr);
+
+    auto solids_count = 0;
+
+    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
+
+    CADLayer &layer = opened_dwg->getLayer (0);
+    ASSERT_EQ ( layer.getGeometryCount(), 4 );
+
+    CADGeometry * geom;
+    for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
+    {
+        geom = layer.getGeometry (i);
+        if ( geom->getType() == CADGeometry::SOLID )
+        {
+            ++solids_count;
+        }
+
+        delete geom;
+    }
+
+    ASSERT_EQ (4, solids_count);
+    delete opened_dwg;
+}
+
+TEST(reading_geometries, 1arc)
+{
+    auto opened_dwg = OpenCADFile ("./data/r2000/1arc.dwg",
+                                   CADFile::OpenOptions::READ_FAST);
+    ASSERT_NE (opened_dwg, nullptr);
+
+    auto arcs_count = 0;
+
+    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
+
+    CADLayer &layer = opened_dwg->getLayer (0);
+    ASSERT_EQ ( layer.getGeometryCount(), 1 );
+
+    CADGeometry * geom;
+    for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
+    {
+        geom = layer.getGeometry (i);
+        if ( geom->getType() == CADGeometry::ARC )
+        {
+            ++arcs_count;
+        }
+
+        delete geom;
+    }
+
+    ASSERT_EQ (1, arcs_count);
+    delete opened_dwg;
+}

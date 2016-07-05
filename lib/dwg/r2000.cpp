@@ -783,13 +783,6 @@ int DWGFileR2000::createFileMap ()
         delete[] pabySectionContent;
     }
 
-    CADDictionaryObject * dict = ( CADDictionaryObject* ) getObject (tables.getTableHandle (CADTables::NamedObjectsDict).getAsLong () );
-    for( size_t i = 0; i < dict->hItemHandles.size(); ++i )
-    {
-        CADXRecordObject *xrecord = ( CADXRecordObject* ) getObject( dict->hItemHandles[i].getAsLong () );
-        int grek = 0;
-    }
-
     return CADErrorCodes::SUCCESS;
 }
 
@@ -1056,10 +1049,122 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
 
 CADGeometry *DWGFileR2000::getGeometry(long index)
 {
-    unique_ptr<CADObject> readedObject( getObject(index) );
+    unique_ptr<CADEntityObject> readedObject( ( CADEntityObject* ) getObject(index) );
 
     if(nullptr == readedObject)
         return nullptr;
+
+    // Casting object's EED to a vector of strings
+    vector< string > asEED;
+    for( auto citer = readedObject->stCed.aEED.cbegin();
+         citer != readedObject->stCed.aEED.cend(); ++citer )
+    {
+        string sEED = "";
+        // Detect the type of EED entity
+        switch(citer->acData[0])
+        {
+            case 0: // string
+            {
+                unsigned char nStrSize = citer->acData[1];
+                // +2 = skip CodePage, no idea how to use it anyway
+                for( size_t i = 0; i < nStrSize; ++i )
+                {
+                    sEED += citer->acData[i + 4];
+                }
+                break;
+            }
+            case 1: // invalid
+            {
+                DebugMsg("Error: EED obj type is 1, error in R2000::getGeometry()");
+                break;
+            }
+            case 2: // { or }
+            {
+                sEED += citer->acData[1] == 0 ? '{' : '}';
+                break;
+            }
+            case 3: // layer table ref
+            {
+                // FIXME: get CADHandle and return getAsLong() result.
+                sEED += "Layer table ref (handle):";
+                for( size_t i = 0; i < 8; ++i )
+                {
+                    sEED += citer->acData[i+1];
+                }
+                break;
+            }
+            case 4: // binary chunk
+            {
+                unsigned char nChunkSize = citer->acData[1];
+                sEED += "Binary chunk (chars):";
+                for( size_t i = 0; i < nChunkSize; ++i )
+                {
+                    sEED += citer->acData[i + 2];
+                }
+                break;
+            }
+            case 5: // entity handle ref
+            {
+                // FIXME: get CADHandle and return getAsLong() result.
+                sEED += "Entity handle ref (handle):";
+                for( size_t i = 0; i < 8; ++i )
+                {
+                    sEED += citer->acData[i+1];
+                }
+                break;
+            }
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            {
+                sEED += "Point: {";
+                double dfX = 0, dfY = 0, dfZ = 0;
+                memcpy( &dfX, citer->acData.data() + 1, 8);
+                memcpy( &dfY, citer->acData.data() + 9, 8);
+                memcpy( &dfZ, citer->acData.data() + 17, 8);
+                sEED += to_string( dfX );
+                sEED += ';';
+                sEED += to_string( dfY );
+                sEED += ';';
+                sEED += to_string( dfZ );
+                sEED += '}';
+                break;
+            }
+            case 40:
+            case 41:
+            case 42:
+            {
+                sEED += "Double:";
+                double dfVal = 0;
+                memcpy( &dfVal, citer->acData.data() + 1, 8);
+                sEED += to_string( dfVal );
+                break;
+            }
+            case 70:
+            {
+                sEED += "Short:";
+                short dVal = 0;
+                memcpy( &dVal, citer->acData.data() + 1, 2 );
+                sEED += to_string( dVal );
+                break;
+            }
+            case 71:
+            {
+                sEED += "Long Int:";
+                long dVal = 0;
+                memcpy( &dVal, citer->acData.data() + 1, 4 );
+                sEED += to_string( dVal );
+                break;
+            }
+            default:
+            {
+                DebugMsg("Error in parsing geometry EED: undefined typecode: %d",
+                         (int)citer->acData[0]);
+            }
+        }
+        asEED.emplace_back( sEED );
+    }
 
     switch ( readedObject->getType() )
     {
@@ -1076,6 +1181,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         arc->setThickness(cadArc->dfThickness);
         arc->setStartingAngle (cadArc->dfStartAngle);
         arc->setEndingAngle (cadArc->dfEndAngle);
+        arc->setEED( asEED );
 
         return arc;
     }
@@ -1091,6 +1197,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         point->setExtrusion (cadPoint->vectExtrusion);
         point->setXAxisAng (cadPoint->dfXAxisAng);
         point->setThickness(cadPoint->dfThickness);
+        point->setEED( asEED );
 
         return point;
     }
@@ -1102,6 +1209,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
                     readedObject.get ());
 
         polyline->setColor (cadPolyline3D->stCed.nCMColor);
+        polyline->setEED( asEED );
         // TODO: code can be much simplified if CADHandle will be used.
         // to do so, == and ++ operators should be implemented.
         unique_ptr<CADVertex3DObject> vertex;
@@ -1151,6 +1259,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
             lwPolyline->addVertex (vertex);
         lwPolyline->setVectExtrusion (cadlwPolyline->vectExtrusion);
         lwPolyline->setWidths (cadlwPolyline->astWidths);
+        lwPolyline->setEED( asEED );
 
         return lwPolyline;
     }
@@ -1166,6 +1275,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         circle->setExtrusion (cadCircle->vectExtrusion);
         circle->setRadius (cadCircle->dfRadius);
         circle->setThickness(cadCircle->dfThickness);
+        circle->setEED( asEED );
 
         return circle;
     }
@@ -1188,6 +1298,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         attrib->setTag (cadAttrib->sTag);
         attrib->setTextValue (cadAttrib->sTextValue);
         attrib->setThickness (cadAttrib->dfThickness);
+        attrib->setEED( asEED );
 
         return attrib;
     }
@@ -1210,6 +1321,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         attdef->setTag (cadAttrib->sTag);
         attdef->setTextValue (cadAttrib->sTextValue);
         attdef->setThickness (cadAttrib->dfThickness);
+        attdef->setEED( asEED );
 
         return attdef;
     }
@@ -1226,6 +1338,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         ellipse->setAxisRatio (cadEllipse->dfAxisRatio);
         ellipse->setEndingAngle (cadEllipse->dfEndAngle);
         ellipse->setStartingAngle (cadEllipse->dfBegAngle);
+        ellipse->setEED( asEED );
 
         return ellipse;
     }
@@ -1240,6 +1353,8 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
 
         CADLine * line = new CADLine(ptBeg, ptEnd);
         line->setColor (cadLine->stCed.nCMColor);
+        line->setEED( asEED );
+
         return line;
     }
 
@@ -1252,6 +1367,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         ray->setColor (cadRay->stCed.nCMColor);
         ray->setVectVector (cadRay->vectVector);
         ray->setPosition (cadRay->vertPosition);
+        ray->setEED( asEED );
 
         return ray;
     }
@@ -1266,6 +1382,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         spline->setColor (cadSpline->stCed.nCMColor);
         spline->setScenario (cadSpline->dScenario);
         spline->setDegree( cadSpline->dDegree );
+        spline->setEED( asEED );
         if ( spline->getScenario() == 2 )
         {
             spline->setFitTollerance (cadSpline->dfFitTol);
@@ -1301,6 +1418,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         text->setObliqueAngle (cadText->dfObliqueAng);
         text->setThickness(cadText->dfThickness);
         text->setHeight (cadText->dfElevation);
+        text->setEED( asEED );
 
         return text;
     }
@@ -1317,6 +1435,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         for(const CADVector& corner : cadSolid->avertCorners)
             solid->addAverCorner (corner) ;
         solid->setExtrusion (cadSolid->vectExtrusion);
+        solid->setEED( asEED );
 
         return solid;
     }
@@ -1354,6 +1473,8 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         {
             image->addClippingPoint(clipPt);
         }
+        image->setEED( asEED );
+
         return image;
     }
 
@@ -1368,6 +1489,8 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         mline->setOpened (cadmLine->dOpenClosed == 1 ? true : false);
         for (  const CADMLineVertex &vertex : cadmLine->avertVertexes )
             mline->addVertex (vertex.vertPosition);
+        mline->setEED( asEED );
+
         return mline;
     }
 
@@ -1389,7 +1512,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         mtext->setRectWidth(cadmText->dfRectWidth);
         mtext->setExtents(cadmText->dfExtents);
         mtext->setExtentsWidth(cadmText->dfExtentsWidth);
-
+        mtext->setEED( asEED );
 
         return mtext;
     }
@@ -1402,6 +1525,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         // TODO: code can be much simplified if CADHandle will be used.
         // to do so, == and ++ operators should be implemented.
         polyline->setColor (cadpolyPface->stCed.nCMColor);
+        polyline->setEED( asEED );
         unique_ptr<CADVertexPFaceObject> vertex;
         auto dCurrentEntHandle = cadpolyPface->hVertexes[0].getAsLong ();
         auto dLastEntHandle    = cadpolyPface->hVertexes[1].getAsLong ();
@@ -1451,6 +1575,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         xline->setColor (cadxLine->stCed.nCMColor);
         xline->setVectVector (cadxLine->vectVector);
         xline->setPosition (cadxLine->vertPosition);
+        xline->setEED( asEED );
 
         return xline;
     }
@@ -1464,6 +1589,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         for(const CADVector& corner : cad3DFace->avertCorners)
             face->addCorner (corner);
         face->setInvisFlags (cad3DFace->dInvisFlags);
+        face->setEED( asEED );
 
         return face;
     }
@@ -3585,6 +3711,32 @@ CADXRecordObject *DWGFileR2000::getXRecord(long dObjectSize,
     }
 
     xrecord->dCloningFlag = ReadBITSHORT( pabyInput, nBitOffsetFromStart );
+
+    short dIndicatorNumber = ReadRAWSHORT( pabyInput, nBitOffsetFromStart );
+    if( dIndicatorNumber == 1 )
+    {
+        unsigned char nStringSize = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+        char dCodePage   = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+        for ( unsigned char i = 0; i < nStringSize; ++i )
+        {
+            ReadCHAR ( pabyInput, nBitOffsetFromStart );
+        }
+    }
+    else if ( dIndicatorNumber == 70 )
+    {
+        ReadRAWSHORT (pabyInput, nBitOffsetFromStart);
+    }
+    else if ( dIndicatorNumber == 10 )
+    {
+        ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
+        ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
+        ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
+    }
+    else if ( dIndicatorNumber == 40 )
+    {
+        ReadRAWDOUBLE (pabyInput, nBitOffsetFromStart);
+    }
+
     xrecord->hParentHandle = ReadHANDLE (pabyInput, nBitOffsetFromStart);
 
     for ( long i = 0; i < xrecord->nNumReactors; ++i )
@@ -3592,7 +3744,7 @@ CADXRecordObject *DWGFileR2000::getXRecord(long dObjectSize,
 
     xrecord->hXDictionary = ReadHANDLE (pabyInput, nBitOffsetFromStart);
 
-    while( nBitOffsetFromStart / 8 < (dObjectSize + 6) )
+    while( nBitOffsetFromStart / 8 < (dObjectSize + 4) )
     {
         xrecord->hObjIdHandles.push_back( ReadHANDLE(pabyInput, nBitOffsetFromStart) );
     }
@@ -3689,4 +3841,50 @@ int DWGFileR2000::readSectionLocator()
     }
 
     return CADErrorCodes::SUCCESS;
+}
+
+// TODO: code is really bad. Just for test purposes only, will fix later.
+string DWGFileR2000::getESRISpatialRef()
+{
+    unique_ptr< CADDictionaryObject > spoNamedDictObj( ( CADDictionaryObject* )
+                                                               getObject (tables.getTableHandle (CADTables::NamedObjectsDict).getAsLong () ) );
+
+    for( size_t i = 0; i < spoNamedDictObj->sItemNames.size(); ++i )
+    {
+        if ( !strcmp ("ESRI_PRJ", spoNamedDictObj->sItemNames[i].c_str()) )
+        {
+            unique_ptr<CADXRecordObject> spoXRecordObj (
+                    ( CADXRecordObject * ) getObject (spoNamedDictObj->hItemHandles[i].getAsLong ()));
+
+            if( spoXRecordObj.get() == nullptr ) return string("");
+
+            size_t esri_prj_begins = 10000;
+            for( size_t j = 0; j < spoXRecordObj->abyDataBytes.size(); ++j )
+            {
+                if( spoXRecordObj->abyDataBytes[j] == 'G' )
+                {
+                    if( spoXRecordObj->abyDataBytes[j+1] == 'E' )
+                    {
+                        esri_prj_begins = j;
+                        break;
+                    }
+                }
+            }
+
+            if( esri_prj_begins > spoXRecordObj->abyDataBytes.size() )
+            {
+                return string("");
+            }
+
+            string esri_prj;
+            for( size_t j = esri_prj_begins; j < spoXRecordObj->abyDataBytes.size(); ++j )
+            {
+                esri_prj.push_back( spoXRecordObj->abyDataBytes[j] );
+            }
+
+            return esri_prj;
+        }
+    }
+
+    return string("");
 }

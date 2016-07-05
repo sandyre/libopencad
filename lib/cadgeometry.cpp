@@ -74,25 +74,14 @@ void CADGeometry::setColor(int ACIColorIndex)
     geometry_color = CADACIColors[ACIColorIndex];
 }
 
-map< string, CADAttdef> CADGeometry::getAttributes ()
+vector< string > CADGeometry::getEED()
 {
-    return mapstAttributes;
+    return asEED;
 }
 
-void CADGeometry::addAttribute( CADAttrib* attrib )
+void CADGeometry::setEED( vector< string > eed )
 {
-    if ( attrib != nullptr )
-    {        
-        mapstAttributes.insert( make_pair( attrib->getTag (), *static_cast<CADAttdef*>(attrib) ) );
-    }
-}
-
-void CADGeometry::addAttribute( CADAttdef* attdef )
-{
-    if( attdef != nullptr )
-    {
-        mapstAttributes.insert ( make_pair( attdef->getTag (), *attdef ) );
-    }
+    asEED = eed;
 }
 
 //------------------------------------------------------------------------------
