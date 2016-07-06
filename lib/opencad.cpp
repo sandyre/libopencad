@@ -60,6 +60,7 @@ static int CheckCADFile(CADFileIO* pCADFileIO)
     else
     {
         char pabyDWGVersion[DWG_VERSION_STR_SIZE + 1] = {0};
+        pCADFileIO->Rewind ();
         pCADFileIO->Read( pabyDWGVersion, DWG_VERSION_STR_SIZE);
         return atoi(pabyDWGVersion + 2);
     }
@@ -142,10 +143,11 @@ CADFileIO* GetDefaultFileIO ( const char *pszFileName )
  * @return positive number for dwg version, negative for dxf version, 0 if error
  * occured
  */
-int IdentifyCADFile( CADFileIO* pCADFileIO )
+int IdentifyCADFile( CADFileIO* pCADFileIO, bool own )
 {
     int result = CheckCADFile(pCADFileIO);
-    delete pCADFileIO;
+    if(own)
+        delete pCADFileIO;
     return result;
 }
 

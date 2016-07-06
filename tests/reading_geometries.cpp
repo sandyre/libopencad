@@ -298,3 +298,4 @@ TEST(reading_geometries, 1arc)
     ASSERT_EQ (1, arcs_count);
     delete opened_dwg;
 }
+

@@ -205,10 +205,6 @@ int main(int argc, char *argv[])
                 ++solidsCount;
                 break;
 
-            case CADGeometry::IMAGE:
-                ++imagesCount;
-                break;
-
             case CADGeometry::MTEXT:
                 ++mtextsCount;
                 break;
@@ -238,6 +234,20 @@ int main(int argc, char *argv[])
             case CADGeometry::HATCH:
                 break;
             }
+        }
+
+        for ( j = 0; j < layer.getImageCount (); ++j )
+        {
+            unique_ptr<CADImage> geom(layer.getImage (j));
+
+            if ( geom == nullptr )
+                continue;
+
+            if(!bSummary)
+                geom->print ();
+
+            ++imagesCount;
+
         }
     }
 
