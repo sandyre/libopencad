@@ -786,6 +786,8 @@ int DWGFileR2000::createFileMap ()
     return CADErrorCodes::SUCCESS;
 }
 
+//TODO: fast extracting handles/CED works for entities,
+//can we implement same capability for non-entities?
 CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
 {
     CADObject * readed_object = nullptr;
@@ -876,6 +878,13 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
                                                          nBitOffsetFromStart);
         stCommonEntityData.nLineWeight = ReadCHAR (pabySectionContent,
                                                    nBitOffsetFromStart);
+
+        // Skip entitity-specific data, we dont need it if bHandlesOnly == true
+        if( bHandlesOnly == true )
+        {
+            return getEntity(dObjectType, dObjectSize, stCommonEntityData,
+                             pabySectionContent, nBitOffsetFromStart);
+        }
 
         switch ( dObjectType )
         {
