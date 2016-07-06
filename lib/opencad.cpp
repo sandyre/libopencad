@@ -47,6 +47,8 @@ static int CheckCADFile(CADFileIO* pCADFileIO)
 
     if(!pCADFileIO->IsOpened())
         pCADFileIO->Open(CADFileIO::OpenMode::read | CADFileIO::OpenMode::binary);
+    if(!pCADFileIO->IsOpened())
+        return 0;
 
     const char* pszFilePath = pCADFileIO->GetFilePath();
     size_t nPathLen = strlen(pszFilePath);
