@@ -2426,7 +2426,9 @@ CADSplineObject *DWGFileR2000::getSpline(long dObjectSize,
         spline->vectBegTangDir = vectBegTangDir;
         CADVector vectEndTangDir = ReadVector(pabyInput, nBitOffsetFromStart);
         spline->vectEndTangDir = vectEndTangDir;
+
         spline->nNumFitPts = ReadBITLONG (pabyInput, nBitOffsetFromStart);
+        spline->averFitPoints.reserve( spline->nNumFitPts );
     }
     else if ( spline->dScenario == 1 )
     {
@@ -2435,8 +2437,14 @@ CADSplineObject *DWGFileR2000::getSpline(long dObjectSize,
         spline->bPeriodic = ReadBIT (pabyInput, nBitOffsetFromStart);
         spline->dfKnotTol = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
         spline->dfCtrlTol = ReadBITDOUBLE (pabyInput, nBitOffsetFromStart);
+
         spline->nNumKnots = ReadBITLONG (pabyInput, nBitOffsetFromStart);
+        spline->adfKnots.reserve( spline->nNumKnots );
+
         spline->nNumCtrlPts = ReadBITLONG (pabyInput, nBitOffsetFromStart);
+        spline->avertCtrlPoints.reserve( spline->nNumCtrlPts );
+        if( spline->bWeight ) spline->adfCtrlPointsWeight.reserve( spline->nNumCtrlPts );
+
         spline->bWeight = ReadBIT (pabyInput, nBitOffsetFromStart);
     }
 #ifdef _DEBUG
@@ -3714,7 +3722,7 @@ CADXRecordObject *DWGFileR2000::getXRecord(long dObjectSize,
     xrecord->nNumReactors = ReadBITLONG( pabyInput, nBitOffsetFromStart );
     xrecord->nNumDataBytes = ReadBITLONG (pabyInput, nBitOffsetFromStart);
 
-    for( size_t i = 0; i < xrecord->nNumDataBytes; ++i )
+    for( long i = 0; i < xrecord->nNumDataBytes; ++i )
     {
         xrecord->abyDataBytes.push_back( ReadCHAR(pabyInput, nBitOffsetFromStart) );
     }

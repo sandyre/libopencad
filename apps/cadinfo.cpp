@@ -271,4 +271,6 @@ int main(int argc, char *argv[])
     cout << "Texts count: " << textCount << endl;
     cout << "Attdefs count: " << attdefCount << endl;
     cout << "Attribs count: " << attribCount << endl;
+
+    delete( pCADFile );
 }
