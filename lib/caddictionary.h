@@ -68,6 +68,7 @@ public:
     CADDictionary();
     ~CADDictionary();
 
+    void                                    addRecord( pair< string, CADDictionaryRecord*> );
     pair< string, CADDictionaryRecord*>&    getRecord( size_t index );
 private:
     vector< pair< string, CADDictionaryRecord* > > astXRecords;

@@ -3905,3 +3905,35 @@ string DWGFileR2000::getESRISpatialRef()
 
     return string("");
 }
+
+CADDictionary DWGFileR2000::getNOD()
+{
+    CADDictionary stNOD;
+
+    unique_ptr< CADDictionaryObject > spoNamedDictObj( ( CADDictionaryObject* )
+                                                               getObject (tables.getTableHandle (CADTables::NamedObjectsDict).getAsLong () ) );
+
+    for( size_t i = 0; i < spoNamedDictObj->sItemNames.size(); ++i )
+    {
+        unique_ptr<CADObject> spoDictRecord( getObject( spoNamedDictObj->hItemHandles[i].getAsLong () ) );
+
+        if( spoDictRecord == nullptr ) continue; // skip unreaded objects
+
+        if( spoDictRecord->getType () == CADObject::ObjectType::DICTIONARY )
+        {
+            // TODO: add implementation of DICTIONARY reading
+        }
+        else if( spoDictRecord->getType () == CADObject::ObjectType::XRECORD )
+        {
+            CADXRecord * cadxRecord = new CADXRecord();
+            CADXRecordObject * cadxRecordObject = ( CADXRecordObject* ) spoDictRecord.get();
+
+            string xRecordData( cadxRecordObject->abyDataBytes.begin(), cadxRecordObject->abyDataBytes.end() );
+            cadxRecord->setRecordData (xRecordData);
+
+            stNOD.addRecord ( make_pair( spoNamedDictObj->sItemNames[i], (CADDictionaryRecord*) cadxRecord ) );
+        }
+    }
+
+    return stNOD;
+}

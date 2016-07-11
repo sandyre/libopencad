@@ -86,3 +86,8 @@ pair< string, CADDictionaryRecord*>& CADDictionary::getRecord ( size_t index )
 {
     return astXRecords[index];
 }
+
+void CADDictionary::addRecord ( pair<string, CADDictionaryRecord *> record )
+{
+    astXRecords.emplace_back( record );
+}

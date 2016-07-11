@@ -35,6 +35,7 @@
 #include "cadfileio.h"
 #include "cadclasses.h"
 #include "cadtables.h"
+#include "caddictionary.h"
 
 #include <string>
 
@@ -69,6 +70,13 @@ public:
     virtual int             parseFile(enum OpenOptions eOptions);
     virtual size_t          getLayersCount() const;
     virtual CADLayer&       getLayer(size_t index);
+
+    /**
+     * @brief returns NamedObjectDictionary (root) of all others dictionaries
+     * @return pointer to the root CADDictionary
+     */
+    virtual CADDictionary   getNOD() = 0;
+
 //    virtual size_t GetBlocksCount();
 //    virtual CADBlockObject * GetBlock( size_t index );
 
