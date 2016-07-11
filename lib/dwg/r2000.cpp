@@ -2312,16 +2312,19 @@ CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
     }
 
     vertixesCount = ReadBITLONG (pabyInput, nBitOffsetFromStart);
+    polyline->avertVertexes.reserve( vertixesCount );
 
     if ( dataFlag & 16 )
     {
         nBulges = ReadBITLONG (pabyInput, nBitOffsetFromStart);
+        polyline->adfBulges.reserve( nBulges );
     }
 
     // TODO: tell ODA that R2000 contains nNumWidths flag
     if ( dataFlag & 32 )
     {
         nNumWidths = ReadBITLONG (pabyInput, nBitOffsetFromStart);
+        polyline->astWidths.reserve( nNumWidths );
     }
 
     // First of all, read first vertex.
