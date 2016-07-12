@@ -460,6 +460,17 @@ void CADLWPolyline::setWidths(const vector<pair<double, double> > &value)
     widths = value;
 }
 
+bool CADLWPolyline::isClosed() const
+{
+    return bClosed;
+}
+
+void CADLWPolyline::setClosed(bool state)
+{
+    bClosed = state;
+}
+
+
 //------------------------------------------------------------------------------
 // CADEllipse
 //------------------------------------------------------------------------------

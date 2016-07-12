@@ -195,8 +195,11 @@ public:
     vector<pair<double, double> > getWidths() const;
     void                          setWidths(const vector<pair<double, double> > &value);
 
+    bool 			  isClosed() const;
+    void 			  setClosed(bool state);
     virtual void print () const override;
 protected:
+    bool  			     bClosed;
     double                           constWidth;
     double                           elevation;
     CADVector                        vectExtrusion;

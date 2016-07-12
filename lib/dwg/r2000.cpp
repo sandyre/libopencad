@@ -1261,6 +1261,7 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         CADLWPolylineObject * cadlwPolyline = static_cast<CADLWPolylineObject*>(
                     readedObject.get ());
 
+	lwPolyline->setClosed(cadlwPolyline->bClosed);
         lwPolyline->setColor (cadlwPolyline->stCed.nCMColor);
         lwPolyline->setConstWidth (cadlwPolyline->dfConstWidth);
         lwPolyline->setElevation (cadlwPolyline->dfElevation);
@@ -2326,6 +2327,13 @@ CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
         nNumWidths = ReadBITLONG (pabyInput, nBitOffsetFromStart);
         polyline->astWidths.reserve( nNumWidths );
     }
+    
+    if( dataFlag & 512 )
+    {
+	polyline->bClosed = true;
+    }
+    else
+	polyline->bClosed = false;
 
     // First of all, read first vertex.
     CADVector vertex = ReadRAWVector(pabyInput, nBitOffsetFromStart);
