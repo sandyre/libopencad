@@ -38,6 +38,21 @@
 using namespace std;
 
 /**
+ * @brief The Matrix class
+ */
+class Matrix
+{
+public:
+    Matrix();
+    void translate(const CADVector &vector);
+    void rotate(double rotation);
+    void scale(const CADVector &vector);
+    CADVector multiply(const CADVector &vector) const;
+protected:
+    array<double, 9> matrix;
+};
+
+/**
  * @brief Base CAD geometry class
  */
 class CADGeometry
@@ -83,7 +98,7 @@ class CADGeometry
     void                setEED(vector< string > eed);
 
     virtual void        print () const = 0;
-
+    virtual void        transform(const Matrix& matrix) = 0;
 protected:
     vector< string >    asEED;
     enum GeometryType   geometryType;
@@ -109,6 +124,7 @@ public:
     void                setXAxisAng(double value);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     CADVector           position;
     CADVector           extrusion;
@@ -131,6 +147,7 @@ public:
     void                setEnd(const CADPoint3D &value);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     CADPoint3D          start;
     CADPoint3D          end;
@@ -150,6 +167,7 @@ public:
     CADVector&          getVertex(size_t index);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     vector<CADVector>   vertexes;
 };
@@ -301,6 +319,7 @@ public:
     void                setDegree(long value);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     long                scenario;
     bool                rational;
@@ -327,6 +346,7 @@ public:
     void                addAverCorner(const CADVector& corner);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     double               elevation;
     vector < CADVector > avertCorners;
@@ -391,6 +411,7 @@ public:
     void                addClippingPoint(const CADVector &pt);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     CADVector           vertInsertionPoint;
     //CADVector vectUDirection;
@@ -462,6 +483,7 @@ public:
     void                setInvisFlags(short value);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     vector< CADVector > avertCorners;
     short               invisFlags;
@@ -478,6 +500,7 @@ public:
     void                addVertex(const CADVector& vertex);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     vector< CADVector > vertexes;
 };
@@ -510,6 +533,7 @@ public:
     void                addVertex(const CADVector& vertex);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     double              scale;
     //char dJust;
@@ -539,6 +563,7 @@ public:
     void                setPositionLocked(bool);
 
     virtual void        print () const override;
+    virtual void        transform(const Matrix& matrix) override;
 protected:
     CADVector           vertAlignmentPoint;
     double              dfElevation;
