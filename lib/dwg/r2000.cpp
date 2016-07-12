@@ -3863,52 +3863,6 @@ int DWGFileR2000::readSectionLocator()
     return CADErrorCodes::SUCCESS;
 }
 
-// TODO: code is really bad. Just for test purposes only, will fix later.
-string DWGFileR2000::getESRISpatialRef()
-{
-    unique_ptr< CADDictionaryObject > spoNamedDictObj( ( CADDictionaryObject* )
-                                                               getObject (tables.getTableHandle (CADTables::NamedObjectsDict).getAsLong () ) );
-
-    for( size_t i = 0; i < spoNamedDictObj->sItemNames.size(); ++i )
-    {
-        if ( !strcmp ("ESRI_PRJ", spoNamedDictObj->sItemNames[i].c_str()) )
-        {
-            unique_ptr<CADXRecordObject> spoXRecordObj (
-                    ( CADXRecordObject * ) getObject (spoNamedDictObj->hItemHandles[i].getAsLong ()));
-
-            if( spoXRecordObj.get() == nullptr ) return string("");
-
-            size_t esri_prj_begins = 10000;
-            for( size_t j = 0; j < spoXRecordObj->abyDataBytes.size(); ++j )
-            {
-                if( spoXRecordObj->abyDataBytes[j] == 'G' )
-                {
-                    if( spoXRecordObj->abyDataBytes[j+1] == 'E' )
-                    {
-                        esri_prj_begins = j;
-                        break;
-                    }
-                }
-            }
-
-            if( esri_prj_begins > spoXRecordObj->abyDataBytes.size() )
-            {
-                return string("");
-            }
-
-            string esri_prj;
-            for( size_t j = esri_prj_begins; j < spoXRecordObj->abyDataBytes.size(); ++j )
-            {
-                esri_prj.push_back( spoXRecordObj->abyDataBytes[j] );
-            }
-
-            return esri_prj;
-        }
-    }
-
-    return string("");
-}
-
 CADDictionary DWGFileR2000::getNOD()
 {
     CADDictionary stNOD;

@@ -81,7 +81,6 @@ public:
     DWGFileR2000(CADFileIO* poFileIO);
     virtual             ~DWGFileR2000();
 
-    string              getESRISpatialRef() override;
 protected:
     virtual int         readSectionLocator() override;
     virtual int         readHeader(enum OpenOptions eOptions) override;

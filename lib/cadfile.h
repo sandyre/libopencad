@@ -80,11 +80,6 @@ public:
 //    virtual size_t GetBlocksCount();
 //    virtual CADBlockObject * GetBlock( size_t index );
 
-    /**
-    * @brief returns ESRI SpatialReference as string.
-    * @return string, containing ESRI SpatRef (data of .prj file if not presented). If none, return string with 0-length.
-    */
-    virtual std::string     getESRISpatialRef() = 0;
 protected:
     /**
      * @brief Get CAD Object from file
