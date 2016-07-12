@@ -68,6 +68,7 @@ public:
     CADDictionary();
     ~CADDictionary();
 
+    size_t                                  getRecordsCount();
     void                                    addRecord( pair< string, CADDictionaryRecord*> );
     pair< string, CADDictionaryRecord*>&    getRecord( size_t index );
 private:

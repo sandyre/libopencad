@@ -82,6 +82,11 @@ CADDictionary::~CADDictionary ()
     }
 }
 
+size_t CADDictionary::getRecordsCount ()
+{
+    return astXRecords.size();
+}
+
 pair< string, CADDictionaryRecord*>& CADDictionary::getRecord ( size_t index )
 {
     return astXRecords[index];

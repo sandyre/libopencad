@@ -123,6 +123,24 @@ int main(int argc, char *argv[])
     classes.print ();
     cout << endl;
 
+    // print NOD info
+    cout << "Named Object Dictionary records:" << endl;
+    CADDictionary oNOD = pCADFile->getNOD();
+    for( size_t i = 0; i < oNOD.getRecordsCount (); ++i )
+    {
+        cout << "RECORD TYPE: ";
+        if( oNOD.getRecord (i).second->getType () == CADObject::ObjectType::XRECORD ) cout << "XRECORD ";
+        else if( oNOD.getRecord (i).second->getType () == CADObject::ObjectType::DICTIONARY ) cout << "DICTIONARY ";
+
+        cout << "RECORD NAME: " << oNOD.getRecord (i).first << endl;
+        if( oNOD.getRecord (i).second->getType () == CADObject::ObjectType::XRECORD )
+        {
+            CADXRecord * cadxRecord = ( CADXRecord* )oNOD.getRecord (i).second;
+            cout << "DATA: " << cadxRecord->getRecordData () << endl;
+        }
+    }
+    cout << endl;
+
     int attdefCount = 0;
     int attribCount = 0;
     int polylinesPface = 0;

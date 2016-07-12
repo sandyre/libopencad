@@ -35,6 +35,8 @@
 #include "cadobjects.h"
 #include "cadcolors.h"
 
+#include <array>
+
 using namespace std;
 
 /**
