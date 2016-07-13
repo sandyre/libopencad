@@ -810,15 +810,19 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
     dObjectSize = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
     short dObjectType = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
 
-    if(dObjectType >= 500){
+    if(dObjectType >= 500)
+    {
         CADClass cadClass = classes.getClassByNum (dObjectType);
-        if(cadClass.sCppClassName == "AcDbRasterImage"){
+        if( !strcmp( cadClass.sCppClassName.c_str(), "AcDbRasterImage" ) )
+        {
             dObjectType = CADObject::IMAGE;
         }
-        else if(cadClass.sCppClassName == "AcDbRasterImageDef"){
+        else if( !strcmp( cadClass.sCppClassName.c_str(), "AcDbRasterImageDef" ) )
+        {
             dObjectType = CADObject::IMAGEDEF;
         }
-        else if(cadClass.sCppClassName == "AcDbRasterImageDefReactor"){
+        else if( !strcmp( cadClass.sCppClassName.c_str(), "AcDbRasterImageDefReactor" ) )
+        {
             dObjectType = CADObject::IMAGEDEFREACTOR;
         }
     }

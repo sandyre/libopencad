@@ -207,7 +207,7 @@ protected:
     double                           constWidth;
     double                           elevation;
     CADVector                        vectExtrusion;
-	vector<double>                   bulges;
+    vector<double>                   bulges;
     vector< pair< double, double > > widths; // start, end.
 };
 
