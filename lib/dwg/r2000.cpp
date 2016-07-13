@@ -1260,8 +1260,9 @@ CADGeometry *DWGFileR2000::getGeometry(long index)
         CADLWPolyline * lwPolyline = new CADLWPolyline();
         CADLWPolylineObject * cadlwPolyline = static_cast<CADLWPolylineObject*>(
                     readedObject.get ());
-
-	lwPolyline->setClosed(cadlwPolyline->bClosed);
+		
+		lwPolyline->setBulges(cadlwPolyline->adfBulges);
+		lwPolyline->setClosed(cadlwPolyline->bClosed);
         lwPolyline->setColor (cadlwPolyline->stCed.nCMColor);
         lwPolyline->setConstWidth (cadlwPolyline->dfConstWidth);
         lwPolyline->setElevation (cadlwPolyline->dfElevation);
