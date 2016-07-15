@@ -2569,7 +2569,8 @@ CADInsertObject *DWGFileR2000::getInsert(int dObjectType, long dObjectSize,
     fillCommonEntityHandleData(insert, pabyInput, nBitOffsetFromStart);
 
     insert->hBlockHeader = ReadHANDLE (pabyInput, nBitOffsetFromStart);
-    if(insert->bHasAttribs){
+    if(insert->bHasAttribs)
+    {
         insert->hAtrribs.push_back (ReadHANDLE (pabyInput, nBitOffsetFromStart));
         insert->hAtrribs.push_back (ReadHANDLE (pabyInput, nBitOffsetFromStart));
         insert->hSeqend = ReadHANDLE (pabyInput, nBitOffsetFromStart);

@@ -153,37 +153,79 @@ void CADLayer::addHandle(long handle, CADObject::ObjectType type)
             return;
     }
 
-    if( type == CADObject::INSERT){
+    if( type == CADObject::INSERT)
+    {
         // TODO: transform insert to block of objects (do we need to transform
         // coordinates according to insert point)?
         unique_ptr< CADObject > insert( pCADFile->getObject ( handle, false ) );
         CADInsertObject *pInsert = static_cast<CADInsertObject *>(insert.get ());
-        if(nullptr != pInsert){
+        if(nullptr != pInsert)
+        {
             unique_ptr< CADObject > blockHeader(
                         pCADFile->getObject (
                             pInsert->hBlockHeader.getAsLong (), false ));
             CADBlockHeaderObject *pBlockHeader =
                     static_cast<CADBlockHeaderObject *>(blockHeader.get ());
-            if(nullptr != pBlockHeader){
+            if(nullptr != pBlockHeader)
+            {
 #ifdef _DEBUG
-               if(pBlockHeader->bBlkisXRef){
+               if(pBlockHeader->bBlkisXRef)
+               {
                    assert(0);
                }
 #endif //_DEBUG
-               for(CADHandle entHandle : pBlockHeader->hEntities){
-                   unique_ptr< CADObject > entity(
-                               pCADFile->getObject ( entHandle.getAsLong (),
-                                                     false ) );
-                   if(nullptr == entity)
-                       continue;
-                   addHandle(entHandle.getAsLong (), entity->getType ());
-                   // add shift/scale/rotate to transform map
-                   Matrix mat;
-                   mat.translate (pInsert->vertInsertionPoint);
-                   mat.scale (pInsert->vertScales);
-                   mat.rotate (pInsert->dfRotation);
-                   transformations[entHandle.getAsLong ()] = mat;
-               }
+                auto dCurrentEntHandle = pBlockHeader->hEntities[0].getAsLong ();
+                auto dLastEntHandle    = pBlockHeader->hEntities[
+                        pBlockHeader->hEntities.size() - 1].getAsLong (); // FIXME: in 2000+ entities probably has no links to each other.
+                while( true )
+                {
+                    unique_ptr< CADEntityObject > entity( static_cast< CADEntityObject* >(
+                            pCADFile->getObject ( dCurrentEntHandle,
+                                                  false ) ) );
+
+                    if( dCurrentEntHandle == dLastEntHandle )
+                    {
+                        entity.reset( static_cast< CADEntityObject* >(
+                                        pCADFile->getObject ( dCurrentEntHandle, true )
+                                      ) );
+
+                        if( entity != nullptr )
+                        {
+                            addHandle (dCurrentEntHandle, entity->getType ());
+                            Matrix mat;
+                            mat.translate (pInsert->vertInsertionPoint);
+                            mat.scale (pInsert->vertScales);
+                            mat.rotate (pInsert->dfRotation);
+                            transformations[dCurrentEntHandle] = mat;
+                            break;
+                        }
+                        else
+                        {
+                            assert(0);
+                        }
+                    }
+
+                    if( entity != nullptr )
+                    {
+                        addHandle ( dCurrentEntHandle, entity->getType () );
+                        Matrix mat;
+                        mat.translate (pInsert->vertInsertionPoint);
+                        mat.scale (pInsert->vertScales);
+                        mat.rotate (pInsert->dfRotation);
+                        transformations[dCurrentEntHandle] = mat;
+
+                        if( entity->stCed.bNoLinks )
+                            ++dCurrentEntHandle;
+                        else
+                            dCurrentEntHandle = entity->stChed.hNextEntity.getAsLong (
+                                    entity->stCed.hObjectHandle
+                            );
+                    }
+                    else
+                    {
+                        assert (0);
+                    }
+                }
             }
 
             // TODO: what todo with attributes of insertion?
