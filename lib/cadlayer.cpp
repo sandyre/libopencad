@@ -140,17 +140,16 @@ void CADLayer::setHandle(long value)
     handle = value;
 }
 
-void CADLayer::addHandle(long handle, CADObject::ObjectType type)
+void CADLayer::addHandle(long handle, CADObject::ObjectType type, long cadinserthandle)
 {
 #ifdef _DEBUG
     cout << "addHandle: " << handle << " type: " << type << endl;
 #endif //_DEBUG
     if( type == CADObject::ATTRIB || type == CADObject::ATTDEF )
     {
-        unique_ptr< CADObject > geometry( pCADFile->getObject ( handle, false ) );
+        unique_ptr< CADAttdef > attdef( static_cast< CADAttdef*>( pCADFile->getGeometry ( handle ) ) );
 
-        if(addAttribute(geometry.get()))
-            return;
+        attributesNames.insert ( attdef->getTag () );
     }
 
     if( type == CADObject::INSERT)
@@ -164,8 +163,7 @@ void CADLayer::addHandle(long handle, CADObject::ObjectType type)
             unique_ptr< CADObject > blockHeader(
                         pCADFile->getObject (
                             pInsert->hBlockHeader.getAsLong (), false ));
-            CADBlockHeaderObject *pBlockHeader =
-                    static_cast<CADBlockHeaderObject *>(blockHeader.get ());
+            CADBlockHeaderObject *pBlockHeader = static_cast<CADBlockHeaderObject *>(blockHeader.get ());
             if(nullptr != pBlockHeader)
             {
 #ifdef _DEBUG
@@ -181,17 +179,13 @@ void CADLayer::addHandle(long handle, CADObject::ObjectType type)
                 {
                     unique_ptr< CADEntityObject > entity( static_cast< CADEntityObject* >(
                             pCADFile->getObject ( dCurrentEntHandle,
-                                                  false ) ) );
+                                                  true ) ) );
 
                     if( dCurrentEntHandle == dLastEntHandle )
                     {
-                        entity.reset( static_cast< CADEntityObject* >(
-                                        pCADFile->getObject ( dCurrentEntHandle, true )
-                                      ) );
-
                         if( entity != nullptr )
                         {
-                            addHandle (dCurrentEntHandle, entity->getType ());
+                            addHandle (dCurrentEntHandle, entity->getType (), handle);
                             Matrix mat;
                             mat.translate (pInsert->vertInsertionPoint);
                             mat.scale (pInsert->vertScales);
@@ -207,7 +201,7 @@ void CADLayer::addHandle(long handle, CADObject::ObjectType type)
 
                     if( entity != nullptr )
                     {
-                        addHandle ( dCurrentEntHandle, entity->getType () );
+                        addHandle ( dCurrentEntHandle, entity->getType (), handle );
                         Matrix mat;
                         mat.translate (pInsert->vertInsertionPoint);
                         mat.scale (pInsert->vertScales);
@@ -227,30 +221,18 @@ void CADLayer::addHandle(long handle, CADObject::ObjectType type)
                     }
                 }
             }
-
-            // TODO: what todo with attributes of insertion?
-            //for (CADHandle attr : pInsert->hAtrribs) {
-            //    addHandle(attr.getAsLong (), CADObject::ATTRIB);
-            //}
         }
         return;
     }
-
-/*
-    if( type == CADObject::BLOCK || type == CADObject::IMAGE  ||
-            type == CADObject::IMAGEDEF || type == CADObject::IMAGEDEFREACTOR) {
-#ifdef _DEBUG
-        assert(0);
-#endif //_DEBUG
-    }
-*/
 
     if(isCommonEntityType (type))
     {
         if(type == CADObject::IMAGE)
             imageHandles.push_back( handle );
         else
-            geometryHandles.push_back( handle );
+        {
+            geometryHandles.push_back( make_pair( handle, cadinserthandle ) );
+        }
         if( geometryType == -2 ) // if not inited set type for first geometry
             geometryType = type;
         else if( geometryType != type ) // if type differs from previous geometry this is geometry bag (geometry type any)
@@ -265,11 +247,11 @@ size_t CADLayer::getGeometryCount() const
 
 CADGeometry *CADLayer::getGeometry(size_t index)
 {
-    long nHandle = geometryHandles[index];
-    CADGeometry* pGeom = pCADFile->getGeometry(nHandle);
+    auto handleBlockRefPair = geometryHandles[index];
+    CADGeometry* pGeom = pCADFile->getGeometry(handleBlockRefPair.first, handleBlockRefPair.second);
     if(nullptr == pGeom)
         return nullptr;
-    auto iter = transformations.find(nHandle);
+    auto iter = transformations.find(handleBlockRefPair.first);
     if(iter != transformations.end())
     {
         // transform geometry if nHandle is in transformations
@@ -309,4 +291,9 @@ bool CADLayer::addAttribute(const CADObject *pObject)
 short CADLayer::getGeometryType ()
 {
     return geometryType;
+}
+
+unordered_set<string> CADLayer::getAttributesTags ()
+{
+    return attributesNames;
 }

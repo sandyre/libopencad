@@ -169,6 +169,12 @@ int main(int argc, char *argv[])
         cout << i+1 << ". Layer " << layer.getName () << " contains "
              << layer.getGeometryCount () << " geometries" << endl;
 
+        cout << "Layer attributes:" << endl;
+        auto attribs = layer.getAttributesTags ();
+        for( const auto& attr : attribs )
+        {
+            cout << "Attribute: [" << attr << "]" << endl;
+        }
 
         for ( j = 0; j < layer.getGeometryCount (); ++j )
         {
@@ -179,6 +185,13 @@ int main(int argc, char *argv[])
 
             if(!bSummary)
                 geom->print ();
+
+            auto geom_attrs = geom->getBlockAttributes ();
+            for( const auto& attdef : geom_attrs )
+            {
+                cout << "Attrib name: " << attdef.getTag () << endl;
+                cout << "Attrib val: " << attdef.getTextValue () << endl;
+            }
 
             switch ( geom->getType() )
             {

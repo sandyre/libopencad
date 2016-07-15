@@ -155,6 +155,16 @@ void CADGeometry::setEED( vector< string > eed )
     asEED = eed;
 }
 
+vector< CADAttdef > CADGeometry::getBlockAttributes()
+{
+    return blockAttributes;
+}
+
+void CADGeometry::setBlockAttributes( const vector< CADAttdef >& data )
+{
+    blockAttributes = data;
+}
+
 //------------------------------------------------------------------------------
 // CADPoint3D
 //------------------------------------------------------------------------------

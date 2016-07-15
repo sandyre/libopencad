@@ -39,6 +39,8 @@
 
 using namespace std;
 
+class CADAttdef;
+
 /**
  * @brief The Matrix class
  */
@@ -96,12 +98,17 @@ class CADGeometry
     RGBColor            getColor() const;
     void                setColor(int ACIColorIndex);// TODO: in 2004+ ACI is not the only way to set the color.
 
+    vector< CADAttdef > getBlockAttributes();
+    void                setBlockAttributes(const vector< CADAttdef >& value);
+
     vector< string >    getEED();
     void                setEED(vector< string > eed);
 
     virtual void        print () const = 0;
     virtual void        transform(const Matrix& matrix) = 0;
 protected:
+    vector< CADAttdef > blockAttributes; // attributes of block reference this geometry is attached to.
+
     vector< string >    asEED;
     enum GeometryType   geometryType;
     double              thickness;
