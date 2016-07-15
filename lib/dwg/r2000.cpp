@@ -826,6 +826,10 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
         {
             dObjectType = CADObject::IMAGEDEFREACTOR;
         }
+        else if( !strcmp( cadClass.sCppClassName.c_str(), "AcDbWipeout") )
+        {
+            dObjectType = CADObject::WIPEOUT;
+        }
     }
 
     // Entities handling
