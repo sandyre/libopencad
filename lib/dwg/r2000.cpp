@@ -813,6 +813,7 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
     if(dObjectType >= 500)
     {
         CADClass cadClass = classes.getClassByNum (dObjectType);
+        // FIXME: replace strcmp() with C++ analog
         if( !strcmp( cadClass.sCppClassName.c_str(), "AcDbRasterImage" ) )
         {
             dObjectType = CADObject::IMAGE;
