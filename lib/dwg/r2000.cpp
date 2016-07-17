@@ -1068,7 +1068,7 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
 CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
 {
     CADGeometry * poGeometry = nullptr;
-    unique_ptr<CADEntityObject> readedObject( ( CADEntityObject* ) getObject(geomhandle) );
+    unique_ptr<CADEntityObject> readedObject( static_cast<CADEntityObject*>(getObject(geomhandle)) );
 
     if(nullptr == readedObject)
         return nullptr;
@@ -1231,6 +1231,7 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
         attdef->setTag (cadAttrib->sTag);
         attdef->setTextValue (cadAttrib->sTextValue);
         attdef->setThickness (cadAttrib->dfThickness);
+        attdef->setPrompt (cadAttrib->sPrompt);
 
         poGeometry = attdef;
         break;
@@ -1629,45 +1630,59 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
     // Getting block reference attributes.
     if( blockrefhandle != 0 )
     {
-        vector< CADAttdef > blockRefAttributes;
-        unique_ptr< CADInsertObject > spoBlockRef( static_cast<CADInsertObject*>( getObject (blockrefhandle) ) );
+        vector< CADAttrib > blockRefAttributes;
+        unique_ptr< CADInsertObject > spoBlockRef(
+                    static_cast<CADInsertObject*>( getObject (blockrefhandle) ) );
 
-        if( spoBlockRef->bHasAttribs )
-        {
-        auto dCurrentEntHandle = spoBlockRef->hAtrribs[0].getAsLong ();
-        auto dLastEntHandle    = spoBlockRef->hAtrribs[1].getAsLong ();
+        long dCurrentEntHandle, dLastEntHandle;
         while ( spoBlockRef->bHasAttribs )
         {
+            dCurrentEntHandle = spoBlockRef->hAtrribs[0].getAsLong ();
+            dLastEntHandle    = spoBlockRef->hAtrribs[1].getAsLong ();
+
             // FIXME: memory leak, somewhere in CAD* destructor is a bug
-            CADAttdefObject * attdef_obj = static_cast< CADAttdefObject * >( getObject (dCurrentEntHandle, true) );
-            CADAttdef       * attdef     = static_cast< CADAttdef * >( getGeometry (dCurrentEntHandle) );
+            CADEntityObject * attDefObj = static_cast<CADEntityObject*>(
+                        getObject (dCurrentEntHandle, true) );
 
             if ( dCurrentEntHandle == dLastEntHandle )
             {
-                if ( attdef == nullptr || attdef_obj == nullptr ) break;
+                if ( attDefObj == nullptr )
+                    break;
 
-                blockRefAttributes.push_back (*attdef);
-//                delete( attdef_obj ); uncomment to cause a crash
-//                delete( attdef );
+                CADAttrib *attrib = static_cast<CADAttrib*>(
+                            getGeometry (dCurrentEntHandle) );
+
+                if(attrib)
+                {
+                    blockRefAttributes.push_back (CADAttrib(*attrib));
+                    delete attrib;
+                }
+                delete attDefObj;
                 break;
             }
 
-            if ( attdef != nullptr && attdef_obj != nullptr )
+            if ( attDefObj != nullptr )
             {
-                if ( attdef_obj->stCed.bNoLinks )
+                if ( attDefObj->stCed.bNoLinks )
                     ++dCurrentEntHandle;
                 else
-                    dCurrentEntHandle = attdef_obj->stChed.hNextEntity.getAsLong (
-                            attdef_obj->stCed.hObjectHandle
-                    );
+                    dCurrentEntHandle = attDefObj->stChed.hNextEntity.getAsLong (
+                            attDefObj->stCed.hObjectHandle);
+
+                CADAttrib *attrib = static_cast<CADAttrib*>(
+                            getGeometry (dCurrentEntHandle) );
+
+                if(attrib)
+                {
+                    blockRefAttributes.push_back (CADAttrib(*attrib));
+                    delete attrib;
+                }
+                delete attDefObj;
             }
             else
             {
                 assert (0);
             }
-//            delete( attdef ); uncomment to cause a crash
-//            delete( attdef_obj );
-        }
         }
         poGeometry->setBlockAttributes ( blockRefAttributes );
     }
@@ -2349,7 +2364,7 @@ CADAttdefObject *DWGFileR2000::getAttributesDefn(long dObjectSize,
                   __LINE__, __FILE__, (nBitOffsetFromStart/8 - dObjectSize - 4));
 #endif //_DEBUG
     return  attdef;
-            }
+}
 
 CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
                                                  CADCommonED stCommonEntityData,
