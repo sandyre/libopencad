@@ -169,8 +169,9 @@ int main(int argc, char *argv[])
         cout << i+1 << ". Layer " << layer.getName () << " contains "
              << layer.getGeometryCount () << " geometries" << endl;
 
-        cout << "Layer attributes:" << endl;
         auto attribs = layer.getAttributesTags ();
+        if(!attribs.empty ())
+            cout << "Layer attributes:" << endl;
         for( const auto& attr : attribs )
         {
             cout << "Attribute: [" << attr << "]" << endl;
@@ -269,13 +270,13 @@ int main(int argc, char *argv[])
 
         for ( j = 0; j < layer.getImageCount (); ++j )
         {
-            unique_ptr<CADImage> geom(layer.getImage (j));
+            unique_ptr<CADImage> image(layer.getImage (j));
 
-            if ( geom == nullptr )
+            if ( image == nullptr )
                 continue;
 
             if(!bSummary)
-                geom->print ();
+                image->print ();
 
             ++imagesCount;
 
