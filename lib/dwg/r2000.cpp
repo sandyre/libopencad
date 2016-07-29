@@ -557,10 +557,12 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
         header.addValue(CADHeader::TSTACKSIZE, ReadBITSHORT (pabyBuf,
                                                         nBitOffsetFromStart));
     }
-    else{
+    else
+    {
        skipBITSHORT (pabyBuf, nBitOffsetFromStart);
        skipBITSHORT (pabyBuf, nBitOffsetFromStart);
     }
+    
     header.addValue(CADHeader::HYPERLINKBASE, ReadTV (pabyBuf,
                                                          nBitOffsetFromStart));
     header.addValue(CADHeader::STYLESHEET, ReadTV (pabyBuf,
@@ -657,7 +659,8 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
 
 int DWGFileR2000::readClasses (enum OpenOptions eOptions)
 {
-    if(eOptions == OpenOptions::READ_ALL || eOptions == OpenOptions::READ_FAST ){
+    if(eOptions == OpenOptions::READ_ALL || eOptions == OpenOptions::READ_FAST )
+    {
         char    *pabySectionContent;
         char    buffer[255];
         size_t dSectionSize = 0;
@@ -680,7 +683,7 @@ int DWGFileR2000::readClasses (enum OpenOptions eOptions)
         pabySectionContent = new char[dSectionSize + 4];
         fileIO->Read (pabySectionContent, dSectionSize);
 
-        while ( ( nBitOffsetFromStart / 8 ) + 1 < dSectionSize )
+        while ( ( nBitOffsetFromStart / 8 + 1 ) < dSectionSize )
         {
             CADClass stClass;
             stClass.dClassNum = ReadBITSHORT (pabySectionContent,
@@ -810,7 +813,7 @@ CADObject * DWGFileR2000::getObject (long index, bool bHandlesOnly)
     dObjectSize = ReadMSHORT (pabySectionContent, nBitOffsetFromStart);
     short dObjectType = ReadBITSHORT (pabySectionContent, nBitOffsetFromStart);
 
-    if(dObjectType >= 500)
+    if( dObjectType >= 500 )
     {
         CADClass cadClass = classes.getClassByNum (dObjectType);
         // FIXME: replace strcmp() with C++ analog
@@ -1404,7 +1407,7 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
         poGeometry = mline;
         break;
     }
-
+    
     case CADObject::MTEXT:
     {
         CADMText * mtext = new CADMText();
@@ -1427,6 +1430,7 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
         poGeometry = mtext;
         break;
     }
+    
     case CADObject::POLYLINE_PFACE:
     {
         CADPolylinePFace * polyline = new CADPolylinePFace();
@@ -1477,6 +1481,7 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
         poGeometry = polyline;
         break;
     }
+    
     case CADObject::XLINE:
     {
         CADXLine * xline = new CADXLine();
@@ -1490,6 +1495,7 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
         poGeometry = xline;
         break;
     }
+    
     case CADObject::FACE3D:
     {
         CADFace3D * face = new CADFace3D();
@@ -1504,6 +1510,7 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
         poGeometry = face;
         break;
     }
+    
     case CADObject::POLYLINE_MESH:
     case CADObject::VERTEX_MESH:
     case CADObject::VERTEX_PFACE_FACE:
@@ -1810,7 +1817,6 @@ CADPointObject *DWGFileR2000::getPoint(long dObjectSize,
                                        const char *pabyInput,
                                        size_t &nBitOffsetFromStart)
 {
-
     CADPointObject * point = new CADPointObject();
 
     point->setSize( dObjectSize );
@@ -2224,6 +2230,7 @@ CADAttribObject *DWGFileR2000::getAttributes(long dObjectSize,
 {
     CADAttribObject * attrib = new CADAttribObject();
 
+    attrib->setSize(dObjectSize);
     attrib->stCed = stCommonEntityData;
     attrib->DataFlags = ReadCHAR (pabyInput, nBitOffsetFromStart);
 
@@ -2298,6 +2305,8 @@ CADAttdefObject *DWGFileR2000::getAttributesDefn(long dObjectSize,
                                                  size_t &nBitOffsetFromStart)
 {
     CADAttdefObject * attdef = new CADAttdefObject();
+
+    attdef->setSize(dObjectSize);
     attdef->stCed = stCommonEntityData;
     attdef->DataFlags = ReadCHAR (pabyInput, nBitOffsetFromStart);
 
@@ -2375,7 +2384,7 @@ CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
     polyline->setSize(dObjectSize);
     polyline->stCed = stCommonEntityData;
 
-    double x, y;
+    double x = 0.0, y = 0.0;
     int vertixesCount  = 0, nBulges = 0, nNumWidths = 0;
     short dataFlag = ReadBITSHORT (pabyInput, nBitOffsetFromStart);
     if ( dataFlag & 4 )
@@ -2405,13 +2414,13 @@ CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
         nNumWidths = ReadBITLONG (pabyInput, nBitOffsetFromStart);
         polyline->astWidths.reserve( nNumWidths );
     }
-    
+
     if( dataFlag & 512 )
     {
-	polyline->bClosed = true;
+        polyline->bClosed = true;
     }
     else
-	polyline->bClosed = false;
+        polyline->bClosed = false;
 
     // First of all, read first vertex.
     CADVector vertex = ReadRAWVector(pabyInput, nBitOffsetFromStart);
@@ -2427,7 +2436,8 @@ CADLWPolylineObject *DWGFileR2000::getLWPolyLine(long dObjectSize,
                                            polyline->avertVertexes[prev].getX());
         y = ReadBITDOUBLEWD (pabyInput, nBitOffsetFromStart,
                                            polyline->avertVertexes[prev].getY());
-        CADVector vertex(x, y);
+        vertex.setX(x);
+        vertex.setY(y);
         polyline->avertVertexes.push_back (vertex);
     }
 
@@ -2464,6 +2474,7 @@ CADArcObject *DWGFileR2000::getArc(long dObjectSize,
 {
     CADArcObject * arc = new CADArcObject();
 
+    arc->setSize(dObjectSize);
     arc->stCed = stCommonEntityData;
 
     CADVector vertPosition = ReadVector(pabyInput, nBitOffsetFromStart);
@@ -3826,7 +3837,7 @@ CADXRecordObject *DWGFileR2000::getXRecord(long dObjectSize,
     if( dIndicatorNumber == 1 )
     {
         unsigned char nStringSize = ReadCHAR ( pabyInput, nBitOffsetFromStart );
-        char dCodePage   = ReadCHAR ( pabyInput, nBitOffsetFromStart );
+        /* char dCodePage   =  */ ReadCHAR ( pabyInput, nBitOffsetFromStart );
         for ( unsigned char i = 0; i < nStringSize; ++i )
         {
             ReadCHAR ( pabyInput, nBitOffsetFromStart );
@@ -3854,7 +3865,7 @@ CADXRecordObject *DWGFileR2000::getXRecord(long dObjectSize,
 
     xrecord->hXDictionary = ReadHANDLE (pabyInput, nBitOffsetFromStart);
 
-    while( nBitOffsetFromStart / 8 < (dObjectSize + 4) )
+    while( nBitOffsetFromStart / 8 < ( (size_t)dObjectSize + 4) )
     {
         xrecord->hObjIdHandles.push_back( ReadHANDLE(pabyInput, nBitOffsetFromStart) );
     }
