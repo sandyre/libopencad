@@ -33,9 +33,9 @@
 #include "cadfile.h"
 #include <cassert>
 
-CADLayer::CADLayer(CADFile * const file) : frozen(false), on(true),
+CADLayer::CADLayer(CADFile * file) : frozen(false), on(true),
     frozenByDefault(false), locked(false), plotting(false), lineWeight(1),
-    color(0), layerId(0), handle(0), geometryType(-2), pCADFile(file)
+    color(0), layerId(0), layer_handle(0), geometryType(-2), pCADFile(file)
 {
 
 }
@@ -132,12 +132,12 @@ void CADLayer::setId(const size_t &value)
 
 long CADLayer::getHandle() const
 {
-    return handle;
+    return layer_handle;
 }
 
 void CADLayer::setHandle(long value)
 {
-    handle = value;
+    layer_handle = value;
 }
 
 void CADLayer::addHandle(long handle, CADObject::ObjectType type, long cadinserthandle)
@@ -280,7 +280,7 @@ bool CADLayer::addAttribute(const CADObject *pObject)
     {
         if ( i->first == attrib->stChed.hOwner.getAsLong () )
         {
-            i->second.insert ( make_pair( attrib->sTag, handle ) );
+            i->second.insert ( make_pair( attrib->sTag, layer_handle ) );
             return true;
         }
     }

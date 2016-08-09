@@ -43,7 +43,7 @@ using namespace std;
 class OCAD_EXTERN CADLayer
 {
 public:
-    CADLayer(CADFile * const file);
+    CADLayer(CADFile * file);
     string getName() const;
     void setName(const string &value);
 
@@ -102,7 +102,7 @@ protected:
     short lineWeight;
     short color;
     size_t layerId;
-    long handle;
+    long layer_handle;
     short geometryType; // if all geometry is same type set this type or -1
 
     unordered_set<string> attributesNames;
@@ -111,7 +111,7 @@ protected:
     vector< pair< long, map< string, long > > > geometryAttributes;
     map<long, Matrix> transformations;
 
-    CADFile * const pCADFile;
+    CADFile * pCADFile;
 };
 
 #endif // CADLAYER_H
