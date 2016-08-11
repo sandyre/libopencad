@@ -97,10 +97,10 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     }
     else
     {
-        skipBITDOUBLE(pabyBuf, nBitOffsetFromStart);
-        skipBITDOUBLE(pabyBuf, nBitOffsetFromStart);
-        skipBITDOUBLE(pabyBuf, nBitOffsetFromStart);
-        skipBITDOUBLE(pabyBuf, nBitOffsetFromStart);
+        SkipBITDOUBLE( pabyBuf, nBitOffsetFromStart );
+        SkipBITDOUBLE( pabyBuf, nBitOffsetFromStart );
+        SkipBITDOUBLE( pabyBuf, nBitOffsetFromStart );
+        SkipBITDOUBLE( pabyBuf, nBitOffsetFromStart );
         SkipTV( pabyBuf, nBitOffsetFromStart );
         SkipTV( pabyBuf, nBitOffsetFromStart );
         SkipTV( pabyBuf, nBitOffsetFromStart );
@@ -217,7 +217,7 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     else
     {
         for(char i = 0; i < 12; ++i)
-            skipBITDOUBLE (pabyBuf, nBitOffsetFromStart);
+            SkipBITDOUBLE( pabyBuf, nBitOffsetFromStart );
         SkipTV( pabyBuf, nBitOffsetFromStart );
     }
 
@@ -469,7 +469,7 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
         SkipTV( pabyBuf, nBitOffsetFromStart );
 
         for(char i = 0; i < 9; ++i)
-            skipBITDOUBLE (pabyBuf, nBitOffsetFromStart);
+            SkipBITDOUBLE( pabyBuf, nBitOffsetFromStart );
 
         nBitOffsetFromStart += 6;
 
@@ -477,7 +477,7 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
             skipBITSHORT (pabyBuf, nBitOffsetFromStart);
 
         for(char i = 0; i < 9; ++i)
-            skipBITDOUBLE (pabyBuf, nBitOffsetFromStart);
+            SkipBITDOUBLE( pabyBuf, nBitOffsetFromStart );
 
         nBitOffsetFromStart++;
 
@@ -497,7 +497,7 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
         skipBITSHORT (pabyBuf, nBitOffsetFromStart);
 
         for(char i = 0; i < 5; ++i)
-            skipHANDLE (pabyBuf, nBitOffsetFromStart);
+            SkipHANDLE( pabyBuf, nBitOffsetFromStart );
 
         skipBITSHORT (pabyBuf, nBitOffsetFromStart);
         skipBITSHORT (pabyBuf, nBitOffsetFromStart);
@@ -534,7 +534,7 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     }
     else
     {
-        skipHANDLE (pabyBuf, nBitOffsetFromStart);
+        SkipHANDLE( pabyBuf, nBitOffsetFromStart );
     }
 
     CADHandle stEntityTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
@@ -626,9 +626,9 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     }
     else
     {
-        skipHANDLE (pabyBuf, nBitOffsetFromStart);
-        skipHANDLE (pabyBuf, nBitOffsetFromStart);
-        skipHANDLE (pabyBuf, nBitOffsetFromStart);
+        SkipHANDLE( pabyBuf, nBitOffsetFromStart );
+        SkipHANDLE( pabyBuf, nBitOffsetFromStart );
+        SkipHANDLE( pabyBuf, nBitOffsetFromStart );
         skipBITSHORT (pabyBuf, nBitOffsetFromStart);
         skipBITSHORT (pabyBuf, nBitOffsetFromStart);
         skipBITSHORT (pabyBuf, nBitOffsetFromStart);

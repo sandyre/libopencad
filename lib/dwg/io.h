@@ -151,21 +151,21 @@ unsigned char   Read3B ( const char * pabyInput, size_t& nBitOffsetFromStart );
 unsigned char   Read4B ( const char * pabyInput, size_t& nBitOffsetFromStart );
 CADHandle       ReadHANDLE ( const char * pabyInput, size_t& nBitOffsetFromStart );
 CADHandle       ReadHANDLE8BLENGTH ( const char * pabyInput, size_t & nBitOffsetFromStart );
-void            skipHANDLE(const char * pabyInput, size_t& nBitOffsetFromStart);
+void            SkipHANDLE( const char * pabyInput, size_t &nBitOffsetFromStart );
 bool            ReadBIT ( const char * pabyInput, size_t& nBitOffsetFromStart );
-void            skipBIT(const char * pabyInput, size_t& nBitOffsetFromStart);
+void            SkipBIT( const char * pabyInput, size_t &nBitOffsetFromStart );
 unsigned char   ReadCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart );
 short           ReadBITSHORT ( const char * pabyInput, size_t& nBitOffsetFromStart );
 int             ReadBITLONG ( const char * pabyInput, size_t& nBitOffsetFromStart );
 double          ReadBITDOUBLE ( const char * pabyInput, size_t& nBitOffsetFromStart );
-void            skipBITDOUBLE( const char * pabyInput, size_t& nBitOffsetFromStart );
+void            SkipBITDOUBLE( const char * pabyInput, size_t &nBitOffsetFromStart );
 double          ReadBITDOUBLEWD ( const char * pabyInput, size_t& nBitOffsetFromStart,
                          double defaultvalue );
 long            ReadMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart );
 long            ReadUMCHAR ( const char * pabyInput, size_t& nBitOffsetFromStart );
 unsigned int    ReadMSHORT ( const char * pabyInput, size_t& nBitOffsetFromStart );
 std::string     ReadTV ( const char * pabyInput, size_t& nBitOffsetFromStart );
-void            skipTV(const char * pabyInput, size_t& nBitOffsetFromStart);
+void            SkipTV( const char * pabyInput, size_t &nBitOffsetFromStart );
 void            skipBITLONG(const char * pabyInput, size_t& nBitOffsetFromStart);
 void            skipBITSHORT(const char * pabyInput, size_t& nBitOffsetFromStart);
 

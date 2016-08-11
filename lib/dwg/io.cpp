@@ -700,7 +700,7 @@ CADHandle ReadHANDLE ( const char * pabyInput, size_t& nBitOffsetFromStart )
     return result;
 }
 
-void skipHANDLE(const char * pabyInput, size_t& nBitOffsetFromStart)
+void SkipHANDLE( const char * pabyInput, size_t &nBitOffsetFromStart )
 {
     Read4B ( pabyInput, nBitOffsetFromStart );
     unsigned char counter = static_cast<unsigned char>(Read4B ( pabyInput,
@@ -782,7 +782,7 @@ int ReadBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart )
     return -1;
 }
 
-void skipBITDOUBLE(const char *pabyInput, size_t &nBitOffsetFromStart)
+void SkipBITDOUBLE( const char * pabyInput, size_t &nBitOffsetFromStart )
 {
     unsigned char BITCODE = Read2B ( pabyInput, nBitOffsetFromStart );
 
@@ -800,7 +800,7 @@ void skipBITDOUBLE(const char *pabyInput, size_t &nBitOffsetFromStart)
     }
 }
 
-void skipTV(const char *pabyInput, size_t &nBitOffsetFromStart)
+void SkipTV( const char * pabyInput, size_t &nBitOffsetFromStart )
 {
     short stringLength = ReadBITSHORT ( pabyInput, nBitOffsetFromStart );
     nBitOffsetFromStart += size_t(stringLength * 8);
@@ -844,7 +844,7 @@ void skipBITSHORT(const char *pabyInput, size_t &nBitOffsetFromStart)
     }
 }
 
-void skipBIT(const char */*pabyInput*/, size_t &nBitOffsetFromStart)
+void SkipBIT( const char */*pabyInput*/, size_t &nBitOffsetFromStart )
 {
     ++nBitOffsetFromStart;
 }
