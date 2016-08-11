@@ -77,7 +77,7 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     }
 
     fileIO->Read (&dHeaderVarsSectionLength, 4);
-    DebugMsg("Header variables section length: %ld\n", dHeaderVarsSectionLength);
+    DebugMsg("Header variables section length: %zd\n", dHeaderVarsSectionLength);
 
     size_t nBitOffsetFromStart = 0;
     pabyBuf = new char[dHeaderVarsSectionLength + 4];
@@ -758,15 +758,17 @@ int DWGFileR2000::createFileMap ()
         // read section data
         fileIO->Read (pabySectionContent, dSectionSize);
 
-        while ( ( nBitOffsetFromStart / 8 ) < ( dSectionSize - 2 ) )
+        while ( ( nBitOffsetFromStart / 8 ) < ( (size_t) dSectionSize - 2 ) )
         {
             tmpOffset.first  = ReadUMCHAR (pabySectionContent, nBitOffsetFromStart);
             tmpOffset.second = ReadMCHAR (pabySectionContent, nBitOffsetFromStart);
 
-            if(0 == nRecordsInSection) {
+            if(0 == nRecordsInSection) 
+            {
                 previousObjHandleOffset = tmpOffset;
             }
-            else {
+            else
+            {
                 previousObjHandleOffset.first += tmpOffset.first;
                 previousObjHandleOffset.second += tmpOffset.second;
             }
@@ -1378,7 +1380,7 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
         CADVector pixelSizeInACADUnits (cadImageDef->dfXPixelSize,
                                         cadImageDef->dfYPixelSize);
         image->setPixelSizeInACADUnits(pixelSizeInACADUnits);
-        image->setResolutionUnits(cadImageDef->dResUnits);
+        image->setResolutionUnits((CADImage::ResolutionUnit)cadImageDef->dResUnits);
         image->setOptions(cadImage->dDisplayProps & 0x08,
                           cadImage->bClipping,
                           cadImage->dBrightness,
@@ -1407,7 +1409,7 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
         poGeometry = mline;
         break;
     }
-    
+
     case CADObject::MTEXT:
     {
         CADMText * mtext = new CADMText();
@@ -1510,12 +1512,14 @@ CADGeometry *DWGFileR2000::getGeometry(long geomhandle, long blockrefhandle)
         poGeometry = face;
         break;
     }
-    
+
     case CADObject::POLYLINE_MESH:
     case CADObject::VERTEX_MESH:
     case CADObject::VERTEX_PFACE_FACE:
     default:
         cerr << "Asked geometry has unsupported type." << endl;
+        poGeometry = new CADUnknown();
+        break;
     }
 
     if( poGeometry == nullptr )
