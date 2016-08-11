@@ -39,6 +39,9 @@
 
 using namespace std;
 
+/*
+ * @brief Base-class for XRecord and Dictionary.
+ */
 class CADDictionaryRecord
 {
 public:
@@ -50,6 +53,9 @@ protected:
     CADObject::ObjectType objType;
 };
 
+/*
+ * @brief Class which implements XRecord
+ */
 class OCAD_EXTERN CADXRecord : public CADDictionaryRecord
 {
 public:
@@ -62,6 +68,9 @@ private:
     string                  sRecordData;
 };
 
+/*
+ * @brief Class which implements Dictionary
+ */
 class OCAD_EXTERN CADDictionary : public CADDictionaryRecord
 {
 public:

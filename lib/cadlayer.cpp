@@ -37,7 +37,6 @@ CADLayer::CADLayer(CADFile * file) : frozen(false), on(true),
     frozenByDefault(false), locked(false), plotting(false), lineWeight(1),
     color(0), layerId(0), layer_handle(0), geometryType(-2), pCADFile(file)
 {
-
 }
 
 string CADLayer::getName() const

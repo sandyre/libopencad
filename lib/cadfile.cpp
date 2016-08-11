@@ -97,7 +97,7 @@ int CADFile::readTables(CADFile::OpenOptions /*eOptions*/)
 {
     // TODO: read other tables in ALL option mode
 
-    int nResult = tables.readTable(this, CADTables::LayersTable);
+    int nResult = tables.ReadTable( this, CADTables::LayersTable );
 //    if(nResult != CADErrorCodes::SUCCESS)
         return nResult;
 
@@ -105,10 +105,10 @@ int CADFile::readTables(CADFile::OpenOptions /*eOptions*/)
 
 size_t CADFile::getLayersCount() const
 {
-    return tables.getLayerCount ();
+    return tables.GetLayerCount();
 }
 
 CADLayer &CADFile::getLayer(size_t index)
 {
-    return tables.getLayer (index);
+    return tables.GetLayer( index );
 }

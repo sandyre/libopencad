@@ -36,6 +36,9 @@
 
 using namespace std;
 
+/*
+ * @brief Class which basicly implements implements 3D vertex
+ */
 class CADVector
 {
 public:

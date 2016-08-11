@@ -28,7 +28,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
-
 #include "r2000.h"
 #include "io.h"
 #include "cadgeometry.h"
@@ -102,17 +101,17 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
         skipBITDOUBLE(pabyBuf, nBitOffsetFromStart);
         skipBITDOUBLE(pabyBuf, nBitOffsetFromStart);
         skipBITDOUBLE(pabyBuf, nBitOffsetFromStart);
-        skipTV(pabyBuf, nBitOffsetFromStart);
-        skipTV(pabyBuf, nBitOffsetFromStart);
-        skipTV(pabyBuf, nBitOffsetFromStart);
-        skipTV(pabyBuf, nBitOffsetFromStart);
+        SkipTV( pabyBuf, nBitOffsetFromStart );
+        SkipTV( pabyBuf, nBitOffsetFromStart );
+        SkipTV( pabyBuf, nBitOffsetFromStart );
+        SkipTV( pabyBuf, nBitOffsetFromStart );
         skipBITLONG(pabyBuf, nBitOffsetFromStart);
         skipBITLONG(pabyBuf, nBitOffsetFromStart);
     }
 
     CADHandle stCurrentViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::CurrentViewportTable,
-                        stCurrentViewportTable);
+    tables.AddTable( CADTables::CurrentViewportTable,
+                     stCurrentViewportTable );
 
     if(eOptions == OpenOptions::READ_ALL)
     {
@@ -219,7 +218,7 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     {
         for(char i = 0; i < 12; ++i)
             skipBITDOUBLE (pabyBuf, nBitOffsetFromStart);
-        skipTV (pabyBuf, nBitOffsetFromStart);
+        SkipTV( pabyBuf, nBitOffsetFromStart );
     }
 
     long juliandate, millisec;
@@ -466,8 +465,8 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     }
     else
     {
-        skipTV(pabyBuf, nBitOffsetFromStart);
-        skipTV(pabyBuf, nBitOffsetFromStart);
+        SkipTV( pabyBuf, nBitOffsetFromStart );
+        SkipTV( pabyBuf, nBitOffsetFromStart );
 
         for(char i = 0; i < 9; ++i)
             skipBITDOUBLE (pabyBuf, nBitOffsetFromStart);
@@ -505,28 +504,28 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     }
 
     CADHandle stBlocksTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::BlocksTable, stBlocksTable);
+    tables.AddTable( CADTables::BlocksTable, stBlocksTable );
 
     CADHandle stLayersTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::LayersTable, stLayersTable);
+    tables.AddTable( CADTables::LayersTable, stLayersTable );
 
     CADHandle stStyleTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::StyleTable, stStyleTable);
+    tables.AddTable( CADTables::StyleTable, stStyleTable );
 
     CADHandle stLineTypesTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::LineTypesTable, stLineTypesTable);
+    tables.AddTable( CADTables::LineTypesTable, stLineTypesTable );
 
     CADHandle stViewTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::ViewTable, stViewTable);
+    tables.AddTable( CADTables::ViewTable, stViewTable );
 
     CADHandle stUCSTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::UCSTable, stUCSTable);
+    tables.AddTable( CADTables::UCSTable, stUCSTable );
 
     CADHandle stViewportTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::ViewportTable, stViewportTable);
+    tables.AddTable( CADTables::ViewportTable, stViewportTable );
 
     CADHandle stAPPIDTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::APPIDTable, stAPPIDTable);
+    tables.AddTable( CADTables::APPIDTable, stAPPIDTable );
 
     if(eOptions == OpenOptions::READ_ALL)
     {
@@ -539,16 +538,16 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     }
 
     CADHandle stEntityTable = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::EntityTable, stEntityTable);
+    tables.AddTable( CADTables::EntityTable, stEntityTable );
 
     CADHandle stACADGroupDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::ACADGroupDict, stACADGroupDict);
+    tables.AddTable( CADTables::ACADGroupDict, stACADGroupDict );
 
     CADHandle stACADMLineStyleDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::ACADMLineStyleDict, stACADMLineStyleDict);
+    tables.AddTable( CADTables::ACADMLineStyleDict, stACADMLineStyleDict );
 
     CADHandle stNamedObjectsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::NamedObjectsDict, stNamedObjectsDict);
+    tables.AddTable( CADTables::NamedObjectsDict, stNamedObjectsDict );
 
     if(eOptions == OpenOptions::READ_ALL)
     {
@@ -569,13 +568,13 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
                                                       nBitOffsetFromStart));
 
     CADHandle stLayoutsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::LayoutsDict, stLayoutsDict);
+    tables.AddTable( CADTables::LayoutsDict, stLayoutsDict );
 
     CADHandle stPlotSettingsDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::PlotSettingsDict, stPlotSettingsDict);
+    tables.AddTable( CADTables::PlotSettingsDict, stPlotSettingsDict );
 
     CADHandle stPlotStylesDict = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::PlotStylesDict, stPlotStylesDict);
+    tables.AddTable( CADTables::PlotStylesDict, stPlotStylesDict );
 
     if(eOptions == OpenOptions::READ_ALL)
     {
@@ -606,11 +605,11 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     header.addValue(CADHeader::VERSIONGUID, ReadTV (pabyBuf, nBitOffsetFromStart));
 
     CADHandle stBlockRecordPaperSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::BlockRecordPaperSpace,
-                        stBlockRecordPaperSpace);
+    tables.AddTable( CADTables::BlockRecordPaperSpace,
+                     stBlockRecordPaperSpace );
     // TODO: is this part of the header?
     CADHandle stBlockRecordModelSpace = ReadHANDLE (pabyBuf, nBitOffsetFromStart);
-    tables.addTable (CADTables::BlockRecordModelSpace, stBlockRecordModelSpace);
+    tables.AddTable( CADTables::BlockRecordModelSpace, stBlockRecordModelSpace );
 
     if(eOptions == OpenOptions::READ_ALL)
     {
@@ -653,7 +652,6 @@ int DWGFileR2000::readHeader (OpenOptions eOptions)
     }
 
     delete[] pabyBuf;
-
     return returnCode;
 }
 
@@ -3973,7 +3971,8 @@ CADDictionary DWGFileR2000::getNOD()
     CADDictionary stNOD;
 
     unique_ptr< CADDictionaryObject > spoNamedDictObj( ( CADDictionaryObject* )
-                                                               getObject (tables.getTableHandle (CADTables::NamedObjectsDict).getAsLong () ) );
+                                                               getObject ( tables.GetTableHandle(
+                                                                       CADTables::NamedObjectsDict ).getAsLong () ) );
 
     for( size_t i = 0; i < spoNamedDictObj->sItemNames.size(); ++i )
     {
