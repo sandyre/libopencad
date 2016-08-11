@@ -43,12 +43,12 @@ CADTables::CADTables()
 
 }
 
-void CADTables::addTable(TableType eType, CADHandle hHandle)
+void CADTables::addTable( TableType eType, CADHandle hHandle )
 {
     tableMap[eType] = hHandle;
 }
 
-int CADTables::readTable( CADFile * const file, CADTables::TableType eType)
+int CADTables::readTable( CADFile * const file, CADTables::TableType eType )
 {
     auto iter = tableMap.find (eType);
     if( iter == tableMap.end () )
