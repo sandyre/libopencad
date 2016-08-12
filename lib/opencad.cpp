@@ -101,7 +101,7 @@ CADFile * OpenCADFile( CADFileIO * pCADFileIO, enum CADFile::OpenOptions eOption
             return nullptr;
     }
 
-    gLastError = poCAD->parseFile( eOptions );
+    gLastError = poCAD->ParseFile( eOptions );
     if( gLastError != CADErrorCodes::SUCCESS )
     {
         delete poCAD;
@@ -156,10 +156,10 @@ CADFileIO* GetDefaultFileIO( const char * pszFileName )
  * @return positive number for dwg version, negative for dxf version, 0 if error
  * occured
  */
-int IdentifyCADFile( CADFileIO * pCADFileIO, bool own )
+int IdentifyCADFile( CADFileIO * pCADFileIO, bool bOwn )
 {
     int result = CheckCADFile(pCADFileIO);
-    if(own)
+    if(bOwn)
         delete pCADFileIO;
     return result;
 }

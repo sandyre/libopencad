@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
 
     // print NOD info
     cout << "Named Object Dictionary records:" << endl;
-    CADDictionary oNOD = pCADFile->getNOD();
+    CADDictionary oNOD = pCADFile->GetNOD();
     for( size_t i = 0; i < oNOD.getRecordsCount (); ++i )
     {
         cout << "RECORD TYPE: ";
@@ -160,12 +160,12 @@ int main(int argc, char *argv[])
     int pointCount = 0;
     int arcCount = 0;
     int textCount = 0;
-    cout << "Layers count: " << pCADFile->getLayersCount () << endl;
+    cout << "Layers count: " << pCADFile->GetLayersCount() << endl;
 
     size_t i,j;
-    for ( i = 0; i < pCADFile->getLayersCount (); ++i )
+    for ( i = 0; i < pCADFile->GetLayersCount(); ++i )
     {
-        CADLayer &layer = pCADFile->getLayer (i);
+        CADLayer &layer = pCADFile->GetLayer( i );
         cout << i+1 << ". Layer " << layer.getName () << " contains "
              << layer.getGeometryCount () << " geometries" << endl;
 

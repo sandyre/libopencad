@@ -83,7 +83,8 @@ CADHandle CADTables::GetTableHandle( enum TableType eType )
 int CADTables::ReadLayersTable( CADFile * const pCADFile, long dLayerControlHandle )
 {
     // Reading Layer Control obj, and aLayers.
-    unique_ptr<CADLayerControlObject> spLayerControl( static_cast<CADLayerControlObject *>(pCADFile->getObject( dLayerControlHandle )) );
+    unique_ptr<CADLayerControlObject> spLayerControl( static_cast<CADLayerControlObject *>(pCADFile->GetObject(
+            dLayerControlHandle )) );
     if( spLayerControl == nullptr )
         return CADErrorCodes::TABLE_READ_FAILED;
 
@@ -95,7 +96,7 @@ int CADTables::ReadLayersTable( CADFile * const pCADFile, long dLayerControlHand
 
             // Init CADLayer from CADLayerObject properties
             unique_ptr<CADLayerObject> oCADLayerObj(
-                    static_cast<CADLayerObject *>(pCADFile->getObject( spLayerControl->hLayers[i].getAsLong() )) );
+                    static_cast<CADLayerObject *>(pCADFile->GetObject( spLayerControl->hLayers[i].getAsLong() )) );
 
             oCADLayer.setName( oCADLayerObj->sLayerName );
             oCADLayer.setFrozen( oCADLayerObj->bFrozen );
@@ -116,15 +117,14 @@ int CADTables::ReadLayersTable( CADFile * const pCADFile, long dLayerControlHand
         return CADErrorCodes::TABLE_READ_FAILED;
 
     unique_ptr<CADBlockHeaderObject> spModelSpace(
-            static_cast<CADBlockHeaderObject *>(pCADFile->getObject( iterBlockMS->second.getAsLong() )) );
+            static_cast<CADBlockHeaderObject *>(pCADFile->GetObject( iterBlockMS->second.getAsLong() )) );
 
     auto dCurrentEntHandle = spModelSpace->hEntities[0].getAsLong();
     auto dLastEntHandle    = spModelSpace->hEntities[1].getAsLong();
     while( true )
     {
         unique_ptr<CADEntityObject> spEntityObj( static_cast<CADEntityObject *>(
-                                                 pCADFile->getObject( dCurrentEntHandle,
-                                                                  true )) );
+                                                         pCADFile->GetObject( dCurrentEntHandle, true )) );
 
         if( dCurrentEntHandle == dLastEntHandle )
         {
