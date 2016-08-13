@@ -16,7 +16,7 @@ TEST(reading_geometries, 24127_circles_128_lines)
     ASSERT_EQ (openedDwg->GetLayersCount (), 1);
     CADGeometry * geom;
     CADLayer &layer = openedDwg->GetLayer (0);
-    for ( size_t i = 0; i < layer.GetGeometryCount (); ++i )
+    for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
     {
         geom = layer.getGeometry (i);
         if ( geom->getType() == CADGeometry::GeometryType::CIRCLE )
