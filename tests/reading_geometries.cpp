@@ -13,10 +13,10 @@ TEST(reading_geometries, 24127_circles_128_lines)
     auto circles_count = 0;
     auto lines_count = 0;
 
-    ASSERT_EQ (openedDwg->getLayersCount (), 1);
+    ASSERT_EQ (openedDwg->GetLayersCount (), 1);
     CADGeometry * geom;
-    CADLayer &layer = openedDwg->getLayer (0);
-    for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
+    CADLayer &layer = openedDwg->GetLayer (0);
+    for ( size_t i = 0; i < layer.GetGeometryCount (); ++i )
     {
         geom = layer.getGeometry (i);
         if ( geom->getType() == CADGeometry::GeometryType::CIRCLE )
@@ -39,10 +39,10 @@ TEST(reading_geometries, 256_polylines_7vertexes)
     ASSERT_NE (opened_dwg, nullptr);
     auto lwplines_count = 0;
 
-    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
+    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
 
     CADGeometry * geom;
-    CADLayer &layer = opened_dwg->getLayer (0);
+    CADLayer &layer = opened_dwg->GetLayer (0);
     for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
     {
         geom = layer.getGeometry (i);
@@ -67,9 +67,9 @@ TEST(reading_geometries, 18432_3dpolylines_6vertexes)
     ASSERT_NE (opened_dwg, nullptr);
     auto plines3d_count = 0;
 
-    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
+    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
 
-    CADLayer &layer = opened_dwg->getLayer (0);
+    CADLayer &layer = opened_dwg->GetLayer (0);
     CADGeometry * geom;
     for ( size_t i = 0; i < layer.getGeometryCount (); ++i )
     {
@@ -94,8 +94,8 @@ TEST(reading_geometries, six_3dpolylines)
                                     CADFile::OpenOptions::READ_FAST) ;
     ASSERT_NE (openedDwg, nullptr);
 
-    ASSERT_EQ (openedDwg->getLayersCount (), 1);
-    CADLayer &layer = openedDwg->getLayer (0);
+    ASSERT_EQ (openedDwg->GetLayersCount (), 1);
+    CADLayer &layer = openedDwg->GetLayer (0);
     ASSERT_EQ (layer.getGeometryCount (), 6);
 
     /* First polyline3d
@@ -157,10 +157,10 @@ TEST(reading_circles, triplet)
                                    CADFile::OpenOptions::READ_FAST);
     ASSERT_NE (openedDwg, nullptr);
 
-    ASSERT_EQ (openedDwg->getLayersCount (), 1);
+    ASSERT_EQ (openedDwg->GetLayersCount (), 1);
     // First circle. Should be 0,0,0 (x,y,z)
     // Radius 16.6 Thickness 1.2
-    CADLayer &layer = openedDwg->getLayer (0);
+    CADLayer &layer = openedDwg->GetLayer (0);
 
     ASSERT_GE (layer.getGeometryCount (), 3);
 
@@ -215,9 +215,9 @@ TEST(reading_geometries, 3rays_5xlines)
     auto rays_count = 0;
     auto xlines_count = 0;
 
-    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
+    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
 
-    CADLayer &layer = opened_dwg->getLayer (0);
+    CADLayer &layer = opened_dwg->GetLayer (0);
     ASSERT_EQ ( layer.getGeometryCount(), 8 );
 
     CADGeometry * geom;
@@ -249,9 +249,9 @@ TEST(reading_geometries, 4solid)
 
     auto solids_count = 0;
 
-    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
+    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
 
-    CADLayer &layer = opened_dwg->getLayer (0);
+    CADLayer &layer = opened_dwg->GetLayer (0);
     ASSERT_EQ ( layer.getGeometryCount(), 4 );
 
     CADGeometry * geom;
@@ -278,9 +278,9 @@ TEST(reading_geometries, 1arc)
 
     auto arcs_count = 0;
 
-    ASSERT_EQ (opened_dwg->getLayersCount (), 1);
+    ASSERT_EQ (opened_dwg->GetLayersCount (), 1);
 
-    CADLayer &layer = opened_dwg->getLayer (0);
+    CADLayer &layer = opened_dwg->GetLayer (0);
     ASSERT_EQ ( layer.getGeometryCount(), 1 );
 
     CADGeometry * geom;
