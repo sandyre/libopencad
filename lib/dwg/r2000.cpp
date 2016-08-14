@@ -106,8 +106,8 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
         SkipTV( pabyBuf, nBitOffsetFromStart );
         SkipTV( pabyBuf, nBitOffsetFromStart );
         SkipTV( pabyBuf, nBitOffsetFromStart );
-        skipBITLONG( pabyBuf, nBitOffsetFromStart );
-        skipBITLONG( pabyBuf, nBitOffsetFromStart );
+        SkipBITLONG( pabyBuf, nBitOffsetFromStart );
+        SkipBITLONG( pabyBuf, nBitOffsetFromStart );
     }
 
     CADHandle stCurrentViewportTable = ReadHANDLE( pabyBuf, nBitOffsetFromStart );
@@ -151,7 +151,7 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
     } else
     {
         for( char i = 0; i < 6; ++i )
-            skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+            SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
     }
 
     oHeader.addValue( CADHeader::ATTMODE, ReadBITSHORT( pabyBuf, nBitOffsetFromStart ) );
@@ -181,7 +181,7 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
     } else
     {
         for( char i = 0; i < 19; ++i )
-            skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+            SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
     }
 
     oHeader.addValue( CADHeader::LTSCALE, ReadBITDOUBLE( pabyBuf, nBitOffsetFromStart ) );
@@ -465,33 +465,33 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
         nBitOffsetFromStart += 6;
 
         for( char i = 0; i < 3; ++i )
-            skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+            SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
 
         for( char i = 0; i < 9; ++i )
             SkipBITDOUBLE( pabyBuf, nBitOffsetFromStart );
 
         nBitOffsetFromStart++;
 
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
 
         nBitOffsetFromStart += 4;
 
         for( char i = 0; i < 14; ++i )
-            skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+            SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
 
         nBitOffsetFromStart += 2;
 
         for( char i = 0; i < 4; ++i )
-            skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+            SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
 
         nBitOffsetFromStart++;
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
 
         for( char i = 0; i < 5; ++i )
             SkipHANDLE( pabyBuf, nBitOffsetFromStart );
 
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
     }
 
     CADHandle stBlocksTable = ReadHANDLE( pabyBuf, nBitOffsetFromStart );
@@ -544,8 +544,8 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
         oHeader.addValue( CADHeader::TSTACKSIZE, ReadBITSHORT( pabyBuf, nBitOffsetFromStart ) );
     } else
     {
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
     }
 
     oHeader.addValue( CADHeader::HYPERLINKBASE, ReadTV( pabyBuf, nBitOffsetFromStart ) );
@@ -573,7 +573,7 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
         oHeader.addValue( CADHeader::OLESTARTUP, static_cast<bool>(Flags & 0x4000) );
     } else
     {
-        skipBITLONG( pabyBuf, nBitOffsetFromStart );
+        SkipBITLONG( pabyBuf, nBitOffsetFromStart );
     }
 
     oHeader.addValue( CADHeader::INSUNITS, ReadBITSHORT( pabyBuf, nBitOffsetFromStart ) );
@@ -609,10 +609,10 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
         SkipHANDLE( pabyBuf, nBitOffsetFromStart );
         SkipHANDLE( pabyBuf, nBitOffsetFromStart );
         SkipHANDLE( pabyBuf, nBitOffsetFromStart );
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
-        skipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
+        SkipBITSHORT( pabyBuf, nBitOffsetFromStart );
     }
 
     /*short nCRC =*/ ReadRAWSHORT( pabyBuf, nBitOffsetFromStart );

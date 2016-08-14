@@ -151,8 +151,8 @@ long          ReadUMCHAR( const char * pabyInput, size_t& nBitOffsetFromStart );
 unsigned int  ReadMSHORT( const char * pabyInput, size_t& nBitOffsetFromStart );
 std::string   ReadTV( const char * pabyInput, size_t& nBitOffsetFromStart );
 void          SkipTV( const char * pabyInput, size_t& nBitOffsetFromStart );
-void          skipBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart );
-void          skipBITSHORT( const char * pabyInput, size_t& nBitOffsetFromStart );
+void          SkipBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart );
+void          SkipBITSHORT( const char * pabyInput, size_t& nBitOffsetFromStart );
 
 CADVector ReadVector( const char * pabyInput, size_t& nBitOffsetFromStart );
 CADVector ReadRAWVector( const char * pabyInput, size_t& nBitOffsetFromStart );

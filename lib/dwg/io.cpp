@@ -259,11 +259,11 @@ bool ReadBIT( const char * pabyInput, size_t& nBitOffsetFromStart )
 
     const char * pBoolByte = pabyInput + nByteOffset;
 
-    unsigned char result = ( pBoolByte[0] >> ( 7 - nBitOffsetInByte ) ) & binary(00000001);
+    unsigned char resultVal = ( pBoolByte[0] >> ( 7 - nBitOffsetInByte ) ) & binary(00000001);
 
     ++nBitOffsetFromStart;
 
-    return result;
+    return resultVal == 0 ? false : true;
 }
 
 short ReadBITSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
@@ -802,7 +802,7 @@ void SkipTV( const char * pabyInput, size_t& nBitOffsetFromStart )
     nBitOffsetFromStart += size_t( stringLength * 8 );
 }
 
-void skipBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart )
+void SkipBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     unsigned char BITCODE = Read2B( pabyInput, nBitOffsetFromStart );
     switch( BITCODE )
@@ -821,7 +821,7 @@ void skipBITLONG( const char * pabyInput, size_t& nBitOffsetFromStart )
     }
 }
 
-void skipBITSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
+void SkipBITSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     unsigned char BITCODE = Read2B( pabyInput, nBitOffsetFromStart );
     switch( BITCODE )
@@ -840,7 +840,7 @@ void skipBITSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
     }
 }
 
-void SkipBIT( const char */*pabyInput*/, size_t& nBitOffsetFromStart )
+void SkipBIT( const char * /*pabyInput*/, size_t& nBitOffsetFromStart )
 {
     ++nBitOffsetFromStart;
 }
