@@ -34,6 +34,7 @@
 #include <memory>
 #include <cassert>
 #include <iostream>
+
 using namespace std;
 
 CADTables::CADTables()
@@ -69,7 +70,7 @@ size_t CADTables::GetLayerCount() const
     return aLayers.size();
 }
 
-CADLayer &CADTables::GetLayer( size_t iIndex )
+CADLayer& CADTables::GetLayer( size_t iIndex )
 {
     return aLayers[iIndex];
 }
@@ -83,8 +84,8 @@ CADHandle CADTables::GetTableHandle( enum TableType eType )
 int CADTables::ReadLayersTable( CADFile * const pCADFile, long dLayerControlHandle )
 {
     // Reading Layer Control obj, and aLayers.
-    unique_ptr<CADLayerControlObject> spLayerControl( static_cast<CADLayerControlObject *>(pCADFile->GetObject(
-            dLayerControlHandle )) );
+    unique_ptr<CADLayerControlObject> spLayerControl(
+            static_cast<CADLayerControlObject *>(pCADFile->GetObject( dLayerControlHandle )) );
     if( spLayerControl == nullptr )
         return CADErrorCodes::TABLE_READ_FAILED;
 
@@ -149,8 +150,7 @@ int CADTables::ReadLayersTable( CADFile * const pCADFile, long dLayerControlHand
                 ++dCurrentEntHandle;
             else
                 dCurrentEntHandle = spEntityObj->stChed.hNextEntity.getAsLong( spEntityObj->stCed.hObjectHandle );
-        }
-        else
+        } else
         {
 #ifdef _DEBUG
             assert( 0 );
@@ -165,12 +165,12 @@ int CADTables::ReadLayersTable( CADFile * const pCADFile, long dLayerControlHand
 
 void CADTables::FillLayer( const CADEntityObject * pEntityObject )
 {
-    for( CADLayer &oLayer : aLayers )
+    for( CADLayer& oLayer : aLayers )
     {
         if( pEntityObject->stChed.hLayer.getAsLong( pEntityObject->stCed.hObjectHandle ) == oLayer.getHandle() )
         {
-            DebugMsg( "Object with type: %s is attached to layer named: %s\n", getNameByType( pEntityObject->getType() ).c_str(),
-                      oLayer.getName().c_str() );
+            DebugMsg( "Object with type: %s is attached to layer named: %s\n",
+                      getNameByType( pEntityObject->getType() ).c_str(), oLayer.getName().c_str() );
 
             oLayer.addHandle( pEntityObject->stCed.hObjectHandle.getAsLong(), pEntityObject->getType() );
             break;

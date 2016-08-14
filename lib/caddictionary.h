@@ -28,7 +28,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
-
 #ifndef CADDICTIONARY_H
 #define CADDICTIONARY_H
 
@@ -60,7 +59,7 @@ class OCAD_EXTERN CADXRecord : public CADDictionaryRecord
 {
 public:
     CADXRecord();
-    
+
     const string&           getRecordData() const;
     void                    setRecordData( const string& data );
 

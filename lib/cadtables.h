@@ -33,9 +33,11 @@
 
 #include "cadheader.h"
 #include "cadlayer.h"
+
 using namespace std;
 
 class CADFile;
+
 /**
  * @brief The CAD tables class. Store tables
  */
@@ -69,18 +71,18 @@ public:
 public:
     CADTables();
 
-    void                AddTable( enum TableType eType, CADHandle hHandle );
-    CADHandle           GetTableHandle( enum TableType eType );
-    int                 ReadTable( CADFile * const pCADFile, enum TableType eType );
-    size_t              GetLayerCount() const;
-    CADLayer&           GetLayer( size_t iIndex );
+    void      AddTable( enum TableType eType, CADHandle hHandle );
+    CADHandle GetTableHandle( enum TableType eType );
+    int       ReadTable( CADFile * const pCADFile, enum TableType eType );
+    size_t    GetLayerCount() const;
+    CADLayer& GetLayer( size_t iIndex );
 
 protected:
-    int                 ReadLayersTable( CADFile * const pCADFile, long dLayerControlHandle );
-    void                FillLayer( const CADEntityObject * pEntityObject );
+    int  ReadLayersTable( CADFile * const pCADFile, long dLayerControlHandle );
+    void FillLayer( const CADEntityObject * pEntityObject );
 protected:
-    map<enum TableType, CADHandle>  mapTables;
-    vector<CADLayer>                aLayers;
+    map<enum TableType, CADHandle> mapTables;
+    vector<CADLayer>               aLayers;
 };
 
 #endif // CADTABLES_H

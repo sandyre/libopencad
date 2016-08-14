@@ -43,7 +43,7 @@ using namespace std;
 class OCAD_EXTERN CADLayer
 {
 public:
-    CADLayer( CADFile * file );
+           CADLayer( CADFile * file );
     string getName() const;
     void   setName( const string& value );
 

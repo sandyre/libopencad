@@ -156,11 +156,11 @@ void CADLayer::addHandle( long handle, CADObject::ObjectType type, long cadinser
         // TODO: transform insert to block of objects (do we need to transform
         // coordinates according to insert point)?
         unique_ptr<CADObject> insert( pCADFile->GetObject( handle, false ) );
-        CADInsertObject       * pInsert = static_cast<CADInsertObject *>(insert.get());
+        CADInsertObject * pInsert = static_cast<CADInsertObject *>(insert.get());
         if( nullptr != pInsert )
         {
             unique_ptr<CADObject> blockHeader( pCADFile->GetObject( pInsert->hBlockHeader.getAsLong(), false ) );
-            CADBlockHeaderObject  * pBlockHeader = static_cast<CADBlockHeaderObject *>(blockHeader.get());
+            CADBlockHeaderObject * pBlockHeader = static_cast<CADBlockHeaderObject *>(blockHeader.get());
             if( nullptr != pBlockHeader )
             {
 #ifdef _DEBUG
