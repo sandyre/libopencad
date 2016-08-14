@@ -122,7 +122,7 @@ int CADTables::ReadLayersTable( CADFile * const pCADFile, long dLayerControlHand
 
     auto dCurrentEntHandle = spModelSpace->hEntities[0].getAsLong();
     auto dLastEntHandle    = spModelSpace->hEntities[1].getAsLong();
-    while( true )
+    while( dCurrentEntHandle != 0 )
     {
         unique_ptr<CADEntityObject> spEntityObj( static_cast<CADEntityObject *>(
                                                          pCADFile->GetObject( dCurrentEntHandle, true )) );
