@@ -639,7 +639,7 @@ int DWGFileR2000::ReadClasses( enum OpenOptions eOptions )
 {
     if( eOptions == OpenOptions::READ_ALL || eOptions == OpenOptions::READ_FAST )
     {
-        char   * pabySectionContent;
+        char * pabySectionContent;
         char   buffer[255];
         size_t dSectionSize        = 0;
         size_t nBitOffsetFromStart = 0;
@@ -694,7 +694,7 @@ int DWGFileR2000::CreateFileMap()
 {
     // Seems like ODA specification is completely awful. CRC is included in section size.
     // section size
-    char           * pabySectionContent;
+    char * pabySectionContent;
     unsigned short dSectionSize;
     size_t         nRecordsInSection;
     size_t         nSection = 0;
@@ -1543,12 +1543,11 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
         vector<CADAttrib>           blockRefAttributes;
         unique_ptr<CADInsertObject> spoBlockRef( static_cast<CADInsertObject *>( GetObject( blockrefhandle ) ) );
 
-        long dCurrentEntHandle, dLastEntHandle;
+        long dCurrentEntHandle = spoBlockRef->hAttribs[0].getAsLong();
+        long dLastEntHandle    = spoBlockRef->hAttribs[0].getAsLong();
+
         while( spoBlockRef->bHasAttribs )
         {
-            dCurrentEntHandle = spoBlockRef->hAtrribs[0].getAsLong();
-            dLastEntHandle    = spoBlockRef->hAtrribs[1].getAsLong();
-
             // FIXME: memory leak, somewhere in CAD* destructor is a bug
             CADEntityObject * attDefObj = static_cast<CADEntityObject *>(
                     GetObject( dCurrentEntHandle, true ) );
@@ -2486,8 +2485,8 @@ CADInsertObject * DWGFileR2000::getInsert( int dObjectType, long dObjectSize, CA
     insert->hBlockHeader = ReadHANDLE( pabyInput, nBitOffsetFromStart );
     if( insert->bHasAttribs )
     {
-        insert->hAtrribs.push_back( ReadHANDLE( pabyInput, nBitOffsetFromStart ) );
-        insert->hAtrribs.push_back( ReadHANDLE( pabyInput, nBitOffsetFromStart ) );
+        insert->hAttribs.push_back( ReadHANDLE( pabyInput, nBitOffsetFromStart ) );
+        insert->hAttribs.push_back( ReadHANDLE( pabyInput, nBitOffsetFromStart ) );
         insert->hSeqend = ReadHANDLE( pabyInput, nBitOffsetFromStart );
     }
 

@@ -403,7 +403,7 @@ public:
     long      nObjectsOwned;
 
     CADHandle      hBlockHeader;
-    CADHandleArray hAtrribs;
+    CADHandleArray hAttribs;
     CADHandle      hSeqend; // if bHasAttribs == true
 };
 
