@@ -760,13 +760,13 @@ int DWGFileR2000::CreateFileMap()
     return CADErrorCodes::SUCCESS;
 }
 
-CADObject * DWGFileR2000::GetObject( long index, bool bHandlesOnly )
+CADObject * DWGFileR2000::GetObject( long dHandle, bool bHandlesOnly )
 {
     CADObject * readed_object  = nullptr;
 
     char   pabyObjectSize[8];
     size_t nBitOffsetFromStart = 0;
-    pFileIO->Seek( mapObjects[index], CADFileIO::SeekOrigin::BEG );
+    pFileIO->Seek( mapObjects[dHandle], CADFileIO::SeekOrigin::BEG );
     pFileIO->Read( pabyObjectSize, 8 );
     unsigned int dObjectSize = ReadMSHORT( pabyObjectSize, nBitOffsetFromStart );
 
@@ -775,7 +775,7 @@ CADObject * DWGFileR2000::GetObject( long index, bool bHandlesOnly )
     size_t             nSectionSize = dObjectSize + nBitOffsetFromStart / 8 + 2;
     unique_ptr<char[]> sectionContentPtr( new char[nSectionSize + 4] );
     char * pabySectionContent = sectionContentPtr.get();
-    pFileIO->Seek( mapObjects[index], CADFileIO::SeekOrigin::BEG );
+    pFileIO->Seek( mapObjects[dHandle], CADFileIO::SeekOrigin::BEG );
     pFileIO->Read( pabySectionContent, nSectionSize );
 
     nBitOffsetFromStart = 0;
@@ -981,10 +981,10 @@ CADObject * DWGFileR2000::GetObject( long index, bool bHandlesOnly )
     return readed_object;
 }
 
-CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
+CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long dBlockRefHandle )
 {
     CADGeometry * poGeometry = nullptr;
-    unique_ptr<CADEntityObject> readedObject( static_cast<CADEntityObject *>(GetObject( geomhandle )) );
+    unique_ptr<CADEntityObject> readedObject( static_cast<CADEntityObject *>(GetObject( dHandle )) );
 
     if( nullptr == readedObject )
         return nullptr;
@@ -997,7 +997,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADArcObject * cadArc = static_cast<CADArcObject *>(
                     readedObject.get());
 
-            arc->setColor( cadArc->stCed.nCMColor );
             arc->setPosition( cadArc->vertPosition );
             arc->setExtrusion( cadArc->vectExtrusion );
             arc->setRadius( cadArc->dfRadius );
@@ -1015,7 +1014,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADPointObject * cadPoint = static_cast<CADPointObject *>(
                     readedObject.get());
 
-            point->setColor( cadPoint->stCed.nCMColor );
             point->setPosition( cadPoint->vertPosition );
             point->setExtrusion( cadPoint->vectExtrusion );
             point->setXAxisAng( cadPoint->dfXAxisAng );
@@ -1031,7 +1029,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADPolyline3DObject * cadPolyline3D          = static_cast<CADPolyline3DObject *>(
                     readedObject.get());
 
-            polyline->setColor( cadPolyline3D->stCed.nCMColor );
             // TODO: code can be much simplified if CADHandle will be used.
             // to do so, == and ++ operators should be implemented.
             unique_ptr<CADVertex3DObject> vertex;
@@ -1076,7 +1073,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
 
             lwPolyline->setBulges( cadlwPolyline->adfBulges );
             lwPolyline->setClosed( cadlwPolyline->bClosed );
-            lwPolyline->setColor( cadlwPolyline->stCed.nCMColor );
             lwPolyline->setConstWidth( cadlwPolyline->dfConstWidth );
             lwPolyline->setElevation( cadlwPolyline->dfElevation );
             for( const CADVector& vertex : cadlwPolyline->avertVertexes )
@@ -1094,7 +1090,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADCircleObject * cadCircle = static_cast<CADCircleObject *>(
                     readedObject.get());
 
-            circle->setColor( cadCircle->stCed.nCMColor );
             circle->setPosition( cadCircle->vertPosition );
             circle->setExtrusion( cadCircle->vectExtrusion );
             circle->setRadius( cadCircle->dfRadius );
@@ -1111,7 +1106,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
                     readedObject.get() );
 
             attrib->setPosition( cadAttrib->vertInsetionPoint );
-            attrib->setColor( cadAttrib->stCed.nCMColor );
             attrib->setExtrusion( cadAttrib->vectExtrusion );
             attrib->setRotationAngle( cadAttrib->dfRotationAng );
             attrib->setAlignmentPoint( cadAttrib->vertAlignmentPoint );
@@ -1134,7 +1128,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
                     readedObject.get() );
 
             attdef->setPosition( cadAttrib->vertInsetionPoint );
-            attdef->setColor( cadAttrib->stCed.nCMColor );
             attdef->setExtrusion( cadAttrib->vectExtrusion );
             attdef->setRotationAngle( cadAttrib->dfRotationAng );
             attdef->setAlignmentPoint( cadAttrib->vertAlignmentPoint );
@@ -1157,7 +1150,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADEllipseObject * cadEllipse = static_cast<CADEllipseObject *>(
                     readedObject.get());
 
-            ellipse->setColor( cadEllipse->stCed.nCMColor );
             ellipse->setPosition( cadEllipse->vertPosition );
             ellipse->setSMAxis( cadEllipse->vectSMAxis );
             ellipse->setAxisRatio( cadEllipse->dfAxisRatio );
@@ -1177,7 +1169,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADPoint3D ptEnd( cadLine->vertEnd, cadLine->dfThickness );
 
             CADLine * line = new CADLine( ptBeg, ptEnd );
-            line->setColor( cadLine->stCed.nCMColor );
 
             poGeometry = line;
             break;
@@ -1189,7 +1180,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADRayObject * cadRay = static_cast<CADRayObject *>(
                     readedObject.get());
 
-            ray->setColor( cadRay->stCed.nCMColor );
             ray->setVectVector( cadRay->vectVector );
             ray->setPosition( cadRay->vertPosition );
 
@@ -1203,8 +1193,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADSplineObject * cadSpline = static_cast<CADSplineObject *>(
                     readedObject.get());
 
-
-            spline->setColor( cadSpline->stCed.nCMColor );
             spline->setScenario( cadSpline->dScenario );
             spline->setDegree( cadSpline->dDegree );
             if( spline->getScenario() == 2 )
@@ -1235,7 +1223,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADTextObject * cadText = static_cast<CADTextObject *>(
                     readedObject.get());
 
-            text->setColor( cadText->stCed.nCMColor );
             text->setPosition( cadText->vertInsetionPoint );
             text->setTextValue( cadText->sTextValue );
             text->setRotationAngle( cadText->dfRotationAng );
@@ -1253,7 +1240,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADSolidObject * cadSolid = static_cast<CADSolidObject *>(
                     readedObject.get());
 
-            solid->setColor( cadSolid->stCed.nCMColor );
             solid->setElevation( cadSolid->dfElevation );
             solid->setThickness( cadSolid->dfThickness );
             for( const CADVector& corner : cadSolid->avertCorners )
@@ -1274,7 +1260,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
                                                                GetObject( cadImage->hImageDef.getAsLong() ) ) );
 
 
-            image->setColor( cadImage->stCed.nCMColor );
             image->setClippingBoundaryType( cadImage->dClipBoundaryType );
             image->setFilePath( cadImageDef->sFilePath );
             image->setVertInsertionPoint( cadImage->vertInsertion );
@@ -1302,7 +1287,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADMLineObject * cadmLine = static_cast<CADMLineObject *>(
                     readedObject.get());
 
-            mline->setColor( cadmLine->stCed.nCMColor );
             mline->setScale( cadmLine->dfScale );
             mline->setOpened( cadmLine->dOpenClosed == 1 ? true : false );
             for( const CADMLineVertex& vertex : cadmLine->avertVertexes )
@@ -1317,8 +1301,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADMText       * mtext    = new CADMText();
             CADMTextObject * cadmText = static_cast<CADMTextObject *>(
                     readedObject.get());
-
-            mtext->setColor( cadmText->stCed.nCMColor );
 
             mtext->setTextValue( cadmText->sTextValue );
             mtext->setXAxisAng( cadmText->vectXAxisDir.getX() ); //TODO: is this needed?
@@ -1343,7 +1325,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
 
             // TODO: code can be much simplified if CADHandle will be used.
             // to do so, == and ++ operators should be implemented.
-            polyline->setColor( cadpolyPface->stCed.nCMColor );
             unique_ptr<CADVertexPFaceObject> vertex;
             auto                             dCurrentEntHandle = cadpolyPface->hVertexes[0].getAsLong();
             auto                             dLastEntHandle    = cadpolyPface->hVertexes[1].getAsLong();
@@ -1391,7 +1372,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CADXLineObject * cadxLine = static_cast<CADXLineObject *>(
                     readedObject.get());
 
-            xline->setColor( cadxLine->stCed.nCMColor );
             xline->setVectVector( cadxLine->vectVector );
             xline->setPosition( cadxLine->vertPosition );
 
@@ -1405,7 +1385,6 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
             CAD3DFaceObject * cad3DFace = static_cast<CAD3DFaceObject *>(
                     readedObject.get());
 
-            face->setColor( cad3DFace->stCed.nCMColor );
             for( const CADVector& corner : cad3DFace->avertCorners )
                 face->addCorner( corner );
             face->setInvisFlags( cad3DFace->dInvisFlags );
@@ -1425,6 +1404,18 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
 
     if( poGeometry == nullptr )
         return nullptr;
+
+    // Applying color
+    if( readedObject->stCed.nCMColor == 256 ) // BYLAYER CASE
+    {
+        CADLayer& oCurrentLayer = this->GetLayer( iLayerIndex );
+        poGeometry->setColor( CADACIColors[oCurrentLayer.getColor()] );
+    }
+    else if( readedObject->stCed.nCMColor <= 255 &&
+             readedObject->stCed.nCMColor >= 0 ) // Excessive check until BYBLOCK case will not be implemented
+    {
+        poGeometry->setColor( CADACIColors[readedObject->stCed.nCMColor] );
+    }
 
     // Applying EED
     // Casting object's EED to a vector of strings
@@ -1538,10 +1529,10 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
     }
 
     // Getting block reference attributes.
-    if( blockrefhandle != 0 )
+    if( dBlockRefHandle != 0 )
     {
         vector<CADAttrib>           blockRefAttributes;
-        unique_ptr<CADInsertObject> spoBlockRef( static_cast<CADInsertObject *>( GetObject( blockrefhandle ) ) );
+        unique_ptr<CADInsertObject> spoBlockRef( static_cast<CADInsertObject *>( GetObject( dBlockRefHandle ) ) );
 
         long dCurrentEntHandle = spoBlockRef->hAttribs[0].getAsLong();
         long dLastEntHandle    = spoBlockRef->hAttribs[0].getAsLong();
@@ -1558,7 +1549,7 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
                     break;
 
                 CADAttrib * attrib = static_cast<CADAttrib *>(
-                        GetGeometry( dCurrentEntHandle ) );
+                        GetGeometry( iLayerIndex, dCurrentEntHandle ) );
 
                 if( attrib )
                 {
@@ -1577,7 +1568,7 @@ CADGeometry * DWGFileR2000::GetGeometry( long geomhandle, long blockrefhandle )
                     dCurrentEntHandle = attDefObj->stChed.hNextEntity.getAsLong( attDefObj->stCed.hObjectHandle );
 
                 CADAttrib * attrib = static_cast<CADAttrib *>(
-                        GetGeometry( dCurrentEntHandle ) );
+                        GetGeometry( iLayerIndex, dCurrentEntHandle ) );
 
                 if( attrib )
                 {

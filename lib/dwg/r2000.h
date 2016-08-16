@@ -86,8 +86,8 @@ protected:
     virtual int ReadClasses( enum OpenOptions eOptions ) override;
     virtual int CreateFileMap() override;
 
-    CADObject   * GetObject( long index, bool bHandlesOnly = false ) override;
-    CADGeometry * GetGeometry( long index, long blockrefhandle = 0 ) override;
+    CADObject   * GetObject( long dHandle, bool bHandlesOnly = false ) override;
+    CADGeometry * GetGeometry( size_t iLayerIndex, long dHandle, long dBlockRefHandle = 0 ) override;
 
     CADDictionary GetNOD() override;
 protected:

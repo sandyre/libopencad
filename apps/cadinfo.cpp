@@ -34,10 +34,12 @@
 
 #include <cstddef>
 #include <iostream>
+#include <iomanip>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <memory>
+#include <cadcolors.h>
 
 using namespace std;
 
@@ -185,7 +187,15 @@ int main(int argc, char *argv[])
                 continue;
 
             if(!bSummary)
-                geom->print ();
+            {
+                geom->print();
+                ios init(NULL);
+                init.copyfmt(cout);
+                cout << "Entity color: #";
+                cout << hex << setw(2) << setfill('0') << (int)geom->getColor().R << (int)geom->getColor().G << (int)geom->getColor().B;
+                cout << "ff" << endl;
+                cout.copyfmt(init);
+            }
 
             auto geom_attrs = geom->getBlockAttributes ();
             for( const auto& attdef : geom_attrs )

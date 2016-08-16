@@ -129,9 +129,9 @@ RGBColor CADGeometry::getColor() const
     return geometry_color;
 }
 
-void CADGeometry::setColor( int ACIColorIndex )
+void CADGeometry::setColor( RGBColor color )
 {
-    geometry_color = CADACIColors[ACIColorIndex];
+    geometry_color = color;
 }
 
 vector<string> CADGeometry::getEED() const

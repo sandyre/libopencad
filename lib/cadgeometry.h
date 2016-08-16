@@ -97,7 +97,7 @@ public:
     double            getThickness() const;
     void              setThickness( double thicknes );
     RGBColor          getColor() const;
-    void              setColor( int ACIColorIndex );// TODO: in 2004+ ACI is not the only way to set the color.
+    void              setColor( RGBColor color );// TODO: in 2004+ ACI is not the only way to set the color.
 
     vector<CADAttrib> getBlockAttributes() const;
     void              setBlockAttributes( const vector<CADAttrib>& value );

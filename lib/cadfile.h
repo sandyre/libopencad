@@ -92,11 +92,12 @@ protected:
 
     /**
      * @brief read geometry from CAD file
+     * @param size_t LayerIndex
      * @param handle Handle of CAD object
      * @param handle Handle of BlockRef (0 if geometry is not in block reference)
      * @return NULL if failed or pointer which mast be feed by user
      */
-    virtual CADGeometry * GetGeometry( long dHandle, long dBlockRefHandle = 0 ) = 0;
+    virtual CADGeometry * GetGeometry( size_t iLayerIndex, long dHandle, long dBlockRefHandle = 0 ) = 0;
 
     /**
      * @brief initially read some basic values and section locator

@@ -146,7 +146,7 @@ void CADLayer::addHandle( long handle, CADObject::ObjectType type, long cadinser
 #endif //_DEBUG
     if( type == CADObject::ATTRIB || type == CADObject::ATTDEF )
     {
-        unique_ptr<CADAttdef> attdef( static_cast< CADAttdef *>( pCADFile->GetGeometry( handle ) ) );
+        unique_ptr<CADAttdef> attdef( static_cast< CADAttdef *>( pCADFile->GetGeometry( this->getId()-1, handle ) ) );
 
         attributesNames.insert( attdef->getTag() );
     }
@@ -245,7 +245,7 @@ size_t CADLayer::getGeometryCount() const
 CADGeometry * CADLayer::getGeometry( size_t index )
 {
     auto handleBlockRefPair = geometryHandles[index];
-    CADGeometry * pGeom = pCADFile->GetGeometry( handleBlockRefPair.first, handleBlockRefPair.second );
+    CADGeometry * pGeom = pCADFile->GetGeometry( this->getId()-1, handleBlockRefPair.first, handleBlockRefPair.second );
     if( nullptr == pGeom )
         return nullptr;
     auto iter = transformations.find( handleBlockRefPair.first );
@@ -264,7 +264,7 @@ size_t CADLayer::getImageCount() const
 
 CADImage * CADLayer::getImage( size_t index )
 {
-    return static_cast<CADImage *>(pCADFile->GetGeometry( imageHandles[index] ));
+    return static_cast<CADImage *>(pCADFile->GetGeometry( this->getId()-1, imageHandles[index] ));
 }
 
 bool CADLayer::addAttribute( const CADObject * pObject )

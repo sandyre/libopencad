@@ -41,9 +41,8 @@ typedef struct
 /**
  * @brief Lookup table to translate ACI to RGB color.
  */
-static const RGBColor CADACIColors[257]
+static const RGBColor CADACIColors[256]
 {
-        { 0,   0,   0 }, // FIXME: ACI indexes counts from 0, but CMColor value never equals 0?
         { 0,   0,   0 },
         { 255, 0,   0 },
         { 255, 255, 0 },
