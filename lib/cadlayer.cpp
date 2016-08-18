@@ -231,22 +231,22 @@ void CADLayer::addHandle( long handle, CADObject::ObjectType type, long cadinser
             {
                 if( isSupportedGeometryType( type ) )
                 {
-                    for( auto cIter = geometryTypes.cbegin(); cIter != geometryTypes.cend(); ++cIter )
+                    if( geometryTypes.size() == 0 ) geometryTypes.push_back( type );
+
+                    if( std::find( geometryTypes.begin(), geometryTypes.end(), type ) == geometryTypes.end() )
                     {
-                        if( * cIter == type ) break;
-                        if( cIter == geometryTypes.cend() - 1 )
-                            geometryTypes.push_back( type );
+                        geometryTypes.push_back( type );
                     }
                     geometryHandles.push_back( make_pair( handle, cadinserthandle ) );
                 }
             }
             else
             {
-                for( auto cIter = geometryTypes.cbegin(); cIter != geometryTypes.cend(); ++cIter )
+                if( geometryTypes.size() == 0 ) geometryTypes.push_back( type );
+
+                if( std::find( geometryTypes.begin(), geometryTypes.end(), type ) == geometryTypes.end() )
                 {
-                    if( * cIter == type ) break;
-                    if( cIter == geometryTypes.cend() - 1 )
-                        geometryTypes.push_back( type );
+                    geometryTypes.push_back( type );
                 }
                 geometryHandles.push_back( make_pair( handle, cadinserthandle ) );
             }
