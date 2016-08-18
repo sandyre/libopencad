@@ -88,7 +88,7 @@ public:
      * @brief returns geometry type of this layer. -2 if geometry type is undefined,
      * -1 if there are more than 1 type of geometries, or geometry type (dwg code).
      */
-    short getGeometryType();
+    unordered_set<CADObject::ObjectType>    getGeometryType();
 
 protected:
     bool addAttribute( const CADObject * pObject );
@@ -103,8 +103,8 @@ protected:
     short  color;
     size_t layerId;
     long   layer_handle;
-    short  geometryType; // if all geometry is same type set this type or -1
 
+    unordered_set<CADObject::ObjectType>    geometryTypes;
     unordered_set<string>                   attributesNames;
     vector<pair<long, long> >               geometryHandles; // second param is CADInsert handle, 0 if its not a geometry in block ref.
     vector<long>                            imageHandles;

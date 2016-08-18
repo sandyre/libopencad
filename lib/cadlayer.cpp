@@ -227,6 +227,7 @@ void CADLayer::addHandle( long handle, CADObject::ObjectType type, long cadinser
             imageHandles.push_back( handle );
         else
         {
+            geometryTypes.insert( type );
             geometryHandles.push_back( make_pair( handle, cadinserthandle ) );
         }
         if( geometryType == -2 ) // if not inited set type for first geometry
@@ -285,9 +286,9 @@ bool CADLayer::addAttribute( const CADObject * pObject )
     return false;
 }
 
-short CADLayer::getGeometryType()
+unordered_set<CADObject::ObjectType> CADLayer::getGeometryTypes()
 {
-    return geometryType;
+    return geometryTypes;
 }
 
 unordered_set<string> CADLayer::getAttributesTags()
