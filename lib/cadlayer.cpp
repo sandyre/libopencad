@@ -35,7 +35,7 @@
 
 CADLayer::CADLayer( CADFile * file ) : frozen( false ), on( true ), frozenByDefault( false ), locked( false ),
                                        plotting( false ), lineWeight( 1 ), color( 0 ), layerId( 0 ), layer_handle( 0 ),
-                                       geometryType( -2 ), pCADFile( file )
+                                       pCADFile( file )
 {
 }
 
@@ -146,7 +146,7 @@ void CADLayer::addHandle( long handle, CADObject::ObjectType type, long cadinser
 #endif //_DEBUG
     if( type == CADObject::ATTRIB || type == CADObject::ATTDEF )
     {
-        unique_ptr<CADAttdef> attdef( static_cast< CADAttdef *>( pCADFile->GetGeometry( this->getId()-1, handle ) ) );
+        unique_ptr<CADAttdef> attdef( static_cast< CADAttdef *>( pCADFile->GetGeometry( this->getId() - 1, handle ) ) );
 
         attributesNames.insert( attdef->getTag() );
     }
@@ -227,14 +227,14 @@ void CADLayer::addHandle( long handle, CADObject::ObjectType type, long cadinser
             imageHandles.push_back( handle );
         else
         {
-            geometryTypes.insert( type );
+            for( auto cIter = geometryTypes.cbegin(); cIter != geometryTypes.cend(); ++cIter )
+            {
+                if( * cIter == type ) break;
+                if( cIter == geometryTypes.cend() - 1 )
+                    geometryTypes.push_back( type );
+            }
             geometryHandles.push_back( make_pair( handle, cadinserthandle ) );
         }
-        if( geometryType == -2 ) // if not inited set type for first geometry
-            geometryType = type;
-        else if( geometryType !=
-                 type ) // if type differs from previous geometry this is geometry bag (geometry type any)
-            geometryType = -1;
     }
 }
 
@@ -246,7 +246,8 @@ size_t CADLayer::getGeometryCount() const
 CADGeometry * CADLayer::getGeometry( size_t index )
 {
     auto handleBlockRefPair = geometryHandles[index];
-    CADGeometry * pGeom = pCADFile->GetGeometry( this->getId()-1, handleBlockRefPair.first, handleBlockRefPair.second );
+    CADGeometry * pGeom = pCADFile->GetGeometry( this->getId() - 1, handleBlockRefPair.first,
+                                                 handleBlockRefPair.second );
     if( nullptr == pGeom )
         return nullptr;
     auto iter = transformations.find( handleBlockRefPair.first );
@@ -265,7 +266,7 @@ size_t CADLayer::getImageCount() const
 
 CADImage * CADLayer::getImage( size_t index )
 {
-    return static_cast<CADImage *>(pCADFile->GetGeometry( this->getId()-1, imageHandles[index] ));
+    return static_cast<CADImage *>(pCADFile->GetGeometry( this->getId() - 1, imageHandles[index] ));
 }
 
 bool CADLayer::addAttribute( const CADObject * pObject )
@@ -286,7 +287,7 @@ bool CADLayer::addAttribute( const CADObject * pObject )
     return false;
 }
 
-unordered_set<CADObject::ObjectType> CADLayer::getGeometryTypes()
+vector<CADObject::ObjectType> CADLayer::getGeometryTypes()
 {
     return geometryTypes;
 }

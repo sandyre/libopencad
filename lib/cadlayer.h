@@ -85,10 +85,9 @@ public:
     CADImage * getImage( size_t index );
 
     /**
-     * @brief returns geometry type of this layer. -2 if geometry type is undefined,
-     * -1 if there are more than 1 type of geometries, or geometry type (dwg code).
+     * @brief returns a vector of presented geometries types
      */
-    unordered_set<CADObject::ObjectType>    getGeometryType();
+    vector<CADObject::ObjectType> getGeometryTypes();
 
 protected:
     bool addAttribute( const CADObject * pObject );
@@ -104,7 +103,7 @@ protected:
     size_t layerId;
     long   layer_handle;
 
-    unordered_set<CADObject::ObjectType>    geometryTypes;
+    vector<CADObject::ObjectType>           geometryTypes; // FIXME: replace with hashset would be perfect
     unordered_set<string>                   attributesNames;
     vector<pair<long, long> >               geometryHandles; // second param is CADInsert handle, 0 if its not a geometry in block ref.
     vector<long>                            imageHandles;
