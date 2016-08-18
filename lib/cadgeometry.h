@@ -373,7 +373,8 @@ public:
 
     double getElevation() const;
     void   setElevation( double value );
-    void   addAverCorner( const CADVector& corner );
+    void   addCorner( const CADVector& corner );
+    vector<CADVector> getCorners();
 
     virtual void print() const override;
     virtual void transform( const Matrix& matrix ) override;

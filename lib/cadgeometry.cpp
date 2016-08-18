@@ -753,9 +753,14 @@ void CADSolid::setElevation( double value )
     elevation = value;
 }
 
-void CADSolid::addAverCorner( const CADVector& corner )
+void CADSolid::addCorner( const CADVector& corner )
 {
     avertCorners.push_back( corner );
+}
+
+vector<CADVector> CADSolid::getCorners()
+{
+    return avertCorners;
 }
 
 //------------------------------------------------------------------------------

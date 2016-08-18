@@ -1243,7 +1243,7 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
             solid->setElevation( cadSolid->dfElevation );
             solid->setThickness( cadSolid->dfThickness );
             for( const CADVector& corner : cadSolid->avertCorners )
-                solid->addAverCorner( corner );
+                solid->addCorner( corner );
             solid->setExtrusion( cadSolid->vectExtrusion );
 
             poGeometry = solid;
