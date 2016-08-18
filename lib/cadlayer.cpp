@@ -227,13 +227,29 @@ void CADLayer::addHandle( long handle, CADObject::ObjectType type, long cadinser
             imageHandles.push_back( handle );
         else
         {
-            for( auto cIter = geometryTypes.cbegin(); cIter != geometryTypes.cend(); ++cIter )
+            if( pCADFile->isReadingUnsupportedGeometries() == false )
             {
-                if( * cIter == type ) break;
-                if( cIter == geometryTypes.cend() - 1 )
-                    geometryTypes.push_back( type );
+                if( isSupportedGeometryType( type ) )
+                {
+                    for( auto cIter = geometryTypes.cbegin(); cIter != geometryTypes.cend(); ++cIter )
+                    {
+                        if( * cIter == type ) break;
+                        if( cIter == geometryTypes.cend() - 1 )
+                            geometryTypes.push_back( type );
+                    }
+                    geometryHandles.push_back( make_pair( handle, cadinserthandle ) );
+                }
             }
-            geometryHandles.push_back( make_pair( handle, cadinserthandle ) );
+            else
+            {
+                for( auto cIter = geometryTypes.cbegin(); cIter != geometryTypes.cend(); ++cIter )
+                {
+                    if( * cIter == type ) break;
+                    if( cIter == geometryTypes.cend() - 1 )
+                        geometryTypes.push_back( type );
+                }
+                geometryHandles.push_back( make_pair( handle, cadinserthandle ) );
+            }
         }
     }
 }

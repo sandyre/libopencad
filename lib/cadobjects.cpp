@@ -423,10 +423,23 @@ const vector<char> CADCommonEntityObjectTypes{
         CADObject::VERTEX_PFACE_FACE, CADObject::TOLERANCE, CADObject::SOLID3D, CADObject::WIPEOUT
 };
 
+const vector<char> CADSupportedGeometryTypes{
+        CADObject::POINT, CADObject::ARC, CADObject::TEXT, CADObject::ELLIPSE, CADObject::CIRCLE, CADObject::LINE,
+        CADObject::LWPOLYLINE, CADObject::POLYLINE3D, CADObject::MLINE, CADObject::ATTRIB, CADObject::ATTDEF,
+        CADObject::RAY, CADObject::SPLINE, CADObject::SOLID, CADObject::IMAGE, CADObject::MTEXT,
+        CADObject::POLYLINE_PFACE, CADObject::XLINE, CADObject::FACE3D
+};
+
 bool isCommonEntityType( short nType )
 {
     return std::find( CADCommonEntityObjectTypes.begin(), CADCommonEntityObjectTypes.end(), ( nType ) ) !=
            CADCommonEntityObjectTypes.end();
+}
+
+bool isSupportedGeometryType( short nType )
+{
+    return std::find( CADSupportedGeometryTypes.begin(), CADSupportedGeometryTypes.end(), ( nType ) ) !=
+            CADSupportedGeometryTypes.end();
 }
 
 const map<char, string> CADObjectNames{

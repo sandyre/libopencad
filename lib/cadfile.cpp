@@ -59,7 +59,7 @@ const CADTables& CADFile::getTables() const
     return oTables;
 }
 
-int CADFile::ParseFile( enum OpenOptions eOptions )
+int CADFile::ParseFile( enum OpenOptions eOptions, bool bReadUnsupportedGeometries )
 {
     if( nullptr == pFileIO )
         return CADErrorCodes::FILE_OPEN_FAILED;
@@ -70,8 +70,10 @@ int CADFile::ParseFile( enum OpenOptions eOptions )
             return CADErrorCodes::FILE_OPEN_FAILED;
     }
 
-    int nResultCode;
+    // Set flag which will tell CADLayer to skip/not skip unsupported geoms
+    bReadingUnsupportedGeometries = bReadUnsupportedGeometries;
 
+    int nResultCode;
     nResultCode = ReadSectionLocators();
     if( nResultCode != CADErrorCodes::SUCCESS )
         return nResultCode;
@@ -109,4 +111,9 @@ size_t CADFile::GetLayersCount() const
 CADLayer& CADFile::GetLayer( size_t index )
 {
     return oTables.GetLayer( index );
+}
+
+bool CADFile::isReadingUnsupportedGeometries()
+{
+    return bReadingUnsupportedGeometries;
 }

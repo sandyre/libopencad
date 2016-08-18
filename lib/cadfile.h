@@ -68,7 +68,7 @@ public:
     const CADTables & getTables() const;
 
 public:
-    virtual int    ParseFile( enum OpenOptions eOptions );
+    virtual int    ParseFile( enum OpenOptions eOptions, bool bReadUnsupportedGeometries = true );
     virtual size_t GetLayersCount() const;
     virtual CADLayer& GetLayer( size_t index );
 
@@ -132,6 +132,11 @@ protected:
      */
     virtual int ReadTables( enum OpenOptions eOptions );
 
+    /**
+     * @brief returns value of flag Read Unsupported Geometries
+     */
+    bool isReadingUnsupportedGeometries();
+
 protected:
     CADFileIO * pFileIO;
     CADHeader  oHeader;
@@ -140,6 +145,7 @@ protected:
 
 protected:
     std::map<long, long> mapObjects; // object index <-> file offset
+    bool bReadingUnsupportedGeometries;
 };
 
 

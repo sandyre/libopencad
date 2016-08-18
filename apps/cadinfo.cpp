@@ -108,8 +108,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    CADFile *pCADFile = OpenCADFile( pszCADFilePath,
-                                      CADFile::OpenOptions::READ_ALL );
+    CADFile *pCADFile = OpenCADFile( pszCADFilePath, CADFile::OpenOptions::READ_ALL, true );
 
     if (pCADFile == nullptr)
     {

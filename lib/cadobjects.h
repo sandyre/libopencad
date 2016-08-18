@@ -223,6 +223,7 @@ protected:
 
 string getNameByType( CADObject::ObjectType eType );
 bool   isCommonEntityType( short nType );
+bool   isSupportedGeometryType( short nType );
 
 /**
  * @brief The CADCommonED struct

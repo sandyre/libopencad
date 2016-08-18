@@ -85,7 +85,7 @@ static int CheckCADFile(CADFileIO * pCADFileIO)
  * @param bReadUnsupportedGeometries Unsupported geoms will be returned as CADUnknown
  * @return CADFile pointer or NULL if failed. The pointer have to be freed by user
  */
-CADFile * OpenCADFile( CADFileIO * pCADFileIO, enum CADFile::OpenOptions eOptions )
+CADFile * OpenCADFile( CADFileIO * pCADFileIO, enum CADFile::OpenOptions eOptions, bool bReadUnsupportedGeometries )
 {
     int nCADFileVersion = CheckCADFile( pCADFileIO );
     CADFile * poCAD = nullptr;
@@ -101,7 +101,7 @@ CADFile * OpenCADFile( CADFileIO * pCADFileIO, enum CADFile::OpenOptions eOption
             return nullptr;
     }
 
-    gLastError = poCAD->ParseFile( eOptions );
+    gLastError = poCAD->ParseFile( eOptions, bReadUnsupportedGeometries );
     if( gLastError != CADErrorCodes::SUCCESS )
     {
         delete poCAD;
@@ -179,9 +179,9 @@ const char * GetCADFormats()
  * @param eOptions Open options
  * @return CADFile pointer or NULL if failed. The pointer have to be freed by user.
  */
-CADFile * OpenCADFile( const char* pszFileName, enum CADFile::OpenOptions eOptions )
+CADFile * OpenCADFile( const char * pszFileName, enum CADFile::OpenOptions eOptions, bool bReadUnsupportedGeometries )
 {
-    return OpenCADFile( GetDefaultFileIO( pszFileName ), eOptions );
+    return OpenCADFile( GetDefaultFileIO( pszFileName ), eOptions, bReadUnsupportedGeometries );
 }
 
 #ifdef _DEBUG
