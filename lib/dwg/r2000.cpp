@@ -1534,54 +1534,57 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
         vector<CADAttrib>           blockRefAttributes;
         unique_ptr<CADInsertObject> spoBlockRef( static_cast<CADInsertObject *>( GetObject( dBlockRefHandle ) ) );
 
-        long dCurrentEntHandle = spoBlockRef->hAttribs[0].getAsLong();
-        long dLastEntHandle    = spoBlockRef->hAttribs[0].getAsLong();
-
-        while( spoBlockRef->bHasAttribs )
+        if( spoBlockRef->hAttribs.size() != 0 )
         {
-            // FIXME: memory leak, somewhere in CAD* destructor is a bug
-            CADEntityObject * attDefObj = static_cast<CADEntityObject *>(
-                    GetObject( dCurrentEntHandle, true ) );
+            long dCurrentEntHandle = spoBlockRef->hAttribs[0].getAsLong();
+            long dLastEntHandle    = spoBlockRef->hAttribs[0].getAsLong();
 
-            if( dCurrentEntHandle == dLastEntHandle )
+            while( spoBlockRef->bHasAttribs )
             {
-                if( attDefObj == nullptr )
+                // FIXME: memory leak, somewhere in CAD* destructor is a bug
+                CADEntityObject * attDefObj = static_cast<CADEntityObject *>(
+                        GetObject( dCurrentEntHandle, true ) );
+
+                if( dCurrentEntHandle == dLastEntHandle )
+                {
+                    if( attDefObj == nullptr )
+                        break;
+
+                    CADAttrib * attrib = static_cast<CADAttrib *>(
+                            GetGeometry( iLayerIndex, dCurrentEntHandle ) );
+
+                    if( attrib )
+                    {
+                        blockRefAttributes.push_back( CADAttrib( * attrib ) );
+                        delete attrib;
+                    }
+                    delete attDefObj;
                     break;
-
-                CADAttrib * attrib = static_cast<CADAttrib *>(
-                        GetGeometry( iLayerIndex, dCurrentEntHandle ) );
-
-                if( attrib )
-                {
-                    blockRefAttributes.push_back( CADAttrib( * attrib ) );
-                    delete attrib;
                 }
-                delete attDefObj;
-                break;
-            }
 
-            if( attDefObj != nullptr )
-            {
-                if( attDefObj->stCed.bNoLinks )
-                    ++dCurrentEntHandle;
-                else
-                    dCurrentEntHandle = attDefObj->stChed.hNextEntity.getAsLong( attDefObj->stCed.hObjectHandle );
-
-                CADAttrib * attrib = static_cast<CADAttrib *>(
-                        GetGeometry( iLayerIndex, dCurrentEntHandle ) );
-
-                if( attrib )
+                if( attDefObj != nullptr )
                 {
-                    blockRefAttributes.push_back( CADAttrib( * attrib ) );
-                    delete attrib;
+                    if( attDefObj->stCed.bNoLinks )
+                        ++dCurrentEntHandle;
+                    else
+                        dCurrentEntHandle = attDefObj->stChed.hNextEntity.getAsLong( attDefObj->stCed.hObjectHandle );
+
+                    CADAttrib * attrib = static_cast<CADAttrib *>(
+                            GetGeometry( iLayerIndex, dCurrentEntHandle ) );
+
+                    if( attrib )
+                    {
+                        blockRefAttributes.push_back( CADAttrib( * attrib ) );
+                        delete attrib;
+                    }
+                    delete attDefObj;
+                } else
+                {
+                    assert ( 0 );
                 }
-                delete attDefObj;
-            } else
-            {
-                assert ( 0 );
             }
+            poGeometry->setBlockAttributes( blockRefAttributes );
         }
-        poGeometry->setBlockAttributes( blockRefAttributes );
     }
 
     poGeometry->setEED( asEED );
