@@ -28,10 +28,12 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  *  SOFTWARE.
  *******************************************************************************/
-#include <iostream>
 #include "cadlayer.h"
 #include "cadfile.h"
+
 #include <cassert>
+#include <iostream>
+#include <algorithm>
 
 CADLayer::CADLayer( CADFile * file ) : frozen( false ), on( true ), frozenByDefault( false ), locked( false ),
                                        plotting( false ), lineWeight( 1 ), color( 0 ), layerId( 0 ), layer_handle( 0 ),
@@ -233,7 +235,7 @@ void CADLayer::addHandle( long handle, CADObject::ObjectType type, long cadinser
                 {
                     if( geometryTypes.size() == 0 ) geometryTypes.push_back( type );
 
-                    if( std::find( geometryTypes.begin(), geometryTypes.end(), type ) == geometryTypes.end() )
+                    if( find( geometryTypes.begin(), geometryTypes.end(), type ) == geometryTypes.end() )
                     {
                         geometryTypes.push_back( type );
                     }
@@ -244,7 +246,7 @@ void CADLayer::addHandle( long handle, CADObject::ObjectType type, long cadinser
             {
                 if( geometryTypes.size() == 0 ) geometryTypes.push_back( type );
 
-                if( std::find( geometryTypes.begin(), geometryTypes.end(), type ) == geometryTypes.end() )
+                if( find( geometryTypes.begin(), geometryTypes.end(), type ) == geometryTypes.end() )
                 {
                     geometryTypes.push_back( type );
                 }
