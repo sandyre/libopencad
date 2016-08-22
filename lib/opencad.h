@@ -52,7 +52,7 @@
 
 #ifndef OCAD_EXTERN
 #ifdef OCAD_STATIC
-  #define OCAD_EXTERN extern
+  #define OCAD_EXTERN //TODO: need additional specification to use library in C
 #else
 #   if defined (_WIN32) || defined (WINDOWS)
 #    ifdef OCAD_EXPORTS
