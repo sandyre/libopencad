@@ -57,10 +57,10 @@ set(HHEADERS
     cadgeometry.h
     cadlayer.h
     cadcolors.h
-    caddictionary.h)
+    caddictionary.h
+    cadobjects.h)
 
 set(HHEADER_PRIV
-    cadobjects.h
     cadfilestreamio.h
     )
 
@@ -114,5 +114,5 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL )
 endif()
 
 if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL )
-    install(FILES ${HHEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}" COMPONENT headers)
+    install(FILES ${HHEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/opencad" COMPONENT headers)
 endif()
