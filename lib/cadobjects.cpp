@@ -420,7 +420,8 @@ const vector<char> CADCommonEntityObjectTypes{
         CADObject::MTEXT, CADObject::IMAGE, CADObject::XLINE, CADObject::RAY, CADObject::MLINE, CADObject::FACE3D,
         CADObject::POLYLINE_PFACE, CADObject::ATTRIB, CADObject::ATTDEF, CADObject::POLYLINE2D, CADObject::HATCH,
         CADObject::INSERT, CADObject::VERTEX3D, CADObject::VERTEX2D, CADObject::VERTEX_MESH, CADObject::VERTEX_PFACE,
-        CADObject::VERTEX_PFACE_FACE, CADObject::TOLERANCE, CADObject::SOLID3D, CADObject::WIPEOUT
+        CADObject::VERTEX_PFACE_FACE, CADObject::TOLERANCE, CADObject::SOLID3D, CADObject::WIPEOUT, CADObject::TRACE,
+        CADObject::DIMENSION_ALIGNED, CADObject::OLE2FRAME
 };
 
 const vector<char> CADSupportedGeometryTypes{

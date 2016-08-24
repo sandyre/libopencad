@@ -124,8 +124,7 @@ int CADTables::ReadLayersTable( CADFile * const pCADFile, long dLayerControlHand
     auto dLastEntHandle    = spModelSpace->hEntities[1].getAsLong();
     while( dCurrentEntHandle != 0 )
     {
-        unique_ptr<CADEntityObject> spEntityObj( static_cast<CADEntityObject *>(
-                                                         pCADFile->GetObject( dCurrentEntHandle, true )) );
+        unique_ptr<CADEntityObject> spEntityObj( static_cast<CADEntityObject *>( pCADFile->GetObject( dCurrentEntHandle, true ) ) );
 
         if( dCurrentEntHandle == dLastEntHandle )
         {
@@ -147,9 +146,13 @@ int CADTables::ReadLayersTable( CADFile * const pCADFile, long dLayerControlHand
             FillLayer( spEntityObj.get() );
 
             if( spEntityObj->stCed.bNoLinks )
+            {
                 ++dCurrentEntHandle;
+            }
             else
+            {
                 dCurrentEntHandle = spEntityObj->stChed.hNextEntity.getAsLong( spEntityObj->stCed.hObjectHandle );
+            }
         } else
         {
 #ifdef _DEBUG
@@ -177,6 +180,3 @@ void CADTables::FillLayer( const CADEntityObject * pEntityObject )
         }
     }
 }
-
-
-
