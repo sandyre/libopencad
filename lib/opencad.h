@@ -31,9 +31,9 @@
 #ifndef OPENCAD_H
 #define OPENCAD_H
 
-#define OCAD_VERSION    "0.1.0"
+#define OCAD_VERSION    "0.2.0"
 #define OCAD_VERSION_MAJOR 0
-#define OCAD_VERSION_MINOR 1
+#define OCAD_VERSION_MINOR 2
 #define OCAD_VERSION_REV   0
 
 #ifndef OCAD_COMPUTE_VERSION
