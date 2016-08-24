@@ -43,8 +43,11 @@ if(BUILD_TESTS)
     find_package(Threads)
     set(TARGET_LINK_LIB ${TARGET_LINK_LIB} ${CMAKE_THREAD_LIBS_INIT} ${TARGET_LINK})
 
+    if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
     find_library(DL_LIB dl)
     set(TARGET_LINK_LIB ${TARGET_LINK_LIB} ${DL_LIB})
+    endif()
+
     find_library(M_LIB m)
     set(TARGET_LINK_LIB ${TARGET_LINK_LIB} ${M_LIB})
 
