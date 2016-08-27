@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
 
     if (pCADFile == nullptr)
     {
-        cerr << "Open CAD file " << pszCADFilePath << " failed." << endl;
+        cerr << "Open CAD file " << (pszCADFilePath == NULL ? "NULL" : pszCADFilePath) << " failed." << endl;
         return EXIT_FAILURE;
     }
 

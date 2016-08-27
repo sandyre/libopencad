@@ -181,6 +181,12 @@ const char * GetCADFormats()
  */
 CADFile * OpenCADFile( const char * pszFileName, enum CADFile::OpenOptions eOptions, bool bReadUnsupportedGeometries )
 {
+    if( pszFileName == NULL )
+    {
+        gLastError = CADErrorCodes::FILE_OPEN_FAILED;
+        return nullptr;
+    }
+
     return OpenCADFile( GetDefaultFileIO( pszFileName ), eOptions, bReadUnsupportedGeometries );
 }
 
