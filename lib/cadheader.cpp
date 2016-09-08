@@ -243,6 +243,17 @@ CADVariant::CADVariant( const char * val )
     dateTimeVal = 0;
 }
 
+CADVariant::CADVariant( long val )
+{
+    type        = DataType ::DECIMAL;
+    decimalVal  = val;
+    stringVal   = to_string( decimalVal );
+    xVal        = 0;
+    yVal        = 0;
+    zVal        = 0;
+    dateTimeVal = 0;
+}
+
 CADVariant::CADVariant( int val )
 {
     type        = DataType::DECIMAL;
@@ -301,22 +312,6 @@ CADVariant::CADVariant( const string& val )
     yVal        = 0;
     zVal        = 0;
     dateTimeVal = 0;
-}
-
-CADVariant::CADVariant( time_t val )
-{
-    type        = DataType::DATETIME;
-    dateTimeVal = val;
-
-    //TODO: data/time format
-    char str_buff[256];
-    snprintf( str_buff, 255, "%ld", dateTimeVal );
-    stringVal = str_buff;
-
-    decimalVal = 0;
-    xVal       = 0;
-    yVal       = 0;
-    zVal       = 0;
 }
 
 CADVariant::CADVariant( const CADHandle& val )
@@ -397,6 +392,22 @@ double CADVariant::getZ() const
 const CADHandle& CADVariant::getHandle() const
 {
     return handleVal;
+}
+
+CADVariant::CADVariant( time_t val, bool bIsTime )
+{
+    type        = DataType::DATETIME;
+    dateTimeVal = val;
+
+    //TODO: data/time format
+    char str_buff[256];
+    snprintf( str_buff, 255, "%ld", dateTimeVal );
+    stringVal = str_buff;
+
+    decimalVal = 0;
+    xVal       = 0;
+    yVal       = 0;
+    zVal       = 0;
 }
 
 //------------------------------------------------------------------------------

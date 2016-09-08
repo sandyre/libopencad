@@ -64,13 +64,14 @@ public:
 public:
     CADVariant();
     CADVariant( const char * val );
+    CADVariant( long val );
     CADVariant( int val );
     CADVariant( short val );
+    CADVariant( time_t val, bool bIsTime );
     CADVariant( double val );
     CADVariant( double x, double y, double z = 0 );
     CADVariant( const CADHandle& val );
     CADVariant( const std::string& val );
-    CADVariant( time_t val );
 public:
     CADVariant( const CADVariant& orig );
     CADVariant& operator=( const CADVariant& orig );
