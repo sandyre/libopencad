@@ -76,6 +76,7 @@ public:
         LWPOLYLINE,
         ELLIPSE,
         LINE,
+		POLYLINE2D,
         POLYLINE3D,
         TEXT,
         ARC,
@@ -176,6 +177,60 @@ protected:
 };
 
 /**
+* @brief Geometry class which represents Polyline 2D
+*/
+class CADPolyline2D : public CADGeometry
+{
+public:
+	CADPolyline2D();
+
+	void	   addVertex(const CADVector& vertex);
+	size_t	   getVertexCount() const;
+	CADVector& getVertex(size_t index);
+
+	bool isClosed() const;
+	void setClosed(bool state);
+
+	bool isSplined() const; // if splined there will be extra 2 vertexes at end defining end vector, if closed two at start also
+	void setSplined( bool state );
+
+	double getStartSegWidth() const;
+	void   setStartSegWidth( double value );
+
+	double getEndSegWidth() const;
+	void   setEndSegWidth( double value );
+
+	double getElevation() const;
+	void   setElevation( double value );
+
+	CADVector getVectExtrusion() const;
+	void      setVectExtrusion( const CADVector& value );
+
+	vector<pair<double, double> > getWidths() const;
+	void                          setWidths(const vector<pair<double, double> >& value);
+
+	bool		   hasBulges() const; // true if any vertexes have non zero bulges
+	vector<double> getBulges() const;
+	void           setBulges(const vector<double>& value);
+
+	virtual void print() const override;
+	virtual void transform( const Matrix& matrix ) override;
+
+protected:
+	bool						  bClosed;
+	bool						  bSplined;
+	double						  dfStartWidth;
+	double						  dfEndWidth;
+	double						  elevation;
+	CADVector					  vectExtrusion;
+	bool						  hasNonZeroBulges;
+	vector<double>				  bulges;
+	vector<pair<double, double> > widths; // start, end.
+	vector<CADVector>	          vertexes;
+};
+
+
+/**
  * @brief Geometry class which represents Polyline 3D
  */
 class CADPolyline3D : public CADGeometry
@@ -183,13 +238,22 @@ class CADPolyline3D : public CADGeometry
 public:
     CADPolyline3D();
 
-    void   addVertex( const CADVector& vertex );
-    size_t getVertexCount() const;
+    void       addVertex( const CADVector& vertex );
+    size_t	   getVertexCount() const;
     CADVector& getVertex( size_t index );
+
+	bool isClosed() const;
+	void setClosed( bool state );
+
+	bool isSplined() const; // if splined there will be extra 2 vertexes at end defining end direction, if closed two at start also
+	void setSplined( bool state );
 
     virtual void print() const override;
     virtual void transform( const Matrix& matrix ) override;
+
 protected:
+	bool			  bClosed;
+	bool			  bSplined;
     vector<CADVector> vertexes;
 };
 
@@ -197,10 +261,17 @@ protected:
  * @brief Geometry class which represents LWPolyline
  */
 
-class CADLWPolyline : public CADPolyline3D
+class CADLWPolyline : public CADGeometry
 {
 public:
     CADLWPolyline();
+
+	void       addVertex(const CADVector& vertex);
+	size_t	   getVertexCount() const;
+	CADVector& getVertex(size_t index);
+
+	bool isClosed() const;
+	void setClosed(bool state);
 
     double getConstWidth() const;
     void   setConstWidth( double value );
@@ -214,20 +285,22 @@ public:
     vector<pair<double, double> > getWidths() const;
     void                          setWidths( const vector<pair<double, double> >& value );
 
+	bool		   hasBulges() const; // true if any vertexes have non zero bulges
     vector<double> getBulges() const;
     void           setBulges( const vector<double>& value );
 
-    bool isClosed() const;
-    void setClosed( bool state );
-
     virtual void print() const override;
+	virtual void transform(const Matrix& matrix) override;
+
 protected:
-    bool                          bClosed;
+	bool						  bClosed;
     double                        constWidth;
     double                        elevation;
     CADVector                     vectExtrusion;
+	bool						  hasNonZeroBulges;
     vector<double>                bulges;
     vector<pair<double, double> > widths; // start, end.
+	vector<CADVector>		      vertexes;
 };
 
 /**
