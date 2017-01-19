@@ -438,13 +438,14 @@ public:
 class CADVertex2DObject : public CADEntityObject
 {
 public:
-              CADVertex2DObject();
-    CADVector vertPosition; // Z must be taken from 2d polyline elevation.
-    double    dfStartWidth;
-    double    dfEndWidth;
-    double    dfBulge;
-    long      nVertexID;
-    double    dfTangentDir;
+				  CADVertex2DObject();
+    unsigned char vFlags;
+    CADVector	  vertPosition; // Z must be taken from 2d polyline elevation.
+    double		  dfStartWidth;
+    double		  dfEndWidth;
+    double		  dfBulge;
+    long		  nVertexID;
+    double		  dfTangentDir;
 
 /* NOTES: Neither elevation nor thickness are present in the 2D VERTEX data.
  * Both should be taken from the 2D POLYLINE entity (15)
@@ -459,9 +460,9 @@ public:
 class CADVertex3DObject : public CADEntityObject
 {
 public:
-    CADVertex3DObject();
-
-    CADVector vertPosition;
+				  CADVertex3DObject();
+	unsigned char vFlags;
+    CADVector     vertPosition;
 };
 
 /**
@@ -504,10 +505,11 @@ public:
 class CADPolyline2DObject : public CADEntityObject
 {
 public:
-    CADPolyline2DObject();
-
+			  CADPolyline2DObject();
     short     dFlags;
     short     dCurveNSmoothSurfType;
+	bool	  bClosed;
+	bool	  bSplined;
     double    dfStartWidth;
     double    dfEndWidth;
     double    dfThickness;
@@ -527,15 +529,16 @@ public:
 class CADPolyline3DObject : public CADEntityObject
 {
 public:
-                  CADPolyline3DObject();
-    unsigned char SplinedFlags;
-    unsigned char ClosedFlags;
+                    CADPolyline3DObject();
+	unsigned char	SplinedFlags;
+	unsigned char	ClosedFlags;
+	bool		    bClosed;
+	bool			bSplined;
+    long			nObjectsOwned;
 
-    long nObjectsOwned;
+    CADHandleArray	hVertexes; // content really depends on DWG version.
 
-    CADHandleArray hVertexes; // content really depends on DWG version.
-
-    CADHandle hSeqend;
+	CADHandle       hSeqend;
 };
 
 /**
