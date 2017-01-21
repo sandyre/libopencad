@@ -109,6 +109,8 @@ protected:
                                         size_t& nBitOffsetFromStart );
     CADTextObject            * getText( long dObjectSize, CADCommonED stCommonEntityData, const char * pabyInput,
                                         size_t& nBitOffsetFromStart );
+	CADVertex2DObject        * getVertex2D(long dObjectSize, CADCommonED stCommonEntityData, const char * pabyInput,
+											size_t& nBitOffsetFromStart);
     CADVertex3DObject        * getVertex3D( long dObjectSize, CADCommonED stCommonEntityData, const char * pabyInput,
                                             size_t& nBitOffsetFromStart );
     CADCircleObject          * getCircle( long dObjectSize, CADCommonED stCommonEntityData, const char * pabyInput,

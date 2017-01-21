@@ -362,12 +362,32 @@ CADVector& CADPolyline3D::getVertex( size_t index )
     return vertexes[index];
 }
 
+bool CADPolyline3D::isClosed() const
+{
+	return bClosed;
+}
+
+void CADPolyline3D::setClosed(bool state)
+{
+	bClosed = state;
+}
+
+bool CADPolyline3D::isSplined() const
+{
+	return bSplined;
+}
+
+void CADPolyline3D::setSplined(bool state)
+{
+	bSplined = state;
+}
+
 void CADPolyline3D::print() const
 {
     cout << "|------Polyline3D-----|" << endl;
     for( size_t i = 0; i < vertexes.size(); ++i )
     {
-        cout << "  #" << i << ". X: " << vertexes[i].getX() << ", Y: " << vertexes[i].getY() << std::endl;
+		cout << "  #" << i << ". X: " << vertexes[i].getX() << ", Y: " << vertexes[i].getY() << ", Z: " << vertexes[i].getZ() << std::endl;
     }
     cout << endl;
 }
@@ -387,6 +407,31 @@ void CADPolyline3D::transform( const Matrix& matrix )
 CADLWPolyline::CADLWPolyline()
 {
     geometryType = CADGeometry::LWPOLYLINE;
+}
+
+void CADLWPolyline::addVertex(const CADVector& vertex)
+{
+	vertexes.push_back(vertex);
+}
+
+size_t CADLWPolyline::getVertexCount() const
+{
+	return vertexes.size();
+}
+
+CADVector& CADLWPolyline::getVertex(size_t index)
+{
+	return vertexes[index];
+}
+
+bool CADLWPolyline::isClosed() const
+{
+	return bClosed;
+}
+
+void CADLWPolyline::setClosed(bool state)
+{
+	bClosed = state;
 }
 
 void CADLWPolyline::print() const
@@ -439,6 +484,11 @@ void CADLWPolyline::setWidths( const vector<pair<double, double> >& value )
     widths = value;
 }
 
+bool CADLWPolyline::hasBulges() const
+{
+	return hasNonZeroBulges;
+}
+
 vector<double> CADLWPolyline::getBulges() const
 {
     return bulges;
@@ -447,18 +497,159 @@ vector<double> CADLWPolyline::getBulges() const
 void CADLWPolyline::setBulges( const vector<double>& value )
 {
     bulges = value;
+	hasNonZeroBulges = false;
+	for ( size_t i = 0; i < bulges.size(); i++ )
+	{
+		if ( fabs( bulges[i] - 0.0 ) > std::numeric_limits<double>::epsilon() * 16 )
+		{
+			hasNonZeroBulges = true;
+			return;
+		}
+	}
 }
 
-bool CADLWPolyline::isClosed() const
+void CADLWPolyline::transform( const Matrix& matrix )
 {
-    return bClosed;
+	for (CADVector& vertex : vertexes)
+	{
+		vertex = matrix.multiply(vertex);
+	}
 }
 
-void CADLWPolyline::setClosed( bool state )
+//------------------------------------------------------------------------------
+// CADPolyline2D
+//------------------------------------------------------------------------------
+CADPolyline2D::CADPolyline2D()
 {
-    bClosed = state;
+	geometryType = CADGeometry::POLYLINE2D;
 }
 
+void CADPolyline2D::addVertex( const CADVector& vertex )
+{
+	vertexes.push_back(vertex);
+}
+
+size_t CADPolyline2D::getVertexCount() const
+{
+	return vertexes.size();
+}
+
+CADVector& CADPolyline2D::getVertex( size_t index )
+{
+	return vertexes[index];
+}
+
+bool CADPolyline2D::isClosed() const
+{
+	return bClosed;
+}
+
+void CADPolyline2D::setClosed( bool state )
+{
+	bClosed = state;
+}
+
+bool CADPolyline2D::isSplined() const
+{
+	return bSplined;
+}
+
+void CADPolyline2D::setSplined( bool state )
+{
+	bSplined = state;
+}
+
+double  CADPolyline2D::getStartSegWidth() const
+{
+	return dfStartWidth;
+}
+
+void CADPolyline2D::setStartSegWidth( double value )
+{
+	dfStartWidth = value;
+}
+
+double CADPolyline2D::getEndSegWidth() const
+{
+	return dfEndWidth;
+}
+
+void CADPolyline2D::setEndSegWidth( double value )
+{
+	dfEndWidth = value;
+}
+
+double CADPolyline2D::getElevation() const
+{
+	return elevation;
+}
+
+void CADPolyline2D::setElevation( double value )
+{
+	elevation = value;
+}
+
+CADVector CADPolyline2D::getVectExtrusion() const
+{
+	return vectExtrusion;
+}
+
+void CADPolyline2D::setVectExtrusion( const CADVector& value )
+{
+	vectExtrusion = value;
+}
+
+vector<pair<double, double> > CADPolyline2D::getWidths() const
+{
+	return widths;
+}
+
+void CADPolyline2D::setWidths( const vector<pair<double, double> >& value )
+{
+	widths = value;
+}
+
+bool CADPolyline2D::hasBulges() const
+{
+	return hasNonZeroBulges;
+}
+
+vector<double> CADPolyline2D::getBulges() const
+{
+	return bulges;
+}
+
+void CADPolyline2D::setBulges( const vector<double>& value )
+{
+	bulges = value;
+	hasNonZeroBulges = false;
+	for ( size_t i = 0; i < bulges.size(); i++ )
+	{
+		if ( fabs(bulges[i] - 0.0) > std::numeric_limits<double>::epsilon() * 16 )
+		{
+			hasNonZeroBulges = true;
+			return;
+		}
+	}	
+}
+
+void CADPolyline2D::print() const
+{
+	cout << "|------Polyline2D-----|" << endl;
+	for (size_t i = 0; i < vertexes.size(); ++i)
+	{
+		cout << "  #" << i << ". X: " << vertexes[i].getX() << ", Y: " << vertexes[i].getY() << std::endl;
+	}
+	cout << endl;
+}
+
+void CADPolyline2D::transform( const Matrix& matrix )
+{
+	for (CADVector& vertex : vertexes)
+	{
+		vertex = matrix.multiply(vertex);
+	}
+}
 
 //------------------------------------------------------------------------------
 // CADEllipse

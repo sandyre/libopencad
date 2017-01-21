@@ -586,6 +586,8 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
     oHeader.addValue( CADHeader::FINGERPRINTGUID, ReadTV( pabyBuf, nBitOffsetFromStart ) );
     oHeader.addValue( CADHeader::VERSIONGUID, ReadTV( pabyBuf, nBitOffsetFromStart ) );
 
+
+
     CADHandle stBlockRecordPaperSpace = ReadHANDLE( pabyBuf, nBitOffsetFromStart );
     oTables.AddTable( CADTables::BlockRecordPaperSpace, stBlockRecordPaperSpace );
     // TODO: is this part of the header?
@@ -596,7 +598,8 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
     {
         // Is this part of the header?
 
-        /*CADHandle LTYPE_BYLAYER = */ReadHANDLE( pabyBuf, nBitOffsetFromStart );
+        /*CADHandle LTYPE_
+		= */ReadHANDLE( pabyBuf, nBitOffsetFromStart );
         /*CADHandle LTYPE_BYBLOCK = */ReadHANDLE( pabyBuf, nBitOffsetFromStart );
         /*CADHandle LTYPE_CONTINUOUS = */ReadHANDLE( pabyBuf, nBitOffsetFromStart );
 
@@ -879,6 +882,9 @@ CADObject * DWGFileR2000::GetObject( long dHandle, bool bHandlesOnly )
             case CADObject::TEXT:
                 return getText( dObjectSize, stCommonEntityData, pabySectionContent, nBitOffsetFromStart );
 
+			case CADObject::VERTEX2D:
+				return getVertex2D(dObjectSize, stCommonEntityData, pabySectionContent, nBitOffsetFromStart);
+
             case CADObject::VERTEX3D:
                 return getVertex3D( dObjectSize, stCommonEntityData, pabySectionContent, nBitOffsetFromStart );
 
@@ -1029,6 +1035,9 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
             CADPolyline3DObject * cadPolyline3D          = static_cast<CADPolyline3DObject *>(
                     readedObject.get());
 
+			polyline->setClosed(cadPolyline3D->bClosed);
+			polyline->setSplined(cadPolyline3D->bSplined);
+
             // TODO: code can be much simplified if CADHandle will be used.
             // to do so, == and ++ operators should be implemented.
             unique_ptr<CADVertex3DObject> vertex;
@@ -1042,7 +1051,8 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
                     break;
 
                 currentVertexH = vertex->stCed.hObjectHandle.getAsLong();
-                polyline->addVertex( vertex->vertPosition );
+				if (! (vertex->vFlags & 2 || vertex->vFlags & 16)) // ignore tangent / spline frame pts  
+					polyline->addVertex( vertex->vertPosition );
                 if( vertex->stCed.bNoLinks == true )
                 {
                     ++currentVertexH;
@@ -1056,7 +1066,8 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
                 {
                     vertex.reset( static_cast<CADVertex3DObject *>(
                                           GetObject( currentVertexH )) );
-                    polyline->addVertex( vertex->vertPosition );
+					if (!( vertex->vFlags & 2 || vertex->vFlags & 16 )) // ignore tangent / spline frame pts 
+						polyline->addVertex( vertex->vertPosition );
                     break;
                 }
             }
@@ -1071,18 +1082,83 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
             CADLWPolylineObject * cadlwPolyline = static_cast<CADLWPolylineObject *>(
                     readedObject.get());
 
-            lwPolyline->setBulges( cadlwPolyline->adfBulges );
-            lwPolyline->setClosed( cadlwPolyline->bClosed );
-            lwPolyline->setConstWidth( cadlwPolyline->dfConstWidth );
-            lwPolyline->setElevation( cadlwPolyline->dfElevation );
+			lwPolyline->setBulges(cadlwPolyline->adfBulges);
+            lwPolyline->setClosed(cadlwPolyline->bClosed );
+            lwPolyline->setConstWidth(cadlwPolyline->dfConstWidth );
+            lwPolyline->setElevation(cadlwPolyline->dfElevation );
             for( const CADVector& vertex : cadlwPolyline->avertVertexes )
-                lwPolyline->addVertex( vertex );
-            lwPolyline->setVectExtrusion( cadlwPolyline->vectExtrusion );
+                lwPolyline->addVertex(vertex );
+            lwPolyline->setVectExtrusion(cadlwPolyline->vectExtrusion );
             lwPolyline->setWidths( cadlwPolyline->astWidths );
 
             poGeometry = lwPolyline;
             break;
         }
+
+		case CADObject::POLYLINE2D:
+		{
+			CADPolyline2D       * polyline2D = new CADPolyline2D();
+			CADPolyline2DObject * cadPolyline2D = static_cast<CADPolyline2DObject *>(
+                    readedObject.get());
+			
+			polyline2D->setClosed(cadPolyline2D->bClosed);
+			polyline2D->setSplined(cadPolyline2D->bSplined);
+			polyline2D->setStartSegWidth(cadPolyline2D->dfStartWidth);
+			polyline2D->setEndSegWidth(cadPolyline2D->dfEndWidth);
+			polyline2D->setElevation(cadPolyline2D->dfElevation);
+			polyline2D->setVectExtrusion(cadPolyline2D->vectExtrusion);
+
+			std::vector<double> bulges;
+			vector<pair<double, double> > widths;
+
+			// TODO: code can be much simplified if CADHandle will be used.
+			// to do so, == and ++ operators should be implemented.
+			unique_ptr<CADVertex2DObject> vertex;
+			long                          currentVertexH = cadPolyline2D->hVertexes[0].getAsLong();
+			while (currentVertexH != 0)
+			{
+				vertex.reset(static_cast<CADVertex2DObject *>(
+					GetObject(currentVertexH)));
+
+				if (vertex == nullptr)
+					break;
+
+				currentVertexH = vertex->stCed.hObjectHandle.getAsLong();
+				if ( !( vertex->vFlags & 2 || vertex->vFlags & 16 )) // ignore tangent / spline frame pts  
+				{
+					polyline2D->addVertex( CADVector( vertex->vertPosition ));
+					bulges.push_back( vertex->dfBulge);
+					widths.push_back( make_pair(vertex->dfStartWidth, vertex->dfEndWidth ));
+				}
+				if (vertex->stCed.bNoLinks == true)
+				{
+					++currentVertexH;
+				}
+				else
+				{
+					currentVertexH = vertex->stChed.hNextEntity.getAsLong(vertex->stCed.hObjectHandle);
+				}
+
+				// Last vertex is reached. read it and break reading.
+				if (currentVertexH == cadPolyline2D->hVertexes[1].getAsLong())
+				{
+					vertex.reset(static_cast<CADVertex2DObject *>(
+						GetObject(currentVertexH)));
+					if (!( vertex->vFlags & 2 || vertex->vFlags & 16 )) // ignore tangent / spline frame pts  
+					{
+						polyline2D->addVertex( CADVector( vertex->vertPosition ));
+						widths.push_back( make_pair( vertex->dfStartWidth, vertex->dfEndWidth ));
+					}
+					break;
+				}
+			}
+
+			polyline2D->setBulges(bulges);
+			polyline2D->setWidths(widths);
+
+			poGeometry = polyline2D;
+            break;
+		}
 
         case CADObject::CIRCLE:
         {
@@ -1746,8 +1822,17 @@ CADPolyline3DObject * DWGFileR2000::getPolyLine3D( long dObjectSize, CADCommonED
     polyline->setSize( dObjectSize );
     polyline->stCed = stCommonEntityData;
 
-    polyline->SplinedFlags = ReadCHAR( pabyInput, nBitOffsetFromStart );
-    polyline->ClosedFlags  = ReadCHAR( pabyInput, nBitOffsetFromStart );
+	polyline->SplinedFlags = ReadCHAR(pabyInput, nBitOffsetFromStart);
+	if ( polyline->SplinedFlags & 0x1 || polyline->SplinedFlags & 0x2 ) // quadratic or cubic spline fit 
+		polyline->bSplined = true;
+	else
+		polyline->bSplined = false;
+
+	polyline->ClosedFlags = ReadCHAR( pabyInput, nBitOffsetFromStart );
+	if ( polyline->ClosedFlags & 0x1 )
+		polyline->bClosed = true;
+	else
+		polyline->bClosed = false;
 
     fillCommonEntityHandleData( polyline, pabyInput, nBitOffsetFromStart );
 
@@ -1949,6 +2034,46 @@ CADTextObject * DWGFileR2000::getText( long dObjectSize, CADCommonED stCommonEnt
     return text;
 }
 
+CADVertex2DObject * DWGFileR2000::getVertex2D( long dObjectSize, CADCommonED stCommonEntityData, const char * pabyInput,
+	size_t& nBitOffsetFromStart )
+{
+	CADVertex2DObject * vertex = new CADVertex2DObject();
+
+	vertex->setSize( dObjectSize );
+	vertex->stCed = stCommonEntityData;
+
+	vertex->vFlags = ReadCHAR( pabyInput, nBitOffsetFromStart );
+
+	CADVector vertPosition = ReadVector( pabyInput, nBitOffsetFromStart );
+	vertex->vertPosition = vertPosition; // z must be taken from polyline elevation
+
+	vertex->dfStartWidth = ReadBITDOUBLE( pabyInput, nBitOffsetFromStart );
+	if (vertex->dfStartWidth < 0) // if negative, abs start value is applicable for both start and end
+	{
+		vertex->dfStartWidth = fabs( vertex->dfStartWidth );
+		vertex->dfEndWidth = fabs(vertex->dfStartWidth);
+	}
+	else
+		vertex->dfEndWidth = ReadBITDOUBLE(pabyInput, nBitOffsetFromStart);
+	
+	vertex->dfBulge = ReadBITDOUBLE(pabyInput, nBitOffsetFromStart);
+
+	vertex->dfTangentDir = ReadBITDOUBLE(pabyInput, nBitOffsetFromStart);
+
+
+	fillCommonEntityHandleData(vertex, pabyInput, nBitOffsetFromStart);
+
+	nBitOffsetFromStart += 8 - (nBitOffsetFromStart % 8); // padding bits to next byte boundary
+	vertex->setCRC(ReadRAWSHORT(pabyInput, nBitOffsetFromStart));
+
+#ifdef _DEBUG
+	if ((nBitOffsetFromStart / 8) != (dObjectSize + 4))
+		DebugMsg("Assertion failed at %d in %s\nSize difference: %d\n", __LINE__, __FILE__,
+		(nBitOffsetFromStart / 8 - dObjectSize - 4));
+#endif // _DEBUG
+	return vertex;
+}
+
 CADVertex3DObject * DWGFileR2000::getVertex3D( long dObjectSize, CADCommonED stCommonEntityData, const char * pabyInput,
                                                size_t& nBitOffsetFromStart )
 {
@@ -1957,7 +2082,7 @@ CADVertex3DObject * DWGFileR2000::getVertex3D( long dObjectSize, CADCommonED stC
     vertex->setSize( dObjectSize );
     vertex->stCed = stCommonEntityData;
 
-    /*unsigned char Flags = */ReadCHAR( pabyInput, nBitOffsetFromStart );
+	vertex->vFlags = ReadCHAR(pabyInput, nBitOffsetFromStart);
 
     CADVector vertPosition = ReadVector( pabyInput, nBitOffsetFromStart );;
     vertex->vertPosition = vertPosition;
@@ -2042,6 +2167,17 @@ CADPolyline2DObject * DWGFileR2000::getPolyline2D( long dObjectSize, CADCommonED
 
     polyline->dFlags                = ReadBITSHORT( pabyInput, nBitOffsetFromStart );
     polyline->dCurveNSmoothSurfType = ReadBITSHORT( pabyInput, nBitOffsetFromStart );
+
+	if ( polyline->dFlags & 0x1 )
+		polyline->bClosed = true;
+	else
+		polyline->bClosed = false;
+
+	if (polyline->dFlags & 0x4 ) // spline fit
+		polyline->bSplined = true;
+	else
+		polyline->bSplined = false;
+
 
     polyline->dfStartWidth = ReadBITDOUBLE( pabyInput, nBitOffsetFromStart );
     polyline->dfEndWidth   = ReadBITDOUBLE( pabyInput, nBitOffsetFromStart );
@@ -2583,11 +2719,11 @@ CADLayerObject * DWGFileR2000::getLayerObject( long dObjectSize, const char * pa
 
     short dFlags = ReadBITSHORT( pabyInput, nBitOffsetFromStart );
     layer->bFrozen           = dFlags & 0x01;
-    layer->bOn               = dFlags & 0x02;
+    layer->bOn               = !(dFlags & 0x02); // bit seems to indicate off, rather than on (as in ODA spec)
     layer->bFrozenInNewVPORT = dFlags & 0x04;
     layer->bLocked           = dFlags & 0x08;
     layer->bPlottingFlag     = dFlags & 0x10;
-    layer->dLineWeight       = dFlags & 0x03E0;
+    layer->dLineWeight       = dFlags & 0x03E0; //
     layer->dCMColor          = ReadBITSHORT( pabyInput, nBitOffsetFromStart );
     layer->hLayerControl     = ReadHANDLE( pabyInput, nBitOffsetFromStart );
     for( long i = 0; i < layer->nNumReactors; ++i )
