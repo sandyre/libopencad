@@ -21,11 +21,5 @@
 ################################################################################
 
 set(repo_name googletest)
-
-if(find_extproject_SHARED)    
-    set(repo_project gtest)
-else()
-    set(repo_project gteststatic)
-endif()
-
+set(repo_project gtest)
 set(repo_include)
