@@ -38,6 +38,7 @@
 #include <cstring>
 #include <cassert>
 #include <memory>
+#include <math.h>
 
 #ifdef __APPLE__
 
