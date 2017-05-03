@@ -38,6 +38,7 @@
 #include <cstring>
 #include <cassert>
 #include <memory>
+#include <cmath>
 
 #ifdef __APPLE__
 
@@ -2050,8 +2051,8 @@ CADVertex2DObject * DWGFileR2000::getVertex2D( long dObjectSize, CADCommonED stC
 	vertex->dfStartWidth = ReadBITDOUBLE( pabyInput, nBitOffsetFromStart );
 	if (vertex->dfStartWidth < 0) // if negative, abs start value is applicable for both start and end
 	{
-		vertex->dfStartWidth = fabs( vertex->dfStartWidth );
-		vertex->dfEndWidth = fabs(vertex->dfStartWidth);
+		vertex->dfStartWidth = std::fabs( vertex->dfStartWidth );
+		vertex->dfEndWidth = std::fabs(vertex->dfStartWidth);
 	}
 	else
 		vertex->dfEndWidth = ReadBITDOUBLE(pabyInput, nBitOffsetFromStart);
