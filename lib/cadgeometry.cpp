@@ -425,6 +425,11 @@ CADVector& CADLWPolyline::getVertex(size_t index)
 	return vertexes[index];
 }
 
+const CADVector& CADLWPolyline::getVertex(size_t index) const
+{
+    return vertexes[index];
+}
+
 bool CADLWPolyline::isClosed() const
 {
 	return bClosed;
@@ -671,7 +676,7 @@ void CADEllipse::setAxisRatio( double value )
     axisRatio = value;
 }
 
-CADVector CADEllipse::getSMAxis()
+CADVector CADEllipse::getSMAxis() const
 {
     return vectSMAxis;
 };
