@@ -269,6 +269,7 @@ public:
 	void       addVertex(const CADVector& vertex);
 	size_t	   getVertexCount() const;
 	CADVector& getVertex(size_t index);
+	const CADVector& getVertex(size_t index) const;
 
 	bool isClosed() const;
 	void setClosed(bool state);
@@ -378,7 +379,7 @@ public:
     double getAxisRatio() const;
     void   setAxisRatio( double value );
 
-    CADVector getSMAxis();
+    CADVector getSMAxis() const;
     void      setSMAxis( const CADVector& vectSMA );
 
     virtual void print() const override;
