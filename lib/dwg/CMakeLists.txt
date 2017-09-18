@@ -33,11 +33,9 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 project(dwg)
 
 set(HHEADERS
-    io.h
     r2000.h)
 
 set(CSOURCES
-    io.cpp
     r2000.cpp
 )
 

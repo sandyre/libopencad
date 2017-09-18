@@ -37,29 +37,6 @@
 #include <string>
 #include <algorithm>
 
-/* DATA TYPES CONSTANTS */
-
-#define BITSHORT_NORMAL         0x0
-#define BITSHORT_UNSIGNED_CHAR  0x1
-#define BITSHORT_ZERO_VALUE     0x2
-#define BITSHORT_256            0x3
-
-#define BITLONG_NORMAL          0x0
-#define BITLONG_UNSIGNED_CHAR   0x1
-#define BITLONG_ZERO_VALUE      0x2
-#define BITLONG_NOT_USED        0x3
-
-#define BITDOUBLE_NORMAL        0x0
-#define BITDOUBLE_ONE_VALUE     0x1
-#define BITDOUBLE_ZERO_VALUE    0x2
-#define BITDOUBLE_NOT_USED      0x3
-
-#define BITDOUBLEWD_DEFAULT_VALUE  0x0
-#define BITDOUBLEWD_4BYTES_PATCHED 0x1
-#define BITDOUBLEWD_6BYTES_PATCHED 0x2
-#define BITDOUBLEWD_FULL_RD        0x3
-
-
 static const size_t DWGSentinelLength = 16;
 
 static const char * DWGHeaderVariablesStart = "\xCF\x7B\x1F\x23\xFD\xDE\x38\xA9\x5F\x7C\x68\xB8\x4E\x6D\x33\x5F";
@@ -80,29 +57,6 @@ inline void SwapEndianness( T&& object, S&& size )
 {
     std::reverse( ( char * ) &object, ( char * ) &object + size );
 }
-
-/*
- * Method taken from here: http://stackoverflow.com/a/2611850
- * Purpose: no C++14 dependencies in library
- */
-template< unsigned long N >
-struct bin
-{
-    enum
-    {
-        value = ( N % 8 ) + ( bin< N / 8 >::value << 1 )
-    };
-};
-
-template<>
-struct bin< 0 >
-{
-    enum
-    {
-        value = 0
-    };
-};
-#define binary( n ) bin<0##n>::value
 
 static const int DWGCRC8Table[256] = {
         0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241, 0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1,

@@ -30,7 +30,6 @@
 #define LIBOPENCAD_INTERNAL_IO_CADBITSTREAMREADER_HPP
 
 #include "../../cadobjects.h"
-
 #include "../toolkit.hpp"
 
 #include <cstdint>
@@ -43,80 +42,81 @@ using CADBitBuffer = std::vector<uint8_t>;
 namespace libopencad
 {
 
-class CADBitStreamReader
-{
-public:
-	CADBitStreamReader(const CADBitBuffer& buffer, size_t initialOffset = 0);
+    class CADBitStreamReader
+    {
+    public:
+        explicit CADBitStreamReader(const CADBitBuffer& buffer, size_t initialOffset = 0);
 
-	int64_t ReadRawLongLong();
-	int32_t ReadRawLong();
-	int16_t ReadRawShort();
-	double  ReadRawDouble();
+        bool Available() const;
+        size_t GetOffset() const;
 
-	uint8_t Read2Bits();
-	uint8_t Read3Bits();
-	uint8_t Read4Bits();
+        double  ReadRawDouble();
+        int64_t ReadRawLongLong();
+        int32_t ReadRawLong();
+        int16_t ReadRawShort();
+        uint8_t ReadChar();
+        uint8_t Read4Bits();
+        uint8_t Read3Bits();
+        uint8_t Read2Bits();
+        bool    ReadBit();
 
-	CADHandle ReadHandle();
-	CADHandle ReadHandle8BitsLength();
-	void SeekHandle();
+        double  ReadBitDoubleWd();
+        double  ReadBitDouble();
+        int32_t ReadBitLong();
+        int16_t ReadBitShort();
 
-	bool ReadBit();
-	void SeekBit();
+        int32_t ReadMChar();
+        int32_t ReadUMChar();
+        uint16_t ReadMShort();
+        
+        std::string ReadTv();
 
-	void SeekBits(size_t bitsCount);
+        CADHandle ReadHandle();
+        CADHandle ReadHandle8BitsLength();
 
-	int32_t ReadBitLong();
-	void SeekBitLong();
+        CADVector ReadVector();
+        CADVector ReadRawVector();
 
-	int16_t ReadBitShort();
-	void SeekBitShort();
+        void SeekBitDouble();
+        void SeekBitLong();
+        void SeekBitShort();
+        void SeekBits(size_t bitsCount);
+        void SeekBit();
 
-	uint8_t ReadChar();
+        void SeekTv();
+        void SeekHandle();
 
-	double  ReadBitDouble();
-	void SeekBitDouble();
+    private:
+        ByteArray ReadBitsImpl(size_t bitsCount);
 
-	double ReadBitDoubleWd();
+    private:
+        enum Bitcodes
+        {
+            BITSHORT_NORMAL            = 0,
+            BITSHORT_UNSIGNED_CHAR     = 1,
+            BITSHORT_ZERO_VALUE        = 2,
+            BITSHORT_256               = 3,
 
-	int32_t ReadMChar();
-	int32_t ReadUMChar();
-	uint16_t ReadMShort();
+            BITLONG_NORMAL             = 0,
+            BITLONG_UNSIGNED_CHAR      = 1,
+            BITLONG_ZERO_VALUE         = 2,
+            BITLONG_NOT_USED           = 3,
 
-	std::string ReadTv();
-	void SeekTv();
+            BITDOUBLE_NORMAL           = 0,
+            BITDOUBLE_ONE_VALUE        = 1,
+            BITDOUBLE_ZERO_VALUE       = 2,
+            BITDOUBLE_NOT_USED         = 3,
 
-private:
-	ByteArray ReadBitsImpl(size_t bitsCount);
+            BITDOUBLEWD_DEFAULT_VALUE  = 0,
+            BITDOUBLEWD_4BYTES_PATCHED = 1,
+            BITDOUBLEWD_6BYTES_PATCHED = 2,
+            BITDOUBLEWD_FULL_RD        = 3
+        };
 
-private:
-	enum Bitcodes
-	{
-		BITSHORT_NORMAL            = 0,
-		BITSHORT_UNSIGNED_CHAR     = 1,
-		BITSHORT_ZERO_VALUE        = 2,
-		BITSHORT_256               = 3,
-
-		BITLONG_NORMAL             = 0,
-		BITLONG_UNSIGNED_CHAR      = 1,
-		BITLONG_ZERO_VALUE         = 2,
-		BITLONG_NOT_USED           = 3,
-
-		BITDOUBLE_NORMAL           = 0,
-		BITDOUBLE_ONE_VALUE        = 1,
-		BITDOUBLE_ZERO_VALUE       = 2,
-		BITDOUBLE_NOT_USED         = 3,
-
-		BITDOUBLEWD_DEFAULT_VALUE  = 0,
-		BITDOUBLEWD_4BYTES_PATCHED = 1,
-		BITDOUBLEWD_6BYTES_PATCHED = 2,
-		BITDOUBLEWD_FULL_RD        = 3
-	};
-
-private:
-	CADBitBuffer	_buffer;
-	size_t			_offset;
-};
+    private:
+        CADBitBuffer    _buffer;
+        size_t          _offset;
+    };
 
 }
 

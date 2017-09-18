@@ -13,6 +13,18 @@ namespace libopencad
     { }
 
 
+    bool CADBitStreamReader::Available() const
+    {
+        return _offset / 8 + 1 < _buffer.size();
+    }
+
+
+    size_t CADBitStreamReader::GetOffset() const
+    {
+        return _offset;
+    }
+
+
     int32_t CADBitStreamReader::ReadRawLong()
     {
         int32_t result = 0;
@@ -356,6 +368,18 @@ namespace libopencad
         std::memcpy(&result, mcharBytes.data(), sizeof(result));
 
         return result;
+    }
+
+
+    CADVector CADBitStreamReader::ReadVector()
+    {
+        return CADVector(ReadBitDouble(), ReadBitDouble(), ReadBitDouble());
+    }
+
+
+    CADVector CADBitStreamReader::ReadRawVector()
+    {
+        return CADVector(ReadRawDouble(), ReadRawDouble());
     }
 
 
