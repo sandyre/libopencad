@@ -18,6 +18,7 @@ script:
 branches:
   only:
   - master
+  - dev
 notifications:
   email: 191980@niuitmo.ru
   irc:
