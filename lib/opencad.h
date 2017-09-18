@@ -7,7 +7,7 @@
  *******************************************************************************
  *  The MIT License (MIT)
  *
- *  Copyright (c) 2016 Alexandr Borzykh
+ *  Copyright (c) 2016-2017 Alexandr Borzykh
  *  Copyright (c) 2016 NextGIS, <info@nextgis.com>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -37,7 +37,7 @@
 #define OCAD_VERSION_REV   0
 
 #ifndef OCAD_COMPUTE_VERSION
-#define OCAD_COMPUTE_VERSION(maj,min,rev) ((maj)*10000+(min)*100+rev) // maj - any, min < 99, rev < 99
+  #define OCAD_COMPUTE_VERSION(maj,min,rev) ((maj)*10000+(min)*100+rev) // maj - any, min < 99, rev < 99
 #endif
 
 #define OCAD_VERSION_NUM OCAD_COMPUTE_VERSION(OCAD_VERSION_MAJOR,OCAD_VERSION_MINOR,OCAD_VERSION_REV)
@@ -58,34 +58,34 @@
 #    ifdef OCAD_EXPORTS
 #      ifdef __GNUC__
 #        define OCAD_EXTERN extern __attribute__((dllexport))
-#      else        
+#      else
 #        define OCAD_EXTERN extern __declspec(dllexport)
-#      endif 
+#      endif
 #    else
 #      ifdef __GNUC__
 #        define OCAD_EXTERN extern __attribute__((dllimport))
-#      else        
+#      else
 #        define OCAD_EXTERN extern __declspec(dllimport)
-#      endif 
+#      endif
 #    endif
 #   else
 #     if __GNUC__ >= 4
 #       define OCAD_EXTERN __attribute__((visibility("default")))
 #     else
-#       define OCAD_EXTERN                extern
-#     endif 
+#       define OCAD_EXTERN extern
+#     endif
 #   endif
 #endif
 #endif
 
 #if defined(__GNUC__) && __GNUC__ >= 4
-#define OCAD_PRINT_FUNC_FORMAT( format_idx, arg_idx ) __attribute__((__format__ (__printf__, format_idx, arg_idx)))
+  #define OCAD_PRINT_FUNC_FORMAT( format_idx, arg_idx ) __attribute__((__format__ (__printf__, format_idx, arg_idx)))
 #else
-#define OCAD_PRINT_FUNC_FORMAT( format_idx, arg_idx )
+  #define OCAD_PRINT_FUNC_FORMAT( format_idx, arg_idx )
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER < 1900)
-#define snprintf _snprintf
+  #define snprintf _snprintf
 #endif
 
 void DebugMsg( const char *, ... ) OCAD_PRINT_FUNC_FORMAT( 1, 2 );
