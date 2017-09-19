@@ -33,11 +33,14 @@ cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 project(dwg)
 
 set(HHEADERS
-    r2000.h)
+    r2000.h
+    ../internal/io/cadbitstreamreader.hpp
+    )
 
 set(CSOURCES
     r2000.cpp
-)
+    ../internal/io/cadbitstreamreader.cpp
+    )
 
 add_library(${PROJECT_NAME} OBJECT ${CSOURCES} ${HHEADERS})
 

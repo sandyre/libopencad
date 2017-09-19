@@ -2,7 +2,7 @@
 
 #include <algorithm>
 #include <cstring>
-
+#include <iostream>
 
 namespace libopencad
 {
@@ -27,34 +27,19 @@ namespace libopencad
 
     int32_t CADBitStreamReader::ReadRawLong()
     {
-        int32_t result = 0;
-        ByteArray longBytes = ReadBitsImpl(32);
-
-        std::memcpy(&result, longBytes.data(), sizeof(result));
-
-        return result;
+        return *reinterpret_cast<int32_t*>(ReadBitsImpl(32).data());
     }
 
 
     int16_t CADBitStreamReader::ReadRawShort()
     {
-        int16_t result = 0;
-        ByteArray shortBytes = ReadBitsImpl(16);
-
-        std::memcpy(&result, shortBytes.data(), sizeof(result));
-
-        return result;
+        return *reinterpret_cast<int16_t*>(ReadBitsImpl(16).data());
     }
 
 
     double CADBitStreamReader::ReadRawDouble()
     {
-        double result = 0;
-        ByteArray doubleBytes = ReadBitsImpl(64);
-
-        std::memcpy(&result, doubleBytes.data(), sizeof(result));
-
-        return result;
+        return *reinterpret_cast<double*>(ReadBitsImpl(64).data());
     }
 
 
@@ -77,7 +62,7 @@ namespace libopencad
 
     bool CADBitStreamReader::ReadBit()
     {
-        return (ReadBitsImpl(1)[0] >> 7) & binary(00000001);
+        return ReadBitsImpl(1)[0] & binary(10000000);
     }
 
 
@@ -93,6 +78,12 @@ namespace libopencad
     }
 
 
+    uint8_t CADBitStreamReader::Read4Bits()
+    {
+        return (ReadBitsImpl(4)[0] >> 4) & binary(00001111);
+    }
+
+
     int16_t CADBitStreamReader::ReadBitShort()
     {
         uint8_t bitcode = Read2Bits();
@@ -103,30 +94,16 @@ namespace libopencad
         switch (bitcode)
         {
         case BITSHORT_NORMAL:
-        {
-            ByteArray shortBytes = ReadBitsImpl(16);
-
-            int16_t result = 0;
-            std::memcpy(&result, shortBytes.data(), sizeof(result));
-
-            return result;
-        }
+            return *reinterpret_cast<int16_t*>(ReadBitsImpl(16).data());
 
         case BITSHORT_UNSIGNED_CHAR:
-        {
-            uint8_t result = ReadBitsImpl(8)[0];
-            return result;
-        }
+            return ReadBitsImpl(8)[0];
 
         case BITSHORT_ZERO_VALUE:
-        {
             return 0;
-        }
 
         case BITSHORT_256:
-        {
             return 256;
-        }
         }
 
         return -1;
@@ -175,30 +152,14 @@ namespace libopencad
         switch (bitcode)
         {
         case BITLONG_NORMAL:
-        {
-            ByteArray shortBytes = ReadBitsImpl(32);
-
-            int32_t result = 0;
-            std::memcpy(&result, shortBytes.data(), sizeof(result));
-
-            return result;
-        }
+            return *reinterpret_cast<int32_t*>(ReadBitsImpl(32).data());
 
         case BITLONG_UNSIGNED_CHAR:
-        {
-            uint8_t result = ReadBitsImpl(8)[0];
-            return result;
-        }
+            return ReadBitsImpl(8)[0];
 
         case BITLONG_ZERO_VALUE:
-        {
-            return 0;
-        }
-
         case BITLONG_NOT_USED:
-        {
             return 0;
-        }
         }
 
         return -1;
@@ -217,6 +178,17 @@ namespace libopencad
     }
 
 
+    void CADBitStreamReader::SeekBitDouble()
+    {
+        ReadBitDouble();
+    }
+
+
+    void CADBitStreamReader::SeekTv()
+    {
+        ReadTv();
+    }
+
     void CADBitStreamReader::SeekBits(size_t bitsCount)
     {
         _offset += bitsCount;
@@ -233,29 +205,14 @@ namespace libopencad
         switch (bitcode)
         {
         case BITDOUBLE_NORMAL:
-        {
-            ByteArray shortBytes = ReadBitsImpl(64);
-
-            double result = 0.0;
-            std::memcpy(&result, shortBytes.data(), sizeof(result));
-
-            return result;
-        }
+            return ReadRawDouble();
 
         case BITDOUBLE_ONE_VALUE:
-        {
             return 1.0;
-        }
 
         case BITDOUBLE_ZERO_VALUE:
-        {
-            return 0.0;
-        }
-
         case BITDOUBLE_NOT_USED:
-        {
             return 0.0;
-        }
         }
 
         return -1.0;
@@ -279,7 +236,7 @@ namespace libopencad
         case BITDOUBLEWD_4BYTES_PATCHED:
         {
             for (size_t idx = 0; idx < 4; ++idx)
-                *(static_cast<char*>(&defaultValue) + idx) = ReadChar();
+                *(reinterpret_cast<char*>(&defaultValue) + idx) = ReadChar();
 
             return defaultValue;
         }
@@ -287,17 +244,14 @@ namespace libopencad
         case BITDOUBLEWD_6BYTES_PATCHED:
         {
             for (size_t idx = 0; idx < 6; ++idx)
-                *(static_cast<char*>(&defaultValue) + idx) = ReadChar();
+                *(reinterpret_cast<char*>(&defaultValue) + idx) = ReadChar();
 
             return defaultValue;
         }
 
-        case BITDOUBLE_NOT_USED:
+        case BITDOUBLEWD_FULL_RD:
         {
-            double result = 0.0;
-            ByteArray doubleBytes = ReadBitsImpl(64);
-
-            std::memcpy(&result, doubleBytes.data(), sizeof(result));
+            return ReadRawDouble();
         }
         }
 
@@ -365,7 +319,47 @@ namespace libopencad
         }
 
         std::reverse(mcharBytes.begin(), mcharBytes.end());
-        std::memcpy(&result, mcharBytes.data(), sizeof(result));
+        std::memcpy(&result, mcharBytes.data(), mcharBytes.size());
+
+        return result;
+    }
+
+
+    uint32_t CADBitStreamReader::ReadMShort()
+    {
+        int32_t result = 0;
+        size_t byteOffset = _offset / 8;
+        size_t bitOffset = _offset % 8;
+
+        ByteArray mshortBytes;
+        mshortBytes.push_back(ReadChar());
+        mshortBytes.push_back(ReadChar());
+
+        if (mshortBytes[1] & binary(10000000))
+        {
+            mshortBytes.push_back(ReadChar());
+            mshortBytes.push_back(ReadChar());
+        }
+
+        std::reverse(mshortBytes.begin(), mshortBytes.end());
+
+        if (mshortBytes.size() == 2)
+        {
+            mshortBytes[0] &= binary(01111111);
+        }
+        else if (mshortBytes.size() == 4)
+        {
+            mshortBytes[0] &= binary(01111111);
+            mshortBytes[2] &= binary(01111111);
+
+            mshortBytes[2] |= (mshortBytes[1] << 7);
+            mshortBytes[1] = (mshortBytes[1] >> 1);
+            mshortBytes[1] |= (mshortBytes[0] << 7);
+            mshortBytes[0] = (mshortBytes[0] >> 1);
+        }
+
+        std::reverse(mshortBytes.begin(), mshortBytes.end());
+        std::memcpy(&result, mshortBytes.data(), mshortBytes.size());
 
         return result;
     }
@@ -392,6 +386,9 @@ namespace libopencad
         size_t resultSizeBytes = (resultSizeBits / 8) + (resultSizeBits % 8 ? 1 : 0);
 
         ByteArray result(resultSizeBytes, 0);
+
+        if (byteOffset + resultSizeBytes >= _buffer.size())
+            throw std::runtime_error("Buffer is empty, but read requested");
 
         std::copy(_buffer.cbegin() + byteOffset, _buffer.cbegin() + byteOffset + resultSizeBytes, result.begin());
 

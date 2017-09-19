@@ -41,9 +41,7 @@
 #include <cmath>
 
 #ifdef __APPLE__
-
-#include <MacTypes.h>
-
+  #include <MacTypes.h>
 #endif
 
 #define UNKNOWN1 CADHeader::MAX_HEADER_CONSTANT + 1

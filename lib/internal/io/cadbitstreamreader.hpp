@@ -60,14 +60,14 @@ namespace libopencad
         uint8_t Read2Bits();
         bool    ReadBit();
 
-        double  ReadBitDoubleWd();
+        double  ReadBitDoubleWd(double defaultValue);
         double  ReadBitDouble();
         int32_t ReadBitLong();
         int16_t ReadBitShort();
 
         int32_t ReadMChar();
         int32_t ReadUMChar();
-        uint16_t ReadMShort();
+        uint32_t ReadMShort();
         
         std::string ReadTv();
 
