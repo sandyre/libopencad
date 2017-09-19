@@ -4,6 +4,7 @@
 #include <cstring>
 #include <iostream>
 
+
 namespace libopencad
 {
 
@@ -14,39 +15,27 @@ namespace libopencad
 
 
     bool CADBitStreamReader::Available() const
-    {
-        return _offset / 8 + 1 < _buffer.size();
-    }
+    { return _offset / 8 + 1 < _buffer.size(); }
 
 
     size_t CADBitStreamReader::GetOffset() const
-    {
-        return _offset;
-    }
+    { return _offset; }
 
 
     int32_t CADBitStreamReader::ReadRawLong()
-    {
-        return *reinterpret_cast<int32_t*>(ReadBitsImpl(32).data());
-    }
+    { return *reinterpret_cast<int32_t*>(ReadBitsImpl(32).data()); }
 
 
     int16_t CADBitStreamReader::ReadRawShort()
-    {
-        return *reinterpret_cast<int16_t*>(ReadBitsImpl(16).data());
-    }
+    { return *reinterpret_cast<int16_t*>(ReadBitsImpl(16).data()); }
 
 
     double CADBitStreamReader::ReadRawDouble()
-    {
-        return *reinterpret_cast<double*>(ReadBitsImpl(64).data());
-    }
+    { return *reinterpret_cast<double*>(ReadBitsImpl(64).data()); }
 
 
     uint8_t CADBitStreamReader::ReadChar()
-    {
-        return ReadBitsImpl(8)[0];
-    }
+    { return ReadBitsImpl(8)[0]; }
 
 
     std::string CADBitStreamReader::ReadTv()
@@ -57,31 +46,25 @@ namespace libopencad
 
         for (int16_t idx = 0; idx < stringLength; ++idx)
             result += ReadChar();
+
+        return result;
     }
 
 
     bool CADBitStreamReader::ReadBit()
-    {
-        return ReadBitsImpl(1)[0] & binary(10000000);
-    }
+    { return ReadBitsImpl(1)[0] & binary(10000000); }
 
 
     uint8_t CADBitStreamReader::Read2Bits()
-    {
-        return (ReadBitsImpl(2)[0] >> 6) & binary(00000011);
-    }
+    { return (ReadBitsImpl(2)[0] >> 6) & binary(00000011); }
 
 
     uint8_t CADBitStreamReader::Read3Bits()
-    {
-        return (ReadBitsImpl(3)[0] >> 5) & binary(00000111);
-    }
+    { return (ReadBitsImpl(3)[0] >> 5) & binary(00000111); }
 
 
     uint8_t CADBitStreamReader::Read4Bits()
-    {
-        return (ReadBitsImpl(4)[0] >> 4) & binary(00001111);
-    }
+    { return (ReadBitsImpl(4)[0] >> 4) & binary(00001111); }
 
 
     int16_t CADBitStreamReader::ReadBitShort()
@@ -167,32 +150,22 @@ namespace libopencad
 
 
     void CADBitStreamReader::SeekBitLong()
-    {
-        ReadBitLong();
-    }
+    { ReadBitLong(); }
 
 
     void CADBitStreamReader::SeekBitShort()
-    {
-        ReadBitShort();
-    }
+    { ReadBitShort(); }
 
 
     void CADBitStreamReader::SeekBitDouble()
-    {
-        ReadBitDouble();
-    }
+    { ReadBitDouble(); }
 
 
     void CADBitStreamReader::SeekTv()
-    {
-        ReadTv();
-    }
+    { ReadTv(); }
 
     void CADBitStreamReader::SeekBits(size_t bitsCount)
-    {
-        _offset += bitsCount;
-    }
+    { _offset += bitsCount; }
 
 
     double CADBitStreamReader::ReadBitDouble()
@@ -259,9 +232,10 @@ namespace libopencad
     }
 
 
-    int32_t CADBitStreamReader::ReadUMChar()
+    int32_t CADBitStreamReader::ReadMChar()
     {
         int64_t result = 0;
+        bool negative = false;
         size_t byteOffset = _offset / 8;
         size_t bitOffset = _offset % 8;
 
@@ -275,6 +249,12 @@ namespace libopencad
         }
 
         std::reverse(mcharBytes.begin(), mcharBytes.end());
+
+        if (mcharBytes[0] & binary(01000000))
+        {
+            mcharBytes[0] &= binary(10111111);
+            negative = true;
+        }
 
         for (size_t idx = 0; idx < mcharBytes.size(); ++idx)
             mcharBytes[idx] &= binary(01111111);
@@ -321,6 +301,8 @@ namespace libopencad
         std::reverse(mcharBytes.begin(), mcharBytes.end());
         std::memcpy(&result, mcharBytes.data(), mcharBytes.size());
 
+        if (negative) result *= -1;
+
         return result;
     }
 
@@ -366,15 +348,11 @@ namespace libopencad
 
 
     CADVector CADBitStreamReader::ReadVector()
-    {
-        return CADVector(ReadBitDouble(), ReadBitDouble(), ReadBitDouble());
-    }
+    { return CADVector(ReadBitDouble(), ReadBitDouble(), ReadBitDouble()); }
 
 
     CADVector CADBitStreamReader::ReadRawVector()
-    {
-        return CADVector(ReadRawDouble(), ReadRawDouble());
-    }
+    { return CADVector(ReadRawDouble(), ReadRawDouble()); }
 
 
     ByteArray CADBitStreamReader::ReadBitsImpl(size_t bitsCount)
@@ -387,7 +365,7 @@ namespace libopencad
 
         ByteArray result(resultSizeBytes, 0);
 
-        if (byteOffset + resultSizeBytes >= _buffer.size())
+        if (_offset >= _buffer.size() * 8)
             throw std::runtime_error("Buffer is empty, but read requested");
 
         std::copy(_buffer.cbegin() + byteOffset, _buffer.cbegin() + byteOffset + resultSizeBytes, result.begin());

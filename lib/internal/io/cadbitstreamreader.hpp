@@ -66,7 +66,6 @@ namespace libopencad
         int16_t ReadBitShort();
 
         int32_t ReadMChar();
-        int32_t ReadUMChar();
         uint32_t ReadMShort();
         
         std::string ReadTv();
