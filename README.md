@@ -57,7 +57,7 @@ All you have to do now - is to link library with your project, and include assoc
 
 ### Library sources inclusion way
 
-All you have to do is to lib/ directory to your project file tree, thats actually it.
+All you have to do is to lib/ directory to your project file tree, that's actually it.
 
 ### Usage example
 

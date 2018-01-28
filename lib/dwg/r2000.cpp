@@ -648,7 +648,7 @@ int DWGFileR2000::ReadHeader(OpenOptions eOptions)
 
     if (memcmp(buffer.data(), DWGHeaderVariablesEnd, DWGSentinelLength))
     {
-        DebugMsg("File is corrupted (HEADERVARS section ending sentinel doesnt match.)");
+        DebugMsg("File is corrupted (HEADERVARS section ending sentinel doesn't match.)");
 
         returnCode = CADErrorCodes::HEADER_SECTION_READ_FAILED;
     }
@@ -701,7 +701,7 @@ int DWGFileR2000::ReadClasses(enum OpenOptions eOptions)
         pFileIO->Read(sentinelBuffer.data(), DWGSentinelLength);
         if (memcmp(sentinelBuffer.data(), DWGDSClassesEnd, DWGSentinelLength))
         {
-            cerr << "File is corrupted (CLASSES section ending sentinel doesnt match.)\n";
+            cerr << "File is corrupted (CLASSES section ending sentinel doesn't match.)\n";
 
             return CADErrorCodes::CLASSES_SECTION_READ_FAILED;
         }
@@ -723,7 +723,7 @@ int DWGFileR2000::CreateFileMap()
 
     mapObjects.clear();
 
-    // seek to the begining of the objects map
+    // seek to the beginning of the objects map
     pFileIO->Seek(sectionLocatorRecords[2].dSeeker, CADFileIO::SeekOrigin::BEG);
 
     while (true)
@@ -860,7 +860,7 @@ CADObject * DWGFileR2000::GetObject(int32_t handle, bool handlesOnly)
         stCommonEntityData.nInvisibility    = reader.ReadBitShort();
         stCommonEntityData.nLineWeight      = reader.ReadChar();
 
-        // Skip entitity-specific data, we dont need it if handlesOnly == true
+        // Skip entitity-specific data, we don't need it if bHandlesOnly == true
         if (handlesOnly == true)
             return getEntity(reader, objectType, objectSize, stCommonEntityData);
 
@@ -2617,7 +2617,7 @@ CADDictionaryObject * DWGFileR2000::getDictionary(CADBitStreamReader& reader, in
 {
     /*
      * FIXME: ODA has a lot of mistypes in spec. for this objects,
-     * it doesnt work for now (error begins in handles stream).
+     * it doesn't work for now (error begins in handles stream).
      * Nonetheless, dictionary->sItemNames is 100% array,
      * not a single obj as pointer by their docs.
      */
