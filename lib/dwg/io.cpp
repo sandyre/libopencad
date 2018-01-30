@@ -384,9 +384,9 @@ long ReadUMCHAR( const char * pabyInput, size_t& nBitOffsetFromStart )
         aMCharBytes[i] &= binary(01111111);
     }
 
-    // TODO: this code doesnt cover case when char.bytescount > 3, but its
+    // TODO: this code doesn't cover case when char.bytescount > 3, but it's
     //       possible on large files.
-    // I just cant write an algorithm that does this.
+    // I just can't write an algorithm that does this.
     switch( MCharBytesCount )
     {
         case 1:
@@ -467,9 +467,9 @@ long ReadMCHAR( const char * pabyInput, size_t& nBitOffsetFromStart )
         aMCharBytes[i] &= binary(01111111);
     }
 
-    // TODO: this code doesnt cover case when char.bytescount > 3, but its
+    // TODO: this code doesn't cover case when char.bytescount > 3, but it's
     //       possible on large files.
-    // I just cant write an algorithm that does this.
+    // I just can't write an algorithm that does this.
     switch( MCharBytesCount )
     {
         case 1:
@@ -524,8 +524,8 @@ unsigned int ReadMSHORT( const char * pabyInput, size_t& nBitOffsetFromStart )
     const char * pMShortFirstByte = pabyInput + nByteOffset;*/
     unsigned char aMShortBytes[8]; // 8 bytes is maximum.
 
-    // TODO: this function doesnot support MSHORTS longer than 4 bytes. ODA says
-    //       its impossible, but not sure.
+    // TODO: this function doesn't support MSHORTS longer than 4 bytes. ODA says
+    //       it's impossible, but not sure.
     size_t MShortBytesCount = 2;
     aMShortBytes[0] = ReadCHAR( pabyInput, nBitOffsetFromStart );
     aMShortBytes[1] = ReadCHAR( pabyInput, nBitOffsetFromStart );
