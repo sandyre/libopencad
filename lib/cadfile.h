@@ -39,7 +39,7 @@
 #include <string>
 
 /**
- * @brief The abstact CAD file class
+ * @brief The abstract CAD file class
  */
 class OCAD_EXTERN CADFile
 {
