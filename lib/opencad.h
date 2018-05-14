@@ -59,13 +59,13 @@
 #      ifdef __GNUC__
 #        define OCAD_EXTERN extern __attribute__((dllexport))
 #      else        
-#        define OCAD_EXTERN extern __declspec(dllexport)
+#        define OCAD_EXTERN __declspec(dllexport)
 #      endif 
 #    else
 #      ifdef __GNUC__
 #        define OCAD_EXTERN extern __attribute__((dllimport))
 #      else        
-#        define OCAD_EXTERN extern __declspec(dllimport)
+#        define OCAD_EXTERN __declspec(dllimport)
 #      endif 
 #    endif
 #   else
