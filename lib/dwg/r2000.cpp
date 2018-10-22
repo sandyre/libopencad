@@ -629,7 +629,8 @@ int DWGFileR2000::ReadHeader( OpenOptions eOptions )
     pFileIO->Read( pabyBuf, DWGSentinelLength );
     if( memcmp( pabyBuf, DWGHeaderVariablesEnd, DWGSentinelLength ) )
     {
-        DebugMsg("File is corrupted (HEADERVARS section ending sentinel doesn't match.)");
+        DebugMsg( "File is corrupted (HEADERVARS section ending sentinel "
+                          "does not match.)" );
 
         returnCode = CADErrorCodes::HEADER_SECTION_READ_FAILED;
     }
@@ -685,7 +686,8 @@ int DWGFileR2000::ReadClasses( enum OpenOptions eOptions )
         pFileIO->Read( buffer, DWGSentinelLength );
         if( memcmp( buffer, DWGDSClassesEnd, DWGSentinelLength ) )
         {
-            cerr << "File is corrupted (CLASSES section ending sentinel doesn't match.)\n";
+            cerr << "File is corrupted (CLASSES section ending sentinel "
+                    "does not match.)\n";
             return CADErrorCodes::CLASSES_SECTION_READ_FAILED;
         }
     }
@@ -709,7 +711,7 @@ int DWGFileR2000::CreateFileMap()
     mapObjects.clear();
 
     // seek to the beginning of the objects map
-    pFileIO->Seek(sectionLocatorRecords[2].dSeeker, CADFileIO::SeekOrigin::BEG);
+    pFileIO->Seek( sectionLocatorRecords[2].dSeeker, CADFileIO::SeekOrigin::BEG );
 
     while( true )
     {
@@ -1050,7 +1052,7 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
                     break;
 
                 currentVertexH = vertex->stCed.hObjectHandle.getAsLong();
-				if (! (vertex->vFlags & 2 || vertex->vFlags & 16)) // ignore tangent / spline frame pts  
+				if (! (vertex->vFlags & 2 || vertex->vFlags & 16)) // ignore tangent / spline frame pts
 					polyline->addVertex( vertex->vertPosition );
                 if( vertex->stCed.bNoLinks == true )
                 {
@@ -1065,7 +1067,7 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
                 {
                     vertex.reset( static_cast<CADVertex3DObject *>(
                                           GetObject( currentVertexH )) );
-					if (!( vertex->vFlags & 2 || vertex->vFlags & 16 )) // ignore tangent / spline frame pts 
+					if (!( vertex->vFlags & 2 || vertex->vFlags & 16 )) // ignore tangent / spline frame pts
 						polyline->addVertex( vertex->vertPosition );
                     break;
                 }
@@ -1099,7 +1101,7 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
 			CADPolyline2D       * polyline2D = new CADPolyline2D();
 			CADPolyline2DObject * cadPolyline2D = static_cast<CADPolyline2DObject *>(
                     readedObject.get());
-			
+
 			polyline2D->setClosed(cadPolyline2D->bClosed);
 			polyline2D->setSplined(cadPolyline2D->bSplined);
 			polyline2D->setStartSegWidth(cadPolyline2D->dfStartWidth);
@@ -1123,7 +1125,7 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
 					break;
 
 				currentVertexH = vertex->stCed.hObjectHandle.getAsLong();
-				if ( !( vertex->vFlags & 2 || vertex->vFlags & 16 )) // ignore tangent / spline frame pts  
+				if ( !( vertex->vFlags & 2 || vertex->vFlags & 16 )) // ignore tangent / spline frame pts
 				{
 					polyline2D->addVertex( CADVector( vertex->vertPosition ));
 					bulges.push_back( vertex->dfBulge);
@@ -1143,7 +1145,7 @@ CADGeometry * DWGFileR2000::GetGeometry( size_t iLayerIndex, long dHandle, long 
 				{
 					vertex.reset(static_cast<CADVertex2DObject *>(
 						GetObject(currentVertexH)));
-					if (!( vertex->vFlags & 2 || vertex->vFlags & 16 )) // ignore tangent / spline frame pts  
+					if (!( vertex->vFlags & 2 || vertex->vFlags & 16 )) // ignore tangent / spline frame pts
 					{
 						polyline2D->addVertex( CADVector( vertex->vertPosition ));
 						widths.push_back( make_pair( vertex->dfStartWidth, vertex->dfEndWidth ));
@@ -1822,7 +1824,7 @@ CADPolyline3DObject * DWGFileR2000::getPolyLine3D( long dObjectSize, CADCommonED
     polyline->stCed = stCommonEntityData;
 
 	polyline->SplinedFlags = ReadCHAR(pabyInput, nBitOffsetFromStart);
-	if ( polyline->SplinedFlags & 0x1 || polyline->SplinedFlags & 0x2 ) // quadratic or cubic spline fit 
+	if ( polyline->SplinedFlags & 0x1 || polyline->SplinedFlags & 0x2 ) // quadratic or cubic spline fit
 		polyline->bSplined = true;
 	else
 		polyline->bSplined = false;
@@ -2054,7 +2056,7 @@ CADVertex2DObject * DWGFileR2000::getVertex2D( long dObjectSize, CADCommonED stC
 	}
 	else
 		vertex->dfEndWidth = ReadBITDOUBLE(pabyInput, nBitOffsetFromStart);
-	
+
 	vertex->dfBulge = ReadBITDOUBLE(pabyInput, nBitOffsetFromStart);
 
 	vertex->dfTangentDir = ReadBITDOUBLE(pabyInput, nBitOffsetFromStart);
@@ -2519,7 +2521,7 @@ CADSplineObject * DWGFileR2000::getSpline( long dObjectSize, CADCommonED stCommo
 #ifdef _DEBUG
     else
     {
-        DebugMsg( "Spline scenario != {1,2} readed: error." );
+        DebugMsg( "Spline scenario != {1,2} read: error." );
     }
 #endif
     for( long i = 0; i < spline->nNumKnots; ++i )
@@ -2734,7 +2736,7 @@ CADLayerObject * DWGFileR2000::getLayerObject( long dObjectSize, const char * pa
 
     /*
      * FIXME: ODA says that this handle should be null hard pointer. It is not.
-     * Also, after reading it dObjectSize is != actual readed structure's size.
+     * Also, after reading it dObjectSize is != actual read structure's size.
      * Not used anyway, so no point to read it for now.
      * It also means that CRC cannot be computed correctly.
      */
@@ -3839,7 +3841,7 @@ int DWGFileR2000::ReadSectionLocators()
     // TODO: code can be much simplified if CADHandle will be used.
     pFileIO->Read( & dImageSeeker, 4 );
     // to do so, == and ++ operators should be implemented.
-    DebugMsg( "Image seeker readed: %d\n", dImageSeeker );
+    DebugMsg( "Image seeker read: %d\n", dImageSeeker );
     imageSeeker = dImageSeeker;
 
     pFileIO->Seek( 2, CADFileIO::SeekOrigin::CUR ); // 19

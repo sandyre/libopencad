@@ -57,7 +57,7 @@ All you have to do now - is to link library with your project, and include assoc
 
 ### Library sources inclusion way
 
-All you have to do is to lib/ directory to your project file tree, that's actually it.
+All you have to do is to link the lib/ directory to your project file tree, that's actually it.
 
 ### Usage example
 
@@ -69,8 +69,8 @@ As an example of library usage, there is a built-in app called cadinfo (builds b
 
 // returns nullptr on fail. GetLastErrorCode() returns an error code.
 CADFile *pCADFile = OpenCADFile( pszCADFilePath,
-                                      CADFile::OpenOptions::READ_ALL ); 
-                                      
+                                      CADFile::OpenOptions::READ_ALL );
+
 const CADHeader& header = pCADFile->getHeader ();
 header.print (); // prints CAD Header variables.
 cout << endl;
