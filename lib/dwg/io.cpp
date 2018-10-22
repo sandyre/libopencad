@@ -341,7 +341,7 @@ unsigned char ReadCHAR( const char * pabyInput, size_t& nBitOffsetFromStart )
 std::string ReadTV( const char * pabyInput, size_t& nBitOffsetFromStart )
 {
     // TODO: due to CLion issues with copying text from output window, all
-    //       string readed are now not zero-terminated. Will fix soon.
+    //       string read are now not zero-terminated. Will fix soon.
     short stringLength = ReadBITSHORT( pabyInput, nBitOffsetFromStart );
 
     std::string result;
