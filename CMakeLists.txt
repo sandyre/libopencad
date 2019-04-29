@@ -28,7 +28,7 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 ################################################################################
- 
+
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 
 project(libopencad)
@@ -49,7 +49,7 @@ endif()
 
 configure_file(${CMAKE_MODULE_PATH}/uninstall.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake IMMEDIATE @ONLY)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17")
 
 enable_testing()
 include(FindAnyProject)
