@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <bitset>
 #include <cstddef>
 
@@ -28,7 +29,24 @@ public:
 			_offset++;
 		}
 
-		std::cout << "Requested: " << Count << " bits, got: " << result << " offset: " << _offset << " buffer length: " << _storage.size() << "\n";
+		return result;
+	}
+
+	template <size_t Count>
+	std::array<std::byte, Count> ReadBytes()
+	{
+		assert((_offset + Count * CHAR_BIT) <= _storage.size());
+
+		std::array<std::byte, Count> result;
+		for (size_t i = 0; i < Count; ++i)
+		{
+			uint8_t byte = 0;
+			for (ssize_t i = CHAR_BIT-1; i >= 0; --i)
+			{
+				byte |= (static_cast<uint8_t>(_storage[_offset++]) << i);
+			}
+			result[i] = std::byte{byte};
+		}
 
 		return result;
 	}

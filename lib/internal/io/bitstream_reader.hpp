@@ -22,6 +22,26 @@ private:
 	InputBitStream	_stream;
 };
 
+namespace detail
+{
+
+	template <class RawType>
+	void ReadRawType(InputBitStream& stream, RawType& value)
+	{
+		using ValueT = typename RawType::ValueT;
+		union Storage
+		{
+			ValueT value;
+			std::array<std::byte, sizeof(ValueT)> bytes;
+		} s;
+
+		s.bytes = stream.ReadBytes<sizeof(ValueT)>();
+		utils::little_to_native(s.bytes.begin(), s.bytes.end());
+		value.Value = s.value;
+	}
+
+}
+
 template <>
 BitStreamReader& BitStreamReader::operator>>(RawBits<1>& value)
 {
@@ -57,37 +77,35 @@ BitStreamReader& BitStreamReader::operator>>(RawChar& value)
 	return *this;
 }
 
-// TODO: code below assumes machine endianness is LE
-
 template <>
 BitStreamReader& BitStreamReader::operator>>(RawShort& value)
 {
-	const uint16_t raw_val = utils::swap_endianness(static_cast<uint16_t>(_stream.Read<16>().to_ulong()));
-	value.Value = static_cast<RawShort::ValueT>(raw_val);
+	static_assert(sizeof(RawShort::ValueT) == 2);
+	detail::ReadRawType(_stream, value);
 	return *this;
 }
 
 template <>
 BitStreamReader& BitStreamReader::operator>>(RawLong& value)
 {
-	const uint32_t raw_val = utils::swap_endianness(static_cast<uint32_t>(_stream.Read<32>().to_ulong()));
-	value.Value = static_cast<RawLong::ValueT>(raw_val);
+	static_assert(sizeof(RawLong::ValueT) == 4);
+	detail::ReadRawType(_stream, value);
 	return *this;
 }
 
 template <>
 BitStreamReader& BitStreamReader::operator>>(RawLongLong& value)
 {
-	const uint64_t raw_val = utils::swap_endianness(static_cast<uint64_t>(_stream.Read<64>().to_ullong()));
-	value.Value = static_cast<RawLongLong::ValueT>(raw_val);
+	static_assert(sizeof(RawLongLong::ValueT) == 8);
+	detail::ReadRawType(_stream, value);
 	return *this;
 }
 
 template <>
 BitStreamReader& BitStreamReader::operator>>(RawDouble& value)
 {
-	const uint64_t raw_val = utils::swap_endianness(_stream.Read<64>().to_ullong());
-	std::memcpy(static_cast<void*>(&value.Value), static_cast<const void*>(&raw_val), sizeof(RawDouble::ValueT));
+	static_assert(sizeof(RawDouble::ValueT) == 8);
+	detail::ReadRawType(_stream, value);
 	return *this;
 }
 
