@@ -2,6 +2,7 @@
 
 #include <array>
 #include <bitset>
+#include <climits>
 #include <cstddef>
 
 #include <iostream>

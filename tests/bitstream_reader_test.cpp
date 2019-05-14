@@ -350,3 +350,65 @@ TEST(bit_types, bit_double)
 		ASSERT_EQ(expected[idx], result[idx].Value);
 	}
 }
+
+TEST(modular_types, mod_char)
+{
+	using namespace libopencad::internal;
+
+	std::vector<bool> input
+	{
+		1,0,0,0,0,0,1,0,
+		0,0,1,0,0,1,0,0,
+		1,1,1,0,1,0,0,1,
+		1,0,0,1,0,1,1,1,
+		1,1,1,0,0,1,1,0,
+		0,0,1,1,0,1,0,1,
+		1,0,0,0,0,1,0,1,
+		0,1,0,0,1,0,1,1
+	};
+
+	std::vector<int32_t> expected
+	{
+		4610,
+		112823273,
+		-1413
+	};
+	std::vector<ModChar> result(expected.size(), ModChar{});
+
+	io::InputBitStream stream{input};
+	io::BitStreamReader reader{stream};
+
+	for (size_t idx = 0; idx < result.size(); ++idx)
+	{
+		reader >> result[idx];
+		ASSERT_EQ(expected[idx], result[idx].Value);
+	}
+}
+
+TEST(modular_types, mod_short)
+{
+	using namespace libopencad::internal;
+
+	std::vector<bool> input
+	{
+		0,0,1,1,0,0,0,1,
+		1,1,1,1,0,1,0,0,
+		1,0,0,0,1,1,0,1,
+		0,0,0,0,0,0,0,0
+	};
+
+	std::vector<uint32_t> expected
+	{
+		4650033
+	};
+	std::vector<ModShort> result(expected.size(), ModShort{});
+
+	io::InputBitStream stream{input};
+	io::BitStreamReader reader{stream};
+
+	for (size_t idx = 0; idx < result.size(); ++idx)
+	{
+		reader >> result[idx];
+		ASSERT_EQ(expected[idx], result[idx].Value);
+	}
+}

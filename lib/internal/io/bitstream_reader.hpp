@@ -35,6 +35,8 @@ namespace detail
 			std::array<std::byte, sizeof(ValueT)> bytes;
 		} s;
 
+		s.bytes = {};
+
 		s.bytes = stream.ReadBytes<sizeof(ValueT)>();
 		utils::little_to_native(s.bytes.begin(), s.bytes.end());
 		value.Value = s.value;
@@ -60,13 +62,6 @@ template <>
 BitStreamReader& BitStreamReader::operator>>(RawBits<3>& value)
 {
 	value.Value = _stream.Read<3>();
-	return *this;
-}
-
-template <>
-BitStreamReader& BitStreamReader::operator>>(RawBits<4>& value)
-{
-	value.Value = _stream.Read<4>();
 	return *this;
 }
 
@@ -192,6 +187,89 @@ BitStreamReader& BitStreamReader::operator>>(BitDouble& value)
 	else
 		assert(false);
 
+	return *this;
+}
+
+template <>
+BitStreamReader& BitStreamReader::operator>>(ModChar& value)
+{
+	using ValueT = typename ModChar::ValueT;
+	union Storage
+	{
+		ValueT value;
+		std::array<RawChar, sizeof(ValueT)> bytes;
+	} s;
+
+	s.bytes = {};
+
+	bool negate = false;
+	size_t mchar_size = 0;
+	while (true)
+	{
+		*this >> s.bytes[mchar_size];
+
+		auto& current_byte = s.bytes[mchar_size++].Value;
+		if (!(current_byte & 0b10000000))
+		{
+			negate = static_cast<bool>(current_byte & 0b01000000);
+			current_byte &= 0b10111111;
+			break;
+		}
+		current_byte &= 0b01111111;
+	}
+
+	utils::little_to_big(s.bytes.begin(), s.bytes.end());
+
+	s.bytes[3].Value |= ((s.bytes[2].Value & 0b00000001) << 7);
+	s.bytes[2].Value >>= 1;
+	s.bytes[2].Value |= ((s.bytes[1].Value & 0b00000011) << 6);
+	s.bytes[1].Value >>= 2;
+	s.bytes[1].Value |= ((s.bytes[0].Value & 0b00000111) << 5);
+	s.bytes[0].Value >>= 3;
+
+	utils::big_to_native(s.bytes.begin(), s.bytes.end());
+
+	value.Value = negate ? -s.value : s.value;
+	return *this;
+}
+
+template <>
+BitStreamReader& BitStreamReader::operator>>(ModShort& value)
+{
+	using ValueT = typename ModShort::ValueT;
+	union Storage
+	{
+		ValueT value;
+		std::array<RawChar, sizeof(ValueT)> bytes;
+	} s;
+
+	s.bytes = {};
+
+	size_t mshort_size = 0;
+	while (true)
+	{
+		*this >> s.bytes[mshort_size++];
+		*this >> s.bytes[mshort_size];
+
+		auto& current_byte = s.bytes[mshort_size++].Value;
+		if (!(current_byte & 0b10000000))
+			break;
+		current_byte &= 0b01111111;
+	}
+
+	for (size_t idx = 0; idx < sizeof(ValueT); idx += 2)
+	{
+		utils::little_to_big(s.bytes.begin() + idx, s.bytes.begin() + idx + 2);
+	}
+
+	s.bytes[2].Value |= ((s.bytes[1].Value & 0b00000001) << 7);
+	s.bytes[1].Value >>= 1;
+	s.bytes[1].Value |= ((s.bytes[0].Value & 0b00000001) << 7);
+	s.bytes[0].Value >>= 2;
+
+	utils::big_to_native(s.bytes.begin(), s.bytes.end());
+
+	value.Value = s.value;
 	return *this;
 }
 

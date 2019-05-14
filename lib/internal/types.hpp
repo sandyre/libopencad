@@ -64,4 +64,8 @@ struct BitDoubleWD : BitDouble
 	ValueT	DefaultValue;
 };
 
+struct ModChar : BaseType<int32_t> {};
+
+struct ModShort : BaseType<uint32_t> {};
+
 }
