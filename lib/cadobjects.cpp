@@ -33,6 +33,7 @@
 
 #include <math.h>
 #include <algorithm>
+#include <limits>
 
 //------------------------------------------------------------------------------
 // CADVector
