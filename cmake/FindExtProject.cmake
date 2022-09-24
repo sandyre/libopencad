@@ -107,7 +107,7 @@ function(find_extproject name)
             )
         endif()
 
-        # Extact files.
+        # Extract files.
         execute_process(
             COMMAND ${CMAKE_COMMAND} -E make_directory ${EXT_INSTALL_DIR}
         )
@@ -116,7 +116,7 @@ function(find_extproject name)
             WORKING_DIRECTORY ${EXT_INSTALL_DIR}
         )
         # Execute find_package and send version, libraries, includes upper cmake script.
-        # The CMake folder in root folder is prefered
+        # The CMake folder in root folder is preferred
         if(OSX_FRAMEWORK AND NOT EXISTS ${EXT_INSTALL_DIR}/${BINARY_NAME}/CMake AND EXISTS ${EXT_INSTALL_DIR}/${BINARY_NAME}/Library/Frameworks)
             set(CMAKE_PREFIX_PATH ${EXT_INSTALL_DIR}/${BINARY_NAME}/Library/Frameworks)
         else()
