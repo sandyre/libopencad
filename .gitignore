@@ -36,3 +36,4 @@
 *.user
 /build*
 /inst
+cmake-build-debug
